@@ -160,6 +160,11 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleReadCompletionNotification object:socketHandler];
 		[socketHandler readInBackgroundAndNotify];
 		[rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil]];
+
+
+		if ([[dictionary objectForKey:RFB_FULLSCREEN] intValue]) {
+			[self makeConnectionFullscreen: self];
+		}
 	}
     return self;
 }

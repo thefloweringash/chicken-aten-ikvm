@@ -23,6 +23,7 @@
 #import "Profile.h"
 // #import <signal.h> // jason removed signal handler
 #import "rfbproto.h"
+#import "vncauth.h"
 
 #import "GrayScaleFrameBuffer.h"
 #import "LowColorFrameBuffer.h"
@@ -57,6 +58,10 @@ static RFBConnectionManager*	sharedManager = nil;
 
     sigblock(sigmask(SIGPIPE));
     connections = [[NSMutableArray alloc] init];
+    cmdlineHost = nil;
+    cmdlineDisplay = nil;
+    cmdlinePassword = @"";
+    cmdlineFullscreen = @"0";
     sharedManager = self;
     [NSApp setDelegate:self];
     [profileManager wakeup];
@@ -96,18 +101,100 @@ static RFBConnectionManager*	sharedManager = nil;
 	[displayFullscreenWarning setState: [ud boolForKey:@"DisplayFullscreenWarning"]];
     
     // end jason
-    [self updateProfileList:nil];
-    if((s = [ud objectForKey:RFB_LAST_HOST]) != nil) {
-        [hostName setStringValue:s];
-        [self selectedHostChanged:s];
-    }
-    [self updateLoginPanel];
-    [loginPanel makeKeyAndOrderFront:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProfileList:) name:ProfileAddDeleteNotification object:nil];
 
-    // So we can tell when the hostName finished changing
-    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidEndEditing:) name: NSControlTextDidEndEditingNotification object: hostName];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidBeginEditing:) name: NSControlTextDidBeginEditingNotification object: hostName];
+    [self processArguments];
+
+    [self updateProfileList:nil];
+
+    if (cmdlineHost) {
+	/* Connect without GUI */
+	Profile* profile;
+	NSDictionary* connectionDictionary;
+
+	connectionDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+            cmdlineHost, RFB_HOST,
+            cmdlinePassword, RFB_PASSWORD,
+            @"0", RFB_SHARED,
+            cmdlineDisplay, RFB_DISPLAY,
+            cmdlineFullscreen, RFB_FULLSCREEN,
+            NULL, NULL];
+
+	profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];	
+	[self createConnectionWithDictionary:connectionDictionary profile:profile owner:self];
+
+    } else {
+	if((s = [ud objectForKey:RFB_LAST_HOST]) != nil) {
+	    [hostName setStringValue:s];
+	    [self selectedHostChanged:s];
+	}
+	
+        [self updateLoginPanel];
+        [loginPanel makeKeyAndOrderFront:self];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProfileList:) name:ProfileAddDeleteNotification object:nil];
+
+	// So we can tell when the hostName finished changing
+	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidEndEditing:) name: NSControlTextDidEndEditingNotification object: hostName];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidBeginEditing:) name: NSControlTextDidBeginEditingNotification object: hostName];
+    }
+}
+
+- (void)processArguments
+{
+    int i;
+    NSProcessInfo *procInfo = [NSProcessInfo processInfo];
+    NSArray *args = [procInfo arguments];
+    NSString *arg;
+    NSString *passwordFile;
+    char *decrypted_password;
+ 
+    for (i = 1; i < [args count]; i++) {
+	arg = [args objectAtIndex:i];
+
+	if ([arg hasPrefix:@"-psn"]) {
+	    if (i + 1 >= [args count]) [self cmdlineUsage];
+	    i++;
+	} else if ([arg hasPrefix:@"--PasswordFile"]) {
+	    if (i + 1 >= [args count]) [self cmdlineUsage];
+	    passwordFile = [args objectAtIndex:++i];
+	    decrypted_password = vncDecryptPasswdFromFile((char*)[passwordFile cString]);
+	    if (decrypted_password == NULL) {
+		fprintf(stderr, "Cannot read password from file.\n");
+	    } else {
+		cmdlinePassword = [[NSString alloc] initWithCString:decrypted_password];
+		free(decrypted_password);
+	    }
+
+	} else if ([arg hasPrefix:@"--FullScreen"]) {
+	    cmdlineFullscreen = @"1";
+	    // FIXME: Support -FullScreen=0 etc
+	    //if (i + 1 >= [args count]) [self cmdlineUsage];
+	    //cmdlinePasswordFile = [args objectAtIndex:i+1];
+	} else if ([arg hasPrefix:@"-"]) {
+	    [self cmdlineUsage];
+	} else {
+	    /* No dash, host:display */
+	    NSArray *listItems = [arg componentsSeparatedByString:@":"];
+	    cmdlineHost = [listItems objectAtIndex:0];
+
+	    if (![cmdlineHost isEqualToString:arg]) {
+		/* Found : */
+		cmdlineDisplay = [listItems objectAtIndex:1];
+	    } else {
+		/* No colon, assume :0 as default */
+		cmdlineDisplay = @"0";
+	    }
+	} 
+    }
+}
+
+- (void)cmdlineUsage
+{
+    fprintf(stderr, "\nUsage: Chicken of the VNC [options] [host:display]\n\n");
+    fprintf(stderr, "options:\n\n");
+    fprintf(stderr, "--PasswordFile <password-file>\n");
+    fprintf(stderr, "--FullScreen\n");
+    exit(1);
 }
 
 - (void)dealloc
@@ -239,6 +326,8 @@ static RFBConnectionManager*	sharedManager = nil;
     [aConnection retain];
     [connections removeObject:aConnection];
     [aConnection autorelease];
+    if (cmdlineHost) 
+	[NSApp terminate:self];
 }
 
 - (IBAction)connect:(id)sender

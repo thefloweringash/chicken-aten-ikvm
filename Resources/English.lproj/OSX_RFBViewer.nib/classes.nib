@@ -48,10 +48,9 @@
         }, 
         {
             ACTIONS = {
-                addServer = id; 
                 connect = id; 
-                deleteSelectedServer = id; 
                 frontInverseCPUSliderChanged = id; 
+                hostSelectionDidChange = id; 
                 otherInverseCPUSliderChanged = id; 
                 preferencesChanged = id; 
             }; 
@@ -60,45 +59,23 @@
             OUTLETS = {
                 autoscrollIncrement = NSSlider; 
                 colorModelMatrix = NSMatrix; 
+                display = NSTextField; 
                 displayFullscreenWarning = NSButton; 
                 frontInverseCPUSlider = NSSlider; 
                 fullscreenScrollbars = NSButton; 
                 gamma = NSTextField; 
+                hostName = NSComboBox; 
                 loginPanel = NSPanel; 
                 otherInverseCPUSlider = NSSlider; 
+                passWord = NSSecureTextField; 
                 profileManager = ProfileManager; 
                 profilePopup = NSPopUpButton; 
                 psMaxRects = NSTextField; 
                 psThreshold = NSTextField; 
-                serverCtrler = ServerDataViewController; 
-                serverDataBox = NSBox; 
-                serverDataBoxLocal = NSBox; 
-                serverList = NSTableView; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = ServerDataManager; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                displayChanged = id; 
-                hostChanged = id; 
-                passwordChanged = id; 
-                profileSelectionChanged = id; 
-                rememberPwdChanged = id; 
-                sharedChanged = id; 
-            }; 
-            CLASS = ServerDataViewController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                display = NSTextField; 
-                hostName = NSTextField; 
-                passWord = NSSecureTextField; 
-                profilePopup = NSPopUpButton; 
                 rememberPwd = NSButton; 
-                "server_" = id; 
                 shared = NSButton; 
             }; 
-            SUPERCLASS = NSWindowController; 
+            SUPERCLASS = NSObject; 
         }
     ); 
     IBVersion = 1; 

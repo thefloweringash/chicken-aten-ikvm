@@ -113,7 +113,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 // jason added for Jaguar check
 + (void)initialize {
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-	NSDictionary *dict = [NSDictionary dictionaryWithObject: [NSNumber numberWithFloat: 0.0] forKey: @"FrameBufferUpdateSeconds"];
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithFloat: 0.0], @"FrameBufferUpdateSeconds", nil];
 	
 	[standardUserDefaults registerDefaults: dict];
 	gIsJaguar = [NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)];
@@ -1059,10 +1059,6 @@ static NSString* byteString(double d)
 	}
 }
 
-- (IBAction)makeConnectionFullscreen: (id)sender {
-	NSBeginAlertSheet(@"Your connection is entering fullscreen mode", @"Fullscreen", @"Cancel", nil, window, self, nil, @selector(connectionWillGoFullscreen: returnCode: contextInfo: ), nil, @"You may return to windowed mode by pressing the key combination (command-option-control-`) at any time.\n\nPlease note that the character in this key command is the back-quote, the key next to the number '1' on American keyboards.");
-}
-
 - (void)connectionWillGoFullscreen:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo {
 	int windowLevel;
 	NSRect screenRect;
@@ -1098,6 +1094,16 @@ static NSString* byteString(double d)
 		[self windowDidResize: nil];
 		[window makeFirstResponder: rfbView];
 		[window makeKeyAndOrderFront:nil];
+	}
+}
+
+- (IBAction)makeConnectionFullscreen: (id)sender {
+	BOOL displayFullscreenWarning = [[NSUserDefaults standardUserDefaults] boolForKey: @"DisplayFullscreenWarning"];
+
+	if (displayFullscreenWarning) {
+		NSBeginAlertSheet(@"Your connection is entering fullscreen mode", @"Fullscreen", @"Cancel", nil, window, self, nil, @selector(connectionWillGoFullscreen: returnCode: contextInfo: ), nil, @"You may return to windowed mode by pressing the key combination (command-option-control-`) at any time.\n\nPlease note that the character in this key command is the back-quote, the key next to the number '1' on American keyboards.");
+	} else {
+		[self connectionWillGoFullscreen:nil returnCode:NSAlertDefaultReturn contextInfo:nil]; 
 	}
 }
 

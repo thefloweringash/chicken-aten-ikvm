@@ -48,6 +48,7 @@
     IBOutlet NSButton *rememberPwd;
 	IBOutlet NSSlider *autoscrollIncrement;
 	IBOutlet NSButton *fullscreenScrollbars;
+	IBOutlet NSButton *displayFullscreenWarning;
 	IBOutlet NSSlider *frontInverseCPUSlider;
 	IBOutlet NSSlider *otherInverseCPUSlider;
     NSMutableArray*	connections;

@@ -36,7 +36,15 @@ static RFBConnectionManager*	sharedManager = nil;
 // Jason added the +initialize method
 + (void)initialize {
     id ud = [NSUserDefaults standardUserDefaults];
-	id dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects: @"128", @"10000", [NSNumber numberWithFloat: 26.0], [NSNumber numberWithFloat: 0.0], [NSNumber numberWithFloat: 0.0], [NSNumber numberWithFloat: 0.9], nil] forKeys: [NSArray arrayWithObjects: @"PS_MAXRECTS", @"PS_THRESHOLD", @"FullscreenAutoscrollIncrement", @"FullscreenScrollbars", @"FrontFrameBufferUpdateSeconds", @"OtherFrameBufferUpdateSeconds", nil]];
+	id dict = [NSDictionary dictionaryWithObjectsAndKeys:
+		@"128", @"PS_MAXRECTS",
+		@"10000", @"PS_THRESHOLD",
+		[NSNumber numberWithFloat: 26.0], @"FullscreenAutoscrollIncrement",
+		[NSNumber numberWithFloat: 0.0],  @"FullscreenScrollbars",
+		[NSNumber numberWithFloat: 0.0], @"FrontFrameBufferUpdateSeconds",
+		[NSNumber numberWithFloat: 0.9], @"OtherFrameBufferUpdateSeconds",
+		[NSNumber numberWithBool: YES], @"DisplayFullscreenWarning",
+					   nil];
 	[ud registerDefaults: dict];
 }
 
@@ -85,6 +93,7 @@ static RFBConnectionManager*	sharedManager = nil;
     updateDelay = [ud floatForKey: @"OtherFrameBufferUpdateSeconds"];
     updateDelay = (float)[otherInverseCPUSlider maxValue] - updateDelay;
     [otherInverseCPUSlider setFloatValue: updateDelay];
+	[displayFullscreenWarning setState: [ud boolForKey:@"DisplayFullscreenWarning"]];
     
     // end jason
     [self updateProfileList:nil];
@@ -118,6 +127,7 @@ static RFBConnectionManager*	sharedManager = nil;
 	// jason added the rest
     [ud setFloat: floor([autoscrollIncrement floatValue] + 0.5) forKey:@"FullscreenAutoscrollIncrement"];
     [ud setBool:[fullscreenScrollbars floatValue] forKey:@"FullscreenScrollbars"];
+    [ud setBool:[displayFullscreenWarning state] forKey:@"DisplayFullscreenWarning"];
 }
 
 - (void)updateProfileList:(id)notification

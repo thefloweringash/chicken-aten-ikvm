@@ -20,6 +20,7 @@
 #import "RFBConnection.h"
 #import "FrameBuffer.h"
 #import "RectangleList.h"
+#import "debug.h"
 
 @implementation RFBView
 
@@ -76,7 +77,7 @@
 
     r.origin.y = b.size.height - NSMaxY(r);
     [fbuf drawRect:r at:destRect.origin];
-    [delegate queueUpdateRequest];
+    //[delegate queueUpdateRequest];
 }
 
 - (void)displayFromBuffer:(NSRect)aRect
@@ -106,6 +107,7 @@
 - (void)mouseDown:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    FULLDebug(@"%@: mouseDown", [self className]);
     buttonMask |= rfbButton1Mask;
     [delegate mouseAt:p buttons:buttonMask];
 }
@@ -129,6 +131,7 @@
 - (void)mouseUp:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    FULLDebug(@"%@: mouseUp", [self className]);
     buttonMask &= ~rfbButton1Mask;
     [delegate mouseAt:p buttons:buttonMask];
 }

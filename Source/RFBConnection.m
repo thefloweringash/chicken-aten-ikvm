@@ -420,6 +420,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 - (void)flushDrawing {
     [window enableFlushWindow];
     [window flushWindow];
+    [self queueUpdateRequest];
 }
 
 // Jason - print_data is never used, so I'm commenting it out
@@ -586,7 +587,7 @@ static void print_data(unsigned char* data, int length)
     if(thePoint.x >= s.width) thePoint.x = s.width - 1;
     if(thePoint.y >= s.height) thePoint.y = s.height - 1;
     mask = [self performButtonEmulation:mask at:thePoint];
-    //NSLog(@"mask %d", mask);
+    FULLDebug(@"mask %d lastMask %d", mask, lastMask);
     if((mouseLocation.x != thePoint.x) || (mouseLocation.y != thePoint.y) || 
        ((mask != lastMask) || (mask & (rfbButton4Mask | rfbButton5Mask)))) {
         //NSLog(@"here %d", mask);
@@ -603,6 +604,7 @@ static void print_data(unsigned char* data, int length)
             [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
         }
         /* Sigh */
+        lastMask = mask;
     }
     [self queueUpdateRequest];
 }

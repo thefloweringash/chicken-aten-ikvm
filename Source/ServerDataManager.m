@@ -101,6 +101,7 @@ static ServerDataManager* gInstance = nil;
 		
     [mServers release];
 	[mGroups release];
+	[mRendezvousNameToServer release];
 	if( nil != mServiceBrowser_VNC )
 	{
 		[mServiceBrowser_VNC release];

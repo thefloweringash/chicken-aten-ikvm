@@ -120,6 +120,7 @@
 		case EDIT_ADDRESS:
 		case EDIT_PORT:
 		case EDIT_NAME:
+		case EDIT_PASSWORD:
 		case SAVE_PASSWORD:
 		case CONNECT:
 		case DELETE:

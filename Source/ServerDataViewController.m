@@ -59,12 +59,15 @@
 }
 
 - (void)dealloc
-{	
+{
+	[(id)mServer release];
+	
 	[super dealloc];
 		
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:ProfileListChangeMsg
-												  object:(id)[ProfileDataManager sharedInstance]];}
+												  object:(id)[ProfileDataManager sharedInstance]];
+}
 
 - (void)setServer:(id<IServerData>)server
 {
@@ -105,6 +108,7 @@
 		
 		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
 		[display     setEditable:[mServer doYouSupport:EDIT_PORT]];
+		[password    setEnabled: [mServer doYouSupport:EDIT_PASSWORD]];
 		[rememberPwd setEnabled: [mServer doYouSupport:SAVE_PASSWORD]];
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];
     }
@@ -183,7 +187,7 @@
 	}
 	else if( password == sender )
 	{
-		if( nil != mServer )
+		if( nil != mServer && [mServer doYouSupport:EDIT_PASSWORD] )
 		{
 			[mServer setPassword:[sender stringValue]];
 		}

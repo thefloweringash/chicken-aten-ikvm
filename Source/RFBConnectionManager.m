@@ -37,10 +37,18 @@
 	{
 		sInstance = [[self alloc] initWithWindowNibName: @"ConnectionDialog"];
 		NSParameterAssert( sInstance != nil );
+		
+		[[NSNotificationCenter defaultCenter] addObserver:sInstance
+												 selector:@selector(applicationWillTerminate:)
+													 name:NSApplicationWillTerminateNotification object:NSApp];
 	}
 	return sInstance;
 }
 
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+	[self release];
+}
 
 - (void)wakeup
 {

@@ -23,8 +23,13 @@
 #import "sys/socket.h"
 #import "netinet/in.h"
 #import "arpa/inet.h"
+#import "KeyChain.h"
+
+#define RFB_SAVED_RENDEZVOUS_SERVERS @"RFB_SAVED_RENDEZVOUS_SERVERS"
 
 @implementation ServerFromRendezvous
+
+#define KEYCHAIN_ZEROCONF_SERVICE_NAME	@"cotvnc-zeroconf"
 
 + (id<IServerData>)createWithNetService:(NSNetService*)service
 {
@@ -43,9 +48,20 @@
 		[service_ setDelegate:self];
 		[service_ resolve];
 		
-		// Set the initial name. If will have to be validated with the
+		// Set the initial name. It will have to be validated with the
 		// delegate if one is set
 		[super setName:[service_ name]];
+		
+		NSMutableDictionary* rendServerDict = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
+		NSMutableDictionary* propertyDict = [rendServerDict objectForKey:[service_ name]];
+		if ( propertyDict )
+		{
+			_rememberPassword = [[propertyDict objectForKey:@"rememberPassword"] boolValue];
+			_display          = [[propertyDict objectForKey:@"display"] intValue];
+			_shared           = [[propertyDict objectForKey:@"shared"] boolValue];
+			_fullscreen       = [[propertyDict objectForKey:@"fullscreen"] boolValue];
+			_lastProfile      = [propertyDict objectForKey:@"lastProfile"];
+		}
 	}
 	
 	return self;
@@ -53,7 +69,37 @@
 
 - (void)dealloc
 {
+	[self save];
 	[service_ release];
+}
+
+- (void)save
+{
+	// This code is extremely inefficient since we are rebuilding the dictionary of rendezvous servers
+	// for each rendezvous server saved.
+	
+	NSMutableDictionary* propertyDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithBool:_rememberPassword],	[NSString stringWithString:@"rememberPassword"],
+		[NSNumber numberWithInt:_display],				[NSString stringWithString:@"display"],
+		[NSNumber numberWithBool:_shared],				[NSString stringWithString:@"shared"],
+		[NSNumber numberWithBool:_fullscreen],			[NSString stringWithString:@"fullscreen"],
+		_lastProfile,									[NSString stringWithString:@"lastProfile"],
+		nil,											nil];
+
+	NSDictionary* defaultServerDict = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
+	NSMutableDictionary* rendServerDict = [NSMutableDictionary dictionaryWithDictionary:defaultServerDict];
+	
+	if( nil == rendServerDict )
+	{
+		[[NSUserDefaults standardUserDefaults] setObject:[NSMutableDictionary dictionary] forKey:RFB_SAVED_RENDEZVOUS_SERVERS];
+		
+		defaultServerDict = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
+		assert( nil != defaultServerDict );
+		rendServerDict = [NSMutableDictionary dictionaryWithDictionary:defaultServerDict];
+	}
+	
+	[rendServerDict setObject:propertyDict forKey:[service_ name]];
+	[[NSUserDefaults standardUserDefaults] setObject:rendServerDict forKey:RFB_SAVED_RENDEZVOUS_SERVERS];
 }
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type
@@ -63,10 +109,11 @@
 		case EDIT_ADDRESS:
 		case EDIT_PORT:
 		case EDIT_NAME:
-		case SAVE_PASSWORD:
 		case DELETE:
 		case SERVER_SAVE:
 			return NO;
+		case EDIT_PASSWORD:
+		case SAVE_PASSWORD:
 		case CONNECT:
 			return (bHasResolved && bResloveSucceeded);
 		default:
@@ -94,11 +141,6 @@
 	{
 		return NSLocalizedString( @"Resolving", nil );
 	}
-}
-
-- (bool)rememberPassword
-{
-	return false;
 }
 
 - (int)display
@@ -147,6 +189,41 @@
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
+														
+	// Finally, load the password
+	if( YES == _rememberPassword )
+	{
+		[self setPassword:[NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_ZEROCONF_SERVICE_NAME account:[service_ name]]]];
+	}
+}
+
+- (void)setPassword: (NSString*)password
+{
+	[super setPassword:password];
+	
+	// only save if set to do so
+	if( YES == _rememberPassword && YES == bHasResolved && YES == bResloveSucceeded)
+	{
+		[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_ZEROCONF_SERVICE_NAME account:[service_ name]];
+	}
+}
+
+- (void)setRememberPassword: (bool)rememberPassword
+{
+	[super setRememberPassword:rememberPassword];
+	
+	// make sure that the saved password reflects the new remember password setting
+	if( YES == bHasResolved && YES == bResloveSucceeded)
+	{
+		if( YES == _rememberPassword )
+		{
+			[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_ZEROCONF_SERVICE_NAME account:[service_ name]];
+		}
+		else
+		{
+			[[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_ZEROCONF_SERVICE_NAME account:[service_ name]];
+		}
+	}
 }
 
 @end

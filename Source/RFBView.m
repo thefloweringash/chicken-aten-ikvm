@@ -185,16 +185,18 @@
 // jason - this doesn't work, I think because the server I'm testing against doesn't support
 // rfbButton4Mask and rfbButton5Mask (8 & 16).  They're not a part of rfbProto, so that ain't
 // too surprising.
-/*
+
 - (void)scrollWheel:(NSEvent *)theEvent {
+  int  addMask;
     NSPoint	p = [self convertPoint:[[self window] convertScreenToBase: [NSEvent mouseLocation]] fromView:nil];
-	if ([theEvent deltaY] < 0.0)
-		buttonMask |= 8;
+    if ([theEvent deltaY] > 0.0)
+      addMask = rfbButton4Mask;
 	else
-		buttonMask |= 16;
-    [delegate mouseAt:p buttons:buttonMask];
+      addMask = rfbButton5Mask;
+    [delegate mouseAt:p buttons:(buttonMask | addMask)];	// 'Mouse button down'
+    [delegate mouseAt:p buttons:0];				// 'Mouse button up'
 }
-*/
+
 
 - (void)keyDown:(NSEvent *)theEvent
 {

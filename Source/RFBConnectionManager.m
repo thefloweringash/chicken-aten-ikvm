@@ -267,7 +267,8 @@ static RFBConnectionManager*	sharedManager = nil;
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
-	if ([[NSApp windows] count] == 0) {
+	//if ([[NSApp windows] count] == 0) {  // Good idea, but it don't work (under 10.1)
+	if (![self haveAnyConnections]) {
         [loginPanel makeKeyAndOrderFront:self];
     }
 }

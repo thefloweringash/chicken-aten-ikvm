@@ -574,14 +574,23 @@ static void print_data(unsigned char* data, int length)
     if(thePoint.x >= s.width) thePoint.x = s.width - 1;
     if(thePoint.y >= s.height) thePoint.y = s.height - 1;
     mask = [self performButtonEmulation:mask at:thePoint];
-    if((mouseLocation.x != thePoint.x) || (mouseLocation.y != thePoint.y) || (mask != lastMask)) {
+    //NSLog(@"mask %d", mask);
+    if((mouseLocation.x != thePoint.x) || (mouseLocation.y != thePoint.y) || 
+       ((mask != lastMask) || (mask & (rfbButton4Mask | rfbButton5Mask)))) {
+        //NSLog(@"here %d", mask);
         mouseLocation = thePoint;
         msg.type = rfbPointerEvent;
         msg.buttonMask = mask;
         msg.x = thePoint.x; msg.x = htons(msg.x);
         msg.y = b.size.height - thePoint.y; msg.y = htons(msg.y);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-        lastMask = mask;
+        /* HACK this code should really go in the view code. */
+        /* I think that ALL events should probably be caught using NSWindow's nextEventMatchingMask:NSAnyEventMask */
+        if (mask & (rfbButton4Mask | rfbButton5Mask)) {
+            msg.buttonMask = mask & !(rfbButton4Mask | rfbButton5Mask);
+            [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+        }
+        /* Sigh */
     }
 }
 

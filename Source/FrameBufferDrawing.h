@@ -93,6 +93,15 @@ static inline unsigned int cvt_pixel(unsigned char* v, FrameBuffer *this)
     *((FBColor*)fbc) = cvt_pixel(pixValue, self);
 }
 
+- (void)fillColor:(FrameBufferColor*)fbc fromTightPixel:(unsigned char*)pixValue
+{
+	if([self tightBytesPerPixel] == 3) {
+		*((FBColor*)fbc) = cvt_pixel24(pixValue, self);
+	} else {
+		*((FBColor*)fbc) = cvt_pixel(pixValue, self);
+	}
+}
+
 /* --------------------------------------------------------------------------------- */
 - (void)fillRect:(NSRect)aRect withColor:(FBColor)aColor
 {	
@@ -112,11 +121,59 @@ printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect
     lines = aRect.size.height;
     stride = size.width - aRect.size.width;
     while(lines--) {
-        for(i=0; i<aRect.size.width; i++) {
+        for(i=aRect.size.width; i; i--) {
             *start++ = aColor;
         }
         start += stride;
     }
+}
+
+/* --------------------------------------------------------------------------------- */
+- (void)putRect:(NSRect)aRect withColors:(FrameBufferPaletteIndex*)data fromPalette:(FrameBufferColor*)palette
+{
+	FBColor*		start;
+	unsigned int	stride, i, lines;
+
+    start = pixels + (int)(aRect.origin.y * size.width) + (int)aRect.origin.x;
+    lines = aRect.size.height;
+    stride = size.width - aRect.size.width;
+    while(lines--) {
+        for(i=aRect.size.width; i; i--) {
+            *start++ = *((FBColor*)(palette + *data));
+			data++;
+        }
+        start += stride;
+    }
+}
+
+/* --------------------------------------------------------------------------------- */
+- (void)putRun:(FrameBufferColor*)fbc ofLength:(int)length at:(NSRect)aRect pixelOffset:(int)offset
+{
+	FBColor*		start;
+	unsigned int	stride, width;
+	unsigned int	offLines, offPixels;
+
+	offLines = offset / (int)aRect.size.width;
+	offPixels = offset - (offLines * (int)aRect.size.width);
+	width = aRect.size.width - offPixels;
+	offLines += aRect.origin.y;
+	offPixels += aRect.origin.x;
+	start = pixels + (int)(offLines * size.width + offPixels);
+    stride = size.width - aRect.size.width;
+	if(width > length) {
+		width = length;
+	}
+	do {
+		length -= width;
+		while(width--) {
+			*start++ = *((FBColor*)fbc);
+		}
+		start += stride;
+		width = aRect.size.width;
+		if(width > length) {
+			width = length;
+		}
+	} while(width > 0);
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -181,13 +238,13 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
         src = pixels + (int)(src_start_y * size.width) + (int)src_start_x;
         dst = pixels + (int)(dst_start_y * size.width) + (int)dst_start_x;
         while(lines--) {
-                for(i=0; i<aRect.size.width; i++) {
-                        *dst = *src;
-                        dst += line_step;
-                        src += line_step;
-                }
-                dst += stride;
-                src += stride;
+			for(i=aRect.size.width; i; i--) {
+				*dst = *src;
+				dst += line_step;
+				src += line_step;
+			}
+			dst += stride;
+			src += stride;
         }
 }
 
@@ -211,7 +268,7 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
         lines = aRect.size.height;
         stride = size.width - aRect.size.width;
         while(lines--) {
-            for(i=0; i<aRect.size.width; i++) {
+			for(i=aRect.size.width; i; i--) {
                 *start++ = cvt_pixel24(data, self);
                 data += 3;
             }
@@ -220,6 +277,31 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
     } else {
         [self putRect:aRect fromData:data];
     }
+}
+
+/* --------------------------------------------------------------------------------- */
+- (void)putRect:(NSRect)aRect fromRGBBytes:(unsigned char*)rgb
+{
+	FBColor* start;
+	unsigned int stride, i, lines, col;
+
+#ifdef PINFO
+	putRectCount++;
+	pubPixelCount += aRect.size.width * aRect.size.height;
+#endif
+
+    start = pixels + (int)(aRect.origin.y * size.width) + (int)aRect.origin.x;
+    lines = aRect.size.height;
+    stride = size.width - aRect.size.width;
+	while(lines--) {
+        for(i=aRect.size.width; i; i--) {
+			col = redClut[(maxValue * *rgb++) / 255];
+			col += greenClut[(maxValue * *rgb++) / 255];
+			col += blueClut[(maxValue * *rgb++) / 255];
+			*start++ = col;
+		}
+		start += stride;
+	}
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -249,7 +331,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 	switch(pixelFormat.bitsPerPixel / 8) {
 		case 1:
 			while(lines--) {
-				for(i=0; i<aRect.size.width; i++) {
+				for(i=aRect.size.width; i; i--) {
 					pix = *data++;
 					CLUT(col, pix);
 					*start++ = col;
@@ -260,7 +342,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 		case 2:
 			if(pixelFormat.bigEndian) {
 				while(lines--) {
-					for(i=0; i<aRect.size.width; i++) {
+					for(i=aRect.size.width; i; i--) {
 						pix = *data++; pix <<= 8; pix += *data++;
 						CLUT(col, pix);
 						*start++ = col;
@@ -269,7 +351,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 				}
 			} else {
 				while(lines--) {
-					for(i=0; i<aRect.size.width; i++) {
+					for(i=aRect.size.width; i; i--) {
 						pix = *data++; pix += (((unsigned int)*data++) << 8);
 						CLUT(col, pix);
 						*start++ = col;
@@ -281,7 +363,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 		case 4:
 			if(pixelFormat.bigEndian) {
 				while(lines--) {
-					for(i=0; i<aRect.size.width; i++) {
+					for(i=aRect.size.width; i; i--) {
 						pix = *data++; pix <<= 8;
 						pix += *data++; pix <<= 8;
 						pix += *data++; pix <<= 8;
@@ -293,7 +375,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 				}
 			} else {
 				while(lines--) {
-					for(i=0; i<aRect.size.width; i++) {
+					for(i=aRect.size.width; i; i--) {
 						pix = *data++;
 						pix += (((unsigned int)*data++) << 8);
 						pix += (((unsigned int)*data++) << 16);

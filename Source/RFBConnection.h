@@ -54,14 +54,12 @@
     id scrollView;
     id newTitleField;
     id newTitlePanel;
-    id mouseLocationTimer;
     id emulate3ButtonTimer;
     id statisticField;
     unsigned lastButtonMask;				// no emulation
     unsigned lastComuptedMask;				// emulated
     unsigned int lastModifier;
     unsigned lastMask;					// emulation
-    float mouseUpdateFrequency;
     BOOL terminating;
     NSPoint	mouseButtonPressedLocation;		// store buttonpress for emulation
     NSPoint	mouseLocation;
@@ -92,6 +90,7 @@
 	NSTrackingRectTag _bottomTrackingTag; // jason added for fullscreen display
 	NSTrackingRectTag _currentTrackingTag; // jason added for fullscreen display
 	NSTimer *_timer; // jason added for fullscreen display
+	NSTrackingRectTag _mouseMovedTrackingTag;
 }
 
 // jason added 'owner' for fullscreen display
@@ -138,8 +137,10 @@
 - (BOOL)connectionIsFullscreen;
 - (IBAction)makeConnectionWindowed: (id)sender;
 - (IBAction)makeConnectionFullscreen: (id)sender;
-- (void)installTrackingRects;
-- (void)removeTrackingRects;
+- (void)installMouseMovedTrackingRect;
+- (void)installFullscreenTrackingRects;
+- (void)removeFullscreenTrackingRects;
+- (void)removeMouseMovedTrackingRect;
 - (void)mouseEntered:(NSEvent *)theEvent;
 - (void)mouseExited:(NSEvent *)theEvent;
 - (void)beginFullscreenScrolling;

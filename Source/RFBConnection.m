@@ -127,7 +127,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     profile = [p retain];
 	_owner = owner; // jason added for fullscreen display
 	_isFullscreen = NO; // jason added for fullscreen display
-    mouseUpdateFrequency = 0.05;
     if((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         [self perror:@"Open Connection" call:@"socket()"];
         [self release];
@@ -169,8 +168,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
     int fd = [socketHandler fileDescriptor];
 
-    [mouseLocationTimer invalidate];
-    [mouseLocationTimer release];
 //    [window release]; // jason set the NIB to release on close - this is for fullscreen
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [manager release];
@@ -327,19 +324,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     maxSize = wf.size;
 */
     [window makeFirstResponder:rfbView];
+	[self windowDidResize: nil];
     [window makeKeyAndOrderFront:self];
-    if(mouseLocationTimer == nil) {
-        mouseLocationTimer = [[NSTimer scheduledTimerWithTimeInterval:mouseUpdateFrequency target:self selector:@selector(updateMouse:) userInfo:nil repeats:YES] retain];
-    }
     [window display];
-}
-
-- (void)updateMouse:(id)theTimer
-{
-    NSPoint p = [window mouseLocationOutsideOfEventStream];
-
-    p = [rfbView convertPoint:p fromView:nil];
-    [self mouseAt:p buttons:lastButtonMask];
 }
 
 - (void)setNewTitle:(id)sender
@@ -447,7 +434,6 @@ static void print_data(unsigned char* data, int length)
     [emulate3ButtonTimer invalidate];
     emulate3ButtonTimer = nil;
     lastComuptedMask = lastButtonMask;
-    [self updateMouse:nil];
 }
 
 #define _ABS(x)	(((x)<0.0)?(-(x)):(x))
@@ -808,25 +794,18 @@ static void print_data(unsigned char* data, int length)
 - (void)windowDidDeminiaturize:(NSNotification *)aNotification
 {
     [rfbProtocol continueUpdate];
-    [self windowDidBecomeKey:nil];
+	[self installMouseMovedTrackingRect];
 }
 
 - (void)windowDidMiniaturize:(NSNotification *)aNotification
 {
     [rfbProtocol stopUpdate];
-    [self windowDidResignKey:nil];
+	[self removeMouseMovedTrackingRect];
 }
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
     [self terminateConnection:nil];
-}
-
-- (void)windowDidResignKey:(NSNotification *)aNotification
-{
-    [mouseLocationTimer invalidate];
-    [mouseLocationTimer release];
-    mouseLocationTimer = nil;
 }
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
@@ -842,19 +821,27 @@ static void print_data(unsigned char* data, int length)
 {
 	[scrollView setHasHorizontalScroller:horizontalScroll];
 	[scrollView setHasVerticalScroller:verticalScroll];
-	// jason added
 	if (_isFullscreen) {
-		[self removeTrackingRects];
-		[self installTrackingRects];
+		[self removeFullscreenTrackingRects];
+		[self installFullscreenTrackingRects];
 	}
-	// end jason
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
-    if(mouseLocationTimer == nil) {
-        mouseLocationTimer = [[NSTimer scheduledTimerWithTimeInterval:mouseUpdateFrequency target:self selector:@selector(updateMouse:) userInfo:nil repeats:YES] retain];
-    }
+	[self installMouseMovedTrackingRect];
+}
+
+- (void)windowDidResignKey:(NSNotification *)aNotification
+{
+	[self removeMouseMovedTrackingRect];
+}
+
+- (void)viewFrameDidChange:(NSNotification *)aNotification
+{
+	[self removeMouseMovedTrackingRect];
+	[self installMouseMovedTrackingRect];
+    [window invalidateCursorRectsForView: rfbView];
 }
 
 - (void)openOptions:(id)sender
@@ -902,7 +889,7 @@ static NSString* byteString(double d)
 }
 
 - (IBAction)makeConnectionWindowed: (id)sender {
-	[self removeTrackingRects];
+	[self removeFullscreenTrackingRects];
 	[scrollView retain];
 	[scrollView removeFromSuperview];
 	[window setDelegate: nil];
@@ -961,14 +948,23 @@ static NSString* byteString(double d)
 		[self _maxSizeForWindowSize: screenRect.size];
 		[scrollView setHasHorizontalScroller:horizontalScroll];
 		[scrollView setHasVerticalScroller:verticalScroll];
-		[self installTrackingRects];
+		[self installFullscreenTrackingRects];
 		[self windowDidResize: nil];
 		[window makeFirstResponder: rfbView];
 		[window makeKeyAndOrderFront:nil];
 	}
 }
 
-- (void)installTrackingRects {
+- (void)installMouseMovedTrackingRect
+{
+	NSPoint mousePoint = [rfbView convertPoint: [window convertScreenToBase: [NSEvent mouseLocation]] fromView: nil];
+	BOOL mouseInVisibleRect = [rfbView mouse: mousePoint inRect: [rfbView visibleRect]];
+	_mouseMovedTrackingTag = [rfbView addTrackingRect: [rfbView visibleRect] owner: self userData: nil assumeInside: mouseInVisibleRect];
+	if (mouseInVisibleRect)
+		[window setAcceptsMouseMovedEvents: YES];
+}
+
+- (void)installFullscreenTrackingRects {
 	NSRect scrollRect = [scrollView bounds];
 	const float minX = NSMinX(scrollRect);
 	const float minY = NSMinY(scrollRect);
@@ -991,7 +987,13 @@ static NSString* byteString(double d)
 	_bottomTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
 }
 
-- (void)removeTrackingRects {
+- (void)removeMouseMovedTrackingRect
+{
+	[rfbView removeTrackingRect: _mouseMovedTrackingTag];
+	[window setAcceptsMouseMovedEvents: NO];
+}
+
+- (void)removeFullscreenTrackingRects {
 	[self endFullscreenScrolling];
 	[scrollView removeTrackingRect: _leftTrackingTag];
 	[scrollView removeTrackingRect: _topTrackingTag];
@@ -1000,12 +1002,23 @@ static NSString* byteString(double d)
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-	_currentTrackingTag = [theEvent trackingNumber];
-	[self beginFullscreenScrolling];
+	NSTrackingRectTag trackingNumber = [theEvent trackingNumber];
+	
+	if (trackingNumber == _mouseMovedTrackingTag)
+		[window setAcceptsMouseMovedEvents: YES];
+	else {
+		_currentTrackingTag = trackingNumber;
+		[self beginFullscreenScrolling];
+	}
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-	[self endFullscreenScrolling];
+	NSTrackingRectTag trackingNumber = [theEvent trackingNumber];
+
+	if (trackingNumber == _mouseMovedTrackingTag)
+		[window setAcceptsMouseMovedEvents: NO];
+	else
+		[self endFullscreenScrolling];
 }
 
 - (void)beginFullscreenScrolling {

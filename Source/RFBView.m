@@ -56,19 +56,17 @@
 	p.x = p.y = hs;
 	[cursor autorelease];
 	cursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:p];
-        [[self window] invalidateCursorRectsForView:self];
+    [[self window] invalidateCursorRectsForView:self];
 }
 
 - (void)setDelegate:(id)aDelegate
 {
     delegate = aDelegate;
     if(!cursor) {
-        NSPoint p;
-        id cursorImage = [NSImage imageNamed:@"rfbCursor"];
-        p.x = p.y = 7;
-        cursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:p];
-        [[self window] invalidateCursorRectsForView:self];
+		[self setCursorTo: @"rfbCursor" hotSpot: 7];
     }
+	[self setPostsFrameChangedNotifications: YES];
+	[[NSNotificationCenter defaultCenter] addObserver: delegate selector: @selector(viewFrameDidChange:) name: NSViewFrameDidChangeNotification object: self];
 }
 
 - (void)drawRect:(NSRect)destRect
@@ -148,6 +146,14 @@
 		buttonMask &= ~rfbButton2Mask;
 		[delegate mouseAt:p buttons:buttonMask];
 	}
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent {
+	[[self window] setAcceptsMouseMovedEvents: YES];
+}
+
+- (void)mouseExited:(NSEvent *)theEvent {
+	[[self window] setAcceptsMouseMovedEvents: NO];
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent

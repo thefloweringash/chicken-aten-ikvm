@@ -368,6 +368,11 @@
 //F52
 //F53
 //F54
+		F52128A40367D6DD01F702E0 = {
+			isa = PBXFileReference;
+			path = "GNU Public License";
+			refType = 4;
+		};
 		F56D311F0353B4DF01000103 = {
 			isa = PBXFileReference;
 			path = "Chicken of the VNC.rtf";
@@ -537,7 +542,7 @@
 				F5DC718D033DB45F01A8010C,
 				F5DC718E033DB45F01A8010C,
 				F56D311F0353B4DF01000103,
-				F5DC7190033DB45F01A8010C,
+				F52128A40367D6DD01F702E0,
 				F5DC7191033DB45F01A8010C,
 			);
 			isa = PBXGroup;
@@ -552,11 +557,6 @@
 		F5DC718E033DB45F01A8010C = {
 			isa = PBXFileReference;
 			path = CHANGES;
-			refType = 4;
-		};
-		F5DC7190033DB45F01A8010C = {
-			isa = PBXFileReference;
-			path = COPYING;
 			refType = 4;
 		};
 		F5DC7191033DB45F01A8010C = {

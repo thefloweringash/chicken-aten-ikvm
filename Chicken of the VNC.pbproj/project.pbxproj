@@ -355,6 +355,16 @@
 //E22
 //E23
 //E24
+		E228FA2704439B7D00F873F6 = {
+			isa = PBXFileReference;
+			path = Bugs.rtf;
+			refType = 4;
+		};
+		E228FA2804439B7D00F873F6 = {
+			isa = PBXFileReference;
+			path = "Version History.rtf";
+			refType = 4;
+		};
 		E2F48D74040EDD2200BD55BA = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -647,25 +657,13 @@
 		F5DC718B033DB45F01A8010C = {
 			children = (
 				F52128E30368AF9F01F702E0,
-				F5DC718D033DB45F01A8010C,
-				F5DC718E033DB45F01A8010C,
+				E228FA2704439B7D00F873F6,
 				F52128E40368AF9F01F702E0,
 				F5DC7191033DB45F01A8010C,
+				E228FA2804439B7D00F873F6,
 			);
 			isa = PBXGroup;
 			path = Documentation;
-			refType = 4;
-		};
-		F5DC718D033DB45F01A8010C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = BUGS;
-			refType = 4;
-		};
-		F5DC718E033DB45F01A8010C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = CHANGES;
 			refType = 4;
 		};
 		F5DC7191033DB45F01A8010C = {

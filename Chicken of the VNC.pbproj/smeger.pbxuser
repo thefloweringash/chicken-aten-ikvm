@@ -5,7 +5,6 @@
 		activeExecutable = F5DA76F7033DB38701A8010C;
 		activeTarget = 29B97326FDCFA39411CA2CEA;
 		addToTargets = (
-			29B97326FDCFA39411CA2CEA,
 		);
 		breakpoints = (
 		);
@@ -13,7 +12,7 @@
 			F5DA76F7033DB38701A8010C,
 		);
 		perUserDictionary = {
-			PBXPerProjectTemplateStateSaveDate = 68088156;
+			PBXPerProjectTemplateStateSaveDate = 71539557;
 			PBXWorkspaceContents = (
 				{
 					LeftSlideOut = {
@@ -21,7 +20,7 @@
 							Split0 = {
 								NavCount = 1;
 								NavGeometry0 = {
-									Frame = "{{0, 0}, {571, 548}}";
+									Frame = "{{0, 0}, {712, 657}}";
 									NavBarVisible = YES;
 								};
 								NavSplitVertical = NO;
@@ -54,17 +53,17 @@
 			);
 			PBXWorkspaceGeometries = (
 				{
-					ContentSize = "{855, 571}";
+					ContentSize = "{996, 680}";
 					LeftSlideOut = {
 						ActiveTab = 0;
 						ActiveTabName = PBXGroupTreeModule;
 						Collapsed = NO;
-						Frame = "{{0, 23}, {855, 548}}";
+						Frame = "{{0, 23}, {996, 657}}";
 						Split0 = {
 							Collapsed = NO;
-							Frame = "{{284, 0}, {571, 548}}";
+							Frame = "{{284, 0}, {712, 657}}";
 							Split0 = {
-								Frame = "{{0, 0}, {571, 548}}";
+								Frame = "{{0, 0}, {712, 657}}";
 							};
 							SplitCount = 1;
 							Tab0 = {
@@ -126,7 +125,7 @@
 						};
 						SplitCount = 1;
 						Tab0 = {
-							Frame = "{{0, 0}, {260, 548}}";
+							Frame = "{{0, 0}, {260, 657}}";
 							GroupTreeTableConfiguration = (
 								SCMStatusColumn,
 								22,
@@ -181,10 +180,10 @@
 					StatusViewVisible = YES;
 					Template = 64ABBB4501FA494900185B06;
 					ToolbarVisible = YES;
-					WindowLocation = "{4, 113}";
+					WindowLocation = "{4, 4}";
 				},
 			);
-			PBXWorkspaceStateSaveDate = 68088156;
+			PBXWorkspaceStateSaveDate = 71539557;
 		};
 		projectwideBuildSettings = {
 		};

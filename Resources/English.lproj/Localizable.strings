@@ -1,2 +1,5 @@
 "RFBDefaultServerName" = "New Server";
 "Connecting..." = "Connecting...";
+
+// Profiles
+"defaultProfileName" = "Default Profile";

@@ -21,16 +21,17 @@
 #import "FrameBufferUpdateReader.h"
 #import "ByteBlockReader.h"
 #import "RawEncodingReader.h"
-#import "CoRREEncodingReader.h"
-#import "RREEncodingReader.h"
-#import "HextileEncodingReader.h"
-#import "RFBConnection.h"
 #import "CopyRectangleEncodingReader.h"
+#import "CoRREEncodingReader.h"
+#import "HextileEncodingReader.h"
+#import "PrefController.h"
+#import "RFBConnection.h"
 #import "RFBConnectionManager.h"
+#import "RREEncodingReader.h"
 #import "TightEncodingReader.h"
 #import "ZlibEncodingReader.h"
-#import "ZRLEEncodingReader.h"
 #import "ZlibHexEncodingReader.h"
+#import "ZRLEEncodingReader.h"
 
 #import "debug.h"
 
@@ -39,9 +40,9 @@
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
     if (self = [super initTarget:aTarget action:anAction]) {
-		id ud = [NSUserDefaults standardUserDefaults];
-		NSString* pst = [ud objectForKey:@"PS_THRESHOLD"];
-		NSString* mpr = [ud objectForKey:@"PS_MAXRECTS"];
+		PrefController *prefs = [PrefController sharedController];
+		int pst = [prefs PS_THRESHOLD];
+		int mpr = [prefs PS_MAXRECTS];
 
 		headerReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setHeader:) size:3];
 		rawEncodingReader = [[RawEncodingReader alloc] initTarget:self action:@selector(didRect:)];
@@ -55,16 +56,10 @@
 		zlibHexEncodingReader = [[ZlibHexEncodingReader alloc] initTarget:self action:@selector(didRect:)];
 		rectHeaderReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setRect:) size:12];
 		connection = [target topTarget];
-		if(pst) {
-			unsigned int i = [pst intValue];
-			[rreEncodingReader setPSThreshold:i];
-			[coRreEncodingReader setPSThreshold:i];
-		}
-		if(mpr) {
-			unsigned int i = [mpr intValue];
-			[rreEncodingReader setMaximumPSRectangles:i];
-			[coRreEncodingReader setMaximumPSRectangles:i];
-		}
+		[rreEncodingReader setPSThreshold:pst];
+		[coRreEncodingReader setPSThreshold:pst];
+		[rreEncodingReader setMaximumPSRectangles:mpr];
+		[coRreEncodingReader setMaximumPSRectangles:mpr];
 	}
     return self;
 }

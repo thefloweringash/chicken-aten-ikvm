@@ -23,6 +23,8 @@
 #import "ServerDataViewController.h"
 #import "IServerData.h"
 #import "ProfileDataManager.h"
+#import "ProfileManager.h"
+#import "ServerDataManager.h"
 
 @implementation ServerDataViewController
 
@@ -88,12 +90,18 @@
 	// Set properties in dialog box
     if (mServer != nil)
 	{
+		[hostName setEnabled: YES];
+		[password setEnabled: YES];
+		[display setEnabled: YES];
+		[shared setEnabled: YES];
+		[profilePopup setEnabled: YES];
+		
 		[hostName setStringValue:[mServer host]];
 		[password setStringValue:[mServer password]];
         [rememberPwd setIntValue:[mServer rememberPassword]];
         [display setIntValue:[mServer display]];
         [shared setIntValue:[mServer shared]];
-		[profilePopup selectItemWithTitle:[mServer lastProfile]];
+		[self setProfilePopupToProfile: [mServer lastProfile]];
 		
 		[hostName    setEditable:[mServer doYouSupport:EDIT_ADDRESS]];
 		[display     setEditable:[mServer doYouSupport:EDIT_PORT]];
@@ -102,12 +110,20 @@
     }
 	else
 	{
+		[hostName setEnabled: NO];
+		[password setEnabled: NO];
+		[rememberPwd setEnabled: NO];
+		[display setEnabled: NO];
+		[shared setEnabled: NO];
+		[profilePopup setEnabled: NO];
+		[connectBtn setEnabled: NO];
+
 		[hostName setStringValue:@""];
 		[password setStringValue:@""];
 		[rememberPwd setIntValue:0];
 		[display setStringValue:@""];
 		[shared setIntValue:0];
-		[profilePopup selectItemAtIndex:0]; 
+		[self setProfilePopupToProfile: nil];
 	}
 }
 
@@ -115,6 +131,15 @@
 - (void)updateProfileView:(id)notification
 {
 	[self loadProfileIntoView];
+}
+
+- (void)setProfilePopupToProfile: (NSString *)profileName
+{
+	ProfileManager *profiles = [ProfileManager sharedManager];
+	if ( profileName && [profiles profileNamed: profileName] )
+		[profilePopup selectItemWithTitle: profileName];
+	else
+		[profilePopup selectItemWithTitle: [[profiles defaultProfile] profileName]];
 }
 
 - (void)loadProfileIntoView
@@ -125,10 +150,7 @@
 	
 	[profilePopup addItemsWithTitles:profileKeys];
 	
-	if( nil != mServer )
-	{
-		[profilePopup selectItemWithTitle:[mServer lastProfile]];
-	}
+	[self setProfilePopupToProfile: [mServer lastProfile]];
 }
 
 - (id<IServerData>)server
@@ -139,22 +161,6 @@
 - (void)setConnectionDelegate:(id)delegate
 {
 	mDelegate = delegate;
-}
-
-- (void)controlTextDidChange:(NSNotification*)notification
-{
-	if( [notification object] == display )
-	{
-		[self displayChanged:display];
-	}
-	else if( [notification object] == password )
-	{
-		[self passwordChanged:password];
-	}
-	else if( [notification object] == hostName )
-	{
-		[self hostChanged:hostName];
-	}
 }
 
 - (void)hostChanged:(id)sender

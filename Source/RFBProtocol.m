@@ -20,14 +20,14 @@
 
 #import "RFBProtocol.h"
 #import "CARD8Reader.h"
+#import "FrameBuffer.h"
+#import "FrameBufferUpdateReader.h"
+#import "PrefController.h"
+#import "Profile.h"
 #import "RFBServerInitReader.h"
 #import "RFBConnection.h"
-#import "FrameBufferUpdateReader.h"
-#import "SetColorMapEntriesReader.h"
 #import "ServerCutTextReader.h"
-#import "FrameBuffer.h"
-#import "RFBConnectionManager.h"
-#import "Profile.h"
+#import "SetColorMapEntriesReader.h"
 
 @implementation RFBProtocol
 
@@ -125,7 +125,7 @@
         if(!aFormat->redMax || !aFormat->bitsPerPixel) {
             NSLog(@"Server proposes invalid format: redMax = %d, bitsPerPixel = %d, using local format",
                   aFormat->redMax, aFormat->bitsPerPixel);
-            [RFBConnectionManager getLocalPixelFormat:aFormat];
+            [[PrefController sharedController] getLocalPixelFormat:aFormat];
             aFormat->bigEndian = [FrameBuffer bigEndian];
         }
     } else {

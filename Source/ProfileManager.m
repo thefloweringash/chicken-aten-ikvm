@@ -17,356 +17,378 @@
  */
 
 #import "ProfileManager.h"
+#import "NSObject_Chicken.h"
+#import "ProfileManager_private.h"
 #import "ProfileDataManager.h"
 
-#define NUMENCODINGS			8
 
-static const NSString* encodingNames[NUMENCODINGS] = {
-	@"Zlib",
+static const NSString* gEncodingNames[NUMENCODINGS] = {
 	@"ZRLE",
-	@"ZlibHex",
     @"Tight",
+	@"Zlib",
+	@"ZlibHex",
     @"Hextile",
-    @"RRE",
     @"CoRRE",
+    @"RRE",
     @"Raw"
 };
 
-static const unsigned int encodingValues[NUMENCODINGS] = {
-	rfbEncodingZlib,
+
+const unsigned int gEncodingValues[NUMENCODINGS] = {
 	rfbEncodingZRLE,
-	rfbEncodingZlibHex,
 	rfbEncodingTight,
+	rfbEncodingZlib,
+	rfbEncodingZlibHex,
 	rfbEncodingHextile,
-    rfbEncodingRRE,
     rfbEncodingCoRRE,
+    rfbEncodingRRE,
     rfbEncodingRaw
 };
 
+
+// --- Dictionary Keys --- //
+NSString *kProfile_PixelFormat_Key = @"PixelFormat";
+NSString *kProfile_E3BTimeout_Key = @"E3BTimeout";
+NSString *kProfile_EmulateKeyDown_Key = @"MKDTimeout";
+NSString *kProfile_EmulateKeyboard_Key = @"EKBTimeout";
+NSString *kProfile_EnableCopyrect_Key = @"EnableCopyRect";
+NSString *kProfile_Encodings_Key = @"Encodings";
+NSString *kProfile_EncodingValue_Key = @"ID";
+NSString *kProfile_EncodingEnabled_Key = @"Enabled";
+NSString *kProfile_LocalAltModifier_Key = @"NewAltKey";
+NSString *kProfile_LocalCommandModifier_Key = @"NewCommandKey";
+NSString *kProfile_LocalControlModifier_Key = @"NewControlKey";
+NSString *kProfile_LocalShiftModifier_Key = @"NewShiftKey";
+NSString *kProfile_IsDefault_Key = @"IsDefault";
+
+// --- Notifications --- //
+NSString *ProfileAddDeleteNotification = @"ProfileAddedOrDeleted";
+
+static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
+
+
 @implementation ProfileManager
 
-+ (CARD32)encodingValue:(int)index
+#pragma mark Shared Instance
+
++ (id)sharedManager 
 {
-    return encodingValues[index];
+	static id sInstance = nil;
+	if ( ! sInstance )
+	{
+		sInstance = [[self alloc] initWithWindowNibName: @"ProfileManager"];
+		NSParameterAssert( sInstance != nil );
+	}
+	return sInstance;
 }
 
-+ (NSMutableArray*)getEncodings
-{
-    int i;
-    
-    NSMutableArray* encodings = [NSMutableArray array];
-    for(i=0; i<NUMENCODINGS; i++) {
-        [encodings addObject:[NSString stringWithFormat:@"%d", i]];
-    }
-    return encodings;
-}
 
 - (void)wakeup
 {
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+	// make sure our window is loaded
+	[self window];
+	
+	[mEncodingTableView setTarget:self];
+    [mEncodingTableView setDoubleAction:@selector(toggleSelectedEncodingEnabled:)];
+    [self _selectProfileAtIndex: 0];
 
-	if( 0 == [profiles count] ) {
-		NSMutableDictionary* def;
+	NSArray *dragTypes = [NSArray arrayWithObject: kProfileDragEntry];
+	[mEncodingTableView registerForDraggedTypes: dragTypes];
+}
 
-		def = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-			[NSString stringWithFormat:@"%d", [[pixelFormatMatrix selectedCell] tag]], PixelFormat,
-			[NSString stringWithFormat:@"%d", [enableCopyRect state]], CopyRectEnabled,
-			[ProfileManager getEncodings], Encodings,
-			[NSString stringWithFormat:@"%d", (1 << NUMENCODINGS) - 1], EnabledEncodings,
-			[m3bTimeout stringValue], EmulateThreeButtonTimeout,
-			[mkdTimeout stringValue], EmulateKeyDownTimeout,
-			[mkbTimeout stringValue], EmulateKeyboardTimeout,
-			[NSNumber numberWithShort: [commandKey indexOfSelectedItem]], NewCommandKeyMap,
-			[NSNumber numberWithShort: [controlKey indexOfSelectedItem]], NewControlKeyMap,
-			[NSNumber numberWithShort: [altKey indexOfSelectedItem]], NewAltKeyMap,
-			[NSNumber numberWithShort: [shiftKey indexOfSelectedItem]], NewShiftKeyMap,
-			nil];
-			
-		[profiles setProfile:def forKey:DefaultProfile];
+
+#pragma mark -
+#pragma mark Utilities
+
+
++ (NSString *)nameForEncodingType: (CARD32)type
+{
+	int index = [self _indexForEncodingType: type];
+	return (NSString *)gEncodingNames[index];
+}
+
+
++ (CARD32)modifierCodeForPreference: (id)preference
+{
+	switch ([preference shortValue])
+	{
+		case kRemoteAltModifier:
+			return kAltKeyCode;
+		case kRemoteMetaModifier:
+			return kMetaKeyCode;
+		case kRemoteControlModifier:
+			return kControlKeyCode;
+		case kRemoteShiftModifier:
+			return kShiftKeyCode;
+		case kRemoteWindowsModifier:
+			return kWindowsKeyCode;
 	}
-
-	[encodingTableView setTarget:self];
-    [encodingTableView setDoubleAction:@selector(changeEncodingState:)];
-    [self selectProfileNamed:DefaultProfile];
+	[NSException raise: NSInternalInconsistencyException format: @"Invalid modifier code"];
+	return 0; // never executed
+	
 }
 
-- (void)updateBrowserButtons:(id)sender
+
+#pragma mark -
+#pragma mark Profile Manager Window
+
+
+- (IBAction)showWindow: (id)sender
+{  [[self window] makeKeyAndOrderFront: nil];  }
+
+
+#pragma mark -
+#pragma mark Profile Access
+
+
+- (Profile *)defaultProfile 
 {
-    NSString* sp = [profileField stringValue];
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+	NSMutableDictionary *defaultProfile = [profiles defaultProfile];
+	NSParameterAssert( defaultProfile != nil );
+	NSString *defaultProfileName = [profiles defaultProfileName];
+	NSParameterAssert( defaultProfileName != nil );
+    return [[[Profile alloc] initWithDictionary:defaultProfile name: defaultProfileName] autorelease];
+}
+
+
+- (BOOL)profileWithNameExists:(NSString*)name
+{
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+    NSMutableDictionary* p = [profiles profileForKey: name];
+	
+    return nil != p;
+}
+
+
+- (Profile *)profileNamed: (NSString*)name
+{
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+    NSMutableDictionary* p = [profiles profileForKey: name];
+	
+    if( nil == p )
+		return [self defaultProfile];
+    return [[[Profile alloc] initWithDictionary:p name: name] autorelease];
+}
+
+
+#pragma mark -
+#pragma mark Action Methods
+
+
+- (IBAction)addProfile: (id)sender
+{
 	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
 
-    [deleteProfileButton setEnabled:
-        ([profiles profileForKey:sp] && ![sp isEqualToString:DefaultProfile])];
-    [newProfileButton setEnabled:
-        (![profiles profileForKey:sp] && ![sp isEqualToString:@""])];
+    NSMutableDictionary *newProfile = [[self _currentProfileDictionary] deepMutableCopy];
+	[newProfile removeObjectForKey: kProfile_IsDefault_Key];
+	NSString *newName = [mProfileNameField stringValue];
+    [profiles setProfile:newProfile forKey: newName];
+    [profiles save];
+	
+	[mProfileTable reloadData];
+    [self _selectProfileNamed: newName];
+	
+    [[NSNotificationCenter defaultCenter] postNotificationName: ProfileAddDeleteNotification
+                                                        object: self];
 }
 
-- (void)updateUpDownButtons:(id)sender
-{
-    int row = [encodingTableView selectedRow];
-    id upb = [upDownButtonMatrix cellAtRow:0 column:0];
-    id dnb = [upDownButtonMatrix cellAtRow:1 column:0];
 
-    [upb setEnabled:(row > 0)];
-    [dnb setEnabled:((row >= 0) && (row < (NUMENCODINGS-1)))];
-}
-
-- (void)upgradeEncodings:(NSMutableDictionary*)d
-{
-    NSArray* encodings = [d objectForKey:Encodings];
-
-    if([encodings count] != NUMENCODINGS) {
-        NSLog(@"supported encodings changed, upgrading profile\n");
-        encodings = [ProfileManager getEncodings];
-        [d setObject:encodings forKey:Encodings];
-    }
-}
-
-- (NSMutableDictionary*)currentProfileDictionary
-{
-    NSMutableDictionary* pd;
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-    
-    NSString* sp = [[profileBrowser selectedCell] stringValue];
-    pd = [profiles profileForKey:sp];
-    [self upgradeEncodings:pd];
-    return pd;
-}
-
-- (void)updateProfileInfo:(id)sender
-{
-    NSDictionary* spd = [self currentProfileDictionary];
-
-    if(spd == nil) {
-        return;
-    }
-    [pixelFormatMatrix selectCellWithTag:[[spd objectForKey:PixelFormat] intValue]];
-    [enableCopyRect setState:[[spd objectForKey:CopyRectEnabled] intValue]];
-    [m3bTimeout setIntValue:[[spd objectForKey:EmulateThreeButtonTimeout] intValue]];
-    [mkdTimeout setIntValue:[[spd objectForKey:EmulateKeyDownTimeout] intValue]];
-    [mkbTimeout setIntValue:[[spd objectForKey:EmulateKeyboardTimeout] intValue]];
-    
-	// jason - changed following to use indices instead of names
-    [commandKey selectItemAtIndex:[[spd objectForKey:NewCommandKeyMap] shortValue]];
-    [controlKey selectItemAtIndex:[[spd objectForKey:NewControlKeyMap] shortValue]];
-    [altKey selectItemAtIndex:[[spd objectForKey:NewAltKeyMap] shortValue]];
-    [shiftKey selectItemAtIndex:[[spd objectForKey:NewShiftKeyMap] shortValue]];
-/*    [commandKey selectItemWithTitle:[spd objectForKey:CommandKeyMap]];
-    [controlKey selectItemWithTitle:[spd objectForKey:ControlKeyMap]];
-    [altKey selectItemWithTitle:[spd objectForKey:AltKeyMap]];
-    [shiftKey selectItemWithTitle:[spd objectForKey:ShiftKeyMap]]; */
-    [encodingTableView reloadData];
-}
-
-- (void)selectProfileNamed:(NSString*)aProfile
-{
-	[profileBrowser loadColumnZero];
-	[profileBrowser setPath:[NSString stringWithFormat:@"/%@", aProfile]];
-	[profileField setStringValue:aProfile];
-	[self updateBrowserButtons:self];
-	[self updateProfileInfo:self];
-}
-
-- (void)addProfile:(id)sender
-{
-    NSMutableDictionary* newProfile;
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-
-    newProfile = [[[self currentProfileDictionary] mutableCopy] autorelease];
-    [profiles setProfile:newProfile forKey:[profileField stringValue]];
-    [self selectProfileNamed:[profileField stringValue]];
-    [self updateBrowserButtons:self];
-    [self profileChanged:self];
-    [[NSNotificationCenter defaultCenter] postNotificationName:ProfileAddDeleteNotification
-                                                        object:self];
-}
-
-- (void)changeEncodingState:(id)sender
-{
-    int row, mask;
-    NSArray* enc;
-    NSMutableDictionary* profile;
-
-    if((row = [sender selectedRow]) < 0) {
-        return;
-    }
-    profile = [self currentProfileDictionary];
-    enc = [profile objectForKey:Encodings];
-    row = [[enc objectAtIndex:row] intValue];
-    mask = [[profile objectForKey:EnabledEncodings] intValue];
-    mask ^= (1 << row);
-    [profile setObject:[NSString stringWithFormat:@"%d", mask] forKey:EnabledEncodings];
-    [[ProfileDataManager sharedInstance] save];
-    [encodingTableView reloadData];
-}
-
-- (void)deleteProfile:(id)sender
-{
-    NSString* current = [[profileBrowser selectedCell] stringValue];
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-
-    [profiles removeProfileForKey:current];
-    [[ProfileDataManager sharedInstance] save];
-    [self selectProfileNamed:DefaultProfile];
-    [[NSNotificationCenter defaultCenter] postNotificationName:ProfileAddDeleteNotification
-                                                        object:self];
-}
-
-- (void)profileChanged:(id)sender
-{
-    NSMutableDictionary* profile = [self currentProfileDictionary];
-
-    [profile setObject:[NSString stringWithFormat:@"%d", [[pixelFormatMatrix selectedCell] tag]]
-                forKey:PixelFormat];
-    [profile setObject:[NSString stringWithFormat:@"%d", [enableCopyRect state]]
-                forKey:CopyRectEnabled];
-    [profile setObject:[m3bTimeout stringValue] forKey:EmulateThreeButtonTimeout];
-    [profile setObject:[mkdTimeout stringValue] forKey:EmulateKeyDownTimeout];
-    [profile setObject:[mkbTimeout stringValue] forKey:EmulateKeyboardTimeout];
-    
-	// Jason - changed from using titleOfSelectedItem to an NSNumber indicating the selected item
-    [profile setObject:[NSNumber numberWithShort: [commandKey indexOfSelectedItem]] forKey:NewCommandKeyMap];
-    [profile setObject:[NSNumber numberWithShort: [controlKey indexOfSelectedItem]] forKey:NewControlKeyMap];
-    [profile setObject:[NSNumber numberWithShort: [altKey indexOfSelectedItem]] forKey:NewAltKeyMap];
-    [profile setObject:[NSNumber numberWithShort: [shiftKey indexOfSelectedItem]] forKey:NewShiftKeyMap];
-/*    [profile setObject:[commandKey titleOfSelectedItem] forKey:CommandKeyMap];
-    [profile setObject:[controlKey titleOfSelectedItem] forKey:ControlKeyMap];
-    [profile setObject:[altKey titleOfSelectedItem] forKey:AltKeyMap];
-    [profile setObject:[shiftKey titleOfSelectedItem] forKey:ShiftKeyMap]; */
-    [[ProfileDataManager sharedInstance] save];
-}
-
-- (void)profileSelected:(id)sender
-{
-    id cell = [sender selectedCell];
-
-    if(cell) {
-        [profileField setStringValue:[cell stringValue]];
-        [self updateBrowserButtons:self];
-        [self updateProfileInfo:self];
-    }
-}
-
-- (void)reorderEncodings:(id)sender
-{
-    int tag = [[sender selectedCell] tag];
-    int row = [encodingTableView selectedRow];
-    NSMutableDictionary* profile = [self currentProfileDictionary];
-    NSMutableArray* encodings = [[[profile objectForKey:Encodings] mutableCopy] autorelease];
-
-    if(tag == 0) {
-        if(row <= 0) {
-            return;
-        }
-        [encodings insertObject:[encodings objectAtIndex:row] atIndex:row - 1];
-        [encodings removeObjectAtIndex:row + 1];
-        [encodingTableView selectRow:row-1 byExtendingSelection:NO];
-        [encodingTableView scrollRowToVisible:row-1];
-    } else {
-        if((row < 0) || (row >= (NUMENCODINGS - 1))) {
-            return;
-        }
-        [encodings insertObject:[encodings objectAtIndex:row] atIndex:row + 2];
-        [encodings removeObjectAtIndex:row];
-        [encodingTableView selectRow:row+1 byExtendingSelection:NO];
-        [encodingTableView scrollRowToVisible:row+1];
-    }
-    [profile setObject:encodings forKey:Encodings];
-    [[ProfileDataManager sharedInstance] save];
-    [encodingTableView reloadData];
-}
-
-- (int)browser:(NSBrowser *)sender numberOfRowsInColumn:(int)column
+- (IBAction)deleteProfile: (id)sender
 {
 	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
 	
-    return [profiles count];
+    [profiles removeProfileForKey: [self _currentProfileName]];
+    [profiles save];
+	[mProfileTable reloadData];
+	
+    [[NSNotificationCenter defaultCenter] postNotificationName:ProfileAddDeleteNotification
+                                                        object:self];
+
+	int selectedRow = [mProfileTable selectedRow];
+	[self _selectProfileAtIndex: selectedRow];
 }
 
-- (NSArray*)sortedProfileNames
+
+- (void)formDidChange:(id)sender
 {
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-    return [profiles sortedKeyArray];
+    NSMutableDictionary* profile = [self _currentProfileDictionary];
+	
+    [profile setObject: [NSNumber numberWithInt: [[mPixelFormatMatrix selectedCell] tag]]
+                forKey: kProfile_PixelFormat_Key];
+    [profile setObject: [NSNumber numberWithInt: [m3bTimeout floatValue]]
+				forKey: kProfile_E3BTimeout_Key];
+    [profile setObject: [NSNumber numberWithInt: [mkdTimeout floatValue]] 
+				forKey: kProfile_EmulateKeyDown_Key];
+    [profile setObject: [NSNumber numberWithInt: [mkbTimeout floatValue]]
+				forKey: kProfile_EmulateKeyboard_Key];
+	[profile setObject: [NSNumber numberWithBool: ([mEnableCopyRect state] == NSOnState) ? YES : NO]
+				forKey: kProfile_EnableCopyrect_Key];
+    
+    [profile setObject: [[self class] _tagForModifierIndex: [mCommandKey indexOfSelectedItem]] 
+				forKey: kProfile_LocalCommandModifier_Key];
+    [profile setObject: [[self class] _tagForModifierIndex: [mControlKey indexOfSelectedItem]] 
+				forKey: kProfile_LocalControlModifier_Key];
+    [profile setObject: [[self class] _tagForModifierIndex: [mAltKey indexOfSelectedItem]] 
+				forKey: kProfile_LocalAltModifier_Key];
+    [profile setObject: [[self class] _tagForModifierIndex: [mShiftKey indexOfSelectedItem]] 
+				forKey: kProfile_LocalShiftModifier_Key];
+	
+    [[ProfileDataManager sharedInstance] save];
 }
 
-- (void)browser:(NSBrowser *)sender willDisplayCell:(id)cell atRow:(int)row column:(int)column
+
+- (IBAction)toggleSelectedEncodingEnabled: (id)sender
 {
-    NSArray* profileNames = [self sortedProfileNames];
-
-    if(row < [profileNames count]) {
-        [cell setLeaf:YES];
-        [cell setStringValue:[profileNames objectAtIndex:row]];
-    }
+	NSMutableArray *encodings = [[self _currentProfileDictionary] objectForKey: kProfile_Encodings_Key];
+	int selectedIndex = [mEncodingTableView selectedRow];
+	NSParameterAssert ( selectedIndex >= 0 && selectedIndex < NUMENCODINGS );
+	
+	NSMutableDictionary *encoding = [encodings objectAtIndex: selectedIndex];
+	BOOL wasEnabled = [[encoding objectForKey: kProfile_EncodingEnabled_Key] boolValue];
+	[encoding setObject: [NSNumber numberWithBool: !wasEnabled] forKey: kProfile_EncodingEnabled_Key];
+	
+	[[ProfileDataManager sharedInstance] save];
+	[mEncodingTableView reloadData];
 }
+
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+	[self _updateBrowserButtons];
+}
+
+
+#pragma mark -
+#pragma mark NSTableView Data Source
+
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-    return NUMENCODINGS;
+	if ( mEncodingTableView == aTableView )
+	{
+		NSDictionary* profile = [self _currentProfileDictionary];
+		NSArray* encodings = [profile objectForKey: kProfile_Encodings_Key];
+		return [encodings count];
+	}
+	
+    return [[ProfileDataManager sharedInstance] count];
 }
+
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn
             row:(int)rowIndex
 {
-    NSDictionary* spd = [self currentProfileDictionary];
-    NSArray* encodingIndices = [spd objectForKey:Encodings];
-    int index;
-    
-    if(rowIndex >= [encodingIndices count]) {
-        return @"";
-    }
-    index = [[encodingIndices objectAtIndex:rowIndex] intValue];
-    if(index >= NUMENCODINGS) {
-        return @"";
-    }
-    if([[aTableColumn identifier] isEqualToString:@"Enabled"]) {
-        unsigned int mask = [[spd objectForKey:EnabledEncodings] intValue];
-        return (mask & (1 << index)) ? @"YES" : @"NO";
-    } else {
-        return (id)encodingNames[index];
-    }
+	if ( mEncodingTableView == aTableView )
+	{
+		NSDictionary* profile = [self _currentProfileDictionary];
+		NSArray* encodings = [profile objectForKey: kProfile_Encodings_Key];
+		NSParameterAssert( rowIndex >= 0 && rowIndex< [encodings count] );		
+
+		NSDictionary *entry = [encodings objectAtIndex: rowIndex];
+		NSParameterAssert( entry != nil );
+
+		if ( [[aTableColumn identifier] isEqualToString:@"Enabled"] )
+			return [entry objectForKey: kProfile_EncodingEnabled_Key];
+		int index = [[entry objectForKey: kProfile_EncodingValue_Key] intValue];
+		return [[self class] nameForEncodingType: index];
+	}
+
+    NSArray* profileNames = [self _sortedProfileNames];
+	NSParameterAssert( rowIndex >= 0 && rowIndex< [profileNames count] );		
+	
+	return [profileNames objectAtIndex: rowIndex];
 }
 
-- (void)windowWillClose:(NSNotification *)aNotification
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
+	if ( mProfileTable == [aNotification object] )
+	{
+		int selectedRow = [mProfileTable selectedRow];
+		NSString *profileName = [[self _sortedProfileNames] objectAtIndex: selectedRow];
+		
+        [mProfileNameField setStringValue: profileName];
+        [self _updateBrowserButtons];
+        [self _updateForm];
+	}
 }
 
-- (void)windowDidUpdate:(NSNotification *)aNotification
+
+- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)operation
 {
-    [self updateBrowserButtons:self];
-    [self updateUpDownButtons:self];
+	if ( mEncodingTableView == tableView )
+	{
+		if ([info draggingSource] == mEncodingTableView)
+		{
+			if ( row == mEncodingDragRow || row == mEncodingDragRow + 1 )
+				return NSDragOperationNone;
+			
+			if ( NSTableViewDropOn == operation )
+				[mEncodingTableView setDropRow: row dropOperation: NSTableViewDropAbove];
+					
+			return NSDragOperationMove;
+		}
+	}
+	return NSDragOperationNone;
 }
 
-- (Profile*)profileNamed:(NSString*)name
-{
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-    NSMutableDictionary* p = [profiles profileForKey:name];
 
-    if(p == nil) {
-        p = [profiles profileForKey:DefaultProfile];
-        [p setObject:DefaultProfile forKey:@"ProfileName"];
-    } else {
-        [p setObject:name forKey:@"ProfileName"];
-    }
-    return [[[Profile alloc] initWithDictionary:p] autorelease];
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
+{
+	if ( mEncodingTableView == tableView )
+	{
+		NSPasteboard *pboard = [info draggingPasteboard];
+		if ( [pboard availableTypeFromArray: [NSArray arrayWithObject: kProfileDragEntry]] )
+		{
+			NSData *data = [pboard dataForType: kProfileDragEntry];
+			NSMutableDictionary *encoding = [NSPropertyListSerialization propertyListFromData: data mutabilityOption: NSPropertyListMutableContainersAndLeaves format: nil errorDescription: nil];
+			
+			NSDictionary* profile = [self _currentProfileDictionary];
+			NSMutableArray* encodings = [profile objectForKey: kProfile_Encodings_Key];
+			NSParameterAssert( row >= 0 && row <= [encodings count] );
+			
+			int oldIndex = [encodings indexOfObject: encoding];
+			NSParameterAssert( NSNotFound != oldIndex );
+			
+			[encodings insertObject: encoding atIndex: row];
+			
+			if ( row < oldIndex )
+				oldIndex++;
+			[encodings removeObjectAtIndex: oldIndex];
+			
+			[[ProfileDataManager sharedInstance] save];
+			[mEncodingTableView reloadData];
+			return YES;
+		}
+	}
+	return NO;
 }
 
-- (NSArray*)profileNames
+
+- (BOOL)tableView:(NSTableView *)tableView writeRows:(NSArray *)rows toPasteboard:(NSPasteboard *)pboard
 {
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-    NSMutableArray* n = [[[profiles sortedKeyArray] mutableCopy] autorelease];
-    if(n == nil) {
-        n = [NSMutableArray array];
-    }
-    if(![n containsObject:DefaultProfile]) {
-        [n insertObject:DefaultProfile atIndex:0];
-    } else {
-        unsigned int idx = [n indexOfObject:DefaultProfile];
-        if(idx > 0) {
-            [n removeObjectAtIndex:idx];
-            [n insertObject:DefaultProfile atIndex:0];
-        }
-    }
-    return n;
+	if ( mEncodingTableView == tableView )
+	{
+		NSParameterAssert( [rows count] == 1 );
+		int rowIndex = [[rows objectAtIndex: 0] intValue];
+		
+		NSDictionary* profile = [self _currentProfileDictionary];
+		NSArray* encodings = [profile objectForKey: kProfile_Encodings_Key];
+		NSParameterAssert( rowIndex >= 0 && rowIndex< [encodings count] );		
+		
+		NSDictionary *encoding = [encodings objectAtIndex: rowIndex];
+		NSParameterAssert( encoding != nil );
+
+		NSData *data = [NSPropertyListSerialization dataFromPropertyList: encoding format: NSPropertyListXMLFormat_v1_0 errorDescription: nil];
+		[pboard declareTypes: [NSArray arrayWithObject: kProfileDragEntry] owner: nil];
+		[pboard setData: data forType: kProfileDragEntry];
+		
+		mEncodingDragRow = rowIndex;
+		
+		return YES;
+	}
+	return NO;
 }
 
 @end

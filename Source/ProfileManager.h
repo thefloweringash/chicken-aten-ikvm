@@ -19,68 +19,77 @@
 #import <AppKit/AppKit.h>
 #import "Profile.h"
 
-#define DefaultProfile			@"default"
-#define ProfileAddDeleteNotification	@"ProfileAddedOrDeleted"
-#define PixelFormat			@"PixelFormat"
-#define CopyRectEnabled			@"EnableCopyRect"
-#define Encodings			@"Encodings"
-#define EnabledEncodings                @"EnabledEncodings"
-#define EmulateThreeButtonTimeout	@"E3BTimeout"
-#define EmulateKeyDownTimeout           @"MKDTimeout"
-#define EmulateKeyboardTimeout          @"EKBTimeout"
-#define CommandKeyMap			@"CommandKey"
-#define ShiftKeyMap			@"ShiftKey"
-#define AltKeyMap			@"AltKey"
-#define ControlKeyMap			@"ControlKey"
-// Jason added the following mappings so we can use indices instead of titles
-#define NewCommandKeyMap	@"NewCommandKey"
-#define NewShiftKeyMap		@"NewShiftKey"
-#define NewAltKeyMap		@"NewAltKey"
-#define NewControlKeyMap	@"NewControlKey"
+// Dictionary Keys
+extern NSString *kProfile_PixelFormat_Key;
+extern NSString *kProfile_E3BTimeout_Key;
+extern NSString *kProfile_EmulateKeyDown_Key;
+extern NSString *kProfile_EmulateKeyboard_Key;
+extern NSString *kProfile_EnableCopyrect_Key;
+extern NSString *kProfile_Encodings_Key;
+extern NSString *kProfile_EncodingValue_Key;
+extern NSString *kProfile_EncodingEnabled_Key;
+extern NSString *kProfile_LocalAltModifier_Key;
+extern NSString *kProfile_LocalCommandModifier_Key;
+extern NSString *kProfile_LocalControlModifier_Key;
+extern NSString *kProfile_LocalShiftModifier_Key;
+extern NSString *kProfile_IsDefault_Key;
 
-@interface ProfileManager : NSObject
+// Notifications
+extern NSString *ProfileAddDeleteNotification;
+
+// Modifier Key Mapping
+typedef enum {
+	kRemoteAltModifier		= 0,
+	kRemoteMetaModifier		= 1,
+	kRemoteControlModifier	= 2,
+	kRemoteShiftModifier	= 3,
+	kRemoteWindowsModifier	= 4
+} ModifierKeyIdentifier;
+
+// Encodings
+#define NUMENCODINGS					8
+extern const unsigned int gEncodingValues[];
+	
+	
+@interface ProfileManager : NSWindowController
 {
-    id altKey;
-    id commandKey;
-    id controlKey;
-    id deleteProfileButton;
-    id enableCopyRect;
-    id encodingTableView;
-    id m3bTimeout;
-    id mkdTimeout;
-    id mkbTimeout;
-    id newProfileButton;
-    id pixelFormatMatrix;
-    id profileBrowser;
-    id profileField;
-    id profilePanel;
-    id shiftKey;
-    id upDownButtonMatrix;
-    }
+    IBOutlet NSTableView *mProfileTable;
+    IBOutlet NSTextField *mProfileNameField;
+    IBOutlet NSButton *mNewProfileButton;
+    IBOutlet NSButton *mDeleteProfileButton;
+    IBOutlet NSPopUpButton *mAltKey;
+    IBOutlet NSPopUpButton *mCommandKey;
+    IBOutlet NSPopUpButton *mControlKey;
+    IBOutlet NSPopUpButton *mShiftKey;
+    IBOutlet NSTableView *mEncodingTableView;
+	IBOutlet NSButton *mEnableCopyRect;
+    IBOutlet NSTextField *m3bTimeout;
+    IBOutlet NSTextField *mkdTimeout;
+    IBOutlet NSTextField *mkbTimeout;
+    IBOutlet NSMatrix *mPixelFormatMatrix;
+	int mEncodingDragRow;
+}
 
-+ (CARD32)encodingValue:(int)index;
-+ (NSMutableArray*)getEncodings;
-
+	// Shared Instance
++ (id)sharedManager;
 - (void)wakeup;
-- (void)addProfile:(id)sender;
-- (void)changeEncodingState:(id)sender;
-- (void)deleteProfile:(id)sender;
-- (void)profileChanged:(id)sender;
-- (void)profileSelected:(id)sender;
-- (void)reorderEncodings:(id)sender;
-- (void)selectProfileNamed:(NSString*)aProfile;
 
-- (int)browser:(NSBrowser *)sender numberOfRowsInColumn:(int)column;
-- (void)browser:(NSBrowser *)sender willDisplayCell:(id)cell atRow:(int)row column:(int)column;
+	// Utilities
++ (NSString *)nameForEncodingType: (CARD32)type;
++ (CARD32)modifierCodeForPreference: (id)preference;
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView;
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn
-            row:(int)rowIndex;
+	// Profile Manager Window
+- (IBAction)showWindow: (id)sender;
 
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)windowDidUpdate:(NSNotification *)aNotification;
-
+	// Profile Access
+- (Profile *)defaultProfile;
+- (BOOL)profileWithNameExists:(NSString*)name;
 - (Profile*)profileNamed:(NSString*)name;
-- (NSArray*)profileNames;
+
+	// Action Methods
+- (IBAction)addProfile:(id)sender;
+- (IBAction)deleteProfile:(id)sender;
+- (IBAction)formDidChange:(id)sender;
+- (IBAction)toggleSelectedEncodingEnabled: (id)sender;
 
 @end

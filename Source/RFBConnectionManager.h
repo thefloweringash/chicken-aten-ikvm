@@ -17,60 +17,36 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "rfbproto.h"
-#import "Profile.h"
-@class ProfileManager;
+@class Profile, ProfileManager;
 @class ServerDataViewController;
 @protocol ConnectionDelegate, IServerData;
 
-/* Constants, generally used for userdefaults */
-#define RFB_COLOR_MODEL		@"RFBColorModel"
-#define RFB_GAMMA_CORRECTION	@"RFBGammaCorrection"
-#define RFB_LAST_HOST		@"RFBLastHost"
 
-#define RFB_HOST_INFO		@"HostPreferences"
-#define RFB_LAST_DISPLAY	@"Display"
-#define RFB_LAST_PROFILE	@"Profile"
-
-#define KEYCHAIN_SERVICE_NAME	@"cotvnc" // This should really be the appname, but I'm too lame to know how to find that - kjw
-
-@interface RFBConnectionManager : NSObject<ConnectionDelegate>
+@interface RFBConnectionManager : NSWindowController<ConnectionDelegate>
 {
-    IBOutlet NSPanel *loginPanel;
-    IBOutlet NSMatrix *colorModelMatrix;
-    IBOutlet NSTextField *psThreshold;
-    IBOutlet NSTextField *psMaxRects;
-    IBOutlet NSTextField *gamma;
-    IBOutlet ProfileManager *profileManager;
-	IBOutlet NSSlider *autoscrollIncrement;
-	IBOutlet NSButton *fullscreenScrollbars;
-	IBOutlet NSButton *displayFullscreenWarning;
-	IBOutlet NSSlider *frontInverseCPUSlider;
-	IBOutlet NSSlider *otherInverseCPUSlider;
 	IBOutlet NSTableView *serverList;
 	IBOutlet NSTableView *groupList;
 	IBOutlet NSBox *serverDataBoxLocal;
 	IBOutlet NSBox *serverListBox;
 	IBOutlet NSBox *serverGroupBox;
 	IBOutlet NSSplitView *splitView;
-	IBOutlet NSMenuItem *rendezvousMenuItem;
     IBOutlet NSButton *serverDeleteBtn;
-	IBOutlet NSTextField *mInfoVersionNumber;
     NSMutableArray*	connections;
-    NSString *cmdlineHost;
-    int       cmdlineDisplay;
-    NSString *cmdlinePassword;
-    bool      cmdlineFullscreen;
 	ServerDataViewController* mServerCtrler;
-	bool      mDisplayGroups;
+	BOOL mDisplayGroups;
+	BOOL mRunningFromCommandLine;
 }
 
-+ (float)gammaCorrection;
-+ (void)getLocalPixelFormat:(rfbPixelFormat*)pf;
++ (id)sharedManager;
+
+- (void)wakeup;
+- (BOOL)runFromCommandLine;
+- (void)runNormally;
+
+- (void)showConnectionDialog: (id)sender;
 
 - (void)removeConnection:(id)aConnection;
 - (void)connect:(id<IServerData>)server;
-- (void)processArguments;
 - (void)cmdlineUsage;
 
 - (void)selectedHostChanged;
@@ -80,30 +56,23 @@
 
 - (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner;
 
-- (IBAction)preferencesChanged:(id)sender;
-
 - (IBAction)addServer:(id)sender;
 - (IBAction)deleteSelectedServer:(id)sender;
-
-- (IBAction)changeRendezvousUse:(id)sender;
-
-- (id)defaultFrameBufferClass;
 
 - (void)makeAllConnectionsWindowed;
 
 - (BOOL)haveMultipleConnections; // True if there is more than one connection open.
 - (BOOL)haveAnyConnections;      // True if there are any connections open.
 
-- (IBAction)frontInverseCPUSliderChanged: (NSSlider *)sender;
-- (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender;
-- (float)maxPossibleFrameBufferUpdateSeconds;
-
 - (void)serverListDidChange:(NSNotification*)notification;
 
 - (id<IServerData>)selectedServer;
 
+- (void)useRendezvous:(BOOL)useRendezvous;
+
 - (void)displayGroups:(bool)display;
 
-- (void)useRendezvous:(bool)useRendezvous;
+- (void)setFrontWindowUpdateInterval: (NSTimeInterval)interval;
+- (void)setOtherWindowUpdateInterval: (NSTimeInterval)interval;
 
 @end

@@ -19,45 +19,34 @@
 #import "KeyChain.h"
 #import "RFBConnectionManager.h"
 #import "RFBConnection.h"
+#import "PrefController.h"
 #import "ProfileManager.h"
 #import "Profile.h"
 #import "rfbproto.h"
 #import "vncauth.h"
 #import "ServerDataViewController.h"
 #import "ServerBase.h"
-
-#import "GrayScaleFrameBuffer.h"
-#import "LowColorFrameBuffer.h"
-#import "HighColorFrameBuffer.h"
-#import "TrueColorFrameBuffer.h"
 #import "ServerDataManager.h"
-
-#define RENDEZVOUS_SETTINGS @"Rendezvous Setting"
-
-static RFBConnectionManager*	sharedManager = nil;
 
 @implementation RFBConnectionManager
 
-+ (void)initialize {
-    id ud = [NSUserDefaults standardUserDefaults];
-	id dict = [NSDictionary dictionaryWithObjectsAndKeys:
-		@"128", @"PS_MAXRECTS",
-		@"10000", @"PS_THRESHOLD",
-		[NSNumber numberWithFloat: 26.0], @"FullscreenAutoscrollIncrement",
-		[NSNumber numberWithFloat: 0.0],  @"FullscreenScrollbars",
-		[NSNumber numberWithFloat: 0.0], @"FrontFrameBufferUpdateSeconds",
-		[NSNumber numberWithFloat: 0.9], @"OtherFrameBufferUpdateSeconds",
-		[NSNumber numberWithBool: YES], @"DisplayFullscreenWarning",
-					   nil];
-	[ud registerDefaults: dict];
++ (id)sharedManager
+{ 
+	static id sInstance = nil;
+	if ( ! sInstance )
+	{
+		sInstance = [[self alloc] initWithWindowNibName: @"ConnectionDialog"];
+		NSParameterAssert( sInstance != nil );
+	}
+	return sInstance;
 }
 
-- (void)awakeFromNib
+
+- (void)wakeup
 {
-    int i;
-    NSString* s;
-    id ud = [NSUserDefaults standardUserDefaults];
-    float updateDelay;
+	// make sure our window is loaded
+	[self window];
+	
 	mDisplayGroups = false;
 	
 	mServerCtrler = [[ServerDataViewController alloc] init];
@@ -65,80 +54,8 @@ static RFBConnectionManager*	sharedManager = nil;
 
     sigblock(sigmask(SIGPIPE));
     connections = [[NSMutableArray alloc] init];
-    cmdlineHost = nil;
-    cmdlineDisplay = 0;
-    cmdlinePassword = @"";
-    cmdlineFullscreen = NO;
-    sharedManager = self;
-    [NSApp setDelegate:self];
-    [profileManager wakeup];
-    i = [ud integerForKey:RFB_COLOR_MODEL];
-    if(i == 0) {
-        NSWindowDepth windowDepth = [[NSScreen mainScreen] depth];
-        if(NSNumberOfColorComponents(NSColorSpaceFromDepth(windowDepth)) == 1) {
-            i = 1;
-        } else {
-            int bps = NSBitsPerSampleFromDepth(windowDepth);
-
-            if(bps < 4)		i = 2;
-            else if(bps < 8)	i = 3;
-            else		i = 4;
-        }
-    }
-    [colorModelMatrix selectCellWithTag:i - 1];
-    if((s = [ud objectForKey:RFB_GAMMA_CORRECTION]) == nil) {
-        s = [gamma stringValue];
-    }
-    [gamma setFloatingPointFormat:NO left:1 right:2];
-    [gamma setFloatValue:[s floatValue]];
+    [[ProfileManager sharedManager] wakeup];
     
-    [psThreshold setStringValue: [ud stringForKey: @"PS_THRESHOLD"]];
-    [psMaxRects setStringValue: [ud stringForKey: @"PS_MAXRECTS"]];
-    
-    [autoscrollIncrement setFloatValue: [ud floatForKey:@"FullscreenAutoscrollIncrement"]];
-    
-    [fullscreenScrollbars setFloatValue: [ud boolForKey:@"FullscreenScrollbars"]];
-    
-    updateDelay = [ud floatForKey: @"FrontFrameBufferUpdateSeconds"];
-    updateDelay = (float)[frontInverseCPUSlider maxValue] - updateDelay;
-    [frontInverseCPUSlider setFloatValue: updateDelay];
-    updateDelay = [ud floatForKey: @"OtherFrameBufferUpdateSeconds"];
-    updateDelay = (float)[otherInverseCPUSlider maxValue] - updateDelay;
-    [otherInverseCPUSlider setFloatValue: updateDelay];
-	[displayFullscreenWarning setState: [ud boolForKey:@"DisplayFullscreenWarning"]];
-    
-    // end jason
-
-    [self processArguments];
-
-    if (cmdlineHost) {
-	/* Connect without GUI */
-	Profile* profile;
-		
-	ServerBase* cmdlineServer = [[[ServerBase alloc] init] autorelease];
-	[cmdlineServer setHost:cmdlineHost];
-	[cmdlineServer setPassword:cmdlinePassword];
-	[cmdlineServer setDisplay:cmdlineDisplay];
-	[cmdlineServer setFullscreen:cmdlineFullscreen];
-
-	profile = [profileManager profileNamed:DefaultProfile];	
-	
-	[self createConnectionWithServer:cmdlineServer profile:profile owner:self];
-
-    } else {
-	if((s = [ud objectForKey:RFB_LAST_HOST]) != nil) {
-	    [serverList setStringValue:s];
-	    [self selectedHostChanged];
-	}
-		
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProfileList:) name:ProfileAddDeleteNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverListDidChange:) name:ServerListChangeMsg object:nil];
-
-	// So we can tell when the serverList finished changing
-	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidEndEditing:) name: NSControlTextDidEndEditingNotification object: serverList];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidBeginEditing:) name: NSControlTextDidBeginEditingNotification object: serverList];
-    }
-		
 	NSBox *serverCtrlerBox = [mServerCtrler box];
 	[serverCtrlerBox retain];
 	[serverCtrlerBox removeFromSuperview];
@@ -160,65 +77,126 @@ static RFBConnectionManager*	sharedManager = nil;
 	// we now own serverGroupBox and are responsible for releasing it
 	
 	[splitView adjustSubviews];
-
-	[loginPanel makeFirstResponder: serverListBox];
-	[loginPanel makeKeyAndOrderFront:self];
-	
-	[self useRendezvous:[[NSUserDefaults standardUserDefaults] boolForKey:RENDEZVOUS_SETTINGS]];
-	
-	[mInfoVersionNumber setStringValue: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
+	[self useRendezvous: [[PrefController sharedController] usesRendezvous]];
 }
 
-- (void)processArguments
+- (BOOL)runFromCommandLine
 {
-    int i;
     NSProcessInfo *procInfo = [NSProcessInfo processInfo];
     NSArray *args = [procInfo arguments];
+    int i, argCount = [args count];
     NSString *arg;
-    NSString *passwordFile;
-    char *decrypted_password;
-
+	
+	ServerBase* cmdlineServer = [[[ServerBase alloc] init] autorelease];
+	Profile* profile = nil;
+	ProfileManager *profileManager = [ProfileManager sharedManager];
+	
 	// Check our arguments.  Args start at 0, which is the application name
 	// so we start at 1.  arg count is the number of arguments, including
 	// the 0th argument.
-    for (i = 1; i < [args count]; i++) {
+    for (i = 1; i < argCount; i++)
+	{
 		arg = [args objectAtIndex:i];
 		
-		if ([arg hasPrefix:@"-psn"]) {
+		if ([arg hasPrefix:@"-psn"])
+		{
 			// Called from the finder.  Do nothing.
-			//if (i + 1 >= [args count]) [self cmdlineUsage];
-			//i++;
-		} else if ([arg hasPrefix:@"--PasswordFile"]) {
-			if (i + 1 >= [args count]) [self cmdlineUsage];
-			passwordFile = [args objectAtIndex:++i];
-			decrypted_password = vncDecryptPasswdFromFile((char*)[passwordFile cString]);
-			if (decrypted_password == NULL) {
-				fprintf(stderr, "Cannot read password from file.\n");
-			} else {
-				cmdlinePassword = [[NSString alloc] initWithCString:decrypted_password];
+			continue;
+		} 
+		else if ([arg hasPrefix:@"--PasswordFile"])
+		{
+			if (i + 1 >= argCount) [self cmdlineUsage];
+			NSString *passwordFile = [args objectAtIndex:++i];
+			char *decrypted_password = vncDecryptPasswdFromFile((char*)[passwordFile cString]);
+			if (decrypted_password == NULL)
+			{
+				NSLog(@"Cannot read password from file.");
+				exit(1);
+			} 
+			else
+			{
+				[cmdlineServer setPassword: [NSString stringWithCString:decrypted_password]];
 				free(decrypted_password);
 			}
-		} else if ([arg hasPrefix:@"--FullScreen"]) {
-			cmdlineFullscreen = YES;
-			// FIXME: Support -FullScreen=0 etc
-			//if (i + 1 >= [args count]) [self cmdlineUsage];
-			//cmdlinePasswordFile = [args objectAtIndex:i+1];
-		} else if ([arg hasPrefix:@"-"]) {
+		}
+		else if ([arg hasPrefix:@"--FullScreen"])
+			[cmdlineServer setFullscreen: YES];
+		else if ([arg hasPrefix:@"--Profile"])
+		{
+			if (i + 1 >= argCount) [self cmdlineUsage];
+			NSString *profileName = [args objectAtIndex:++i];
+			if ( ! [profileManager profileWithNameExists: profileName] )
+			{
+				NSLog(@"Cannot find a profile with the given name: \"%@\".", profileName);
+				exit(1);
+			}
+			profile = [profileManager profileNamed: profileName];
+		}
+		else if ([arg hasPrefix:@"-"])
 			[self cmdlineUsage];
-		} else {
+		else
+		{
 			/* No dash, host:display */
 			NSArray *listItems = [arg componentsSeparatedByString:@":"];
-			cmdlineHost = [listItems objectAtIndex:0];
+			NSString *cmdlineHost = [listItems objectAtIndex: 0];
+			[cmdlineServer setHost: cmdlineHost];
 			
-			if (![cmdlineHost isEqualToString:arg]) {
+			mRunningFromCommandLine = YES;
+			
+			int cmdlineDisplay;
+			if ( ! [cmdlineHost isEqualToString: arg] )
+			{
 				/* Found : */
 				cmdlineDisplay = [[listItems objectAtIndex:1] intValue];
-			} else {
+			}
+			else
+			{
 				/* No colon, assume :0 as default */
 				cmdlineDisplay = 0;
 			}
+			[cmdlineServer setDisplay: cmdlineDisplay];
 		} 
     }
+	
+	if ( mRunningFromCommandLine )
+	{
+		if ( nil == profile )
+			profile = [profileManager defaultProfile];	
+		[self createConnectionWithServer:cmdlineServer profile:profile owner:self];
+		return YES;
+	}
+	return NO;
+}
+
+- (void)runNormally
+{
+    NSString* lastHostName = [[PrefController sharedController] lastHostName];
+
+	if( nil != lastHostName )
+	    [serverList setStringValue: lastHostName];
+	[self selectedHostChanged];
+	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver: self 
+		   selector: @selector(updateProfileList:) 
+			   name: ProfileAddDeleteNotification 
+			 object: nil];
+	[nc addObserver: self 
+		   selector: @selector(serverListDidChange:) 
+			   name: ServerListChangeMsg 
+			 object: nil];
+	
+	// So we can tell when the serverList finished changing
+	[nc addObserver:self 
+		   selector: @selector(cellTextDidEndEditing:) 
+			   name: NSControlTextDidEndEditingNotification 
+			 object: serverList];
+	[nc addObserver:self 
+		   selector: @selector(cellTextDidBeginEditing:) 
+			   name: NSControlTextDidBeginEditingNotification 
+			 object: serverList];
+
+	[self showConnectionDialog: nil];
 }
 
 - (void)cmdlineUsage
@@ -226,8 +204,15 @@ static RFBConnectionManager*	sharedManager = nil;
     fprintf(stderr, "\nUsage: Chicken of the VNC [options] [host:display]\n\n");
     fprintf(stderr, "options:\n\n");
     fprintf(stderr, "--PasswordFile <password-file>\n");
+    fprintf(stderr, "--Profile <profile-name>\n");
     fprintf(stderr, "--FullScreen\n");
     exit(1);
+}
+
+- (void)showConnectionDialog: (id)sender
+{
+	[[self window] makeFirstResponder: serverListBox];
+	[[self window] makeKeyAndOrderFront:self];
 }
 
 - (void)dealloc
@@ -238,25 +223,6 @@ static RFBConnectionManager*	sharedManager = nil;
 	[serverListBox release];
 	[serverGroupBox release];
     [super dealloc];
-}
-
-- (void)savePrefs
-{
-    id ud = [NSUserDefaults standardUserDefaults];
-
-    [ud setInteger:[[colorModelMatrix selectedCell] tag] + 1 forKey:RFB_COLOR_MODEL];
-    [ud setObject:[gamma stringValue] forKey:RFB_GAMMA_CORRECTION];
-    [ud setObject:[psMaxRects stringValue] forKey:@"PS_MAXRECTS"];
-    [ud setObject:[psThreshold stringValue] forKey:@"PS_THRESHOLD"];
-	// jason added the rest
-    [ud setFloat: floor([autoscrollIncrement floatValue] + 0.5) forKey:@"FullscreenAutoscrollIncrement"];
-    [ud setBool:[fullscreenScrollbars floatValue] forKey:@"FullscreenScrollbars"];
-    [ud setBool:[displayFullscreenWarning state] forKey:@"DisplayFullscreenWarning"];
-}
-
-- (IBAction)preferencesChanged:(id)sender
-{
-	[self savePrefs];
 }
 
 - (id<IServerData>)selectedServer
@@ -287,8 +253,7 @@ static RFBConnectionManager*	sharedManager = nil;
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost
 {
 	/* change */
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
+    NSDictionary* hostDictionaryList = [[PrefController sharedController] hostInfo];
     NSDictionary* hostDictionary = [hostDictionaryList objectForKey:aHost];
     NSDictionary* names = [hostDictionary objectForKey:@"NameTranslations"];
     NSString* news;
@@ -301,11 +266,10 @@ static RFBConnectionManager*	sharedManager = nil;
 
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost
 {
-	/* change */
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
+    PrefController* prefController = [PrefController sharedController];
     NSMutableDictionary* hostDictionaryList, *hostDictionary, *names;
 
-    hostDictionaryList = [[[ud objectForKey:RFB_HOST_INFO] mutableCopy] autorelease];
+    hostDictionaryList = [[[prefController hostInfo] mutableCopy] autorelease];
     if(hostDictionaryList == nil) {
         hostDictionaryList = [NSMutableDictionary dictionary];
     }
@@ -320,7 +284,7 @@ static RFBConnectionManager*	sharedManager = nil;
     [names setObject:translation forKey:aName];
     [hostDictionary setObject:names forKey:@"NameTranslations"];
     [hostDictionaryList setObject:hostDictionary forKey:aHost];
-    [ud setObject:hostDictionaryList forKey:RFB_HOST_INFO];
+    [prefController setHostInfo:hostDictionaryList];
 }
 
 - (void)removeConnection:(id)aConnection
@@ -328,18 +292,18 @@ static RFBConnectionManager*	sharedManager = nil;
     [aConnection retain];
     [connections removeObject:aConnection];
     [aConnection autorelease];
-    if (cmdlineHost) 
-	[NSApp terminate:self];
+    if ( mRunningFromCommandLine ) 
+		[NSApp terminate:self];
 }
 
 - (void)connect:(id<IServerData>)server;
 {
-    Profile* profile = [profileManager profileNamed:[server lastProfile]];
+    Profile* profile = [[ProfileManager sharedManager] profileNamed:[server lastProfile]];
     
     // Only close the open dialog of the connection was successful
     if( YES == [self createConnectionWithServer:server profile:profile owner:self] )
 	{
-        [loginPanel orderOut:self];
+        [[self window] orderOut:self];
     }
 }
 
@@ -372,32 +336,9 @@ static RFBConnectionManager*	sharedManager = nil;
 	[[ServerDataManager sharedInstance] removeServer:[self selectedServer]];
 }
 
-- (id)defaultFrameBufferClass
-{
-    switch([[colorModelMatrix selectedCell] tag]) {
-        case 0: return [GrayScaleFrameBuffer class];
-        case 1: return [LowColorFrameBuffer class];
-        case 2: return [HighColorFrameBuffer class];
-        case 3: return [TrueColorFrameBuffer class];
-        default: return [TrueColorFrameBuffer class];
-    }
-}
-
-+ (void)getLocalPixelFormat:(rfbPixelFormat*)pf
-{
-    id fbc = [sharedManager defaultFrameBufferClass];
-
-    [fbc getPixelFormat:pf];
-}
-
-+ (float)gammaCorrection
-{
-    return [sharedManager->gamma floatValue];
-}
-
 - (void)windowWillClose:(NSNotification *)aNotification
 {
-    [self savePrefs];
+//jshprefs    [self savePrefs];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -409,7 +350,7 @@ static RFBConnectionManager*	sharedManager = nil;
 
     // [[NSApp windows] count] is the best option, but it don't work pre-jaguar
     if ((gIsJaguar && ([[NSApp windows] count] == 0)) || ((!gIsJaguar) && (![self haveAnyConnections]))) {
-        [loginPanel makeKeyAndOrderFront:self];
+        [[self window] makeKeyAndOrderFront:self];
     }
 }
 
@@ -438,44 +379,6 @@ static RFBConnectionManager*	sharedManager = nil;
 
 - (BOOL)haveAnyConnections {
     return [connections count] > 0;
-}
-
-- (IBAction)frontInverseCPUSliderChanged: (NSSlider *)sender
-{
-	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
-	RFBConnection *thisConnection;
-	NSWindow *keyWindow = [NSApp keyWindow];
-	float updateDelay = [sender floatValue];
-	
-	updateDelay = (float)[sender maxValue] - updateDelay;
-	[[NSUserDefaults standardUserDefaults] setFloat: updateDelay forKey: @"FrontFrameBufferUpdateSeconds"];
-	while (thisConnection = [connectionEnumerator nextObject]) {
-		if ([thisConnection window] == keyWindow) {
-			[thisConnection setFrameBufferUpdateSeconds: updateDelay];
-			break;
-		}
-	}
-}
-
-- (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender
-{
-	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
-	RFBConnection *thisConnection;
-	NSWindow *keyWindow = [NSApp keyWindow];
-	float updateDelay = [sender floatValue];
-
-	updateDelay = (float)[sender maxValue] - updateDelay;
-	[[NSUserDefaults standardUserDefaults] setFloat: updateDelay forKey: @"OtherFrameBufferUpdateSeconds"];
-	while (thisConnection = [connectionEnumerator nextObject]) {
-		if ([thisConnection window] != keyWindow) {
-			[thisConnection setFrameBufferUpdateSeconds: updateDelay];
-		}
-	}
-}
-
-- (float)maxPossibleFrameBufferUpdateSeconds;
-{
-	return [frontInverseCPUSlider maxValue];
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
@@ -565,20 +468,11 @@ static RFBConnectionManager*	sharedManager = nil;
 	[self selectedHostChanged];
 }
 
-- (IBAction)changeRendezvousUse:(id)sender
-{
-	[self useRendezvous:![[ServerDataManager sharedInstance] getUseRendezvous]];
-}
-
-- (void)useRendezvous:(bool)useRendezvous
+- (void)useRendezvous:(BOOL)useRendezvous
 {
 	[[ServerDataManager sharedInstance] useRendezvous: useRendezvous];
 	
-	assert( [[ServerDataManager sharedInstance] getUseRendezvous] == useRendezvous );
-	
-	[rendezvousMenuItem setState:useRendezvous ? NSOnState : NSOffState];
-	
-	[[NSUserDefaults standardUserDefaults] setBool:useRendezvous forKey:RENDEZVOUS_SETTINGS];
+	NSParameterAssert( [[ServerDataManager sharedInstance] getUseRendezvous] == useRendezvous );
 }
 
 - (void)displayGroups:(bool)display
@@ -597,6 +491,35 @@ static RFBConnectionManager*	sharedManager = nil;
 		}
 		
 		[splitView adjustSubviews];
+	}
+}
+
+
+- (void)setFrontWindowUpdateInterval: (NSTimeInterval)interval
+{
+	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
+	RFBConnection *thisConnection;
+	NSWindow *keyWindow = [NSApp keyWindow];
+	
+	while (thisConnection = [connectionEnumerator nextObject]) {
+		if ([thisConnection window] == keyWindow) {
+			[thisConnection setFrameBufferUpdateSeconds: interval];
+			break;
+		}
+	}
+}
+
+
+- (void)setOtherWindowUpdateInterval: (NSTimeInterval)interval
+{
+	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
+	RFBConnection *thisConnection;
+	NSWindow *keyWindow = [NSApp keyWindow];
+	
+	while (thisConnection = [connectionEnumerator nextObject]) {
+		if ([thisConnection window] != keyWindow) {
+			[thisConnection setFrameBufferUpdateSeconds: interval];
+		}
 	}
 }
 

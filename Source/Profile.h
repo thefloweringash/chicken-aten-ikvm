@@ -49,7 +49,7 @@ typedef enum {
     CARD32 enabledEncodings[20];
 }
 
-- (id)initWithDictionary:(NSDictionary*)d;
+- (id)initWithDictionary:(NSDictionary*)d name: (NSString *)name;
 - (float)emulate3ButtonTimeout;
 - (float)emulateKeyDownTimeout;
 - (float)emulateKeyboardTimeout;

@@ -19,83 +19,53 @@
  */
 
 #import "Profile.h"
+#import "NSObject_Chicken.h"
 #import "ProfileManager.h"
 #import "FrameBuffer.h"
 
 @implementation Profile
 
-static CARD32 getcode(id s)
-{
-	if([s shortValue] == kOptionKeyPopupIndex) {
-		return kMetaKeyCode;
-	} else if([s shortValue] == kControlKeyPopupIndex) {
-		return kControlKeyCode;
-	} else if([s shortValue] == kCommmandKeyPopupIndex) {
-		return kAltKeyCode;
-	} else if([s shortValue] == kShiftKeyPopupIndex) {
-		return kShiftKeyCode;
-	} else {
-		return kWindowsKeyCode;
-	}
-}
-/*
-static CARD32 getcode(NSString* s)
-{
-    if([s isEqualToString:@"Meta"]) {
-        return 0xffe7;
-    } else if([s isEqualToString:@"Control"]) {
-        return 0xffe3;
-    } else if([s isEqualToString:@"Alt"]) {
-        return 0xffe9;
-    } else if([s isEqualToString:@"Shift"]) {
-        return 0xffe1;
-    } else {
-        return 0xffea;
-    }
-}
-*/
-
-- (id)initWithDictionary:(NSDictionary*)d
+- (id)initWithDictionary:(NSDictionary*)d name: (NSString *)name
 {
     if (self = [super init]) {
 		NSArray* enc;
-		int i, mask;
-		BOOL copyrect;
-		id check;
+		int i;
 
-		info = [d copy];
-		e3btimeout = [[info objectForKey:EmulateThreeButtonTimeout] intValue];
+		info = [[d deepMutableCopy] retain];
+		[info setObject: name forKey: @"ProfileName"];
+		
+		// we're guaranteed that all keys are present
+		e3btimeout = [[info objectForKey:kProfile_E3BTimeout_Key] intValue];
 		e3btimeout /= 1000.0;
-                
-		// If the EmulateKeyDownTimeout is nil, it means it's not in the profile.
-		check = [info objectForKey:EmulateKeyDownTimeout];
-		if (check == nil) {
-			ekdtimeout = -1;
-		}
-		else {
-			ekdtimeout = [[info objectForKey:EmulateKeyDownTimeout] intValue];
-			ekdtimeout /= 1000.0;
-		}
 
-		ekbtimeout = [[info objectForKey:EmulateKeyboardTimeout] intValue];
+		ekdtimeout = [[info objectForKey:kProfile_EmulateKeyDown_Key] intValue];
+		ekdtimeout /= 1000.0;
+
+		ekbtimeout = [[info objectForKey:kProfile_EmulateKeyboard_Key] intValue];
                 
-		commandKeyCode = getcode([info objectForKey:NewCommandKeyMap]);
-		altKeyCode = getcode([info objectForKey:NewAltKeyMap]);
-		shiftKeyCode = getcode([info objectForKey:NewShiftKeyMap]);
-		controlKeyCode = getcode([info objectForKey:NewControlKeyMap]);
-		enc = [info objectForKey:Encodings];
-		mask = [[info objectForKey:EnabledEncodings] intValue];
-		if((copyrect = [[info objectForKey:CopyRectEnabled] intValue]) != 0) {
+		commandKeyCode = [ProfileManager modifierCodeForPreference: 
+			[info objectForKey: kProfile_LocalCommandModifier_Key]];
+		
+		altKeyCode = [ProfileManager modifierCodeForPreference: 
+			[info objectForKey: kProfile_LocalAltModifier_Key]];
+		
+		shiftKeyCode = [ProfileManager modifierCodeForPreference: 
+			[info objectForKey: kProfile_LocalShiftModifier_Key]];
+		
+		controlKeyCode = [ProfileManager modifierCodeForPreference: 
+			[info objectForKey: kProfile_LocalControlModifier_Key]];
+		
+		enc = [info objectForKey: kProfile_Encodings_Key];
+		if( YES == [[info objectForKey: kProfile_EnableCopyrect_Key] boolValue] ) {
 			numberOfEnabledEncodings = 1;
 			enabledEncodings[0] = rfbEncodingCopyRect;
 		} else {
 			numberOfEnabledEncodings = 0;
 		}
 		for(i=0; i<[enc count]; i++) {
-			int e = [[enc objectAtIndex:i] intValue];
-			if(mask & (1 << e)) {
-				enabledEncodings[numberOfEnabledEncodings++] = [ProfileManager encodingValue:e];
-			}
+			NSDictionary *e = [enc objectAtIndex:i];
+			if ( [[e objectForKey: kProfile_EncodingEnabled_Key] boolValue] )
+				enabledEncodings[numberOfEnabledEncodings++] = [[e objectForKey: kProfile_EncodingValue_Key] intValue];
 		}
 	}
     return self;
@@ -159,14 +129,14 @@ static CARD32 getcode(NSString* s)
 
 - (BOOL)useServerNativeFormat
 {
-    int i = [[info objectForKey:PixelFormat] intValue];
+    int i = [[info objectForKey: kProfile_PixelFormat_Key] intValue];
 
     return (i == 0) ? YES : NO;
 }
 
 - (void)getPixelFormat:(rfbPixelFormat*)format
 {
-    int i = [[info objectForKey:PixelFormat] intValue];
+    int i = [[info objectForKey: kProfile_PixelFormat_Key] intValue];
 
     format->bigEndian = [FrameBuffer bigEndian];
     format->trueColour = YES;

@@ -17,21 +17,22 @@
  */
 
 #import "RFBConnection.h"
-#import "RFBView.h"
-#import "RFBServerInitReader.h"
+#import "EncodingReader.h"
+#import "FrameBuffer.h"
+#import "FrameBufferUpdateReader.h"
+#import "FullscreenWindow.h"
+#import "IServerData.h"
+#import "KeyEquivalentManager.h"
 #import "NLTStringReader.h"
+#import "PrefController.h"
+#import "RectangleList.h"
+#import "RFBConnectionManager.h"
 #import "RFBHandshaker.h"
 #import "RFBProtocol.h"
-#import "RFBConnectionManager.h"
-#import "FrameBuffer.h"
-#import "RectangleList.h"
-#import "FrameBufferUpdateReader.h"
-#import "KeyEquivalentManager.h"
-#import "EncodingReader.h"
-#import "IServerData.h"
+#import "RFBServerInitReader.h"
+#import "RFBView.h"
 #include <unistd.h>
 #include <libc.h>
-#include "FullscreenWindow.h" // added by Jason for fullscreen mode
 
 #define	F1_KEYCODE		0xffbe
 #define F2_KEYCODE		0xffbf
@@ -279,7 +280,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
     NSRect  winframe;
     NSSize	maxviewsize;
-	BOOL usesFullscreenScrollers = [[NSUserDefaults standardUserDefaults] floatForKey: @"FullscreenScrollbars"] != 0.0; // jason added
+	BOOL usesFullscreenScrollers = [[PrefController sharedController] fullscreenHasScrollbars];
 	
     horizontalScroll = verticalScroll = NO;
     winframe = [window frame];
@@ -324,7 +325,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	NSRect screenRect;
 	NSClipView *contentView;
 
-    frameBufferClass = [manager defaultFrameBufferClass];
+    frameBufferClass = [[PrefController sharedController] defaultFrameBufferClass];
 	[frameBuffer autorelease];
     frameBuffer = [[frameBufferClass alloc] initWithSize:aSize andFormat:pixf];
 
@@ -1087,7 +1088,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
 	//NSLog(@"Key\n");
 	[self installMouseMovedTrackingRect];
-	[self setFrameBufferUpdateSeconds: [[NSUserDefaults standardUserDefaults] floatForKey: @"FrontFrameBufferUpdateSeconds"]];
+	[self setFrameBufferUpdateSeconds: [[PrefController sharedController] frontFrameBufferUpdateSeconds]];
 	
 	//Reset keyboard state on remote end
 	[self sendModifier:0];
@@ -1097,7 +1098,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
 	//NSLog(@"Not Key\n");
 	[self removeMouseMovedTrackingRect];
-	[self setFrameBufferUpdateSeconds: [[NSUserDefaults standardUserDefaults] floatForKey: @"OtherFrameBufferUpdateSeconds"]];
+	[self setFrameBufferUpdateSeconds: [[PrefController sharedController] otherFrameBufferUpdateSeconds]];
 	
 	//Reset keyboard state on remote end
 	[self sendModifier:0];
@@ -1225,7 +1226,7 @@ static NSString* byteString(double d)
 }
 
 - (IBAction)makeConnectionFullscreen: (id)sender {
-	BOOL displayFullscreenWarning = [[NSUserDefaults standardUserDefaults] boolForKey: @"DisplayFullscreenWarning"];
+	BOOL displayFullscreenWarning = [[PrefController sharedController] displayFullScreenWarning];
 
 	if (displayFullscreenWarning) {
 		NSBeginAlertSheet(@"Your connection is entering fullscreen mode", @"Fullscreen", @"Cancel", nil, window, self, nil, @selector(connectionWillGoFullscreen: returnCode: contextInfo: ), nil, @"You may return to windowed mode by pressing the proper key equivalent at any time.  You can change this key equivalent in the Preferences if necessary.");
@@ -1254,7 +1255,7 @@ static NSString* byteString(double d)
 	float scrollWidth = [NSScroller scrollerWidth];
 	NSRect aRect;
 
-	if ([[NSUserDefaults standardUserDefaults] floatForKey: @"FullscreenScrollbars"] == 0.0)
+	if ( ! [[PrefController sharedController] fullscreenHasScrollbars] )
 		scrollWidth = 0.0;
 	aRect = NSMakeRect(minX, minY, kTrackingRectThickness, height);
 	_leftTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
@@ -1319,7 +1320,7 @@ static NSString* byteString(double d)
 - (void)scrollFullscreenView: (NSTimer *)timer {
 	NSClipView *contentView = [scrollView contentView];
 	NSPoint origin = [contentView bounds].origin;
-	float autoscrollIncrement = [[NSUserDefaults standardUserDefaults] floatForKey: @"FullscreenAutoscrollIncrement"];
+	float autoscrollIncrement = [[PrefController sharedController] fullscreenAutoscrollIncrement];
 
 	if (_currentTrackingTag == _leftTrackingTag)
 		[contentView scrollToPoint: [contentView constrainScrollPoint: NSMakePoint(origin.x - autoscrollIncrement, origin.y)]];
@@ -1343,7 +1344,7 @@ static NSString* byteString(double d)
 
 - (void)setFrameBufferUpdateSeconds: (float)seconds {
 	_frameBufferUpdateSeconds = seconds;
-	_hasManualFrameBufferUpdates = _frameBufferUpdateSeconds >= [manager maxPossibleFrameBufferUpdateSeconds];
+	_hasManualFrameBufferUpdates = _frameBufferUpdateSeconds >= [[PrefController sharedController] maxPossibleFrameBufferUpdateSeconds];
 		
 }
 

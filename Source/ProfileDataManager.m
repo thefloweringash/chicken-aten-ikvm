@@ -7,63 +7,77 @@
 //
 
 #import "ProfileDataManager.h"
+#import "NSObject_Chicken.h"
+#import "ProfileManager.h"
+#import "PrefController.h"
 
-#define PROFILES			@"ConnectProfiles"
 
 @implementation ProfileDataManager
-
-static ProfileDataManager* gInstance = nil;
 
 - (id)init
 {
 	if( self = [super init] )
 	{
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(applicationWillTerminate:)
-													 name:NSApplicationWillTerminateNotification object:NSApp];
-													 
-		NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-		if((profiles = [[ud objectForKey:PROFILES] mutableCopy]) != nil) {
-			NSString* key;
-			NSEnumerator* keys = [profiles keyEnumerator];
+		mProfiles = (NSMutableDictionary *)[[PrefController sharedController] profileDict];
+		NSParameterAssert( mProfiles != nil );
+		mProfiles = [[mProfiles deepMutableCopy] retain];
+		NSString* key;
+		NSEnumerator* keys = [mProfiles keyEnumerator];
 
-			while((key = [keys nextObject]) != nil) {
-				NSMutableDictionary* d = [[[profiles objectForKey:key] mutableCopy] autorelease];
-				[profiles setObject:d forKey:key];
-			}
-		}
-		else
-		{
-			profiles = [[NSMutableDictionary alloc] init];
+		while((key = [keys nextObject]) != nil) {
+			NSMutableDictionary* d = [[[mProfiles objectForKey:key] mutableCopy] autorelease];
+			[mProfiles setObject:d forKey:key];
 		}
 	}
 	
 	return self;
 }
 
-+ (ProfileDataManager*) sharedInstance
+- (void)dealloc
 {
-	if( nil == gInstance )
-	{
-		gInstance = [[ProfileDataManager alloc] init];
-	}
-	
-	return gInstance;
+	[mProfiles release];
+	[super dealloc];
 }
 
-- (void)applicationWillTerminate:(NSNotification *)notification
++ (ProfileDataManager*) sharedInstance
 {
-	[gInstance release];
+	static id sInstance = nil;
+	if( nil == sInstance )
+	{
+		sInstance = [[ProfileDataManager alloc] init];
+	}
+	
+	return sInstance;
+}
+
+- (NSMutableDictionary *)defaultProfile
+{
+	return [mProfiles objectForKey: [self defaultProfileName]];
+}
+
+- (NSString *)defaultProfileName
+{
+	NSEnumerator *profileNameEnumerator = [mProfiles keyEnumerator];
+	NSString *profileName;
+	
+	while ( profileName = [profileNameEnumerator nextObject] )
+	{
+		NSDictionary *profile = [mProfiles objectForKey: profileName];
+		if ( [profile objectForKey: kProfile_IsDefault_Key] )
+			return profileName;
+	}
+	[NSException raise: NSInternalInconsistencyException format: @"No default profile could be found"];
+	return nil; // never executed
 }
 
 - (NSMutableDictionary*)profileForKey:(id)key
 {
-	return (NSMutableDictionary*)[profiles objectForKey:key];
+	return [mProfiles objectForKey:key];
 }
 
 - (void)setProfile:(NSMutableDictionary*)profile forKey:(id) key
 {
-	[profiles setObject:profile forKey:key];
+	[mProfiles setObject:profile forKey:key];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ProfileListChangeMsg
 														object:self];
@@ -71,7 +85,7 @@ static ProfileDataManager* gInstance = nil;
 
 - (void)removeProfileForKey:(id) key
 {
-	[profiles removeObjectForKey:key];
+	[mProfiles removeObjectForKey:key];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ProfileListChangeMsg
 														object:self];
@@ -79,17 +93,17 @@ static ProfileDataManager* gInstance = nil;
 
 - (int)count
 {
-	return [profiles count];
+	return [mProfiles count];
 }
 
 - (void)save
 {
-	[[NSUserDefaults standardUserDefaults] setObject:profiles forKey:PROFILES];
+	[[PrefController sharedController] setProfileDict: mProfiles];
 }
 
 - (NSArray*)sortedKeyArray
 {
-	return [[profiles allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+	return [[mProfiles allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
 @end

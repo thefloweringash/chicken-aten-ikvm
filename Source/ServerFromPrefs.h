@@ -25,7 +25,6 @@
 @class ServerDataManager;
 
 @interface ServerFromPrefs : ServerBase {
-	NSMutableDictionary* _prefDict;
 }
 
 + (id<IServerData>)createWithName:(NSString*)name;

@@ -17,8 +17,9 @@
  */
 
 
-#include "FrameBuffer.h"
-#include "RFBConnectionManager.h"
+#import "FrameBuffer.h"
+#import "PrefController.h"
+#import "RFBConnectionManager.h"
 
 @implementation FrameBuffer
 
@@ -216,7 +217,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 - (void)setPixelFormat:(rfbPixelFormat*)theFormat
 {
     int		i;
-    double	rweight, gweight, bweight, gamma = 1.0/[RFBConnectionManager gammaCorrection];
+    double	rweight, gweight, bweight, gamma = 1.0/[[PrefController sharedController] gammaCorrection];
 
     fprintf(stderr, "rfbPixelFormat redMax = %d\n", theFormat->redMax);
     fprintf(stderr, "rfbPixelFormat greenMax = %d\n", theFormat->greenMax);

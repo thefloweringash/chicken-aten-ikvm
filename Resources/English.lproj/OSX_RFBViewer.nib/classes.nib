@@ -2,6 +2,18 @@
     IBClasses = (
         {
             ACTIONS = {
+                changeRendezvousUse = id; 
+                showConnectionDialog = id; 
+                showPreferences = id; 
+                showProfileManager = id; 
+            }; 
+            CLASS = AppDelegate; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {mInfoVersionNumber = NSTextField; mRendezvousMenuItem = NSMenuItem; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
                 makeConnectionFullscreen = id; 
                 makeConnectionWindowed = id; 
                 manuallyUpdateFrameBuffer = id; 
@@ -55,31 +67,13 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {
-                addServer = id; 
-                changeRendezvousUse = id; 
-                deleteSelectedServer = id; 
-                frontInverseCPUSliderChanged = id; 
-                otherInverseCPUSliderChanged = id; 
-                preferencesChanged = id; 
-            }; 
+            ACTIONS = {addServer = id; deleteSelectedServer = id; preferencesChanged = id; }; 
             CLASS = RFBConnectionManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                autoscrollIncrement = NSSlider; 
-                colorModelMatrix = NSMatrix; 
-                displayFullscreenWarning = NSButton; 
-                frontInverseCPUSlider = NSSlider; 
-                fullscreenScrollbars = NSButton; 
-                gamma = NSTextField; 
                 groupList = NSTableView; 
                 loginPanel = NSPanel; 
                 mInfoVersionNumber = NSTextField; 
-                otherInverseCPUSlider = NSSlider; 
-                profileManager = ProfileManager; 
-                psMaxRects = NSTextField; 
-                psThreshold = NSTextField; 
-                rendezvousMenuItem = NSMenuItem; 
                 serverDataBoxLocal = NSBox; 
                 serverDeleteBtn = NSButton; 
                 serverGroupBox = NSBox; 

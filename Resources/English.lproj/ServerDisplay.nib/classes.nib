@@ -15,6 +15,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 box = NSBox; 
+                connectBtn = NSButton; 
                 connectIndicator = NSProgressIndicator; 
                 connectIndicatorText = NSTextField; 
                 display = NSTextField; 

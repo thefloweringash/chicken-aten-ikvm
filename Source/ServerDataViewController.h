@@ -60,6 +60,7 @@
 
 - (void)updateView:(id)notification;
 - (void)updateProfileView:(id)notification;
+- (void)setProfilePopupToProfile: (NSString *)profileName;
 
 - (void)loadProfileIntoView;
 

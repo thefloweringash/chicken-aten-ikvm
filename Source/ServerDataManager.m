@@ -20,12 +20,12 @@
 //
 
 #import "ServerDataManager.h"
+#import "PrefController.h"
 #import "ServerFromPrefs.h"
 #import "ServerFromRendezvous.h"
 #import <AppKit/AppKit.h>
 
 #define RFB_PREFS_LOCATION  @"Library/Preferences/cotvnc.prefs"
-#define RFB_HOST_INFO		@"HostPreferences"
 #define RFB_SERVER_LIST     @"ServerList"
 #define RFB_GROUP_LIST		@"GroupList"
 #define RFB_SAVED_SERVERS   @"SavedServers"
@@ -43,8 +43,6 @@ static ServerDataManager* gInstance = nil;
 {
 	if( self = [super init] )
 	{
-		mPostMessages = true;
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(applicationWillTerminate:)
 													 name:NSApplicationWillTerminateNotification object:NSApp];
@@ -72,8 +70,9 @@ static ServerDataManager* gInstance = nil;
 {
 	if( self = [self init] )
 	{
-		NSEnumerator* hostEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:RFB_HOST_INFO] keyEnumerator];
-		NSEnumerator* objEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:RFB_HOST_INFO] objectEnumerator];
+		NSDictionary *hostInfo = [[PrefController sharedController] hostInfo];
+		NSEnumerator* hostEnumerator = [hostInfo keyEnumerator];
+		NSEnumerator* objEnumerator = [hostInfo objectEnumerator];
 		NSString* host;
 		NSDictionary* obj;
 		while( host = [hostEnumerator nextObject] )
@@ -85,13 +84,6 @@ static ServerDataManager* gInstance = nil;
 				[server setDelegate:self];
 				[mServers setObject:server forKey:[server name]];
 			}
-		}
-		
-		if( 0 == [mServers count] )
-		{
-			mPostMessages = false;
-			[self createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
-			mPostMessages = true;
 		}
 	}
 	
@@ -279,11 +271,8 @@ static ServerDataManager* gInstance = nil;
 	[mServers removeObjectForKey:[server name]];
 	assert( nil == [mServers objectForKey:[server name]] );
 	
-	if( mPostMessages )
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
-															object:self];
-	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
+														object:self];
 }
 
 - (void)makeNameUnique:(NSMutableString*)name
@@ -317,11 +306,8 @@ static ServerDataManager* gInstance = nil;
 	
 	[newServer setDelegate:self];
 	
-	if( mPostMessages )
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
-															object:self];
-	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
+														object:self];
 	
 	return newServer;
 }
@@ -414,11 +400,8 @@ static ServerDataManager* gInstance = nil;
 			[rendezvousDict removeAllObjects];
 			[mRendezvousNameToServer removeAllObjects];
 			
-			if( mPostMessages )
-			{
-				[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
-																	object:self];
-			}
+			[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
+																object:self];
 		}
 	}
 }
@@ -474,7 +457,7 @@ static ServerDataManager* gInstance = nil;
 	NSParameterAssert( newServer == [mServers objectForKey:[newServer name]] );
 	NSParameterAssert( newServer == [[mGroups objectForKey:@"Rendezvous"] objectForKey:[newServer name]] );
 	
-    if(!moreComing && mPostMessages)
+    if(!moreComing)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 															object:self];
@@ -497,7 +480,7 @@ static ServerDataManager* gInstance = nil;
 	
 	[serverToRemove release];
     
-    if(!moreComing && mPostMessages)
+    if(!moreComing)
     {		
         [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 															object:self];

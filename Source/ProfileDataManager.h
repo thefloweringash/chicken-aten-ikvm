@@ -14,7 +14,7 @@
 @interface ProfileDataManager : NSObject {
 
 @private
-	NSMutableDictionary*		profiles;
+	NSMutableDictionary *mProfiles;
 }
 
 /**
@@ -23,7 +23,9 @@
  *  @return Shared singleton instance of the ProfileDataManager class. */
 + (ProfileDataManager*) sharedInstance;
 
-- (NSMutableDictionary*)profileForKey:(id) key;
+- (NSMutableDictionary *)defaultProfile;
+- (NSString *)defaultProfileName;
+- (NSMutableDictionary *)profileForKey:(id) key;
 - (void)setProfile:(NSMutableDictionary*) profile forKey:(id) key;
 - (void)removeProfileForKey:(id) key;
 - (int)count;

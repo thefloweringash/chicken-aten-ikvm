@@ -68,7 +68,6 @@
 
 - (void)dealloc
 {
-	[_prefDict release];
 	[super dealloc];
 }
 

@@ -35,7 +35,7 @@
 		_password =         [[NSString alloc] init];
 		_rememberPassword = NO;
 		_display =          0;
-		_lastProfile =      [[NSString alloc] initWithString:DefaultProfile];
+		_lastProfile =      nil;
 		_shared =           NO;
 		_fullscreen =       NO;
 		
@@ -182,15 +182,10 @@
 - (void)setLastProfile: (NSString*)lastProfile
 {
 	[_lastProfile autorelease];
+	_lastProfile = nil;
 	
-	if( nil == [[ProfileDataManager sharedInstance] profileForKey:[self lastProfile]] )
-	{
-		_lastProfile = [[NSString stringWithString:DefaultProfile] retain];
-	}
-	else
-	{
+	if( nil != [[ProfileDataManager sharedInstance] profileForKey: lastProfile] )
 		_lastProfile = [lastProfile retain];
-	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -203,9 +198,10 @@
 
 - (void)profileListUpdate:(id)notification
 {
-	if( nil == [[ProfileDataManager sharedInstance] profileForKey:[self lastProfile]] )
+	NSString *lastProfile = [self lastProfile];
+	if( !lastProfile || (nil == [[ProfileDataManager sharedInstance] profileForKey: lastProfile]) )
 	{
-		[self setLastProfile:DefaultProfile];
+		[self setLastProfile:nil];
 	}
 }
 

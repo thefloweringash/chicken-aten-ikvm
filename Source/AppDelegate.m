@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import "PrefController.h"
 #import "RFBConnectionManager.h"
-//#import "ServerDataManager.h"
 
 
 @implementation AppDelegate

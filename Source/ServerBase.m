@@ -60,7 +60,6 @@
 	[_host release];
 	[_password release];
 	[_lastProfile release];
-	[(id)_delegate release];
 	[super dealloc];
 }
 
@@ -204,7 +203,6 @@
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate
 {
-	[(id)delegate retain];
 	_delegate = delegate;
 }
 

@@ -26,8 +26,6 @@
 {
     [super init];
     [self startWithNumber:number];
-    rectList = NULL;
-    rgbList = NULL;
     return self;
 }
 
@@ -45,10 +43,16 @@
 - (void)startWithNumber:(unsigned int)n
 {
     if(n > capacity) {
-        free(rectList);
-        free(rgbList);
+		if (rectList != NULL) {
+			free(rectList);
+		}
+		if (rgbList != NULL) {
+			free(rgbList);
+		}
         rectList = malloc(sizeof(NSRect) * n);
+		NSParameterAssert( rectList != NULL );
         rgbList = malloc(sizeof(float) * n * 3);
+		NSParameterAssert( rgbList != NULL );
         capacity = n;
     }
     used = 0;

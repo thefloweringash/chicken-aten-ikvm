@@ -50,7 +50,6 @@
                 frontInverseCPUSliderChanged = id; 
                 otherInverseCPUSliderChanged = id; 
                 preferencesChanged = id; 
-                selectedHostChanged = id; 
             }; 
             CLASS = RFBConnectionManager; 
             LANGUAGE = ObjC; 
@@ -58,6 +57,7 @@
                 autoscrollIncrement = NSSlider; 
                 colorModelMatrix = NSMatrix; 
                 display = NSTextField; 
+                displayFullscreenWarning = NSButton; 
                 frontInverseCPUSlider = NSSlider; 
                 fullscreenScrollbars = NSButton; 
                 gamma = NSTextField; 

@@ -222,19 +222,18 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)connectionHasTerminated
 {
-	[socketHandler release];
-	[titleString release];
-	[manager release];
-	[versionReader release];
-	[handshaker release];
-	[(id)server_ release];
-	[serverVersion release];
-	[rfbProtocol release];
-	[frameBuffer release];
-	//[optionPanel release];  We don't create this!
-	[profile release];
-	[host release];
-	[realDisplayName release];
+	[socketHandler release];	socketHandler = nil;
+	[titleString release];		titleString = nil;
+	[manager release];			manager = nil;
+	[versionReader release];	versionReader = nil;
+	[handshaker release];		handshaker = nil;
+	[(id)server_ release];		server_ = nil;
+	[serverVersion release];	serverVersion = nil;
+	[rfbProtocol release];		rfbProtocol = nil;
+	[frameBuffer release];		frameBuffer = nil;
+	[profile release];			profile = nil;
+	[host release];				host = nil;
+	[realDisplayName release];	realDisplayName = nil;
 
 	[manager removeConnection:self];
 }
@@ -983,6 +982,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	// if this is a key equivalent, perform it and get the rock outta here
 	if ( aFlag && characters && [[KeyEquivalentManager defaultManager] performEquivalentWithCharacters: [theEvent charactersIgnoringModifiers] modifiers: [theEvent modifierFlags] & 0xFFFF0000] )
 	{
+		// if we've closed down our window as a result of the key command, do nothing
+		if ( nil == socketHandler )
+			return;
 		[self clearEmulationActiveMask];
 		buttonEmulationKeyDownMask = 0;
 		[self sendModifier:0];

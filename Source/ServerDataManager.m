@@ -34,24 +34,6 @@
 
 static ServerDataManager* gInstance = nil;
 
-- (id)retain
-{
-	return [super retain];
-}
-
-
-- (oneway void)release
-{
-	[super release];
-}
-
-
-- (id)autorelease
-{
-	return [super autorelease];
-}
-
-
 + (void)initialize
 {
 	[ServerDataManager setVersion:1];

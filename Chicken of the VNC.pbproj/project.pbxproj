@@ -269,7 +269,6 @@
 				F5DC7184033DB40D01A8010C,
 				F5DC7189033DB44301A8010C,
 				F5DC718A033DB44301A8010C,
-				F5DC723C033DB95501A8010C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -429,6 +428,11 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		F541E47E03D8228D01000122 = {
+			isa = PBXFileReference;
+			path = main.r;
+			refType = 4;
 		};
 		F564F4B60392E07E01303550 = {
 			isa = PBXFileReference;
@@ -681,7 +685,7 @@
 				F5DC71C0033DB4A801A8010C,
 				F5DC71CE033DB4A801A8010C,
 				F5DC71CF033DB4A801A8010C,
-				F5DC71D0033DB4A801A8010C,
+				F541E47E03D8228D01000122,
 				F5DC71D1033DB4A801A8010C,
 				F5DC71D2033DB4A801A8010C,
 				F5DC71D3033DB4A801A8010C,
@@ -918,11 +922,6 @@
 		F5DC71CF033DB4A801A8010C = {
 			isa = PBXFileReference;
 			path = LowColorFrameBuffer.m;
-			refType = 4;
-		};
-		F5DC71D0033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = main.r;
 			refType = 4;
 		};
 		F5DC71D1033DB4A801A8010C = {
@@ -1353,12 +1352,6 @@
 		};
 		F5DC723B033DB95401A8010C = {
 			fileRef = F5DC71CF033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC723C033DB95501A8010C = {
-			fileRef = F5DC71D0033DB4A801A8010C;
 			isa = PBXBuildFile;
 			settings = {
 			};

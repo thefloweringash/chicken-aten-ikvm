@@ -25,9 +25,11 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    headerReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setHeader:) size:5];
-    colorReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setColors:)];
-    return [super initTarget:aTarget action:anAction];
+	if (self = [super initTarget:aTarget action:anAction]) {
+		headerReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setHeader:) size:5];
+		colorReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setColors:)];
+	}
+    return self;
 }
 
 - (void)dealloc

@@ -71,10 +71,12 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    blockReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBlock:) size:20];
-    nameReader = [[RFBStringReader alloc] initTarget:self action:@selector(setName:)];
-    msg = [[ServerInitMessage alloc] init];
-    return [super initTarget:aTarget action:anAction];
+	if (self = [super initTarget:aTarget action:anAction]) {
+		blockReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBlock:) size:20];
+		nameReader = [[RFBStringReader alloc] initTarget:self action:@selector(setName:)];
+		msg = [[ServerInitMessage alloc] init];
+	}
+    return self;
 }
 
 - (void)dealloc

@@ -26,22 +26,16 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    [super initTarget:aTarget action:anAction];
-    subEncodingReader = [[CARD8Reader alloc] initTarget:self action:@selector(setSubEncoding:)];
-    rawReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawRawTile:)];
-    backGroundReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
-    foreGroundReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setForeground:)];
-    subColorRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawSubColorRects:)];
-    numOfSubRectReader = [[CARD8Reader alloc] initTarget:self action:@selector(setSubrects:)];
-    subRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawSubRects:)];
-    return self;
-}
-
-- (void)setFrameBuffer:(id)aBuffer
-{
-    [super setFrameBuffer:aBuffer];
-    [backGroundReader setBufferSize:[aBuffer bytesPerPixel]];
-    [foreGroundReader setBufferSize:[aBuffer bytesPerPixel]];
+    if (self = [super initTarget:aTarget action:anAction]) {
+		subEncodingReader = [[CARD8Reader alloc] initTarget:self action:@selector(setSubEncoding:)];
+		rawReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawRawTile:)];
+		backGroundReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
+		foreGroundReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setForeground:)];
+		subColorRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawSubColorRects:)];
+		numOfSubRectReader = [[CARD8Reader alloc] initTarget:self action:@selector(setSubrects:)];
+		subRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawSubRects:)];
+	}
+	return self;
 }
 
 - (void)dealloc
@@ -54,6 +48,13 @@
     [subRectReader release];
     [subEncodingReader release];
     [super dealloc];
+}
+
+- (void)setFrameBuffer:(id)aBuffer
+{
+    [super setFrameBuffer:aBuffer];
+    [backGroundReader setBufferSize:[aBuffer bytesPerPixel]];
+    [foreGroundReader setBufferSize:[aBuffer bytesPerPixel]];
 }
 
 - (void)resetReader

@@ -27,8 +27,6 @@
 #import "ByteBlockReader.h"
 #import "RFBConnection.h"
 
-#import "debug.h"
-
 #ifdef SUPPORT_JPEG
 
 static void JpegInitSource(j_decompress_ptr cinfo)
@@ -69,23 +67,29 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    [super initTarget:aTarget action:anAction];
-    controlReader = [[CARD8Reader alloc] initTarget:self action:@selector(setControl:)];
-    backPixReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
-    filterIdReader = [[CARD8Reader alloc] initTarget:self action:@selector(setFilterId:)];
-    unzippedDataReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setUnzippedData:)];
-    zippedDataReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setZippedData:)];
-    zipLengthReader = [[ZipLengthReader alloc] initTarget:self action:@selector(setZipLength:)];
-    copyFilter = [[CopyFilter alloc] initTarget:self action:@selector(filterInitDone:)];
-    paletteFilter = [[PaletteFilter alloc] initTarget:self action:@selector(filterInitDone:)];
-    gradientFilter = [[GradientFilter alloc] initTarget:self action:@selector(filterInitDone:)];
-    zBuffer = [[NSMutableData alloc] initWithLength:Z_BUFSIZE];
-    connection = [aTarget topTarget];
+    if (self = [super initTarget:aTarget action:anAction]) {
+		controlReader = [[CARD8Reader alloc] initTarget:self action:@selector(setControl:)];
+		backPixReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
+		filterIdReader = [[CARD8Reader alloc] initTarget:self action:@selector(setFilterId:)];
+		unzippedDataReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setUnzippedData:)];
+		zippedDataReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setZippedData:)];
+		zipLengthReader = [[ZipLengthReader alloc] initTarget:self action:@selector(setZipLength:)];
+		copyFilter = [[CopyFilter alloc] initTarget:self action:@selector(filterInitDone:)];
+		paletteFilter = [[PaletteFilter alloc] initTarget:self action:@selector(filterInitDone:)];
+		gradientFilter = [[GradientFilter alloc] initTarget:self action:@selector(filterInitDone:)];
+		zBuffer = [[NSMutableData alloc] initWithLength:Z_BUFSIZE];
+		connection = [aTarget topTarget];
+	}
     return self;
 }
 
 - (void)dealloc
 {
+    int streamID;
+
+    for(streamID=0; streamID<NUM_ZSTREAMS; streamID++) {
+		[self uninitializeStream: streamID];
+    }
     [controlReader release];
     [backPixReader release];
     [filterIdReader release];
@@ -122,11 +126,8 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     
     cntl = [cntlByte unsignedCharValue];
     for(streamId=0; streamId<NUM_ZSTREAMS; streamId++) {
-        if((cntl & 0x01) && zStreamActive[streamId]) {
-            if((inflateEnd(&zStream[streamId]) != Z_OK) && (zStream[streamId].msg != NULL)) {
-                NSLog(@"inflateEnd: %s\n", zStream[streamId].msg); // jason - correct spelling from 'infalte'
-            }
-			zStreamActive[streamId] = NO;
+        if((cntl & 0x01)) {
+			[self uninitializeStream: streamId];
         }
 		cntl >>= 1;
     }
@@ -154,11 +155,9 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 
 - (void)setBackground:(NSData*)data
 {
-    FULLDebug(@"%@: setBackground", [self className]);
 #ifdef COLLECT_STATS
         bytesTransferred += [data length];
 #endif
-    FULLDebug(@"%@: setBackground", [self className]);
     [frameBuffer fillRect:frame tightPixel:(unsigned char*)[data bytes]];
     [target performSelector:action withObject:self];
 }
@@ -198,6 +197,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
         return;
     }
     rowSize = (frame.size.width * pixelBits + 7) / 8;
+	NSParameterAssert( rowSize <= Z_BUFSIZE );
     size = rowSize * frame.size.height;
     if(size < TIGHT_MIN_TO_COMPRESS) {
         [unzippedDataReader setBufferSize:size];
@@ -209,7 +209,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 
 - (void)setUnzippedData:(NSData*)data
 {
-    FULLDebug(@"%@: setUnzippedData", [self className]);
 #ifdef COLLECT_STATS
     bytesTransferred += [data length];
 #endif
@@ -226,11 +225,11 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 #ifdef COLLECT_STATS
     unsigned l = [zl unsignedIntValue];
     if(l < 0x80) {
-	bytesTransferred += 1;
+		bytesTransferred += 1;
     } else if(l < 0x4000) {
-	bytesTransferred += 2;
+		bytesTransferred += 2;
     } else {
-	bytesTransferred += 3;
+		bytesTransferred += 3;
     }
 #endif
 #ifdef SUPPORT_JPEG
@@ -243,7 +242,9 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     streamId = cntl & 0x03;
     stream = zStream + streamId;
     if(!zStreamActive[streamId]) {
-        stream->zalloc = Z_NULL;
+		stream->next_in = Z_NULL;
+		stream->avail_in = Z_NULL;
+		stream->zalloc = Z_NULL;
         stream->zfree = Z_NULL;
         stream->opaque = Z_NULL;
         error = inflateInit(stream);
@@ -271,7 +272,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     z_stream* stream;
     NSRect r;
 	
-    FULLDebug(@"%@: setZippedData", [self className]);
 
 #ifdef ZDEBUG
 	fwrite([data bytes], 1, [data length], debugFiles[cntl & 3]);
@@ -353,6 +353,15 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     } else {
         [target performSelector:action withObject:self];
     }
+}
+
+- (void)uninitializeStream: (int)streamID {
+	if(zStreamActive[streamID]) {
+		if((inflateEnd(&zStream[streamID]) != Z_OK) && (zStream[streamID].msg != NULL)) {
+			NSLog(@"inflateEnd: %s\n", zStream[streamID].msg);
+		}
+		zStreamActive[streamID] = NO;
+	}
 }
 
 @end

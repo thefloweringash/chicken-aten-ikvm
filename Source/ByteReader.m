@@ -24,9 +24,11 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    action = anAction;
-    target = aTarget;
-    return [super init];
+	if (self = [super init]) {
+		action = anAction;
+		target = aTarget;
+	}
+    return self;
 }
 
 - (void)resetReader

@@ -23,12 +23,6 @@
 
 @implementation EncodingReader
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
-{
-    [super initTarget:aTarget action:anAction];
-    return self;
-}
-
 - (void)setRectangle:(NSRect)aRect
 {
     frame = aRect;

@@ -30,7 +30,7 @@
 
 - (void)resetReader
 {
-    [value release];
+    [value autorelease];
     value = [[NSMutableString alloc] init];
 }
 

@@ -28,8 +28,9 @@
 #endif
 
 #define NUM_ZSTREAMS		4
-#define Z_BUFSIZE		4096
+//#define Z_BUFSIZE		4096
 #define TIGHT_BUFSIZE		16384
+#define Z_BUFSIZE		TIGHT_BUFSIZE
 #define TIGHT_MIN_TO_COMPRESS	12
 
 @interface TightEncodingReader : EncodingReader
@@ -61,5 +62,7 @@
 	struct 	jpeg_source_mgr jpegSrcManager;
 #endif
 }
+
+- (void)uninitializeStream: (int)streamID;
 
 @end

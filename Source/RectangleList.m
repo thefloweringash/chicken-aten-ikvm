@@ -24,8 +24,9 @@
 
 - (id)initElements:(unsigned int)number
 {
-    [super init];
-    [self startWithNumber:number];
+    if (self = [super init]) {
+		[self startWithNumber:number];
+	}
     return self;
 }
 

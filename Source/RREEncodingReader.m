@@ -40,13 +40,14 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    [super initTarget:aTarget action:anAction];
-    [self setPSThreshold:PS_THRESHOLD];
-    [self setMaximumPSRectangles:PS_MAXRECT];
-    numOfReader = [[CARD32Reader alloc] initTarget:self action:@selector(setNumOfRects:)];
-    backPixReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
-    subRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawRectangles:)];
-    rectList = [[RectangleList alloc] initElements:psThreshold];
+    if (self = [super initTarget:aTarget action:anAction]) {
+		[self setPSThreshold:PS_THRESHOLD];
+		[self setMaximumPSRectangles:PS_MAXRECT];
+		numOfReader = [[CARD32Reader alloc] initTarget:self action:@selector(setNumOfRects:)];
+		backPixReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
+		subRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawRectangles:)];
+		rectList = [[RectangleList alloc] initElements:psThreshold];
+	}
     return self;
 }
 

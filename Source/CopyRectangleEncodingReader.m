@@ -26,11 +26,12 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    [super initTarget:aTarget action:anAction];
-    posReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setPosition:) size:4];
+    if (self = [super initTarget:aTarget action:anAction]) {
+		posReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setPosition:) size:4];
 #ifdef COLLECT_STATS
-    bytesTransferred = 4;
+		bytesTransferred = 4;
 #endif
+	}
     return self;
 }
 

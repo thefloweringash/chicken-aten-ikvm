@@ -25,8 +25,10 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    lengthReader = [[CARD32Reader alloc] initTarget:self action:@selector(setLength:)];
-    return [super initTarget:aTarget action:anAction];
+	if (self = [super initTarget:aTarget action:anAction]) {
+		lengthReader = [[CARD32Reader alloc] initTarget:self action:@selector(setLength:)];
+	}
+    return self;
 }
 
 - (void)dealloc

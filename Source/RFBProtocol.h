@@ -27,7 +27,7 @@
 @interface RFBProtocol : ByteReader
 {
     id			typeReader;
-    id			msgTypeReader[MAX_MSGTYPE+1];
+    id			msgTypeReader[MAX_MSGTYPE + 1];
     BOOL		isStopped;
     BOOL		shouldUpdate;
 
@@ -37,14 +37,17 @@
 
 - (id)initTarget:(id)aTarget serverInfo:(id)info;
 - (void)setFrameBuffer:(id)aBuffer;
+- (void)requestIncrementalFrameBufferUpdateForVisibleRect:(id)aReader;
 - (void)continueUpdate;
 - (void)stopUpdate;
 
 - (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag;
+- (void)setPixelFormat:(rfbPixelFormat*)aFormat;
 
 - (CARD16)numberOfEncodings;
 - (CARD32*)encodings;
 - (void)changeEncodingsTo:(CARD32*)newEncodings length:(CARD16)l;
+- (void)setEncodings;
 
 - (FrameBufferUpdateReader*)frameBufferUpdateReader;
 

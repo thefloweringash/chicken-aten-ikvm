@@ -16,17 +16,18 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-	int inflateResult;
+    if (self = [super initTarget:aTarget action:anAction]) {
+		int inflateResult;
 	
-    [super initTarget:aTarget action:anAction];
-	capacity = 4096;
-	pixels = malloc(capacity);
-	numBytesReader = [[CARD32Reader alloc] initTarget:self action:@selector(setNumBytes:)];
-    pixelReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setCompressedData:)];
-    connection = [aTarget topTarget];
-	inflateResult = inflateInit(&stream);
-	if (inflateResult != Z_OK) {
-		[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", stream.msg]];
+		capacity = 4096;
+		pixels = malloc(capacity);
+		numBytesReader = [[CARD32Reader alloc] initTarget:self action:@selector(setNumBytes:)];
+		pixelReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setCompressedData:)];
+		connection = [aTarget topTarget];
+		inflateResult = inflateInit(&stream);
+		if (inflateResult != Z_OK) {
+			[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", stream.msg]];
+		}
 	}
     return self;
 }
@@ -36,6 +37,7 @@
 	free(pixels);
 	[numBytesReader release];
     [pixelReader release];
+	inflateEnd(&stream);
     [super dealloc];
 }
 
@@ -60,6 +62,7 @@
 	if(s > capacity) {
 		free(pixels);
 		pixels = malloc(s);
+		NSParameterAssert( pixels != NULL );
 		capacity = s;
 	}
 	stream.next_in   = (char*)[data bytes];

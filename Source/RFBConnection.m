@@ -31,8 +31,6 @@
 #include <libc.h>
 #include "FullscreenWindow.h" // added by Jason for fullscreen mode
 
-#include "debug.h" // added by Jason for fullscreen mode
-
 #define	F1_KEYCODE		0xffbe
 #define F2_KEYCODE		0xffbf
 #define	F3_KEYCODE		0xffc0
@@ -114,64 +112,69 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 // jason added for Jaguar check
 + (void)initialize {
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+	NSDictionary *dict = [NSDictionary dictionaryWithObject: [NSNumber numberWithFloat: 0.0] forKey: @"FrameBufferUpdateSeconds"];
+	
+	[standardUserDefaults registerDefaults: dict];
 	gIsJaguar = [NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)];
 }
 
 // jason changed for fullscreen display
 - (id)initWithDictionary:(NSDictionary*)aDictionary profile:(Profile*)p owner:(id)owner
 {
-    struct sockaddr_in	remote;
-    int sock, port;
-	int display; // jason added to handle a direct port specification
+    if (self = [super init]) {
+		struct sockaddr_in	remote;
+		int sock, port;
+		int display;
 
-    [super init];
-    titleString = NULL;
-    profile = [p retain];
-	_owner = owner; // jason added for fullscreen display
-	_isFullscreen = NO; // jason added for fullscreen display
-    if((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
-        [self perror:@"Open Connection" call:@"socket()"];
-        [self release];
-        return nil;
-    }
-    if((host = [aDictionary objectForKey:RFB_HOST]) == nil) {
-        host = [DEFAULT_HOST retain];
-    } else {
-        [host retain];
-    }
-	// jason added for direct port specification
-	display = [[aDictionary objectForKey:RFB_DISPLAY] intValue];
-	if (display > 10)
-		port = display;
-	else
-		port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
-	// end jason
-//	port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
-    socket_address(&remote, host, port);
-    if(connect(sock, (struct sockaddr *)&remote, sizeof(remote)) < 0) {
-        [self perror:@"Open Connection" call:@"connect()"];
-        [self release];
-        return nil;
-    }
-    [NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
-    dictionary = [aDictionary retain];
+		[self setFrameBufferUpdateSeconds: [[NSUserDefaults standardUserDefaults] floatForKey: @"FrameBufferUpdateSeconds"]];
+		profile = [p retain];
+		_owner = owner; // jason added for fullscreen display
+		_isFullscreen = NO; // jason added for fullscreen display
+		if((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+			[self perror:@"Open Connection" call:@"socket()"];
+			[self release];
+			return nil;
+		}
+		if((host = [aDictionary objectForKey:RFB_HOST]) == nil) {
+			host = [DEFAULT_HOST retain];
+		} else {
+			[host retain];
+		}
+		// jason added for direct port specification
+		display = [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+		if (display > 10)
+			port = display;
+		else
+			port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+		// end jason
+	//	port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+		socket_address(&remote, host, port);
+		if(connect(sock, (struct sockaddr *)&remote, sizeof(remote)) < 0) {
+			[self perror:@"Open Connection" call:@"connect()"];
+			[self release];
+			return nil;
+		}
+		[NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
+		dictionary = [aDictionary retain];
+	
+		versionReader = [[NLTStringReader alloc] initTarget:self action:@selector(setServerVersion:)];
+		[self setReader:versionReader];
 
-    versionReader = [[NLTStringReader alloc] initTarget:self action:@selector(setServerVersion:)];
-    [self setReader:versionReader];
-    
-    socketHandler = [[NSFileHandle alloc] initWithFileDescriptor:sock];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleReadCompletionNotification object:socketHandler];
-    [socketHandler readInBackgroundAndNotify];
-    [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil]];
+		socketHandler = [[NSFileHandle alloc] initWithFileDescriptor:sock closeOnDealloc: YES];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleReadCompletionNotification object:socketHandler];
+		[socketHandler readInBackgroundAndNotify];
+		[rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil]];
+	}
     return self;
 }
 
 - (void)dealloc
 {
-    int fd = [socketHandler fileDescriptor];
-
-//    [window release]; // jason set the NIB to release on close - this is for fullscreen
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+	[self cancelFrameBufferUpdateRequest];
+	[self endFullscreenScrolling];
+    [socketHandler release];
     [titleString release];
     [manager release];
     [versionReader release];
@@ -180,8 +183,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [serverVersion release];
     [rfbProtocol release];
     [frameBuffer release];
-    [socketHandler release];
-    close(fd);
     //[optionPanel release];  We don't create this!
     [profile release];
     [host release];
@@ -217,8 +218,10 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)setServerVersion:(NSString*)aVersion
 {
+	[serverVersion autorelease];
     serverVersion = [aVersion retain];
     NSLog(@"Server reports Version %@\n", aVersion);
+	[handshaker autorelease];
     handshaker = [[RFBHandshaker alloc] initTarget:self action:@selector(start:)];
     [self setReader:handshaker];
 }
@@ -228,15 +231,17 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     if(!terminating) {
         int alertValue;
         NSString *terminateString = NULL;
+		
         terminating = YES;
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-            name:NSFileHandleReadCompletionNotification object:socketHandler];
+		[self cancelFrameBufferUpdateRequest];
+		[[NSNotificationCenter defaultCenter] removeObserver:self
+														name:NSFileHandleReadCompletionNotification object:socketHandler];
 		// jason added for fullscreen display
 		if (_isFullscreen)
 			[self makeConnectionWindowed: self];
 		// end jason
 
-	[window close];
+		[window close];
         if(aReason) {
             if (![_owner haveMultipleConnections]) {
                 terminateString = @"Quit";
@@ -310,6 +315,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	NSClipView *contentView; // jason added
 
     frameBufferClass = [manager defaultFrameBufferClass];
+	[frameBuffer autorelease];
     frameBuffer = [[frameBufferClass alloc] initWithSize:aSize andFormat:pixf];
 
     [rfbView setFrameBuffer:frameBuffer];
@@ -363,6 +369,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)setDisplayName:(NSString*)aName
 {
+	[realDisplayName autorelease];
     realDisplayName = [aName retain];
     [titleString autorelease];
     titleString = [[manager translateDisplayName:realDisplayName forHost:host] retain];
@@ -377,6 +384,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)start:(ServerInitMessage*)info
 {
+	[rfbProtocol autorelease];
     rfbProtocol = [[RFBProtocol alloc] initTarget:self serverInfo:info];
     [rfbProtocol setFrameBuffer:frameBuffer];
     [self setReader:rfbProtocol];
@@ -441,10 +449,11 @@ static void print_data(unsigned char* data, int length)
     NSData* data = [[aNotification userInfo] objectForKey:NSFileHandleNotificationDataItem];
     unsigned consumed, length = [data length];
     unsigned char* bytes = (unsigned char*)[data bytes];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; // if we process slower than our requests, we don't autorelease until we get a break, which could be never.
 
-    FULLDebug(@"%@: readData length: %d", [self className], length);
     if(!length) {	// server closed socket obviously
         [self terminateConnection:@"The server closed the connection"];
+		[pool release];
         return;
     }
 //    print_data(bytes, length);
@@ -454,10 +463,12 @@ static void print_data(unsigned char* data, int length)
         length -= consumed;
         bytes += consumed;
         if(terminating) {
+			[pool release];
             return;
         }
     }
     [socketHandler readInBackgroundAndNotify];
+	[pool release];
 }
 
 - (void)setManager:(id)aManager
@@ -588,7 +599,6 @@ static void print_data(unsigned char* data, int length)
     if(thePoint.x >= s.width) thePoint.x = s.width - 1;
     if(thePoint.y >= s.height) thePoint.y = s.height - 1;
     mask = [self performButtonEmulation:mask at:thePoint];
-    FULLDebug(@"mask %d lastMask %d", mask, lastMask);
     if((mouseLocation.x != thePoint.x) || (mouseLocation.y != thePoint.y) || 
        ((mask != lastMask) || (mask & (rfbButton4Mask | rfbButton5Mask)))) {
         //NSLog(@"here %d", mask);
@@ -611,20 +621,28 @@ static void print_data(unsigned char* data, int length)
 }
 
 - (void)queueUpdateRequest {
-    SEL selector = @selector(getUpdate:);
-    NSObject *withObject = self;
-    NSObject *targetObject = self;
-    
     if (!updateRequested) {
         updateRequested = TRUE;
-    } else {
-        [NSObject cancelPreviousPerformRequestsWithTarget:withObject selector:selector object:targetObject];
+		[self cancelFrameBufferUpdateRequest];
+		if (_frameBufferUpdateSeconds > 0.0) {
+			_frameUpdateTimer = [NSTimer scheduledTimerWithTimeInterval: _frameBufferUpdateSeconds target: self selector: @selector(requestFrameBufferUpdate:) userInfo: nil repeats: NO];
+			[_frameUpdateTimer retain];
+		} else {
+			[self requestFrameBufferUpdate: nil];
+		}
     }
-    [targetObject performSelector:selector withObject:withObject afterDelay:.01];
 }
 
-- (void)getUpdate:(id)sender {
-	[rfbProtocol requestUpdate:[window frame] incremental:TRUE];
+- (void)requestFrameBufferUpdate:(id)sender {
+    updateRequested = FALSE;
+	[rfbProtocol requestIncrementalFrameBufferUpdateForVisibleRect: nil];
+}
+
+- (void)cancelFrameBufferUpdateRequest
+{
+	[_frameUpdateTimer invalidate];
+	[_frameUpdateTimer release];
+	_frameUpdateTimer = nil;
     updateRequested = FALSE;
 }
 
@@ -1139,6 +1157,7 @@ static NSString* byteString(double d)
 }
 
 - (void)beginFullscreenScrolling {
+	[self endFullscreenScrolling];
 	_timer = [NSTimer scheduledTimerWithTimeInterval: kAutoscrollInterval
 											target: self
 										  selector: @selector(scrollFullscreenView:)
@@ -1168,6 +1187,14 @@ static NSString* byteString(double d)
 	else
 		NSLog(@"Illegal tracking rectangle");
     [scrollView reflectScrolledClipView: contentView];
+}
+
+- (float)frameBufferUpdateSeconds {
+	return _frameBufferUpdateSeconds;
+}
+
+- (void)setFrameBufferUpdateSeconds: (float)seconds {
+	_frameBufferUpdateSeconds = seconds;
 }
 
 @end

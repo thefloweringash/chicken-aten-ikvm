@@ -38,47 +38,35 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    id ud = [NSUserDefaults standardUserDefaults];
-    NSString* pst = [ud objectForKey:@"PS_THRESHOLD"];
-    NSString* mpr = [ud objectForKey:@"PS_MAXRECTS"];
-    
-    [super initTarget:aTarget action:anAction];
-    headerReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setHeader:) size:3];
-    rawEncodingReader = [[RawEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-    copyRectangleEncodingReader = [[CopyRectangleEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-    rreEncodingReader = [[RREEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-    coRreEncodingReader = [[CoRREEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-    hextileEncodingReader = [[HextileEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-    tightEncodingReader = [[TightEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-	zlibEncodingReader = [[ZlibEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-	zrleEncodingReader = [[ZRLEEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-	zlibHexEncodingReader = [[ZlibHexEncodingReader alloc] initTarget:self action:@selector(didRect:)];
-    rectHeaderReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setRect:) size:12];
-    connection = [target topTarget];
-    if(pst) {
-        unsigned int i = [pst intValue];
-        [rreEncodingReader setPSThreshold:i];
-        [coRreEncodingReader setPSThreshold:i];
-    }
-    if(mpr) {
-        unsigned int i = [mpr intValue];
-        [rreEncodingReader setMaximumPSRectangles:i];
-        [coRreEncodingReader setMaximumPSRectangles:i];
-    }
-    return self;
-}
+    if (self = [super initTarget:aTarget action:anAction]) {
+		id ud = [NSUserDefaults standardUserDefaults];
+		NSString* pst = [ud objectForKey:@"PS_THRESHOLD"];
+		NSString* mpr = [ud objectForKey:@"PS_MAXRECTS"];
 
-- (void)setFrameBuffer:(id)aBuffer
-{
-    [rawEncodingReader setFrameBuffer:aBuffer];
-    [copyRectangleEncodingReader setFrameBuffer:aBuffer];
-    [rreEncodingReader setFrameBuffer:aBuffer];
-    [coRreEncodingReader setFrameBuffer:aBuffer];
-    [hextileEncodingReader setFrameBuffer:aBuffer];
-    [tightEncodingReader setFrameBuffer:aBuffer];
-	[zlibEncodingReader setFrameBuffer:aBuffer];
-	[zrleEncodingReader setFrameBuffer:aBuffer];
-	[zlibHexEncodingReader setFrameBuffer:aBuffer];
+		headerReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setHeader:) size:3];
+		rawEncodingReader = [[RawEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		copyRectangleEncodingReader = [[CopyRectangleEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		rreEncodingReader = [[RREEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		coRreEncodingReader = [[CoRREEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		hextileEncodingReader = [[HextileEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		tightEncodingReader = [[TightEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		zlibEncodingReader = [[ZlibEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		zrleEncodingReader = [[ZRLEEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		zlibHexEncodingReader = [[ZlibHexEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+		rectHeaderReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setRect:) size:12];
+		connection = [target topTarget];
+		if(pst) {
+			unsigned int i = [pst intValue];
+			[rreEncodingReader setPSThreshold:i];
+			[coRreEncodingReader setPSThreshold:i];
+		}
+		if(mpr) {
+			unsigned int i = [mpr intValue];
+			[rreEncodingReader setMaximumPSRectangles:i];
+			[coRreEncodingReader setMaximumPSRectangles:i];
+		}
+	}
+    return self;
 }
 
 - (void)dealloc
@@ -95,6 +83,19 @@
 	[zrleEncodingReader release];
 	[zlibHexEncodingReader release];
     [super dealloc];
+}
+
+- (void)setFrameBuffer:(id)aBuffer
+{
+    [rawEncodingReader setFrameBuffer:aBuffer];
+    [copyRectangleEncodingReader setFrameBuffer:aBuffer];
+    [rreEncodingReader setFrameBuffer:aBuffer];
+    [coRreEncodingReader setFrameBuffer:aBuffer];
+    [hextileEncodingReader setFrameBuffer:aBuffer];
+    [tightEncodingReader setFrameBuffer:aBuffer];
+	[zlibEncodingReader setFrameBuffer:aBuffer];
+	[zrleEncodingReader setFrameBuffer:aBuffer];
+	[zlibHexEncodingReader setFrameBuffer:aBuffer];
 }
 
 - (void)resetReader
@@ -128,9 +129,10 @@
     currentRect.origin.y = ntohs(msg->r.y);
     currentRect.size.width = ntohs(msg->r.w);
     currentRect.size.height = ntohs(msg->r.h);
-    FULLDebug(@"currentRect: %@", NSStringFromRect(currentRect));
     if ((currentRect.size.width == 0) && (currentRect.size.height == 0)) {
-        //return;
+		// this is a hack for compatibility with OSXvnc 1.0
+		[self updateComplete];
+		return;
     }
     e = ntohl(msg->encoding);
     switch(e) {
@@ -189,8 +191,7 @@
     if(numberOfRects) {
         [target setReader:rectHeaderReader];
     } else {
-        [target performSelector:action withObject:self];
-        [connection flushDrawing];
+		[self updateComplete];
     }
 }
 
@@ -212,6 +213,12 @@
 - (double)bytesRepresented
 {
     return bytesRepresented;
+}
+
+- (void)updateComplete
+{
+	[target performSelector:action withObject:self];
+	[connection flushDrawing];
 }
 
 @end

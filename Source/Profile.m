@@ -57,37 +57,38 @@ static CARD32 getcode(NSString* s)
 
 - (id)initWithDictionary:(NSDictionary*)d
 {
-    NSArray* enc;
-    int i, mask;
-    BOOL copyrect;
-    
-    [super init];
-    info = [d copy];
-    e3btimeout = [[info objectForKey:EmulateThreeButtonTimeout] intValue];
-    e3btimeout /= 1000.0;
-	// Jason replaced the following so we can use indices instead of titles
-    commandKeyCode = getcode([info objectForKey:NewCommandKeyMap]);
-    altKeyCode = getcode([info objectForKey:NewAltKeyMap]);
-    shiftKeyCode = getcode([info objectForKey:NewShiftKeyMap]);
-    controlKeyCode = getcode([info objectForKey:NewControlKeyMap]);
-/*    commandKeyCode = getcode([info objectForKey:CommandKeyMap]);
-    altKeyCode = getcode([info objectForKey:AltKeyMap]);
-    shiftKeyCode = getcode([info objectForKey:ShiftKeyMap]);
-    controlKeyCode = getcode([info objectForKey:ControlKeyMap]); */
-    enc = [info objectForKey:Encodings];
-    mask = [[info objectForKey:EnabledEncodings] intValue];
-    if((copyrect = [[info objectForKey:CopyRectEnabled] intValue]) != 0) {
-        numberOfEnabledEncodings = 1;
-        enabledEncodings[0] = rfbEncodingCopyRect;
-    } else {
-        numberOfEnabledEncodings = 0;
-    }
-    for(i=0; i<[enc count]; i++) {
-        int e = [[enc objectAtIndex:i] intValue];
-        if(mask & (1 << e)) {
-            enabledEncodings[numberOfEnabledEncodings++] = [ProfileManager encodingValue:e];
-        }
-    }
+    if (self = [super init]) {
+		NSArray* enc;
+		int i, mask;
+		BOOL copyrect;
+
+		info = [d copy];
+		e3btimeout = [[info objectForKey:EmulateThreeButtonTimeout] intValue];
+		e3btimeout /= 1000.0;
+		// Jason replaced the following so we can use indices instead of titles
+		commandKeyCode = getcode([info objectForKey:NewCommandKeyMap]);
+		altKeyCode = getcode([info objectForKey:NewAltKeyMap]);
+		shiftKeyCode = getcode([info objectForKey:NewShiftKeyMap]);
+		controlKeyCode = getcode([info objectForKey:NewControlKeyMap]);
+	/*    commandKeyCode = getcode([info objectForKey:CommandKeyMap]);
+		altKeyCode = getcode([info objectForKey:AltKeyMap]);
+		shiftKeyCode = getcode([info objectForKey:ShiftKeyMap]);
+		controlKeyCode = getcode([info objectForKey:ControlKeyMap]); */
+		enc = [info objectForKey:Encodings];
+		mask = [[info objectForKey:EnabledEncodings] intValue];
+		if((copyrect = [[info objectForKey:CopyRectEnabled] intValue]) != 0) {
+			numberOfEnabledEncodings = 1;
+			enabledEncodings[0] = rfbEncodingCopyRect;
+		} else {
+			numberOfEnabledEncodings = 0;
+		}
+		for(i=0; i<[enc count]; i++) {
+			int e = [[enc objectAtIndex:i] intValue];
+			if(mask & (1 << e)) {
+				enabledEncodings[numberOfEnabledEncodings++] = [ProfileManager encodingValue:e];
+			}
+		}
+	}
     return self;
 }
 

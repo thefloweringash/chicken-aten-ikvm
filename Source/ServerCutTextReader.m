@@ -26,9 +26,11 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    dummyReader = [[ByteBlockReader alloc] initTarget:self action:@selector(padding:) size:3];
-    textReader = [[RFBStringReader alloc] initTarget:self action:@selector(setText:)];
-    return [super initTarget:aTarget action:anAction];
+	if (self = [super initTarget:aTarget action:anAction]) {
+		dummyReader = [[ByteBlockReader alloc] initTarget:self action:@selector(padding:) size:3];
+		textReader = [[RFBStringReader alloc] initTarget:self action:@selector(setText:)];
+	}
+    return self;
 }
 
 - (void)dealloc

@@ -95,6 +95,8 @@
 	NSTrackingRectTag _currentTrackingTag; // jason added for fullscreen display
 	NSTimer *_timer; // jason added for fullscreen display
 	NSTrackingRectTag _mouseMovedTrackingTag;
+	float _frameBufferUpdateSeconds;
+	NSTimer *_frameUpdateTimer;
 }
 
 // jason added 'owner' for fullscreen display
@@ -121,6 +123,8 @@
 - (void)flushDrawing;
 
 - (void)queueUpdateRequest;
+- (void)requestFrameBufferUpdate:(id)sender;
+- (void)cancelFrameBufferUpdateRequest;
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned)mask;
 - (void)mouseMovedTo:(NSPoint)thePoint;
 - (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag;
@@ -157,5 +161,8 @@
 - (void)beginFullscreenScrolling;
 - (void)endFullscreenScrolling;
 - (void)scrollFullscreenView: (NSTimer *)timer;
+
+- (float)frameBufferUpdateSeconds;
+- (void)setFrameBufferUpdateSeconds: (float)seconds;
 
 @end

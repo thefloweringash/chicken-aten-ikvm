@@ -31,6 +31,37 @@
 
 @implementation RFBProtocol
 
+- (id)initTarget:(id)aTarget serverInfo:(id)info
+{
+    if (self = [super initTarget:aTarget action:NULL]) {
+		rfbPixelFormat	myFormat;
+	
+		memcpy(&myFormat, (rfbPixelFormat*)[info pixelFormatData], sizeof(myFormat));
+		[self setPixelFormat:&myFormat];
+		[aTarget setDisplaySize:[info size] andPixelFormat:&myFormat];
+		[aTarget setDisplayName:[info name]];
+		[self setEncodings];
+		typeReader = [[CARD8Reader alloc] initTarget:self action:@selector(receiveType:)];
+		msgTypeReader[rfbFramebufferUpdate] = [[FrameBufferUpdateReader alloc] initTarget:self action:@selector(frameBufferUpdateComplete:)];
+		msgTypeReader[rfbSetColourMapEntries] = [[SetColorMapEntriesReader alloc] initTarget:self action:@selector(setColormapEntries:)];
+		msgTypeReader[rfbBell] = nil;
+		msgTypeReader[rfbServerCutText] = [[ServerCutTextReader alloc] initTarget:self action:@selector(serverCutText:)];
+		[self requestUpdate:[aTarget visibleRect] incremental:NO];
+	}
+    return self;
+}
+
+- (void)dealloc
+{
+    int i;
+
+    [typeReader release];
+    for(i=0; i<=MAX_MSGTYPE; i++) {
+        [msgTypeReader[i] release];
+    }
+    [super dealloc];
+}
+
 - (CARD16)numberOfEncodings
 {
     return numberOfEncodings;
@@ -117,25 +148,6 @@
     [target writeBytes:(unsigned char*)&msg length:sz_rfbSetPixelFormatMsg];
 }
 
-- (id)initTarget:(id)aTarget serverInfo:(id)info
-{
-	rfbPixelFormat	myFormat;
-	
-    [super initTarget:aTarget action:NULL];
-    memcpy(&myFormat, (rfbPixelFormat*)[info pixelFormatData], sizeof(myFormat));
-    [self setPixelFormat:&myFormat];
-    [aTarget setDisplaySize:[info size] andPixelFormat:&myFormat];
-    [aTarget setDisplayName:[info name]];
-    [self setEncodings];
-    [self requestUpdate:[aTarget visibleRect] incremental:NO];
-    typeReader = [[CARD8Reader alloc] initTarget:self action:@selector(receiveType:)];
-    msgTypeReader[rfbFramebufferUpdate] = [[FrameBufferUpdateReader alloc] initTarget:self action:@selector(frameBufferUpdate:)];
-    msgTypeReader[rfbSetColourMapEntries] = [[SetColorMapEntriesReader alloc] initTarget:self action:@selector(setColormapEntries:)];
-    msgTypeReader[rfbBell] = nil;
-    msgTypeReader[rfbServerCutText] = [[ServerCutTextReader alloc] initTarget:self action:@selector(serverCutText:)];
-    return self;
-}
-
 - (FrameBufferUpdateReader*)frameBufferUpdateReader
 {
     return msgTypeReader[rfbFramebufferUpdate];
@@ -146,25 +158,19 @@
     [msgTypeReader[rfbFramebufferUpdate] setFrameBuffer:aBuffer];
 }
 
-- (void)dealloc
+- (void)frameBufferUpdateComplete:(id)aReader
 {
-    int i;
-    
-    [typeReader release];
-    for(i=0; i<=MAX_MSGTYPE; i++) {
-        [msgTypeReader[i] release];
-    }
-    [super dealloc];
+	[target setReader:self];
+	[target queueUpdateRequest];
 }
 
-- (void)frameBufferUpdate:(id)aReader
+- (void)requestIncrementalFrameBufferUpdateForVisibleRect:(id)aReader
 {
-    [target setReader:self];
     if(isStopped) {
         shouldUpdate = YES;
     } else {
-        [self requestUpdate:[target visibleRect] incremental:YES];
-    }
+		[self requestUpdate:[target visibleRect] incremental:YES];
+	}
 }
 
 - (void)setColormapEntries:(id)aReader
@@ -201,7 +207,7 @@
     if(isStopped) {
         isStopped = NO;
         if(shouldUpdate) {
-            [self requestUpdate:[target visibleRect] incremental:YES];
+            [self requestIncrementalFrameBufferUpdateForVisibleRect: nil];
             shouldUpdate = NO;
         }
     }
@@ -213,6 +219,5 @@
         isStopped = YES;
     }
 }
-
 
 @end

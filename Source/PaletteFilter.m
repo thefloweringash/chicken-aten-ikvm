@@ -29,10 +29,11 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    [super initTarget:aTarget action:anAction];
-    numColorReader = [[CARD8Reader alloc] initTarget:self action:@selector(setColors:)];
-    paletteReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setPalette:)];
-    filterData = [[NSMutableData alloc] init];
+    if (self = [super initTarget:aTarget action:anAction]) {
+		numColorReader = [[CARD8Reader alloc] initTarget:self action:@selector(setColors:)];
+		paletteReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setPalette:)];
+		filterData = [[NSMutableData alloc] init];
+	}
     return self;
 }
 
@@ -42,7 +43,7 @@
     [paletteReader release];
     [filterData release];
     if(src) {
-	free(src);
+		free(src);
     }
     [super dealloc];
 }
@@ -52,9 +53,9 @@
     rowSize = [target rectangle].size.width;
     if(rowSize > rowCapacity) {
         rowCapacity = rowSize;
-	if(src) {
-	    free(src);
-	}
+		if(src) {
+			free(src);
+		}
         src = malloc(3 * rowSize * sizeof(int));
     }
     [target setReader:numColorReader];

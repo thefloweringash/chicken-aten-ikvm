@@ -26,9 +26,10 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    [super initTarget:aTarget action:anAction];
-    filterData = [[NSMutableData alloc] init];
-    prevRow = thisRow = src = NULL;
+    if (self = [super initTarget:aTarget action:anAction]) {
+		filterData = [[NSMutableData alloc] init];
+		prevRow = thisRow = src = NULL;
+	}
     return self;
 }
 

@@ -420,10 +420,7 @@ printf("draw x=%f y=%f w=%f h=%f at x=%f y=%f\n", aRect.origin.x, aRect.origin.y
     r.origin = aPoint;
     if((aRect.size.width * aRect.size.height) > SCRATCHPAD_SIZE) {
         bpr = size.width * sizeof(FBColor);
-		// Jason changed cast to const unsigned char **
         NSDrawBitmap(r, r.size.width, r.size.height, bitsPerColor, samplesPerPixel, sizeof(FBColor) * 8, bpr, NO, NO, NSDeviceRGBColorSpace, (const unsigned char**)&start);
-/*        NSDrawBitmap(r, r.size.width, r.size.height, bitsPerColor, samplesPerPixel, sizeof(FBColor) *
-                     8, bpr, NO, NO, NSDeviceRGBColorSpace, (unsigned char**)&start); */
     } else {
         FBColor* sp = scratchpad;
         int lines = r.size.height;
@@ -436,11 +433,7 @@ printf("draw x=%f y=%f w=%f h=%f at x=%f y=%f\n", aRect.origin.x, aRect.origin.y
             start += stride;
         }
         bpr = r.size.width * sizeof(FBColor);
-		// Jason changed cast to const unsigned char **
-        NSDrawBitmap(r, r.size.width, r.size.height, bitsPerColor, samplesPerPixel, sizeof(FBColor) *
-                     8, bpr, NO, NO, NSDeviceRGBColorSpace, (const unsigned char**)&scratchpad);
-/*        NSDrawBitmap(r, r.size.width, r.size.height, bitsPerColor, samplesPerPixel, sizeof(FBColor) *
-                     8, bpr, NO, NO, NSDeviceRGBColorSpace, (unsigned char**)&scratchpad); */
+        NSDrawBitmap(r, r.size.width, r.size.height, bitsPerColor, samplesPerPixel, sizeof(FBColor) * 8, bpr, NO, NO, NSDeviceRGBColorSpace, (const unsigned char**)&scratchpad);
     }
 }
 

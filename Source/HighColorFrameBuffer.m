@@ -26,25 +26,26 @@ typedef	unsigned short			FBColor;
 
 - (id)initWithSize:(NSSize)aSize andFormat:(rfbPixelFormat*)theFormat
 {
-    unsigned int sps;
-
-    [super initWithSize:aSize andFormat:theFormat];
-    if(isBig) {
-        rshift = 12;
-        gshift = 8;
-        bshift = 4;
-    } else {
-        rshift = 4;
-        gshift = 0;
-        bshift = 12;
-    }
-    maxValue = 15;
-    samplesPerPixel = 3;
-    bitsPerColor = 4;
-    [self setPixelFormat:theFormat];
-    sps = MIN((SCRATCHPAD_SIZE * sizeof(FBColor)), (aSize.width * aSize.height * sizeof(FBColor)));
-    pixels = malloc(aSize.width * aSize.height * sizeof(FBColor));
-    scratchpad = malloc(sps);
+    if (self = [super initWithSize:aSize andFormat:theFormat]) {
+		unsigned int sps;
+	
+		if(isBig) {
+			rshift = 12;
+			gshift = 8;
+			bshift = 4;
+		} else {
+			rshift = 4;
+			gshift = 0;
+			bshift = 12;
+		}
+		maxValue = 15;
+		samplesPerPixel = 3;
+		bitsPerColor = 4;
+		[self setPixelFormat:theFormat];
+		sps = MIN((SCRATCHPAD_SIZE * sizeof(FBColor)), (aSize.width * aSize.height * sizeof(FBColor)));
+		pixels = malloc(aSize.width * aSize.height * sizeof(FBColor));
+		scratchpad = malloc(sps);
+	}
     return self;
 }
 

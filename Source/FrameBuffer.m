@@ -278,14 +278,15 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
         unsigned short	s;
     } x;
 
-    [super init];
-    x.s = 0x1234;
-    isBig = (x.c[0] == 0x12);
-    size = aSize;
+    if (self = [super init]) {
+		x.s = 0x1234;
+		isBig = (x.c[0] == 0x12);
+		size = aSize;
 /*
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(monitor:)
                                    userInfo:nil repeats:YES];
-*/ 
+*/
+	}
     return self;
 }
 

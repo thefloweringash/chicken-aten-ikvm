@@ -9,7 +9,7 @@
 
 #import <Foundation/NSString.h>
 
-//#define FULL_DEBUG
+#define FULL_DEBUG
 
 #ifdef FULL_DEBUG
 #define FULLDebug NSLog

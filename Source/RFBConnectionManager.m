@@ -47,13 +47,55 @@ static RFBConnectionManager*	sharedManager = nil;
 	[ud registerDefaults: dict];
 }
 
-- (id)init
-{    
-    sigblock(sigmask(SIGPIPE));
-    connections = [[NSMutableArray alloc] init];
-    sharedManager = self;
-    [NSApp setDelegate:self];
-    return [super init];
+- (void)awakeFromNib
+{
+    int i;
+    NSString* s;
+    id ud = [NSUserDefaults standardUserDefaults];
+
+	sigblock(sigmask(SIGPIPE));
+	connections = [[NSMutableArray alloc] init];
+	sharedManager = self;
+	[NSApp setDelegate:self];
+	[profileManager wakeup];
+    i = [ud integerForKey:RFBColorModel];
+    if(i == 0) {
+        NSWindowDepth d = [[NSScreen mainScreen] depth];
+        if(NSNumberOfColorComponents(NSColorSpaceFromDepth(d)) == 1) {
+            i = 1;
+        } else {
+            int bps = NSBitsPerSampleFromDepth(d);
+
+            if(bps < 4)		i = 2;
+            else if(bps < 8)	i = 3;
+            else		i = 4;
+        }
+    }
+    [colorModelMatrix selectCellWithTag:i - 1];
+    if((s = [ud objectForKey:RFBGammaCorrection]) == nil) {
+        s = [gamma stringValue];
+    }
+    [gamma setFloatingPointFormat:NO left:1 right:2];
+    [gamma setFloatValue:[s floatValue]];
+	// jason added the following because, well, it was missing
+	[psThreshold setStringValue: [ud stringForKey: @"PS_THRESHOLD"]];
+	[psMaxRects setStringValue: [ud stringForKey: @"PS_MAXRECTS"]];
+    [autoscrollIncrement setFloatValue: [ud floatForKey:@"FullscreenAutoscrollIncrement"]];
+    [fullscreenScrollbars setFloatValue: [ud boolForKey:@"FullscreenScrollbars"]];
+	// end jason
+    [self updateProfileList:nil];
+    if((s = [ud objectForKey:RFBLastHost]) != nil) {
+        [hostName setStringValue:s];
+    }
+    [self updateLoginPanel];
+    [loginPanel makeKeyAndOrderFront:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProfileList:) name:ProfileAddDeleteNotification object:nil];
+}
+
+- (void)dealloc
+{
+    [connections release];
+    [super dealloc];
 }
 
 - (void)savePrefs
@@ -134,53 +176,6 @@ static RFBConnectionManager*	sharedManager = nil;
     [h setObject:names forKey:@"NameTranslations"];
     [hi setObject:h forKey:aHost];
     [ud setObject:hi forKey:RFBHostInfo];
-}
-
-- (void)awakeFromNib
-{
-    int i;
-    NSString* s;
-    id ud = [NSUserDefaults standardUserDefaults];
-
-    [profileManager wakeup];
-    i = [ud integerForKey:RFBColorModel];
-    if(i == 0) {
-        NSWindowDepth d = [[NSScreen mainScreen] depth];
-        if(NSNumberOfColorComponents(NSColorSpaceFromDepth(d)) == 1) {
-            i = 1;
-        } else {
-            int bps = NSBitsPerSampleFromDepth(d);
-
-            if(bps < 4)		i = 2;
-            else if(bps < 8)	i = 3;
-            else		i = 4;
-        }
-    }
-    [colorModelMatrix selectCellWithTag:i - 1];
-    if((s = [ud objectForKey:RFBGammaCorrection]) == nil) {
-        s = [gamma stringValue];
-    }
-    [gamma setFloatingPointFormat:NO left:1 right:2];
-    [gamma setFloatValue:[s floatValue]];
-	// jason added the following because, well, it was missing
-	[psThreshold setStringValue: [ud stringForKey: @"PS_THRESHOLD"]];
-	[psMaxRects setStringValue: [ud stringForKey: @"PS_MAXRECTS"]];
-    [autoscrollIncrement setFloatValue: [ud floatForKey:@"FullscreenAutoscrollIncrement"]];
-    [fullscreenScrollbars setFloatValue: [ud boolForKey:@"FullscreenScrollbars"]];
-	// end jason
-    [self updateProfileList:nil];
-    if((s = [ud objectForKey:RFBLastHost]) != nil) {
-        [hostName setStringValue:s];
-    }
-    [self updateLoginPanel];
-    [loginPanel makeKeyAndOrderFront:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProfileList:) name:ProfileAddDeleteNotification object:nil];
-}
-
-- (void)dealloc
-{
-    [connections release];
-    [super dealloc];
 }
 
 - (void)removeConnection:(id)aConnection

@@ -20,14 +20,24 @@
 
 #import "ByteBlockReader.h"
 
-#import "debug.h"
+extern BOOL gIsJaguar;
 
 @implementation ByteBlockReader
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction size:(unsigned)aSize
 {
-    [self setBufferSize:aSize];
-    return [super initTarget:aTarget action:anAction];
+	if (self = [super initTarget:aTarget action:anAction]) {
+		[self setBufferSize:aSize];
+	}
+    return self;
+}
+
+- (void)dealloc
+{
+    if(buffer) {
+        free(buffer);
+    }
+    [super dealloc];
 }
 
 - (void)setBufferSize:(unsigned)aSize
@@ -47,14 +57,6 @@
     return size;
 }
 
-- (void)dealloc
-{
-    if(buffer) {
-        free(buffer);
-    }
-    [super dealloc];
-}
-
 - (void)resetReader
 {
     bytesRead = 0;
@@ -62,13 +64,18 @@
 
 - (unsigned)readBytes:(unsigned char*)theBytes length:(unsigned)aLength
 {
+	// we can save some time here by not copying the data into a new NSData object.  Unfortunately, we can only save this time on Jaguar.  It's important to remember that all of our targets must treat this data as _READ_ONLY_!
+	
     unsigned canConsume = MIN(aLength, (size - bytesRead));
-
-    FULLDebug(@"Reading %d bytes", aLength);
     
     memcpy(buffer + bytesRead, theBytes, canConsume);
     if((bytesRead += canConsume) == size) {
-        [target performSelector:action withObject:[NSData dataWithBytes:buffer length:size]];
+		if (gIsJaguar) {
+			[target performSelector:action withObject:[NSData dataWithBytesNoCopy:buffer length:size freeWhenDone: NO]];
+		}
+		else {
+			[target performSelector:action withObject:[NSData dataWithBytes:buffer length:size]];
+		}
     }
     return canConsume;
 }

@@ -43,9 +43,8 @@
 + (float)gammaCorrection;
 + (void)getLocalPixelFormat:(rfbPixelFormat*)pf;
 
-- (id)init;
-- (void)awakeFromNib;
-- (void)dealloc;
+- (void)updateProfileList:(id)notification;
+- (void)updateLoginPanel;
 - (void)removeConnection:(id)aConnection;
 - (void)connect:(id)sender;
 

@@ -15,18 +15,19 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-	int inflateResult;
-
-    [super initTarget:aTarget action:anAction];
-    zLengthReader = [[CARD16Reader alloc] initTarget:self action:@selector(setZLength:)];
-    connection = [aTarget topTarget];
-	inflateResult = inflateInit(&rawStream);
-	if(inflateResult != Z_OK) {
-		[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", rawStream.msg]];
-	}
-	inflateResult = inflateInit(&encodedStream);
-	if(inflateResult != Z_OK) {
-		[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", rawStream.msg]];
+    if (self = [super initTarget:aTarget action:anAction]) {
+		int inflateResult;
+	
+		zLengthReader = [[CARD16Reader alloc] initTarget:self action:@selector(setZLength:)];
+		connection = [aTarget topTarget];
+		inflateResult = inflateInit(&rawStream);
+		if(inflateResult != Z_OK) {
+			[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", rawStream.msg]];
+		}
+		inflateResult = inflateInit(&encodedStream);
+		if(inflateResult != Z_OK) {
+			[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", encodedStream.msg]];
+		}
 	}
     return self;
 }
@@ -34,6 +35,8 @@
 - (void)dealloc
 {
 	[zLengthReader release];
+	inflateEnd(&rawStream);
+	inflateEnd(&encodedStream);
 	[super dealloc];
 }
 

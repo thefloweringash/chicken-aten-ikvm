@@ -20,7 +20,6 @@
 #import "RFBConnection.h"
 #import "FrameBuffer.h"
 #import "RectangleList.h"
-#import "debug.h"
 
 @implementation RFBView
 
@@ -47,6 +46,7 @@
 - (void)dealloc
 {
     [fbuf release];
+	[cursor release];
     [super dealloc];
 }
 
@@ -107,7 +107,6 @@
 - (void)mouseDown:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    FULLDebug(@"%@: mouseDown", [self className]);
     buttonMask |= rfbButton1Mask;
     [delegate mouseAt:p buttons:buttonMask];
 }
@@ -131,7 +130,6 @@
 - (void)mouseUp:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    FULLDebug(@"%@: mouseUp", [self className]);
     buttonMask &= ~rfbButton1Mask;
     [delegate mouseAt:p buttons:buttonMask];
 }

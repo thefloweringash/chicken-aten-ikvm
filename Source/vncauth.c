@@ -64,16 +64,16 @@ vncEncryptBytes(unsigned char *bytes, char *passwd)
     /* key is simply password padded with nulls */
 
     for (i = 0; i < 8; i++) {
-	if (i < strlen(passwd)) {
-	    key[i] = passwd[i];
-	} else {
-	    key[i] = 0;
-	}
+		if (i < strlen(passwd)) {
+			key[i] = passwd[i];
+		} else {
+			key[i] = 0;
+		}
     }
 
     deskey(key, EN0);
 
     for (i = 0; i < CHALLENGESIZE; i += 8) {
-	des(bytes+i, bytes+i);
+		des(bytes+i, bytes+i);
     }
 }

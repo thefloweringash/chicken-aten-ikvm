@@ -43,6 +43,7 @@
 }
 
 - (void)setFrameBuffer:(id)aBuffer;
+- (void)updateComplete;
 
 - (double)compressRatio;
 - (double)rectanglesTransferred;

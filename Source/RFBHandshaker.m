@@ -28,13 +28,15 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
-    authTypeReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthType:)];
-    connFailedReader = [[RFBStringReader alloc] initTarget:self action:@selector(connFailed:)];
-    challengeReader = [[ByteBlockReader alloc] initTarget:self action:@selector(challenge:)
-                                                     size:CHALLENGESIZE];
-    authResultReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthResult:)];
-    serverInitReader = [[RFBServerInitReader alloc] initTarget:self action:@selector(setServerInit:)];
-    return [super initTarget:aTarget action:anAction];
+	if (self = [super initTarget:aTarget action:anAction]) {
+		authTypeReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthType:)];
+		connFailedReader = [[RFBStringReader alloc] initTarget:self action:@selector(connFailed:)];
+		challengeReader = [[ByteBlockReader alloc] initTarget:self action:@selector(challenge:)
+														size:CHALLENGESIZE];
+		authResultReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthResult:)];
+		serverInitReader = [[RFBServerInitReader alloc] initTarget:self action:@selector(setServerInit:)];
+	}
+    return self;
 }
 
 - (void)dealloc

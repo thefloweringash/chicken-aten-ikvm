@@ -65,19 +65,8 @@
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type
 {
-	switch( type )
-	{
-		case EDIT_ADDRESS:
-		case EDIT_PORT:
-		case EDIT_NAME:
-		case CONNECT:
-			return YES;
-		case SAVE_PASSWORD:
-			return NO;
-		default:
-			// handle all cases
-			assert(0);
-	}
+	// subclasses are fully responsible for implementing this
+	assert(0);
 	
 	return NO;
 }

@@ -28,6 +28,22 @@
 	<array>
 		<dict>
 			<key>Characters</key>
+			<string>?</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Chicken of the VNC Help</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>p</string>
+			<key>Modifiers</key>
+			<integer>1572864</integer>
+			<key>Title</key>
+			<string>Connection Profiles…</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
 			<string>m</string>
 			<key>Modifiers</key>
 			<integer>1048576</integer>

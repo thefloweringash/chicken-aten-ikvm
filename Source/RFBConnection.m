@@ -222,6 +222,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)connectionHasTerminated
 {
+	[manager removeConnection:self];
+
 	[socketHandler release];	socketHandler = nil;
 	[titleString release];		titleString = nil;
 	[manager release];			manager = nil;
@@ -234,8 +236,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	[profile release];			profile = nil;
 	[host release];				host = nil;
 	[realDisplayName release];	realDisplayName = nil;
-
-	[manager removeConnection:self];
 }
 
 - (void)connectionTerminatedSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo

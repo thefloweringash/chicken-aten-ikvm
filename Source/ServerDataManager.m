@@ -155,8 +155,40 @@ static ServerDataManager* gInstance = nil;
 {
     NSParameterAssert( [coder allowsKeyedCoding] );
 
-	[coder encodeObject:mServers forKey:RFB_SERVER_LIST];
-	[coder encodeObject:mGroups forKey:RFB_GROUP_LIST];
+	// make a mutable copy of our server groups so we can remove unsavable servers
+	NSMutableDictionary *savableGroups = [NSMutableDictionary dictionary];
+	NSEnumerator *groupNameEnumerator = [mGroups keyEnumerator];
+	NSString *groupName;
+	
+	while ( groupName = [groupNameEnumerator nextObject] )
+	{
+		NSDictionary *originalServers = [mGroups objectForKey: groupName];
+		NSMutableDictionary *newServers = [NSMutableDictionary dictionaryWithDictionary: originalServers];
+		[savableGroups setObject: newServers forKey: groupName];
+	}
+	
+	// and remove the unsavable servers
+	NSMutableDictionary *savableServers = [NSMutableDictionary dictionaryWithDictionary: mServers];
+	NSEnumerator *serverNameEnumerator = [mServers keyEnumerator];
+	NSString *serverName;
+	
+	while ( serverName = [serverNameEnumerator nextObject] )
+	{
+		id<IServerData> server = [self getServerWithName: serverName];
+		NSParameterAssert( server != nil );
+		if ( ! [server doYouSupport: SERVER_SAVE] )
+		{
+			[savableServers removeObjectForKey: serverName];
+			
+			NSEnumerator *groupEnumerator = [savableGroups objectEnumerator];
+			NSMutableDictionary *group;
+			while ( group = [groupEnumerator nextObject] )
+				[group removeObjectForKey: serverName];
+		}
+	}
+	
+	[coder encodeObject: savableServers forKey: RFB_SERVER_LIST];
+	[coder encodeObject: savableGroups forKey: RFB_GROUP_LIST];
 }
 
 - (id)initWithCoder:(NSCoder *)coder

@@ -7,11 +7,19 @@
 //
 
 #import "AppDelegate.h"
+#import "KeyEquivalentManager.h"
 #import "PrefController.h"
 #import "RFBConnectionManager.h"
 
 
 @implementation AppDelegate
+
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification
+{
+	// make sure our singleton key equivalent manager is initialized, otherwise, it won't watch the frontmost window
+	[[KeyEquivalentManager defaultManager] loadScenarios];
+}
+
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {

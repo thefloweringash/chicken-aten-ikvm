@@ -65,6 +65,7 @@
 		case EDIT_NAME:
 		case SAVE_PASSWORD:
 		case DELETE:
+		case SERVER_SAVE:
 			return NO;
 		case CONNECT:
 			return (bHasResolved && bResloveSucceeded);

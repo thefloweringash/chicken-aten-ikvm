@@ -123,6 +123,7 @@
 		case SAVE_PASSWORD:
 		case CONNECT:
 		case DELETE:
+		case SERVER_SAVE:
 			return YES;
 		default:
 			// handle all cases

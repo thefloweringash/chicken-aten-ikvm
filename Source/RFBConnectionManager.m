@@ -20,7 +20,7 @@
 #import "RFBConnection.h"
 #import "ProfileManager.h"
 #import "Profile.h"
-#import <signal.h>
+// #import <signal.h> // jason removed signal handler
 #import "rfbproto.h"
 
 #import "GrayScaleFrameBuffer.h"
@@ -39,6 +39,7 @@
 static RFBConnectionManager*	sharedManager = nil;
 
 /* --------------------------------------------------------------------------------- */
+// jason removed signal handler, so the following function is extraneous
 static void	signal_handler(int signr)
 {
 static struct {
@@ -106,6 +107,8 @@ BOOL	isFatal = NO;
 }
 
 /* --------------------------------------------------------------------------------- */
+// jason removed signal handler, so the following function is extraneous
+/*
 static void install_signals(void)
 {
 int		i;
@@ -114,6 +117,7 @@ int		i;
         signal(i, signal_handler);
     }
 }
+*/
 
 @implementation RFBConnectionManager
 
@@ -211,7 +215,7 @@ int		i;
     NSString* s;
     id ud = [NSUserDefaults standardUserDefaults];
 
-    install_signals();
+//    install_signals();  // jason removed signal handler
     [profileManager wakeup];
     i = [ud integerForKey:RFBColorModel];
     if(i == 0) {

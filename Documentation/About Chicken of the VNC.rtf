@@ -1,10 +1,9 @@
 {\rtf1\mac\ansicpg10000\cocoartf102
-\readonlydoc1{\fonttbl\f0\fswiss\fcharset77 Arial-BoldMT;\f1\fswiss\fcharset77 ArialMT;\f2\fnil\fcharset77 Monaco;
-\f3\fnil\fcharset77 LucidaSans-Typewriter;\f4\fswiss\fcharset77 Helvetica;\f5\fswiss\fcharset77 Arial-ItalicMT;
-}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue255;\red255\green5\blue85;\red137\green19\blue21;
-\red104\green56\blue33;}
-\vieww14200\viewh14360\viewkind0
+\readonlydoc1{\fonttbl\f0\fswiss\fcharset77 Arial-BoldMT;\f1\fswiss\fcharset77 ArialMT;\f2\fswiss\fcharset77 Helvetica;
+\f3\fnil\fcharset77 Monaco;\f4\fswiss\fcharset77 Arial-ItalicMT;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue255;\red0\green16\blue0;\red255\green5\blue85;
+\red137\green19\blue21;\red104\green56\blue33;}
+\vieww9000\viewh9000\viewkind0
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
 
 \f0\b\fs72 \cf0 Chicken of the VNC\
@@ -13,15 +12,18 @@
 \fs36 \cf0 brawwwK!
 \f1\b0\fs20 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
-\cf0 VNCViewer written by Helmut Maierhofer \cf2 \ul helmut.maierhofer@chello.at\cf0 \ulnone \
+\cf0 VNCViewer written by Helmut Maierhofer \cf2 \ul \ulc2 helmut.maierhofer@chello.at\cf0 \ulnone \
 Mac OS X port and cheesy name by Jason Harris\cf2  \ul support@geekspiff.com
 \fs24 \cf0 \ulnone \
 
-\fs20 Icon generously provided by Cale Peeples\cf2  \ul cale@dumbculture.com
-\fs24 \cf0 \ulnone \
+\fs20 Icon generously provided by Cale Peeples\cf2  \ul cale@dumbculture.com\
+\cf0 \ulnone Other graphics by Tobia Conforto
+\f2\fs24 \cf3  {\field{\*\fldinst{HYPERLINK "mailto:tobix@linux.it"}}{\fldrslt 
+\f1\fs20 \cf2 \ul \ulc2 tobix@linux.it}}
+\f1 \cf0 \
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
 
-\f2\fs20 \cf2 \ul http://cotvnc.sourceforge.net/
+\f3\fs20 \cf2 \ul http://cotvnc.sourceforge.net/
 \f1\fs24 \cf0 \ulnone \
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
 \cf0 \
@@ -43,7 +45,7 @@ More information about VNC can be found at AT&T's compendium: \cf2 \ul http://ww
 
 \f1\b0 \
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
-\cf3 Note:  If you have used a version of Chicken of the VNC prior to 1.3, you will need to either delete your preferences (in ~/Library/Preferences/com.geekspiff.chickenofthevnc.plist), or reset the modifier key mappings in all of your stored profiles.  If you wish, you may also delete the "Chicken of the VNC" folder in your preferences, as it is no longer used.\
+\cf4 Note:  If you have used a version of Chicken of the VNC prior to 1.3, you will need to either delete your preferences (in ~/Library/Preferences/com.geekspiff.chickenofthevnc.plist), or reset the modifier key mappings in all of your stored profiles.  If you wish, you may also delete the "Chicken of the VNC" folder in your preferences, as it is no longer used.\
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
 \cf0 \
 Use it just like any other VNC client - enter the address of a working VNC server, the display number (or port) and your password and rock'n'roll...\
@@ -65,14 +67,14 @@ You can also use profiles to specify your default encoding.  VNC operates by tra
 The different encodings are (in rough order of efficiency)\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7280\tx7840\tx8400\tx8960\tx9520\tx10080\tx10640\tx11200\tx11760\tx12320\tx12880\tx13440\tx14000\tx14560\tx15120\tx15680\tx16240\tx16800\tx17360\tx17920\tx18480\tx19040\tx19600\tx20160\tx20720\tx21280\tx21840\tx22400\tx22960\tx23520\tx24080\tx24640\tx25200\tx25760\tx26320\tx26880\tx27440\tx28000\tx28560\tx29120\tx29680\tx30240\tx30800\tx31360\tx31920\tx32480\tx33040\tx33600\tx34160\tx34720\tx35280\tx35840\tx36400\tx36960\tx37520\tx38080\tx38640\tx39200\tx39760\tx40320\tx40880\tx41440\tx42000\tx42560\tx43120\tx43680\tx44240\tx44800\tx45360\tx45920\tx46480\tx47040\tx47600\tx48160\tx48720\tx49280\tx49840\tx50400\tx50960\tx51520\tx52080\tx52640\tx53200\tx53760\tx54320\tx54880\tx55440\tx56000\li2651\fi-2651\ql\qnatural
 
-\f3\fs22 \cf0 \CocoaLigature0 	\cf4 Tight\cf0 \
-	\cf4 Zlib\cf0 \
-	\cf4 ZRLE\cf0 \
-	\cf4 ZlibHex\cf0 \
-	\cf4 Hextile\cf0 \
-	\cf4 RRE\cf0 \
-	\cf4 CoRRE\cf0 \
-	\cf4 Raw\cf0 \
+\f2\fs22 \cf0 \CocoaLigature0 	\cf5 Tight\cf0 \
+	\cf5 Zlib\cf0 \
+	\cf5 ZRLE\cf0 \
+	\cf5 ZlibHex\cf0 \
+	\cf5 Hextile\cf0 \
+	\cf5 RRE\cf0 \
+	\cf5 CoRRE\cf0 \
+	\cf5 Raw\cf0 \
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
 
 \f1\fs24 \cf0 \CocoaLigature1 \
@@ -81,9 +83,9 @@ The different encodings are (in rough order of efficiency)\
 \f0\b\fs28 \ul Mouse Button Emulation
 \f1\b0\fs24 \ulnone \
 \
-If you are one of those cursed with a single button mouse, you can emulate the right button by quickly tapping the <Shift> key.  The mouse pointer will change to indicate that clicks will act like the third (right) mouse button.  Likewise, you can emulate the middle button by quickly tapping the <Control> key.  To cancel emulation, tap the key a second time.\
+If you are one of those cursed with a single button mouse, you can emulate the right button by quickly tapping the <Shift> key.   Just how quickly is determined by the "Key-Down Timeout" setting (in the Profile Settings) -- Hold the key down longer than that, and emulation will not be done. The mouse pointer will change to indicate that clicks will act like the third (right) mouse button.  Likewise, you can emulate the middle button by quickly tapping the <Control> key.  To cancel emulation, tap the key a second time.  If the mouse is not clicked within "Emulation Timeout" seconds (also in Profile Settings), emulation will be canceled.\
 \
-If you are lucky enough to have a two or three button mouse, you don't need to worry about emulation as Chicken of the VNC supports up to three mouse buttons, as well as scroll-wheels on compatible servers.\
+If you are lucky enough to have a two or three button mouse, you don't need to worry about emulation as Chicken of the VNC supports up to three mouse buttons, as well as scroll-wheels on compatible servers.  If you have a two button mouse, the second mouse button will send the third mouse button, and the second mouse button can be sent by clicking both mouse buttons at the same time.  The mouse buttons must both be clicked within "3-Button Mouse Emulation Timeout" ms.\
 \
 \
 
@@ -146,7 +148,7 @@ Because this program is distributed under the GNU license, source code is availa
 \f1\b0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f4 \cf0 \ul Version 1.3.6 (January 17, 2003)\
+\f2 \cf0 \ul \ulc0 Version 1.3.6 (January 17, 2003)\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 \cf0 \ulnone \'a5 Fixed a nasty memory leak and checked all encodings to verify that none of them memory problems.\
 \'a5 Added preferences to modify the CPU performance of the frontmost connection independently of all other connections.\
@@ -161,8 +163,8 @@ Because this program is distributed under the GNU license, source code is availa
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 \cf0 \ulnone \'a5 More improvements to Tight Encoding\
 \'a5 JPEG encoding support in Tight Encoding (only available for expert users who install 
-\f3\fs22 \cf5 \CocoaLigature0 jpeglib 
-\f4\fs24 \cf0 \CocoaLigature1 and recompile Chicken)\
+\fs22 \cf6 \CocoaLigature0 jpeglib 
+\fs24 \cf0 \CocoaLigature1 and recompile Chicken)\
 \'a5 ZRLE encoding\
 \'a5 ZLIB encoding\
 \'a5 Added "Send Ctrl-Alt-Del" menu item\
@@ -202,7 +204,7 @@ Because this program is distributed under the GNU license, source code is availa
 \f1 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f4 \cf0 \ul Version 1.2.3 (March 22, 2002)\
+\f2 \cf0 \ul Version 1.2.3 (March 22, 2002)\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 \cf0 \ulnone \'a5 Initial Mac OS X release.\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
@@ -228,13 +230,13 @@ You should have received a copy of the GNU General Public License along with thi
 \f1\b0\fs24 \ulnone \
 \
 \'a5 
-\f5\i Jason Harris
+\f4\i Jason Harris
 \f1\i0  - Project manager, port to Mac OS X, various code enhancements, documentation\
 \'a5 
-\f5\i Helmut Maierhofer
+\f4\i Helmut Maierhofer
 \f1\i0  - Original implementation for NeXTStep, encoding guru extraordinaire\
 \'a5 
-\f5\i Kurt Werle
+\f4\i Kurt Werle
 \f1\i0  - Development, speed and feature enhancements\
 \
 \
@@ -246,36 +248,36 @@ You should have received a copy of the GNU General Public License along with thi
 \f1\b0 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f4 \cf0 You can always get the latest versions of Chicken of the VNC, news and updates at the Source Forge web site:\
+\f2 \cf0 You can always get the latest versions of Chicken of the VNC, news and updates at the Source Forge web site:\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f2\fs20 \cf2 http://cotvnc.sourceforge.net
-\f4\fs24 \cf0 \
+\f3\fs20 \cf2 http://cotvnc.sourceforge.net
+\f2\fs24 \cf0 \
 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 \cf0 To get support on Chicken of the VNC, you can submit a support request\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f2\fs20 \cf2 http://sourceforge.net/tracker/?atid=507160&group_id=64347&func=browse\
+\f3\fs20 \cf2 http://sourceforge.net/tracker/?atid=507160&group_id=64347&func=browse\
 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f4\fs24 \cf0 To submit an idea or suggestion for Chicken of the VNC, use this address:\
+\f2\fs24 \cf0 To submit an idea or suggestion for Chicken of the VNC, use this address:\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f2\fs20 \cf2 http://sourceforge.net/tracker/?atid=507162&group_id=64347&func=browse\
+\f3\fs20 \cf2 http://sourceforge.net/tracker/?atid=507162&group_id=64347&func=browse\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f4 \cf0 \
+\f2 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \fs24 \cf0 Alternately, if you prefer email, you can contact:\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f2\fs20 \cf2 feedback@geekspiff.com\
+\f3\fs20 \cf2 feedback@geekspiff.com\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f4 \cf0 \
+\f2 \cf0 \
 VNCViewer Copyright (\'a9) 1998-2000 Helmut Maierhofer\
 This Readme Copyright (\'a9) 2002 Geekspiff and Jason Harris\
 All Rights Reserved}

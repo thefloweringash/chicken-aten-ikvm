@@ -68,6 +68,14 @@
 		</dict>
 		<dict>
 			<key>Characters</key>
+			<string>l</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Open Listener…</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
 			<string>w</string>
 			<key>Modifiers</key>
 			<integer>1048576</integer>

@@ -25,7 +25,7 @@
 #import "rfbproto.h"
 #import "vncauth.h"
 #import "ServerDataViewController.h"
-#import "ServerBase.h"
+#import "ServerFromPrefs.h"
 #import "ServerDataManager.h"
 
 @implementation RFBConnectionManager
@@ -88,7 +88,7 @@
     int i, argCount = [args count];
     NSString *arg;
 	
-	ServerBase* cmdlineServer = [[[ServerBase alloc] init] autorelease];
+	ServerFromPrefs* cmdlineServer = [[[ServerFromPrefs alloc] init] autorelease];
 	Profile* profile = nil;
 	ProfileManager *profileManager = [ProfileManager sharedManager];
 	
@@ -326,6 +326,25 @@
     
     return returnVal;
 }
+
+- (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file server:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner
+{
+	/* change */
+    RFBConnection* theConnection;
+    bool returnVal = YES;
+
+    theConnection = [[[RFBConnection alloc] initWithFileHandle:file server:server profile:someProfile owner:someOwner] autorelease];
+    if(theConnection) {
+        [theConnection setManager:self];
+        [connections addObject:theConnection];
+    }
+    else {
+        returnVal = NO;
+    }
+    
+    return returnVal;
+}
+
 
 - (IBAction)addServer:(id)sender
 {

@@ -25,6 +25,9 @@ NSString *kPrefs_HostInfo_Key = @"HostPreferences";
 NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 NSString *kPrefs_Version_Key = @"Version";
 
+// Note: Preference Keys that start with "Listener"
+// are defined and used in ListenerController
+
 
 @implementation PrefController (Private)
 

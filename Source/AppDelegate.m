@@ -10,6 +10,7 @@
 #import "KeyEquivalentManager.h"
 #import "PrefController.h"
 #import "RFBConnectionManager.h"
+#import "ListenerController.h"
 
 
 @implementation AppDelegate
@@ -50,6 +51,10 @@
 
 - (IBAction)showConnectionDialog: (id)sender
 {  [[RFBConnectionManager sharedManager] showConnectionDialog: nil];  }
+
+
+- (IBAction)showListenerDialog: (id)sender
+{  [[ListenerController sharedController] showWindow: nil];  }
 
 
 - (IBAction)showProfileManager: (id)sender

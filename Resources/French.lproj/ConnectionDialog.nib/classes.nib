@@ -1,0 +1,21 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {addServer = id; deleteSelectedServer = id; }; 
+            CLASS = RFBConnectionManager; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                groupList = NSTableView; 
+                serverDataBoxLocal = NSBox; 
+                serverDeleteBtn = NSButton; 
+                serverGroupBox = NSBox; 
+                serverList = NSTableView; 
+                serverListBox = NSBox; 
+                splitView = NSSplitView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

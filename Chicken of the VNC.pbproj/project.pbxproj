@@ -84,22 +84,23 @@
 		};
 		29B97317FDCFA39411CA2CEA = {
 			children = (
-				E21FE261062B6D310059585C,
-				E21FE256062B6C8D0059585C,
-				F5DC7172033DB3DC01A8010C,
 				F5DC7175033DB40D01A8010C,
 				E2CA650906DA451500B70BDF,
 				F5DC7177033DB40D01A8010C,
-				E21FE430062B79350059585C,
+				E21FE256062B6C8D0059585C,
+				F5DC7172033DB3DC01A8010C,
+				E2B0839B0763A51700CE24C1,
+				E21FE261062B6D310059585C,
 				F5DC717C033DB40D01A8010C,
 				F5DC717B033DB40D01A8010C,
 				F5DC7178033DB40D01A8010C,
 				F5DC717A033DB40D01A8010C,
 				F5DC7179033DB40D01A8010C,
 				E2F3A7E606D4A687005EB917,
-				F5DC7187033DB44301A8010C,
+				E2B083F70763AAC200CE24C1,
 				E2F3A33E06D44E0E005EB917,
 				E2F3A99C06D4BFD8005EB917,
+				F5DC7187033DB44301A8010C,
 				F5DC7185033DB44301A8010C,
 				7FFA903B062BA74F0008D381,
 				7FF0C9A305CDBDCE008E39DD,
@@ -209,6 +210,7 @@
 				7F7A945805E71B5C00E20416,
 				E23631D40646E8BD000D00B6,
 				E23631DC0646E907000D00B6,
+				E2B083B70763A84C00CE24C1,
 			);
 			buildRules = (
 			);
@@ -305,6 +307,8 @@
 				E2F3A3B406D45C7B005EB917,
 				E2F3AB0406D5B86A005EB917,
 				E2F3AD7106D5E11D005EB917,
+				E2B083E30763AA7D00CE24C1,
+				E2B083EF0763AA9A00CE24C1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -617,12 +621,13 @@
 				7F7A942105E71B5C00E20416,
 				7F7A942205E71B5C00E20416,
 				E21FE263062B6D310059585C,
-				E21FE431062B79350059585C,
 				7FFA903D062BA74F0008D381,
 				E2F3A34006D44E0E005EB917,
 				E2F3A7E806D4A687005EB917,
 				E2F3A99E06D4BFD8005EB917,
 				E2CA651806DA451600B70BDF,
+				E2B0839D0763A51700CE24C1,
+				E2B083F90763AAC200CE24C1,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -752,6 +757,8 @@
 				E2F3A3B506D45C7B005EB917,
 				E2F3AB0506D5B86A005EB917,
 				E2F3AD7206D5E11D005EB917,
+				E2B083E20763AA7D00CE24C1,
+				E2B083F00763AA9A00CE24C1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1234,6 +1241,8 @@
 		};
 		7FE7F83006D8005600647AA1 = {
 			children = (
+				E2B083ED0763AA9A00CE24C1,
+				E2B083EE0763AA9A00CE24C1,
 				7FBB0A6605F5BC9700F716C4,
 				7FBB0A6705F5BC9700F716C4,
 			);
@@ -1247,6 +1256,8 @@
 				7FC6DF2705C315C20028A970,
 				7FFA8FE9062BA6330008D381,
 				7FFA8FEA062BA6330008D381,
+				E2B083E10763AA7D00CE24C1,
+				E2B083E00763AA7D00CE24C1,
 				7FC6DF6705C31AF50028A970,
 				7FC6DF6805C31AF50028A970,
 				7FC6DF6D05C31B0D0028A970,
@@ -1306,6 +1317,7 @@
 		7FFA903B062BA74F0008D381 = {
 			children = (
 				7FFA903C062BA74F0008D381,
+				E2B083A30763A79F00CE24C1,
 			);
 			isa = PBXVariantGroup;
 			name = ServerDisplay.nib;
@@ -1349,6 +1361,7 @@
 		E21FE261062B6D310059585C = {
 			children = (
 				E21FE262062B6D310059585C,
+				E2B083A70763A79F00CE24C1,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -1367,21 +1380,6 @@
 		};
 		E21FE263062B6D310059585C = {
 			fileRef = E21FE261062B6D310059585C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		E21FE430062B79350059585C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = KeyEquivalentScenarios.plist;
-			path = Resources/KeyEquivalentScenarios.plist;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		E21FE431062B79350059585C = {
-			fileRef = E21FE430062B79350059585C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1614,6 +1612,206 @@
 			shellPath = /bin/sh;
 			shellScript = "strip -urx \"$TARGET_BUILD_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION/Contents/MacOS/$PRODUCT_NAME\"";
 		};
+		E2B0839B0763A51700CE24C1 = {
+			children = (
+				E2B0839C0763A51700CE24C1,
+				E2B083A60763A79F00CE24C1,
+			);
+			isa = PBXVariantGroup;
+			name = KeyEquivalentScenarios.plist;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B0839C0763A51700CE24C1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = English;
+			path = Resources/English.lproj/KeyEquivalentScenarios.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B0839D0763A51700CE24C1 = {
+			fileRef = E2B0839B0763A51700CE24C1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E2B083A30763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/ServerDisplay.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083A40763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/ConnectionDialog.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083A50763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/RFBConnection.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083A60763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = French;
+			path = Resources/French.lproj/KeyEquivalentScenarios.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083A70763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = French;
+			path = Resources/French.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083A80763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/Preferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083A90763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = French;
+			path = Resources/French.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083AA0763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/OSX_RFBViewer.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083AB0763A79F00CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/ProfileManager.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083B70763A84C00CE24C1 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# We don't have our French translation in place yet, but I want it available in CVS, so I've included\n# this script so that we don't have a bogus translation in the final builds.  Don't want to \n# break the CVS build, ya dig?\n\ncd \"$TARGET_BUILD_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION/Contents/Resources\"\nrm -r French.lproj";
+		};
+		E2B083E00763AA7D00CE24C1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ServerFromConnection.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083E10763AA7D00CE24C1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ServerFromConnection.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083E20763AA7D00CE24C1 = {
+			fileRef = E2B083E00763AA7D00CE24C1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E2B083E30763AA7D00CE24C1 = {
+			fileRef = E2B083E10763AA7D00CE24C1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E2B083ED0763AA9A00CE24C1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ListenerController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083EE0763AA9A00CE24C1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ListenerController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083EF0763AA9A00CE24C1 = {
+			fileRef = E2B083ED0763AA9A00CE24C1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E2B083F00763AA9A00CE24C1 = {
+			fileRef = E2B083EE0763AA9A00CE24C1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E2B083F70763AAC200CE24C1 = {
+			children = (
+				E2B083F80763AAC200CE24C1,
+				E2B084000763ABD300CE24C1,
+			);
+			isa = PBXVariantGroup;
+			name = ListenDialog.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083F80763AAC200CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/ListenDialog.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E2B083F90763AAC200CE24C1 = {
+			fileRef = E2B083F70763AAC200CE24C1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E2B084000763ABD300CE24C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/ListenDialog.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		E2CA650906DA451500B70BDF = {
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
@@ -1687,6 +1885,7 @@
 		E2F3A33E06D44E0E005EB917 = {
 			children = (
 				E2F3A33F06D44E0E005EB917,
+				E2B083A80763A79F00CE24C1,
 			);
 			isa = PBXVariantGroup;
 			name = Preferences.nib;
@@ -1739,6 +1938,7 @@
 		E2F3A7E606D4A687005EB917 = {
 			children = (
 				E2F3A7E706D4A687005EB917,
+				E2B083A40763A79F00CE24C1,
 			);
 			isa = PBXVariantGroup;
 			name = ConnectionDialog.nib;
@@ -1763,6 +1963,7 @@
 		E2F3A99C06D4BFD8005EB917 = {
 			children = (
 				E2F3A99D06D4BFD8005EB917,
+				E2B083AB0763A79F00CE24C1,
 			);
 			isa = PBXVariantGroup;
 			name = ProfileManager.nib;
@@ -1941,6 +2142,7 @@
 		F5DC7172033DB3DC01A8010C = {
 			children = (
 				F5DC7173033DB3DC01A8010C,
+				E2B083A90763A79F00CE24C1,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -2016,6 +2218,7 @@
 		F5DC7185033DB44301A8010C = {
 			children = (
 				F5DC7186033DB44301A8010C,
+				E2B083A50763A79F00CE24C1,
 			);
 			isa = PBXVariantGroup;
 			name = RFBConnection.nib;
@@ -2034,6 +2237,7 @@
 		F5DC7187033DB44301A8010C = {
 			children = (
 				F5DC7188033DB44301A8010C,
+				E2B083AA0763A79F00CE24C1,
 			);
 			isa = PBXVariantGroup;
 			name = OSX_RFBViewer.nib;

@@ -104,6 +104,7 @@
 
 // jason added 'owner' for fullscreen display
 - (id)initWithServer:(id<IServerData>)server profile:(Profile*)p owner:(id)owner;
+- (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server profile:(Profile*)p owner:(id)owner;
 
 - (void)setManager:(id)aManager;
 - (void)dealloc;

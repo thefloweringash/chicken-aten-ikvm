@@ -55,6 +55,8 @@
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
 - (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner;
+- (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file 
+    server:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner;
 
 - (IBAction)addServer:(id)sender;
 - (IBAction)deleteSelectedServer:(id)sender;

@@ -1,0 +1,31 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                connectToServer = id; 
+                profileSelectionChanged = id; 
+                rememberPwdChanged = id; 
+                sharedChanged = id; 
+            }; 
+            CLASS = ServerDataViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                box = NSBox; 
+                connectBtn = NSButton; 
+                connectIndicator = NSProgressIndicator; 
+                connectIndicatorText = NSTextField; 
+                display = NSTextField; 
+                hostName = NSTextField; 
+                mDelegate = id; 
+                mServer = id; 
+                password = NSTextField; 
+                profilePopup = NSPopUpButton; 
+                rememberPwd = NSButton; 
+                shared = NSButton; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

@@ -88,11 +88,11 @@
 	}
 	else if( bHasResolved && !bResloveSucceeded )
 	{
-		return @"address resolve failed";
+		return NSLocalizedString( @"AddressResolveFailed", nil );
 	}
 	else
 	{
-		return @"resolving...";
+		return NSLocalizedString( @"Resolving", nil );
 	}
 }
 

@@ -193,7 +193,9 @@
     unsigned t = [type unsignedIntValue];
 
     if(t > MAX_MSGTYPE) {
-        [target terminateConnection:[NSString stringWithFormat:@"Unknown message type %@\n", type]];
+		NSString *errorStr = NSLocalizedString( @"UnknownMessageType", nil );
+		errorStr = [NSString stringWithFormat:errorStr, type];
+        [target terminateConnection:errorStr];
     } else if(t == rfbBell) {
         [target ringBell];
         [target setReader:self];

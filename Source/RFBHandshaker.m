@@ -79,8 +79,12 @@
             [target setReader:challengeReader];
             break;
         default:
-            [target terminateConnection:[NSString stringWithFormat:@"Unknown authType %@", authType]];
+		{
+			NSString *errorStr = NSLocalizedString( @"UnknownAuthType", nil );
+			errorStr = [NSString stringWithFormat:errorStr, authType];
+            [target terminateConnection:errorStr];
             break;
+		}
     }
 }
 
@@ -96,19 +100,24 @@
 
 - (void)setAuthResult:(NSNumber*)theResult
 {
+	NSString *errorStr;
+
     switch([theResult unsignedIntValue]) {
         case rfbVncAuthOK:
             [self sendClientInit];
             break;
         case rfbVncAuthFailed:
-            [target terminateConnection:@"Authentication Failed"];
+			errorStr = NSLocalizedString( @"AuthenticationFailed", nil );
+            [target terminateConnection:errorStr];
             break;
         case rfbVncAuthTooMany:
-            [target terminateConnection:@"Authentication Failed (too many failures)"];
+			errorStr = NSLocalizedString( @"AuthenticationFailedTooMany", nil );
+            [target terminateConnection:errorStr];
             break;
         default:
-            [target terminateConnection:[NSString stringWithFormat:@"Unknown authResult %@",
-                theResult]];
+			errorStr = NSLocalizedString( @"UnknownAuthResult", nil );
+			errorStr = [NSString stringWithFormat:errorStr, theResult];
+            [target terminateConnection:errorStr];
             break;
     }
 }

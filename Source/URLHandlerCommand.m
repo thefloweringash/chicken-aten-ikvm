@@ -47,7 +47,7 @@ if (!(condition)) return [self scriptError: (errno) description: \
 	
     // XXX should ignore arguments instead, if the GURL/OURL is coming from a Web browser?
     HLSAssert1([self arguments] == nil || [[self arguments] count] == 0, errAEParamMissed,
-               @"CanUt handle arguments for %@", verb);
+               @"Cannot handle arguments for %@", verb);
     HLSAssert(urlString != nil, errAEParamMissed, @"No URL to open was specified.");
     
 	url = [NSURL URLWithString: urlString];

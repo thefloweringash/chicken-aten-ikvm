@@ -117,7 +117,7 @@
 				
 				if (title && [title isEqualToString: @"Apple"])
 					title = [[NSProcessInfo processInfo] processName];
-				else if (title && [title isEqualToString: @"Services"])
+				else if ( submenu == [NSApp servicesMenu] )
 					continue;
 				
 				NSMutableArray *items = [NSMutableArray array];

@@ -17,6 +17,7 @@
 - (IBAction)showPreferences: (id)sender;
 - (IBAction)changeRendezvousUse:(id)sender;
 - (IBAction)showConnectionDialog: (id)sender;
+- (IBAction)showListenerDialog: (id)sender;
 - (IBAction)showProfileManager: (id)sender;
 - (IBAction)showHelp: (id)sender;
 

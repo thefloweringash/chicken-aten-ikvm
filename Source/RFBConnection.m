@@ -26,7 +26,9 @@
 #import "FrameBuffer.h"
 #import "RectangleList.h"
 #import "FrameBufferUpdateReader.h"
+#import "KeyEquivalentManager.h"
 #import "EncodingReader.h"
+#import "IServerData.h"
 #include <unistd.h>
 #include <libc.h>
 #include "FullscreenWindow.h" // added by Jason for fullscreen mode
@@ -47,7 +49,7 @@ BOOL gIsJaguar;
 
 const unsigned int page0[256] = {
     0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0xff09, 0xa, 0xb, 0xc, 0xff0d, 0xe, 0xf,
-    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0xff1b, 0x1c, 0x1d, 0x1e, 0x1f,
+    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0xff09, 0x1a, 0xff1b, 0x1c, 0x1d, 0x1e, 0x1f,
     0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
     0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,
     0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
@@ -120,7 +122,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 }
 
 // jason changed for fullscreen display
-- (id)initWithDictionary:(NSDictionary*)aDictionary profile:(Profile*)p owner:(id)owner
+- (id)initWithServer:(id<IServerData>)server profile:(Profile*)p owner:(id)owner
 {
     if (self = [super init]) {
 		struct sockaddr_in	remote;
@@ -134,24 +136,29 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 			[self release];
 			return nil;
 		}
-		if((host = [aDictionary objectForKey:RFB_HOST]) == nil) {
+		if((host = [server host]) == nil) {
 			host = [DEFAULT_HOST retain];
 		} else {
 			[host retain];
 		}
-		port = [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+		port = [server display];
 		// displays >= 100 are treated as port numbers, in the
 		// same way as RealVNC and others does. 
 		if (port < 100)
 		    port += RFB_PORT;
 		socket_address(&remote, host, port);
+		if( INADDR_NONE == remote.sin_addr.s_addr ) {
+			[self perror: [NSString stringWithFormat:@"Could not find a server with the name \"%@\"", host] call:@"connect()"];
+			[self release];
+			return nil;
+		}
 		if(connect(sock, (struct sockaddr *)&remote, sizeof(remote)) < 0) {
-			[self perror:@"Open Connection" call:@"connect()"];
+			[self perror:[NSString stringWithFormat:@"Could not connect to server %@:%d", host, port] call:@"connect()"];
 			[self release];
 			return nil;
 		}
 		[NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
-		dictionary = [aDictionary retain];
+		server_ = [(id)server retain];
 	
 		versionReader = [[NLTStringReader alloc] initTarget:self action:@selector(setServerVersion:)];
 		[self setReader:versionReader];
@@ -162,7 +169,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		[rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil]];
 
 
-		if ([[dictionary objectForKey:RFB_FULLSCREEN] intValue]) {
+		if ([server fullscreen]) {
 			[self makeConnectionFullscreen: self];
 		}
 	}
@@ -171,22 +178,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-	[self cancelFrameBufferUpdateRequest];
-	[self endFullscreenScrolling];
-    [socketHandler release];
-    [titleString release];
-    [manager release];
-    [versionReader release];
-    [handshaker release];
-    [dictionary release];
-    [serverVersion release];
-    [rfbProtocol release];
-    [frameBuffer release];
-    //[optionPanel release];  We don't create this!
-    [profile release];
-    [host release];
-    [realDisplayName release];
+	[window close];
+	[self terminateConnection: nil]; // just in case it didn't already get called somehow
     [super dealloc];
 }
 
@@ -226,43 +219,59 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [self setReader:handshaker];
 }
 
+- (void)connectionHasTerminated
+{
+	[socketHandler release];
+	[titleString release];
+	[manager release];
+	[versionReader release];
+	[handshaker release];
+	[(id)server_ release];
+	[serverVersion release];
+	[rfbProtocol release];
+	[frameBuffer release];
+	//[optionPanel release];  We don't create this!
+	[profile release];
+	[host release];
+	[realDisplayName release];
+
+	[manager removeConnection:self];
+}
+
+- (void)connectionTerminatedSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	/* One might reasonably argue that this should be handled by the connection manager. */
+	switch (returnCode) {
+		case NSAlertDefaultReturn:
+			break;
+		case NSAlertAlternateReturn:
+			[_owner createConnectionWithServer:server_ profile:profile owner:_owner];
+			break;
+		default:
+			NSLog(@"Unknown alert returnvalue: %d", returnCode);
+	}
+	[self connectionHasTerminated];
+}
+
 - (void)terminateConnection:(NSString*)aReason
 {
-    if(!terminating) {
-        int alertValue;
-        NSString *terminateString = NULL;
-		
+    if(!terminating) {		
         terminating = YES;
-		[self clearAllEmulationStates];
-		[self cancelFrameBufferUpdateRequest];
-		[[NSNotificationCenter defaultCenter] removeObserver:self
-														name:NSFileHandleReadCompletionNotification object:socketHandler];
-		// jason added for fullscreen display
+
 		if (_isFullscreen)
 			[self makeConnectionWindowed: self];
-		// end jason
+		
+		[[NSNotificationCenter defaultCenter] removeObserver:self];
+		[self cancelFrameBufferUpdateRequest];
+		[self endFullscreenScrolling];
+		[self clearAllEmulationStates];
 
-		[window close];
         if(aReason) {
-            if (![_owner haveMultipleConnections]) {
-                terminateString = @"Quit";
-            }
-            alertValue = NSRunAlertPanel(@"Terminate Connection", aReason, @"Ok", terminateString, @"Reconnect", NULL);
-
-            /* One might reasonably argue that this should be handled by the connection manager. */
-            switch (alertValue) {
-                case -1:
-                    [_owner createConnectionWithDictionary:dictionary profile:profile owner:_owner];
-                    break;
-                case 0:
-                    [NSApp terminate:self];
-                case 1:
-                    break;
-                default:
-                    NSLog(@"Unknown alert returnvalue: %d", alertValue);
-            }
+			NSBeginAlertSheet(@"Connection Terminated", @"Okay", @"Reconnect", nil, window, self, @selector(connectionTerminatedSheetDidEnd:returnCode:contextInfo:), nil, nil, aReason);
+			return;
         }
-        [manager removeConnection:self];
+
+		[self connectionHasTerminated];
     }
 }
 
@@ -387,12 +396,12 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (NSString*)password
 {
-    return [dictionary objectForKey:RFB_PASSWORD];
+    return [server_ password];
 }
 
 - (BOOL)connectShared
 {
-    return [[dictionary objectForKey:RFB_SHARED] intValue] ? YES : NO;
+    return [server_ shared];
 }
 
 - (NSRect)visibleRect
@@ -531,22 +540,32 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	[emulate3ButtonTimer invalidate];
 	[emulate3ButtonTimer release];
 	emulate3ButtonTimer = nil;
-	// NSLog(@"Key-Down Timer Reset!\n");
+	//NSLog(@"Key-Down Timer Reset!\n");
 }
 
 - (void)emulateButtonTimeout:(id)sender
 {
-	NSPoint p = [window mouseLocationOutsideOfEventStream];
+	//NSLog(@"Timed out\n");
 	[self resetButtonEmulationTimer];
-    lastComputedMask = lastButtonMask;
-	p = [rfbView convertPoint:p fromView:nil];
-	[self mouseMovedTo: p];
+	if ( window ) // possible that this could be called between NULLing window and self being dealloc'ed
+	{
+		NSPoint p = [window mouseLocationOutsideOfEventStream];
+		lastComputedMask = lastButtonMask;
+		p = [rfbView convertPoint:p fromView:nil];
+		[self mouseMovedTo: p];
+	}
 }
 
 #define _ABS(x)	(((x)<0.0)?(-(x)):(x))
 
 - (unsigned)performButtonEmulation:(unsigned)mask at:(NSPoint)thePoint
 {
+	// This does two things:
+	// 1. If you press buttons 1 and 3 together, sends a button 2 event
+	// 2. If you do the shift- or control tap thingie, it sends the button that corresponds to that.
+	// To do 1, it has a timer, emulate3buttontimer. Press 1 and 3 within the timer of each other and they press 2.
+	//    Note that this means that not always a button event is passed on.
+	// To do 2, it uses a mask that is set up in the modifier code.
     unsigned diff = mask ^ lastButtonMask;
     unsigned pressed = diff & mask;
     unsigned released = diff & lastButtonMask;
@@ -554,9 +573,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     if(pressed) {
 		// button 1 or 3 pressed
         if((mask & (rfbButton1Mask | rfbButton3Mask)) == (rfbButton1Mask | rfbButton3Mask)) {
-            // both buttons pressed
+            // both 1 and 3 buttons pressed
             if( emulate3ButtonTimer) {
-				// timer is running, so the second button has been pressed.
+				// timer is running, so we generate a button 2 press
 				[self resetButtonEmulationTimer];
 				// emulate button 2 in lastComputedMask
                 lastComputedMask = rfbButton2Mask;
@@ -571,15 +590,20 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 				// only one but the timer is running -> bug
                 NSLog(@"emulate3ButtonTimer running when no button was pressed ???\n");
             } else {
-				if(buttonEmulationActiveMask) {
-					// we should emulate buttons
+				if(buttonEmulationActiveMask && mask == rfbButton1Mask) {
+					// Button emulation and mouse button 1 pressed, we should emulate buttons
                     lastComputedMask = buttonEmulationActiveMask;
 				} else {
-					// first button is pressed, start emulation-timer
                     float to = [profile emulate3ButtonTimeout];
 
-                    mouseButtonPressedLocation = thePoint;
-                    emulate3ButtonTimer = [[NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(emulateButtonTimeout:) userInfo:nil repeats:NO] retain];
+					// first button is pressed, start emulation-timer if button 1 or 3
+					if(to && (mask == rfbButton1Mask || mask == rfbButton3Mask)) {
+						mouseButtonPressedLocation = thePoint;
+						emulate3ButtonTimer = [[NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(emulateButtonTimeout:) userInfo:nil repeats:NO] retain];
+					} else {
+						// Any other button pressed or no emulation -> send
+						lastComputedMask = mask;
+					}
 				}
             }
         }
@@ -690,6 +714,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 }
 
 - (void)requestFrameBufferUpdate:(id)sender {
+	if ( terminating) return;
     updateRequested = FALSE;
 	[rfbProtocol requestIncrementalFrameBufferUpdateForVisibleRect: nil];
 }
@@ -759,7 +784,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     if(diff & NSShiftKeyMask) {
         msg.down = (m & NSShiftKeyMask) ? YES : NO;
         msg.key = htonl([profile shiftKeyCode]);
-		//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
+//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
         if(msg.down) {
             if(!(lastButtonMask & rfbButton1Mask)) {
@@ -784,7 +809,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     if(diff & NSControlKeyMask) {
         msg.down = (m & NSControlKeyMask) ? YES : NO;
         msg.key = htonl([profile controlKeyCode]);
-        //        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
+//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
         if(msg.down) {
             if(!(lastButtonMask & rfbButton1Mask)) {
@@ -793,7 +818,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
             }
         } else {
             if(buttonEmulationKeyDownMask & rfbButton2Mask) {
-                if(buttonEmulationActiveMask) {
+                if(buttonEmulationActiveMask & rfbButton2Mask) {
+					// Allow cancelling emulation by pressing button again
                     [self clearEmulationActiveMask];
                 } else {
                     if ([self checkButtonEmulationKeyDownTimer]) {
@@ -808,27 +834,34 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     if(diff & NSAlternateKeyMask) {
         msg.down = (m & NSAlternateKeyMask) ? YES : NO;
         msg.key = htonl([profile altKeyCode]);
-		//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
+//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     }
     if(diff & NSCommandKeyMask) {
         msg.down = (m & NSCommandKeyMask) ? YES : NO;
         msg.key = htonl([profile commandKeyCode]);
-		//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
+//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     }
     if(diff & NSHelpKeyMask) {		// this is F1
         msg.down = (m & NSHelpKeyMask) ? YES : NO;
         msg.key = htonl(F1_KEYCODE);
+//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     }
 
 	// jason added a check for capslock
     if(diff & NSAlphaShiftKeyMask) {
-        msg.down = (m & NSAlphaShiftKeyMask) ? YES : NO;
+		/* This mCapsLock crap is a horrible hack.  I was completely unable to figure out why
+		 * sending the CAPSLOCK modifier to RealVNC wouldn't work, so my work around is to keep 
+		 * track of whether or not we're supposed to be sending a capslocked string.  If we are, 
+		 * we'll ask the OS to convert our string to uppercase for us before we send it.  Yuckage.
+		 */
+        mCapsLock = msg.down = (m & NSAlphaShiftKeyMask) ? YES : NO;
         msg.key = htonl(CAPSLOCK);
+//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-    }
+   }
     lastModifier = m;
 }
 
@@ -841,17 +874,20 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
     msg.down = aFlag;
-    if(c < 256) {
+	if(c < 256) {
         kc = page0[c & 0xff];
     } else if((c & 0xff00) == 0xf700) {
         kc = pagef7[c & 0xff];
     } else {
-	kc = c;
+		kc = c;
     }
     msg.key = htonl(kc);
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     buttonEmulationKeyDownMask = 0;
     [self resetButtonEmulationKeyDownTimer];
+	if(buttonEmulationActiveMask) {
+		[self clearEmulationActiveMask];
+	}
 }
 
 - (void)sendCtrlAltDel: (id)sender
@@ -906,9 +942,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     }
     
     r.length = 1;
-	// Jason casted to NSString to avoid an ambiguity
     for(i=0; i<[(NSString *)sel length]; i++) {
-//    for(i=0; i<[sel length]; i++) {
         unichar c = [sel characterAtIndex:i];
         [self sendKey:c pressed:YES];
         [self sendKey:c pressed:NO];
@@ -917,7 +951,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     return YES;
 }
 
-- (void)pasteViaKeypress:(id)sender
+- (void)paste:(id)sender
 {
     [self pasteFromPasteboard:[NSPasteboard generalPasteboard]];
 }
@@ -931,57 +965,34 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 }
 
 /* --------------------------------------------------------------------------------- */
-- (void)paste:(id)sender
-{
-    rfbClientCutTextMsg*	msg;
-    NSPasteboard* pb = [NSPasteboard generalPasteboard];
-    id sel;
-    const char* s;
-    char* cp;
-
-    [pb types];
-    sel = [pb stringForType:NSStringPboardType];
-    s = [sel lossyCString];
-    if(s == NULL) {
-        return;
-    }
-    msg = malloc(sz_rfbClientCutTextMsg + strlen(s));
-    msg->type = rfbClientCutText;
-    msg->length = htonl(strlen(s));
-    cp = (char*)&msg->length;
-    cp += sizeof(CARD32);
-    memcpy(cp, s, strlen(s));
-    [self writeBytes:(unsigned char*)msg length:(sz_rfbClientCutTextMsg + strlen(s))];
-    free(msg);
-    [self sendModifier:lastModifier & ~NSCommandKeyMask];
-}
-
 - (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag
 {
-	// Jason rewrote this routine.  My rationale is that since the key is being sent to the server anyway, we'll just go ahead and map it into AutoKeyCodes.  This way, it seems transparent to the user, but we've still got a keymap that can be edited if the user has problems.  Also, I intercept kFullscreenSwitchKey and kFullscreenSwitchModifiers to switch fullscreen mode
 	NSString *characters;
 	int i, length;
-
+	
 	// Jason - decomposedStringWithCanonicalMapping is a jaguar-only API call
 	if (gIsJaguar)
 		characters = [[theEvent charactersIgnoringModifiers] decomposedStringWithCanonicalMapping];
 	else
 		characters = [theEvent charactersIgnoringModifiers];
-
+			
+	if ( mCapsLock )
+		characters = [characters uppercaseString];
+	
+	// if this is a key equivalent, perform it and get the rock outta here
+	if ( aFlag && characters && [[KeyEquivalentManager defaultManager] performEquivalentWithCharacters: [theEvent charactersIgnoringModifiers] modifiers: [theEvent modifierFlags] & 0xFFFF0000] )
+	{
+		[self clearEmulationActiveMask];
+		buttonEmulationKeyDownMask = 0;
+		[self sendModifier:0];
+		return;
+	}
+	
 	length = [characters length];
 	for (i = 0; i < length; ++i) {
 		unichar c;
-
+		
 		c = [characters characterAtIndex: i];
-		if ( (c == kFullscreenSwitchKey) && (lastModifier == kFullscreenSwitchModifiers) ){
-			if (aFlag)
-				_isFullscreen ? [self makeConnectionWindowed: self] : [self makeConnectionFullscreen: self];
-			[self clearEmulationActiveMask];
-			buttonEmulationKeyDownMask = 0;
-			[self sendModifier:kFullscreenSwitchModifiers]; // Clear the modifier mask
-			[self sendModifier:0];
-			continue;
-		}
 		[self sendKey:c pressed:aFlag];
 	}
 }
@@ -1074,14 +1085,23 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
+	//NSLog(@"Key\n");
 	[self installMouseMovedTrackingRect];
 	[self setFrameBufferUpdateSeconds: [[NSUserDefaults standardUserDefaults] floatForKey: @"FrontFrameBufferUpdateSeconds"]];
+	
+	//Reset keyboard state on remote end
+	[self sendModifier:0];
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification
 {
+	//NSLog(@"Not Key\n");
 	[self removeMouseMovedTrackingRect];
 	[self setFrameBufferUpdateSeconds: [[NSUserDefaults standardUserDefaults] floatForKey: @"OtherFrameBufferUpdateSeconds"]];
+	
+	//Reset keyboard state on remote end
+	[self sendModifier:0];
+	[self clearAllEmulationStates];
 }
 
 - (void)viewFrameDidChange:(NSNotification *)aNotification
@@ -1133,6 +1153,11 @@ static NSString* byteString(double d)
 // Jason added the following methods for full-screen display
 - (BOOL)connectionIsFullscreen {
 	return _isFullscreen;
+}
+
+- (IBAction)toggleFullscreenMode: (id)sender
+{
+	_isFullscreen ? [self makeConnectionWindowed: self] : [self makeConnectionFullscreen: self];
 }
 
 - (IBAction)makeConnectionWindowed: (id)sender {
@@ -1203,7 +1228,7 @@ static NSString* byteString(double d)
 	BOOL displayFullscreenWarning = [[NSUserDefaults standardUserDefaults] boolForKey: @"DisplayFullscreenWarning"];
 
 	if (displayFullscreenWarning) {
-		NSBeginAlertSheet(@"Your connection is entering fullscreen mode", @"Fullscreen", @"Cancel", nil, window, self, nil, @selector(connectionWillGoFullscreen: returnCode: contextInfo: ), nil, @"You may return to windowed mode by pressing the key combination (command-option-control-`) at any time.\n\nPlease note that the character in this key command is the back-quote, the key next to the number '1' on American keyboards.");
+		NSBeginAlertSheet(@"Your connection is entering fullscreen mode", @"Fullscreen", @"Cancel", nil, window, self, nil, @selector(connectionWillGoFullscreen: returnCode: contextInfo: ), nil, @"You may return to windowed mode by pressing the proper key equivalent at any time.  You can change this key equivalent in the Preferences if necessary.");
 	} else {
 		[self connectionWillGoFullscreen:nil returnCode:NSAlertDefaultReturn contextInfo:nil]; 
 	}

@@ -20,6 +20,8 @@
 #import "rfbproto.h"
 #import "Profile.h"
 @class ProfileManager;
+@class ServerDataViewController;
+@protocol ConnectionDelegate, IServerData;
 
 /* Constants, generally used for userdefaults */
 #define RFB_COLOR_MODEL		@"RFBColorModel"
@@ -32,55 +34,60 @@
 
 #define KEYCHAIN_SERVICE_NAME	@"cotvnc" // This should really be the appname, but I'm too lame to know how to find that - kjw
 
-@interface RFBConnectionManager : NSObject
+@interface RFBConnectionManager : NSObject<ConnectionDelegate>
 {
-    IBOutlet NSTextField *display;
-    IBOutlet NSComboBox *hostName;
-    IBOutlet NSSecureTextField *passWord;
-    IBOutlet NSButton *shared;
     IBOutlet NSPanel *loginPanel;
     IBOutlet NSMatrix *colorModelMatrix;
     IBOutlet NSTextField *psThreshold;
     IBOutlet NSTextField *psMaxRects;
     IBOutlet NSTextField *gamma;
-    IBOutlet NSPopUpButton *profilePopup;
     IBOutlet ProfileManager *profileManager;
-    IBOutlet NSButton *rememberPwd;
 	IBOutlet NSSlider *autoscrollIncrement;
 	IBOutlet NSButton *fullscreenScrollbars;
 	IBOutlet NSButton *displayFullscreenWarning;
 	IBOutlet NSSlider *frontInverseCPUSlider;
 	IBOutlet NSSlider *otherInverseCPUSlider;
+	IBOutlet NSTableView *serverList;
+	IBOutlet NSTableView *groupList;
+	IBOutlet NSBox *serverDataBoxLocal;
+	IBOutlet NSBox *serverListBox;
+	IBOutlet NSBox *serverGroupBox;
+	IBOutlet NSSplitView *splitView;
+	IBOutlet NSMenuItem *rendezvousMenuItem;
+    IBOutlet NSButton *serverDeleteBtn;
+	IBOutlet NSTextField *mInfoVersionNumber;
     NSMutableArray*	connections;
     NSString *cmdlineHost;
-    NSString *cmdlineDisplay;
+    int       cmdlineDisplay;
     NSString *cmdlinePassword;
-    NSString *cmdlineFullscreen;
+    bool      cmdlineFullscreen;
+	ServerDataViewController* mServerCtrler;
+	bool      mDisplayGroups;
 }
 
 + (float)gammaCorrection;
 + (void)getLocalPixelFormat:(rfbPixelFormat*)pf;
 
-- (void)updateProfileList:(id)notification;
-- (void)updateLoginPanel;
 - (void)removeConnection:(id)aConnection;
-- (IBAction)connect:(id)sender;
+- (void)connect:(id<IServerData>)server;
 - (void)processArguments;
 - (void)cmdlineUsage;
 
-- (void)selectedHostChanged: (NSString *) newHostName;
-
-- (NSDictionary *) selectedHostDictionary;
+- (void)selectedHostChanged;
 
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
-- (BOOL)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner;
+- (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner;
 
 - (IBAction)preferencesChanged:(id)sender;
-- (id)defaultFrameBufferClass;
 
-//- (void)controlTextDidChange:(NSNotification *)aNotification; no needed?
+- (IBAction)addServer:(id)sender;
+- (IBAction)deleteSelectedServer:(id)sender;
+
+- (IBAction)changeRendezvousUse:(id)sender;
+
+- (id)defaultFrameBufferClass;
 
 - (void)makeAllConnectionsWindowed;
 
@@ -91,6 +98,12 @@
 - (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender;
 - (float)maxPossibleFrameBufferUpdateSeconds;
 
-- (IBAction)hostSelectionDidChange:(id)sender;
+- (void)serverListDidChange:(NSNotification*)notification;
+
+- (id<IServerData>)selectedServer;
+
+- (void)displayGroups:(bool)display;
+
+- (void)useRendezvous:(bool)useRendezvous;
 
 @end

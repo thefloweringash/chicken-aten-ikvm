@@ -9,9 +9,17 @@
                 openOptions = id; 
                 pasteViaKeypress = id; 
                 sendCtrlAltDel = id; 
+                toggleFullscreenMode = id; 
             }; 
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {changeSelectedScenario = id; restoreDefaults = id; }; 
+            CLASS = KeyEquivalentPrefsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {mConnectionType = NSPopUpButton; mOutlineView = NSOutlineView; }; 
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = Profile; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
@@ -48,9 +56,10 @@
         }, 
         {
             ACTIONS = {
-                connect = id; 
+                addServer = id; 
+                changeRendezvousUse = id; 
+                deleteSelectedServer = id; 
                 frontInverseCPUSliderChanged = id; 
-                hostSelectionDidChange = id; 
                 otherInverseCPUSliderChanged = id; 
                 preferencesChanged = id; 
             }; 
@@ -59,23 +68,55 @@
             OUTLETS = {
                 autoscrollIncrement = NSSlider; 
                 colorModelMatrix = NSMatrix; 
-                display = NSTextField; 
                 displayFullscreenWarning = NSButton; 
                 frontInverseCPUSlider = NSSlider; 
                 fullscreenScrollbars = NSButton; 
                 gamma = NSTextField; 
-                hostName = NSComboBox; 
+                groupList = NSTableView; 
                 loginPanel = NSPanel; 
+                mInfoVersionNumber = NSTextField; 
                 otherInverseCPUSlider = NSSlider; 
-                passWord = NSSecureTextField; 
                 profileManager = ProfileManager; 
-                profilePopup = NSPopUpButton; 
                 psMaxRects = NSTextField; 
                 psThreshold = NSTextField; 
+                rendezvousMenuItem = NSMenuItem; 
+                serverDataBoxLocal = NSBox; 
+                serverDeleteBtn = NSButton; 
+                serverGroupBox = NSBox; 
+                serverList = NSTableView; 
+                serverListBox = NSBox; 
+                splitView = NSSplitView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = ServerDataManager; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                connectToServer = id; 
+                displayChanged = id; 
+                hostChanged = id; 
+                passwordChanged = id; 
+                profileSelectionChanged = id; 
+                rememberPwdChanged = id; 
+                sharedChanged = id; 
+            }; 
+            CLASS = ServerDataViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                box = NSBox; 
+                connectBtn = NSButton; 
+                connectIndicator = NSProgressIndicator; 
+                connectIndicatorText = NSTextField; 
+                display = NSTextField; 
+                hostName = NSTextField; 
+                mDelegate = id; 
+                mServer = id; 
+                password = NSTextField; 
+                profilePopup = NSPopUpButton; 
                 rememberPwd = NSButton; 
                 shared = NSButton; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = NSWindowController; 
         }
     ); 
     IBVersion = 1; 

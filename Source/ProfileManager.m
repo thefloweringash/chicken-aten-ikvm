@@ -17,15 +17,15 @@
  */
 
 #import "ProfileManager.h"
+#import "ProfileDataManager.h"
 
-#define PROFILES			@"ConnectProfiles"
 #define NUMENCODINGS			8
 
 static const NSString* encodingNames[NUMENCODINGS] = {
-    @"Tight",
 	@"Zlib",
 	@"ZRLE",
 	@"ZlibHex",
+    @"Tight",
     @"Hextile",
     @"RRE",
     @"CoRRE",
@@ -33,10 +33,10 @@ static const NSString* encodingNames[NUMENCODINGS] = {
 };
 
 static const unsigned int encodingValues[NUMENCODINGS] = {
-	rfbEncodingTight,
 	rfbEncodingZlib,
 	rfbEncodingZRLE,
 	rfbEncodingZlibHex,
+	rfbEncodingTight,
 	rfbEncodingHextile,
     rfbEncodingRRE,
     rfbEncodingCoRRE,
@@ -62,35 +62,30 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
 }
 
 - (void)wakeup
-{    
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    if((profiles = [[ud objectForKey:PROFILES] mutableCopy]) == nil) {
-        NSMutableDictionary* def;
+{
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
 
-        def = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-            [NSString stringWithFormat:@"%d", [[pixelFormatMatrix selectedCell] tag]], PixelFormat,
-            [NSString stringWithFormat:@"%d", [enableCopyRect state]], CopyRectEnabled,
-            [ProfileManager getEncodings], Encodings,
-            [NSString stringWithFormat:@"%d", (1 << NUMENCODINGS) - 1], EnabledEncodings,
-            [m3bTimeout stringValue], EmulateThreeButtonTimeout,
-            [mkdTimeout stringValue], EmulateKeyDownTimeout,
-            [mkbTimeout stringValue], EmulateKeyboardTimeout,
-            [NSNumber numberWithShort: [commandKey indexOfSelectedItem]], NewCommandKeyMap,
-            [NSNumber numberWithShort: [controlKey indexOfSelectedItem]], NewControlKeyMap,
-            [NSNumber numberWithShort: [altKey indexOfSelectedItem]], NewAltKeyMap,
-            [NSNumber numberWithShort: [shiftKey indexOfSelectedItem]], NewShiftKeyMap,
-            nil];
-	profiles = [[NSMutableDictionary alloc] initWithObjectsAndKeys:def, DefaultProfile, nil];
-    } else {
-        NSString* key;
-        NSEnumerator* keys = [profiles keyEnumerator];
+	if( 0 == [profiles count] ) {
+		NSMutableDictionary* def;
 
-        while((key = [keys nextObject]) != nil) {
-            NSMutableDictionary* d = [[[profiles objectForKey:key] mutableCopy] autorelease];
-            [profiles setObject:d forKey:key];
-        }
-    }
-    [encodingTableView setTarget:self];
+		def = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+			[NSString stringWithFormat:@"%d", [[pixelFormatMatrix selectedCell] tag]], PixelFormat,
+			[NSString stringWithFormat:@"%d", [enableCopyRect state]], CopyRectEnabled,
+			[ProfileManager getEncodings], Encodings,
+			[NSString stringWithFormat:@"%d", (1 << NUMENCODINGS) - 1], EnabledEncodings,
+			[m3bTimeout stringValue], EmulateThreeButtonTimeout,
+			[mkdTimeout stringValue], EmulateKeyDownTimeout,
+			[mkbTimeout stringValue], EmulateKeyboardTimeout,
+			[NSNumber numberWithShort: [commandKey indexOfSelectedItem]], NewCommandKeyMap,
+			[NSNumber numberWithShort: [controlKey indexOfSelectedItem]], NewControlKeyMap,
+			[NSNumber numberWithShort: [altKey indexOfSelectedItem]], NewAltKeyMap,
+			[NSNumber numberWithShort: [shiftKey indexOfSelectedItem]], NewShiftKeyMap,
+			nil];
+			
+		[profiles setProfile:def forKey:DefaultProfile];
+	}
+
+	[encodingTableView setTarget:self];
     [encodingTableView setDoubleAction:@selector(changeEncodingState:)];
     [self selectProfileNamed:DefaultProfile];
 }
@@ -98,11 +93,12 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
 - (void)updateBrowserButtons:(id)sender
 {
     NSString* sp = [profileField stringValue];
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
 
     [deleteProfileButton setEnabled:
-        ([profiles objectForKey:sp] && ![sp isEqualToString:DefaultProfile])];
+        ([profiles profileForKey:sp] && ![sp isEqualToString:DefaultProfile])];
     [newProfileButton setEnabled:
-        (![profiles objectForKey:sp] && ![sp isEqualToString:@""])];
+        (![profiles profileForKey:sp] && ![sp isEqualToString:@""])];
 }
 
 - (void)updateUpDownButtons:(id)sender
@@ -129,9 +125,10 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
 - (NSMutableDictionary*)currentProfileDictionary
 {
     NSMutableDictionary* pd;
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
     
     NSString* sp = [[profileBrowser selectedCell] stringValue];
-    pd = [profiles objectForKey:sp];
+    pd = [profiles profileForKey:sp];
     [self upgradeEncodings:pd];
     return pd;
 }
@@ -173,9 +170,10 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
 - (void)addProfile:(id)sender
 {
     NSMutableDictionary* newProfile;
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
 
     newProfile = [[[self currentProfileDictionary] mutableCopy] autorelease];
-    [profiles setObject:newProfile forKey:[profileField stringValue]];
+    [profiles setProfile:newProfile forKey:[profileField stringValue]];
     [self selectProfileNamed:[profileField stringValue]];
     [self updateBrowserButtons:self];
     [self profileChanged:self];
@@ -198,16 +196,17 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
     mask = [[profile objectForKey:EnabledEncodings] intValue];
     mask ^= (1 << row);
     [profile setObject:[NSString stringWithFormat:@"%d", mask] forKey:EnabledEncodings];
-    [[NSUserDefaults standardUserDefaults] setObject:profiles forKey:PROFILES];
+    [[ProfileDataManager sharedInstance] save];
     [encodingTableView reloadData];
 }
 
 - (void)deleteProfile:(id)sender
 {
     NSString* current = [[profileBrowser selectedCell] stringValue];
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
 
-    [profiles removeObjectForKey:current];
-    [[NSUserDefaults standardUserDefaults] setObject:profiles forKey:PROFILES];
+    [profiles removeProfileForKey:current];
+    [[ProfileDataManager sharedInstance] save];
     [self selectProfileNamed:DefaultProfile];
     [[NSNotificationCenter defaultCenter] postNotificationName:ProfileAddDeleteNotification
                                                         object:self];
@@ -234,7 +233,7 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
     [profile setObject:[controlKey titleOfSelectedItem] forKey:ControlKeyMap];
     [profile setObject:[altKey titleOfSelectedItem] forKey:AltKeyMap];
     [profile setObject:[shiftKey titleOfSelectedItem] forKey:ShiftKeyMap]; */
-    [[NSUserDefaults standardUserDefaults] setObject:profiles forKey:PROFILES];
+    [[ProfileDataManager sharedInstance] save];
 }
 
 - (void)profileSelected:(id)sender
@@ -273,18 +272,21 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
         [encodingTableView scrollRowToVisible:row+1];
     }
     [profile setObject:encodings forKey:Encodings];
-    [[NSUserDefaults standardUserDefaults] setObject:profiles forKey:PROFILES];
+    [[ProfileDataManager sharedInstance] save];
     [encodingTableView reloadData];
 }
 
 - (int)browser:(NSBrowser *)sender numberOfRowsInColumn:(int)column
 {
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+	
     return [profiles count];
 }
 
 - (NSArray*)sortedProfileNames
 {
-    return [[profiles allKeys] sortedArrayUsingSelector:@selector(compare:)];
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+    return [profiles sortedKeyArray];
 }
 
 - (void)browser:(NSBrowser *)sender willDisplayCell:(id)cell atRow:(int)row column:(int)column
@@ -336,10 +338,11 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
 
 - (Profile*)profileNamed:(NSString*)name
 {
-    NSMutableDictionary* p = [profiles objectForKey:name];
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+    NSMutableDictionary* p = [profiles profileForKey:name];
 
     if(p == nil) {
-        p = [profiles objectForKey:DefaultProfile];
+        p = [profiles profileForKey:DefaultProfile];
         [p setObject:DefaultProfile forKey:@"ProfileName"];
     } else {
         [p setObject:name forKey:@"ProfileName"];
@@ -349,7 +352,8 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
 
 - (NSArray*)profileNames
 {
-    NSMutableArray* n = [[[[profiles allKeys] sortedArrayUsingSelector:@selector(compare:)] mutableCopy] autorelease];
+	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+    NSMutableArray* n = [[[profiles sortedKeyArray] mutableCopy] autorelease];
     if(n == nil) {
         n = [NSMutableArray array];
     }

@@ -70,6 +70,11 @@
 	[[NSNotificationCenter defaultCenter] addObserver: delegate selector: @selector(viewFrameDidChange:) name: NSViewFrameDidChangeNotification object: self];
 }
 
+- (id)delegate
+{
+	return delegate;
+}
+
 - (void)drawRect:(NSRect)destRect
 {
     NSRect b = [self bounds];

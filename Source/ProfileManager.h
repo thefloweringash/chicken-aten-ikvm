@@ -56,9 +56,7 @@
     id profilePanel;
     id shiftKey;
     id upDownButtonMatrix;
-
-    NSMutableDictionary*		profiles;
-}
+    }
 
 + (CARD32)encodingValue:(int)index;
 + (NSMutableArray*)getEncodings;

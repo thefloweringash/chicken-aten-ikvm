@@ -30,6 +30,7 @@
 
 - (void)setFrameBuffer:(id)aBuffer;
 - (void)setDelegate:(id)aDelegate;
+- (id)delegate;
 - (void)drawRect:(NSRect)aRect;
 - (void)displayFromBuffer:(NSRect)aRect;
 - (void)drawRectList:(id)aList;

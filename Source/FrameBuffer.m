@@ -51,6 +51,8 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
                 pix += (((unsigned int)*v) << 24);
             }
             break;
+		default:
+			[NSException raise: NSGenericException format: @"Unsupported bytesPerPixel"];
     }
     clr[0] = (float)(this->redClut[(pix >> this->pixelFormat.redShift) & this->pixelFormat.redMax] >> this->rshift) / this->maxValue;
     clr[1] = (float)(this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax] >> this->gshift) / this->maxValue;
@@ -339,7 +341,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 - (unsigned int)tightBytesPerPixel
 {
     if((pixelFormat.bitsPerPixel == 32) &&
-        (pixelFormat.depth == 24) &&
+		(pixelFormat.depth >= 24) &&
         (pixelFormat.redMax == 0xff) &&
         (pixelFormat.greenMax == 0xff) &&
         (pixelFormat.blueMax == 0xff)) {

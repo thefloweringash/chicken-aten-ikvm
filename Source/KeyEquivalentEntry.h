@@ -1,0 +1,23 @@
+//
+//  KeyEquivalentEntry.h
+//  Chicken of the VNC
+//
+//  Created by Bob Newhart on Sun Mar 21 2004.
+//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
+//
+
+#import <AppKit/AppKit.h>
+@class KeyEquivalent;
+
+
+@interface KeyEquivalentEntry : NSObject {
+	NSMenuItem *mMenuItem;
+}
+
+- (id)initWithTitle: (NSString *)title;
+- (id)initWithMenuItem: (NSMenuItem *)menuItem;
+- (NSMenuItem *)menuItem;
+- (void)makeActive: (BOOL)active forKeyEquivalent: (KeyEquivalent *)keyEquivalent;
+- (BOOL)isEqualToEntry: (KeyEquivalentEntry *)x;
+
+@end

@@ -23,6 +23,8 @@
 #import "rfbproto.h"
 #import "RFBProtocol.h"
 
+@protocol IServerData;
+
 #define RFB_HOST		@"Host"
 #define RFB_PASSWORD		@"Password"
 #define RFB_REMEMBER		@"RememberPassword"
@@ -36,8 +38,6 @@
 #define NUM_BUTTON_EMU_KEYS	2
 
 // jason added the following constants for fullscreen display
-#define kFullscreenSwitchKey		'`'
-#define kFullscreenSwitchModifiers	(NSCommandKeyMask | NSAlternateKeyMask | NSControlKeyMask)
 #define kTrackingRectThickness		10.0
 #define kAutoscrollInterval			0.05
 
@@ -51,7 +51,7 @@
     id currentReader;
     id versionReader;
     id handshaker;
-    id dictionary;
+    id<IServerData> server_;
     id serverVersion;
     RFBProtocol *rfbProtocol;
     id scrollView;
@@ -99,17 +99,17 @@
 	float _frameBufferUpdateSeconds;
 	NSTimer *_frameUpdateTimer;
 	BOOL _hasManualFrameBufferUpdates;
+	BOOL mCapsLock;
 }
 
 // jason added 'owner' for fullscreen display
-- (id)initWithDictionary:(NSDictionary*)aDictionary profile:(Profile*)p owner:(id)owner;
-//- (id)initWithDictionary:(NSDictionary*)aDictionary andProfile:(Profile*)p;
+- (id)initWithServer:(id<IServerData>)server profile:(Profile*)p owner:(id)owner;
+
 - (void)setManager:(id)aManager;
 - (void)dealloc;
 
 - (void)paste:(id)sender;
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb;
-- (void)pasteViaKeypress:(id)sender;
 - (void)setServerVersion:(NSString*)aVersion;
 - (void)terminateConnection:(NSString*)aReason;
 - (void)setDisplaySize:(NSSize)aSize andPixelFormat:(rfbPixelFormat*)pixf;
@@ -144,6 +144,8 @@
 - (id)frameBuffer;
 - (NSWindow *)window;
 
+- (void)windowDidBecomeKey:(NSNotification *)aNotification;
+- (void)windowDidResignKey:(NSNotification *)aNotification;
 - (void)windowDidDeminiaturize:(NSNotification *)aNotification;
 - (void)windowDidMiniaturize:(NSNotification *)aNotification;
 - (void)windowWillClose:(NSNotification *)aNotification;
@@ -155,6 +157,7 @@
 
 // Jason added the following for full-screen windows
 - (BOOL)connectionIsFullscreen;
+- (IBAction)toggleFullscreenMode: (id)sender;
 - (IBAction)makeConnectionWindowed: (id)sender;
 - (IBAction)makeConnectionFullscreen: (id)sender;
 - (void)installMouseMovedTrackingRect;

@@ -1,0 +1,555 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+\readonlydoc1{\fonttbl\f0\fswiss\fcharset77 Arial-BoldMT;\f1\fswiss\fcharset77 ArialMT;\f2\fswiss\fcharset77 Helvetica;
+\f3\fnil\fcharset77 LucidaGrande-Bold;\f4\fnil\fcharset77 LucidaGrande;\f5\fnil\fcharset77 LucidaSans-Typewriter;
+\f6\fnil\fcharset77 Futura-MediumItalic;}
+{\colortbl;\red255\green255\blue255;\red137\green137\blue137;\red0\green0\blue255;\red0\green11\blue152;
+\red143\green0\blue0;\red51\green51\blue51;\red137\green19\blue21;\red0\green18\blue255;}
+\vieww14200\viewh14360\viewkind0
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f0\b\fs72 \cf0 Chicken of the VNC\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 {{\NeXTGraphic Pasted Graphic.tiff \width2560 \height2560
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\fs72 \cf0 \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\fs36 \cf0 brawwwK!\
+
+\f1\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f2\fs24 \cf2 VNCViewer written by Helmut Maierhofer \cf3 helmut.maierhofer@chello.at\cf2 \
+Mac OS X port and cheesy name by Jason Harris \cf3 support@geekspiff.com\cf2 \
+Icon generously provided by Cale Peeples \cf3 cale@dumbculture.com\cf2 \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+\cf3 http://cotvnc.sourceforge.net/\cf2 \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f1 \cf0 \
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 About Chicken of the VNC\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f1\b0\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f4 \cf0 Chicken of the VNC is a VNC client for Mac OS X.  A VNC client allows one to display and interact with a remote computer screen.  In other words, you can use Chicken of the VNC to interact with a remote computer as though it's right next to you.\
+\
+Chicken of the VNC was written by Helmut Maierhofer for OpenStep on Intel and Jason Harris (the author of this document) ported it to the Cocoa API on Mac OS X.  Helmut's original version was called VNCViewer, but as there are already several VNC programs on Mac OS X with this name, I decided to save some confusion and call it by this horrible Chicken name instead.  \
+\
+More information about VNC can be found at AT&T's compendium: \cf3 http://www.uk.research.att.com/vnc/\cf0 .  \
+
+\f1 \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Using Chicken of the VNC\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f1\b0\fs24 \cf0 \
+
+\f4\fs20 \cf5 Note:  If you have used a version of Chicken of the VNC prior to 1.3, you will need to either delete your preferences (in ~/Library/Preferences/com.geekspiff.chickenofthevnc.plist), or reset the modifier key mappings in all of your stored profiles.  If you wish, you may also delete the "Chicken of the VNC" folder in your preferences, as it is no longer used.\
+
+\fs24 \cf0 \
+Use it just like any other VNC client - enter the address of a working VNC server, the display number (or port) and your password and rock'n'roll...\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\qc
+\cf0 {{\NeXTGraphic Untitled-1.jpg \width7800 \height3580
+}¬}
+\f4\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+\cf0 \'a5 
+\f3\b \cf6 Servers:
+\f4\b0 \cf0   You can store commonly used servers in this section.  Use the + and - buttons to add and remove servers.  \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+\cf0 \'a5 
+\f3\b \cf6 Host:  
+\f4\b0 The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You must be able to "ping" the host to connect to it.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf6 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+\cf0 \'a5 
+\f3\b \cf6 Display/Port:
+\f4\b0   The display number or port for the connection.  \cf0 VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  Display numbers less than 100 are interpreted as a port number.  If you're having problems connecting, you should make sure that the port is not firewalled on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.\
+\
+\'a5 
+\f3\b \cf6 Password:  
+\f4\b0 The password needed to connect to the server running at the specified host and display.  If Remember Password was checked, this will be fetched from your keychain after you've entered it initially.\
+\
+\cf0 \'a5 
+\f3\b \cf6 Remember Password:  
+\f4\b0 If checked, the password will be stored in your Keychain and remembered for later use.\
+\
+\cf0 \'a5 
+\f3\b \cf6 Profile:  
+\f4\b0 The connection profile to use when connecting to this server.  See the section below for more info about connection profiles.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \
+You can also check AT&T's web page (given above) for additional information on connection and configuring a VNC client.\
+
+\f1 \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Using Connection Profiles\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f1\b0\fs24 \cf0 \
+
+\f4 You can use profiles to store settings for an individual VNC server or for a class of servers.  For example, you might want to use full-color display for a server that is on your local area network, but drop down to 8-bit display for a remote machine.  \
+\
+You can also use profiles to specify your default encoding.  VNC operates by transferring an image of the screen from the server to the client.  This obviously requires lots of bandwidth.  The better the encoding that you use to transfer this information, the less "lag" you'll experience while using the Chicken.  \
+\
+The different encodings are (in rough order of efficiency)\
+
+\f5\fs22 \CocoaLigature0 	\cf7 Tight\cf0 \
+	\cf7 Zlib\cf0 \
+	\cf7 ZRLE\cf0 \
+	\cf7 ZlibHex\cf0 \
+	\cf7 Hextile\cf0 \
+	\cf7 RRE\cf0 \
+	\cf7 CoRRE\cf0 \
+	\cf7 Raw\
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 \CocoaLigature1 {{\NeXTGraphic Untitled-2.jpg \width8920 \height5060
+}¬}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+
+\f4\fs24 \cf0 \'a5 
+\f3\b \cf6 Profiles:  
+\f4\b0 A list of profiles that are available to use for your connections.  Add a new profile by typing its name below the list and pressing 
+\f3\b New
+\f4\b0 .  Remove a profile other than the default by selecting it and pressing the 
+\f3\b Delete
+\f4\b0  button.  The information in the remainder of the window belongs to the selected profile.\
+\
+\cf0 \'a5 
+\f3\b \cf6 RFB-Pixelformat:  
+\f4\b0 The color resolution to use for the connection.  Because VNC requires large amounts of bandwidth, a more responsive connection can be obtained by using lower color resolution.  
+\f3\b Server Native
+\f4\b0  uses whatever color resolution the server is using.  8-bit converts colors to grayscale, 16-bit uses thousands of colors, and 24-bit uses millions.\
+\
+\cf0 \'a5 
+\f3\b \cf6 Encoding:  
+\f4\b0 The encoding to use for the connection.  Encodings are described above.  Use the arrows on the right to change the order of preferred encodings.  The top encoding will be tried first, and subsequent encodings will be tried until one is found that is supported by your server.  To disable an encoding, double-click it.  
+\f3\b CopyRect Encoding
+\f4\b0  is an optimization that's useful in some situations.  If you're connecting to a very old server, you may wish to turn it off, but we haven't run across any situations where it isn't supported.\
+\
+\cf0 \'a5 
+\f3\b \cf6 3-Button Mouse Emulation Timeout:  
+\f4\b0 You can emulate clicking the third mouse button on a two button mouse by clicking both buttons together.  This setting controls the maximum amount of time that can elapse between the two button presses to simulate the third button.  See 
+\f3\b Mouse Button Emulation
+\f4\b0  for more information.\
+\
+\cf0 \'a5 
+\f3\b \cf6 Key Down Timeout:  
+\f4\b0 You can emulate clicking the second or third mouse buttons by tapping the 
+\f3\b Alt
+\f4\b0  or 
+\f3\b Shift
+\f4\b0  keys.  If the key is held down longer than this setting, emulation will not be used.  See 
+\f3\b Mouse Button Emulation
+\f4\b0  for more information.\
+\
+\cf0 \'a5 
+\f3\b \cf6 Emulation Timeout:  
+\f4\b0 Mouse button emulation that was triggered by tapping the 
+\f3\b Alt
+\f4\b0  or 
+\f3\b Shift
+\f4\b0  keys will be cancelled if a click does not occur this long after the keyboard button was tapped.  You can disable keyboard-mouse button emulation by setting this to zero.\
+\
+\cf0 \'a5 
+\f3\b \cf6 Keymapping:  
+\f4\b0 You can use this section to map the keys on your Macintosh keyboard to keys commonly used on other operating systems.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Mouse Button Emulation\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+If you are one of those cursed with a single button mouse, you can emulate the right button by quickly tapping the 
+\f3\b Shift
+\f4\b0  key on your keyboard.  The mouse pointer will change to indicate that clicks will act like the third (right) mouse button.  Likewise, you can emulate the middle button by quickly tapping the 
+\f3\b Alt
+\f4\b0  (sometimes called Option) key on your keyboard.  To cancel emulation, tap the key a second time or wait for the time interval specified in 
+\f3\b Emulation Timeout
+\f4\b0 .\
+\
+If you have a two-button mouse and wish to emulate a third-button click, press both buttons simultaneously.  You can adjust how close together the presses must occur by tweaking the 
+\f3\b 3-Button Mouse Emulation Timeout
+\f4\b0  setting.\
+\
+If you are lucky enough to have a two or three button mouse, you don't need to worry about emulation as Chicken of the VNC supports up to three mouse buttons, as well as scroll-wheels on compatible servers.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Full Screen Display\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+The Chicken can be toggled in and out of full screen display by pressing the keyboard combination command-option-control-`.  The 'command' key is also known as the 'Apple' key.  The back-quote (`) is the character immediately to the left of the number '1' on American keyboards.  \
+\
+If this key combination interferes with your work, or is not convenient on international keyboards, it can be changed in the 
+\f3\b Keyboard tab of the
+\f4\b0  
+\f3\b Preferences
+\f4\b0 .\
+\
+While in full screen mode, you cannot interact with the Dock or with any other programs running locally on your Macintosh.  If the remote screen is larger than your local screen, the display will 'auto-scroll' when the mouse is close the edge of the screen.  The scrolling speed and the presence of scrollbars can be adjusted in the 
+\f3\b Fullscreen tab of the Preferences
+\f4\b0 .\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 I Get Strange Characters When I Type\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+Different operating systems interpret keystrokes to mean different things.  Although standardization is in the works, not all servers are fully standardized.  \
+\
+Older versions of Chicken of the VNC tried to account for this difficulty by interrupting your VNC session to ask you to type certain keystrokes.  As of Chicken of the VNC version 1.3, this process became automated.\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f1 \cf0 \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 How 'Bout CTRL-ALT-DEL and Other Strange Combos?\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+Windows machines commonly use the CTRL-ALT-DEL keystroke.  You can send this keystroke by choosing "Send Ctrl-Alt-Del" from the "Connection" menu.  If you'd prefer to type the keystroke, you can do this by simply hitting the keys that map to it.  In the default configuration, this is CTRL-CMD-DEL (the CMD key is also referred to as the Apple key).\
+\
+On machines that don't have a DEL key (such as recent PowerBooks and iBooks), you can use the function key and the ordinary delete key.  In the default configuration, you would use CTRL-CMD-FN-DELETE.\
+\
+Likewise, to send Alt-F4 on a laptop (where F4 is mapped to sound volume), you can CMD-FN-F4.\
+\
+You can see additional uses for the Function key at\
+\cf3 http://developer.apple.com/techpubs/hardware/Developer_Notes/Macintosh_CPUs-G4/PowerBook_G4_11Oct01/3Input-Output/Keyboard_.html\
+\cf0 \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Preferences\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 {{\NeXTGraphic performance.jpg \width7440 \height4640
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f4\b0\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+\cf0 \'a5 
+\f3\b \cf6 Performance:  
+\f4\b0 Use the sliders to adjust how often your connections ask the server for updates.  Generally, you want the frontmost connection to update as often as possible, while other connections can be less responsive.  To force a connection to never update unless requested by choosing 
+\f3\b Refresh
+\f4\b0  from the 
+\f3\b Window
+\f4\b0  menu, set the slider to 
+\f3\b Only Update Manually
+\f4\b0 .\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 {{\NeXTGraphic fullscreen.jpg \width7440 \height4640
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+
+\f4\fs24 \cf0 \'a5 
+\f3\b \cf6 Autoscroll Speed:  
+\f4\b0 Controls how quickly your fullscreen connection scrolls when the mouse is moved to the edge of your screen.\
+\
+\cf0 \'a5 
+\f3\b \cf6 Display Scrollbars While in Fullscreen Mode:  
+\f4\b0 Controls whether scrollbars are displayed for fullscreen connections.  They aren't necessary, since you can use the 
+\f3\b Autoscroll
+\f4\b0  feature, but sometimes its nice to have an explicit scrollbar.\
+\
+\cf0 \'a5 
+\f3\b \cf6 Display Warning Before Entering Fullscreen Mode :  
+\f4\b0 Controls whether a warning panel is displayed before entering fullscreen mode.  Since the only way to get back out of fullscreen mode is by knowing the keyboard command, the warning is an important reminder.  If you're sure you know the keyboard command, you can use this to disable the warning.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 {{\NeXTGraphic colormodel.jpg \width7440 \height4640
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+
+\f4\fs24 \cf0 \'a5 
+\f3\b \cf6 Local Color Model:  
+\f4\b0 Controls the color model that will be used to display the remote server.  This differs from the color settings in the 
+\f3\b Connection Profile
+\f4\b0  in that this setting does not affect what is requested from the VNC server, but only what is displayed on your screen.  There's generally no good reason not to set this to whatever your screen is set to. \
+\
+\cf0 \'a5 
+\f3\b \cf6 Gamma:  
+\f4\b0 Use this to change the gamma point of the display.  \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 {{\NeXTGraphic keyboard.jpg \width7440 \height4640
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+
+\f4\fs24 \cf0 \'a5 
+\f3\b \cf6 Keyboard Equivalents:  
+\f4\b0 Use this section to change the keyboard equivalents for various menu commands for different connection scenarios.  The popup menu controls the scenario.  
+\f3\b Non-Connection Window
+\f4\b0  is the scenario in which a window other than a VNC connection is the frontmost window.  In other words, something like the 
+\f3\b Connection
+\f4\b0  dialog or the preferences window is frontmost.  
+\f3\b Windowed Connection
+\f4\b0  is the scenario in which a VNC connection in a window is frontmost.  
+\f3\b Fullscreen Connection
+\f4\b0  is the scenario in which 
+\f3\b Fullscreen Mode
+\f4\b0  is active.  You can change the keyboard equivalent used to move in and out of 
+\f3\b Fullscreen Mode
+\f4\b0  by changing it in both the Windowed Connection and Fullscreen Connection scenarios. \
+\
+\cf0 \'a5 
+\f3\b \cf6 Keyboard Equivalent Table:  
+\f4\b0 Change a keyboard equivalent by navigating to the desired menu command and double-clicking the 
+\f3\b Shortcut
+\f4\b0  next to it.  Press the keyboard equivalent you wish to use, or press 
+\f3\b Space
+\f4\b0  on your keyboard to remove an equivalent.  \
+\
+\cf0 \'a5 
+\f3\b \cf6 Restore Defaults:  
+\f4\b0 Use this to restore the default keyboard equivalents.  These are the standard keyboard equivalents when a non-connection window is frontmost, and no keyboard equivalents other than to switch in and out of 
+\f3\b Fullscreen Mode
+\f4\b0  whenever a connection is frontmost.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 {{\NeXTGraphic display.jpg \width7440 \height4640
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li860\ql\qnatural
+
+\f4\fs24 \cf0 \'a5 
+\f3\b \cf6 Display:  
+\f4\b0 Use this settings in this tab to tweak the expected complexity of the server's screen.  \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+\cf6 \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Known Problems\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+\'a5 It is not possible to auto-scroll diagonally in full-screen mode, only horizontally or vertically.\
+\'a5 Modifier keys such as cmd, option, etc. may be in a strange state after switching in or out of full-screen mode.\
+\'a5 Window size may be incorrect after switching out of fullscreen mode.\
+\'a5 A server window smaller than the client screen is not centered in fullscreen mode.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Source Code\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+Because this program is distributed under the GNU license, source code is available for it.  If you're interested in contributing to Chicken of the VNC, it is hosted collaboratively on SourceForge.  The address is\
+\cf3 http://cotvnc.sourceforge.net/\
+\cf0 \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Version History\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li940\fi-220\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \'a5
+\f3\b  Version 2.0b1 (August 18, 2004)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li940\fi-220\ql\qnatural
+
+\f4\b0 \cf0 - New connection manager that stores commonly used servers.\
+- Auto-discovery of servers via Rendezvous.\
+- Added keychain support.\
+- Added support for keyboard commands when connection windows are not the frontmost windows.\
+- Added support for customizable menu key equivalents.\
+- Clarified menus. rearranged them, and made them more "Mac-like".\
+- Drastically improved documentation.\
+- Added timers for mouse button emulation that help prevent accidental emulation.\
+- Added ability to specify connection options from the command line.\
+- Shift-Tab now works properly on Windows machines.\
+- Capslock now works on Windows machines.\
+- Resolved errors when connection to RealVNC using ZLibHex encoding.\
+- Resolved errors when connecting to OSXVNC using Tight encoding.\
+- Miscellaneous other encoding fixes.\
+- Tight encoding is no longer the default encoding.\
+- Widened "Port (or Display)" text field so it can hold 5 digits.\
+- Port numbers below 100 are now interpreted as a display number, instead of numbers below 10.\
+- Mouse tracking no longer breaks after exiting from full-screen mode.\
+- Resolved an issue that could cause Chicken to crash if the server connection unexpectedly died.\
+- When a server connection dies, Chicken now notifies the user with a sheet so that the user can see which connection it was.\
+- Removed the "Quit" option from the notification presented when a server has died.\
+- Changed release date in "About Chicken of the VNC" for 1.3.6 to properly reflect the year 2003.\
+- New VNC graphics in About dialog by Tobia Conforto {\field{\*\fldinst{HYPERLINK "mailto:tobix@linux.it"}}{\fldrslt tobix@linux.it}}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \'a5
+\f3\b  Version 1.3.6 (January 17, 2003)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li940\fi-220\ql\qnatural
+
+\f4\b0 \cf0 - Fixed a nasty memory leak and checked all encodings to verify that none of them memory problems.\
+- Added preferences to modify the CPU performance of the frontmost connection independently of all other connections.\
+- Finally fixed Tight Encoding - previously, it only worked when the server had a small screen.\
+- More speed optimization when running under Jaguar.\
+- Redid the scheduler to fix a problem that caused excessive CPU usage.\
+- Added lots of internal error-checking.\
+- Modified many default preferences to have more reasonable values - display and preferred encodings particularly.  If upgrading, you will need to restore the order of your preferred encodings.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \'a5
+\f3\b  Version 1.3.5 (January 13, 2003)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li940\fi-220\ql\qnatural
+
+\f4\b0 \cf0 - More improvements to Tight Encoding\
+- JPEG encoding support in Tight Encoding (only available for expert users who install jpeglib and recompile Chicken)\
+- ZRLE encoding\
+- ZLIB encoding\
+- Added "Send Ctrl-Alt-Del" menu item\
+- Fixed several full-screen windowing bugs\
+- Added support for mouse scroll-wheels when connecting to servers that support this extension to the VNC protocol\
+- Works with OSXvnc 1.0\
+- When a connection is dropped, Chicken asks if you'd like to reconnect\
+- Presents the connection dialog when Chicken is brought frontmost and there are no open sessions\
+- Improvements to window drawing speed\
+- The Login dialog window now stores the server addresses you've connected to\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \'a5
+\f3\b  Version 1.3.1 (October 24, 2002)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li940\fi-220\ql\qnatural
+
+\f4\b0 \cf0 - Restored support for versions of Mac OS X lower than 10.2.\
+- Improved connection issues when using Tight encoding, although it's still not perfect.\
+- Added support for specification of a port number instead of a display number.\
+- Added native support for three-button mice.\
+- Fixed a bug that caused Chicken to crash on machines with Unsanity's FruitMenu installed.\
+- Chicken is now hosted on SourceForge.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \'a5
+\f3\b  Version 1.3 (October 8, 2002)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li940\fi-220\ql\qnatural
+
+\f4\b0 \cf0 - Added a full-screen, auto-scrolling mode and associated preference settings.  \
+- Connection windows no longer default to being larger than your main screen.\
+- Windows now initially appear scrolled to the top-left instead of the bottom left.\
+- You are no longer prompted to type a key without a modifier when you type special characters.  \
+- Revamped the text sending engine.\
+- Arrow keys are no longer sent twice.\
+- Revamped and reorganized the profile window so that it makes more sense for Mac OS X (and follows the Aqua guidelines).  Also, the profile window could now be localized if someone felt the urge to do it (it no longer uses string constants).  However, this change means that previous users will either need to reset their modifier keymappings in all of their profiles, or delete their preferences.\
+- Changed the rectangle drawing options in the Preference window so that they more accurately reflect behaviour on Mac OS X.\
+- The rectangle drawing options in the Preferences window now show their current value.  Previously, they always showed the default value, although they used whatever value had been set.\
+- Synced with Helmut's 1.2.5 release.  This adds the ability to paste a file's path into your VNC window by dragging the corresponding file into the window (untested).\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li360\ql\qnatural
+\cf0 \'a5
+\f3\b  Version 1.2.3 (March 22, 2002)\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li940\fi-220\ql\qnatural
+
+\f4\b0 \cf0 - Initial Mac OS X release.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Distribution and License Agreement\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+Chicken of the VNC is released under the GNU license.  \
+\
+Chicken of the VNC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\
+\
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\
+\
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Main Contributors\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+\'a5 
+\f6\i\fs26 Jason Harris
+\f4\i0\fs24  - Project manager, port to Mac OS X, various code enhancements, documentation\
+\'a5 
+\f6\i\fs26 Jared McIntyre
+\f4\i0\fs24  - GUI additions, Rendezvous implementation, additional development\
+\'a5 
+\f6\i\fs26 Helmut Maierhofer
+\f4\i0\fs24  - Original implementation for NeXTStep, encoding guru extraordinaire\
+\'a5 
+\f6\i\fs26 Kurt Werle
+\f4\i0\fs24  - Development, speed and feature enhancements\
+\'a5 
+\f6\i\fs26 Sean Kamath
+\f4\i0\fs24  - Additional development and feedback\
+\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\qc
+
+\f3\b\fs26 \cf4 Contact Information\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\ql\qnatural
+
+\f4\b0\fs24 \cf0 \
+You can always get the latest versions of Chicken of the VNC, news and updates at the Source Forge web site:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\qc
+\cf8 \ul \ulc8 http://cotvnc.sourceforge.net\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\ql\qnatural
+\cf0 \ulnone \
+To get support on Chicken of the VNC, you can submit a support request\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\qc
+\cf8 \ul \ulc8 http://sourceforge.net/tracker/?atid=507160&group_id=64347&func=browse\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\ql\qnatural
+\cf0 \ulnone \
+To submit an idea or suggestion for Chicken of the VNC, use this address:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\qc
+\cf8 \ul \ulc8 http://sourceforge.net/tracker/?atid=507162&group_id=64347&func=browse\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\ql\qnatural
+\cf0 \ulnone \
+Alternately, if you prefer email, you can contact:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li340\qc
+\cf8 \ul \ulc8 support@geekspiff.com\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f2\fs20 \cf0 \ulnone \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\fs18 \cf0 VNCViewer Copyright (\'a9) 1998-2000 Helmut Maierhofer\
+This Readme Copyright (\'a9) 2002 Geekspiff and Jason Harris\
+All Rights Reserved}

@@ -27,7 +27,7 @@
     id hostName;
     id passWord;
     id shared;
-    id loginPanel;
+    NSPanel *loginPanel;
     NSMutableArray*	connections;
         
     id colorModelMatrix;

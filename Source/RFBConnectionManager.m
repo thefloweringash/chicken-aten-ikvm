@@ -52,6 +52,7 @@ static RFBConnectionManager*	sharedManager = nil;
     sigblock(sigmask(SIGPIPE));
     connections = [[NSMutableArray alloc] init];
     sharedManager = self;
+    [NSApp setDelegate:self];
     return [super init];
 }
 
@@ -264,10 +265,20 @@ static RFBConnectionManager*	sharedManager = nil;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)applicationDidBecomeActive:(NSNotification *)aNotification
+{
+    if (![self haveAnyConnections])
+    {
+        [loginPanel makeKeyAndOrderFront:self];
+    }
+}
+
+/* Neither is this needed, nor is it called (until now that I've set the app delegate)
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
+*/
 
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {

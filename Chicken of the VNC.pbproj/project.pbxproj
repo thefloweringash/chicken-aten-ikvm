@@ -3,13 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 34;
+	objectVersion = 38;
 	objects = {
 		1058C7A0FEA54F0111CA2CBB = {
 			children = (
 				1058C7A1FEA54F0111CA2CBB,
-				F5B8B7E9036275D101000105,
 				E2F48D78040EDD5100BD55BA,
+				F5B8B7E9036275D101000105,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -20,15 +20,6 @@
 			name = Cocoa.framework;
 			path = /System/Library/Frameworks/Cocoa.framework;
 			refType = 0;
-		};
-		1058C7A2FEA54F0111CA2CBB = {
-			children = (
-				29B97325FDCFA39411CA2CEA,
-				29B97324FDCFA39411CA2CEA,
-			);
-			isa = PBXGroup;
-			name = "Other Frameworks";
-			refType = 4;
 		};
 		1058C7A3FEA54F0111CA2CBB = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -84,6 +75,7 @@
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
 			);
+			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -125,24 +117,11 @@
 		29B97323FDCFA39411CA2CEA = {
 			children = (
 				1058C7A0FEA54F0111CA2CBB,
-				1058C7A2FEA54F0111CA2CBB,
 			);
 			isa = PBXGroup;
 			name = Frameworks;
 			path = "";
 			refType = 4;
-		};
-		29B97324FDCFA39411CA2CEA = {
-			isa = PBXFrameworkReference;
-			name = AppKit.framework;
-			path = /System/Library/Frameworks/AppKit.framework;
-			refType = 0;
-		};
-		29B97325FDCFA39411CA2CEA = {
-			isa = PBXFrameworkReference;
-			name = Foundation.framework;
-			path = /System/Library/Frameworks/Foundation.framework;
-			refType = 0;
 		};
 		29B97326FDCFA39411CA2CEA = {
 			buildPhases = (
@@ -154,7 +133,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
-				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -167,12 +145,11 @@
 			);
 			isa = PBXApplicationTarget;
 			name = "Chicken of the VNC";
-			productInstallPath = "$(HOME)/Applications";
 			productName = "Chicken of the VNC";
 			productReference = 17587328FF379C6511CA2CBB;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">
-<plist version=\"0.9\">
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
@@ -203,7 +180,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		29B97327FDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -256,6 +232,7 @@
 				E2F48D76040EDD2200BD55BA,
 			);
 			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		29B97328FDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -272,6 +249,7 @@
 				F5DC718A033DB44301A8010C,
 			);
 			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		29B9732BFDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -323,6 +301,7 @@
 				E2F48D77040EDD2200BD55BA,
 			);
 			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		29B9732DFDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -332,6 +311,7 @@
 				E2F48D79040EDD5100BD55BA,
 			);
 			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 //290
 //291
@@ -357,9 +337,9 @@
 			buildRules = (
 			);
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUGGING_SYMBOLS = NO;
-				OPTIMIZATION_CFLAGS = "-O3";
+				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				OPTIMIZATION_CFLAGS = "-Os";
 				REMOVE_CVS_FROM_RESOURCES = YES;
 			};
 			isa = PBXBuildStyle;

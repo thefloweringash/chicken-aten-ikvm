@@ -805,6 +805,7 @@ static void print_data(unsigned char* data, int length)
 			if (aFlag)
 				_isFullscreen ? [self makeConnectionWindowed: self] : [self makeConnectionFullscreen: self];
 			buttonEmulationActiveMask = 0;
+                        [self sendModifier:0]; // Clear the modifier mask
 			continue;
 		}
 		[self sendKey:c pressed:aFlag];

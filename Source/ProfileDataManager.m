@@ -32,6 +32,10 @@ static ProfileDataManager* gInstance = nil;
 				[profiles setObject:d forKey:key];
 			}
 		}
+		else
+		{
+			profiles = [[NSMutableDictionary alloc] init];
+		}
 	}
 	
 	return self;

@@ -32,6 +32,8 @@
 #import "ZRLEEncodingReader.h"
 #import "ZlibHexEncodingReader.h"
 
+#import "debug.h"
+
 @implementation FrameBufferUpdateReader
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
@@ -125,6 +127,7 @@
     currentRect.origin.y = ntohs(msg->r.y);
     currentRect.size.width = ntohs(msg->r.w);
     currentRect.size.height = ntohs(msg->r.h);
+    FULLDebug(@"currentRect: %@", NSStringFromRect(currentRect));
     e = ntohl(msg->encoding);
     switch(e) {
         case rfbEncodingRaw:

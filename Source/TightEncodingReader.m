@@ -27,6 +27,8 @@
 #import "ByteBlockReader.h"
 #import "RFBConnection.h"
 
+#import "debug.h"
+
 #ifdef SUPPORT_JPEG
 
 static void JpegInitSource(j_decompress_ptr cinfo)
@@ -152,9 +154,11 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 
 - (void)setBackground:(NSData*)data
 {
+    FULLDebug(@"%@: setBackground", [self className]);
 #ifdef COLLECT_STATS
         bytesTransferred += [data length];
 #endif
+    FULLDebug(@"%@: setBackground", [self className]);
     [frameBuffer fillRect:frame tightPixel:(unsigned char*)[data bytes]];
     [target performSelector:action withObject:self];
 }
@@ -205,6 +209,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 
 - (void)setUnzippedData:(NSData*)data
 {
+    FULLDebug(@"%@: setUnzippedData", [self className]);
 #ifdef COLLECT_STATS
     bytesTransferred += [data length];
 #endif
@@ -266,6 +271,8 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     z_stream* stream;
     NSRect r;
 	
+    FULLDebug(@"%@: setZippedData", [self className]);
+
 #ifdef ZDEBUG
 	fwrite([data bytes], 1, [data length], debugFiles[cntl & 3]);
 	fflush(debugFiles[cntl & 3]);

@@ -20,6 +20,8 @@
 
 #import "ByteBlockReader.h"
 
+#import "debug.h"
+
 @implementation ByteBlockReader
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction size:(unsigned)aSize
@@ -62,6 +64,8 @@
 {
     unsigned canConsume = MIN(aLength, (size - bytesRead));
 
+    FULLDebug(@"Reading %d bytes", aLength);
+    
     memcpy(buffer + bytesRead, theBytes, canConsume);
     if((bytesRead += canConsume) == size) {
         [target performSelector:action withObject:[NSData dataWithBytes:buffer length:size]];

@@ -21,6 +21,8 @@
 #import "RawEncodingReader.h"
 #import "ByteBlockReader.h"
 
+#import "debug.h"
+
 @implementation RawEncodingReader
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
@@ -40,6 +42,7 @@
 {
     unsigned s = [frameBuffer bytesPerPixel] * frame.size.width * frame.size.height;
 
+    FULLDebug(@"%@: resetReader", [self className]);
 #ifdef COLLECT_STATS
     bytesTransferred = s;
 #endif
@@ -49,6 +52,7 @@
 
 - (void)setPixels:(NSData*)pixel
 {
+    FULLDebug(@"%@: setPixels", [self className]);
     [frameBuffer putRect:frame fromData:(unsigned char*)[pixel bytes]];
     [target performSelector:action withObject:self];
 }

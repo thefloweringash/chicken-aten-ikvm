@@ -87,10 +87,10 @@
         if((cntl & 0x01) && zStreamActive[streamId]) {
             if((inflateEnd(&zStream[streamId]) != Z_OK) && (zStream[streamId].msg != NULL)) {
                 NSLog(@"inflateEnd: %s\n", zStream[streamId].msg); // jason - correct spelling from 'infalte'
+				zStreamActive[streamId] = NO;
             }
-	    zStreamActive[streamId] = NO;
         }
-	cntl >>= 1;
+		cntl >>= 1;
     }
     if(cntl == rfbTightFill) {
         [target setReader:backPixReader];
@@ -257,3 +257,4 @@
 }
 
 @end
+

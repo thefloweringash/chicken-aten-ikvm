@@ -175,29 +175,47 @@
 - (void)mouseDown:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    buttonMask |= 1;
+    buttonMask |= rfbButton1Mask;
     [delegate mouseAt:p buttons:buttonMask];
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    buttonMask |= 4;
+    buttonMask |= rfbButton3Mask;
     [delegate mouseAt:p buttons:buttonMask];
+}
+
+- (void)otherMouseDown:(NSEvent *)theEvent
+{
+	if ([theEvent buttonNumber] == 2) {
+		NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+		buttonMask |= rfbButton2Mask;
+		[delegate mouseAt:p buttons:buttonMask];
+	}
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    buttonMask &= ~1;
+    buttonMask &= ~rfbButton1Mask;
     [delegate mouseAt:p buttons:buttonMask];
 }
 
 - (void)rightMouseUp:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    buttonMask &= ~4;
+    buttonMask &= ~rfbButton3Mask;
     [delegate mouseAt:p buttons:buttonMask];
+}
+
+- (void)otherMouseUp:(NSEvent *)theEvent
+{
+	if ([theEvent buttonNumber] == 2) {
+		NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+		buttonMask &= ~rfbButton2Mask;
+		[delegate mouseAt:p buttons:buttonMask];
+	}
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
@@ -217,6 +235,28 @@
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     [delegate mouseAt:p buttons:buttonMask];
 }
+
+- (void)otherMouseDragged:(NSEvent *)theEvent
+{
+	if ([theEvent buttonNumber] == 2) {
+		NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+		[delegate mouseAt:p buttons:buttonMask];
+	}
+}
+
+// jason - this doesn't work, I think because the server I'm testing against doesn't support
+// rfbButton4Mask and rfbButton5Mask (8 & 16).  They're not a part of rfbProto, so that ain't
+// too surprising.
+/*
+- (void)scrollWheel:(NSEvent *)theEvent {
+    NSPoint	p = [self convertPoint:[[self window] convertScreenToBase: [NSEvent mouseLocation]] fromView:nil];
+	if ([theEvent deltaY] < 0.0)
+		buttonMask |= 8;
+	else
+		buttonMask |= 16;
+    [delegate mouseAt:p buttons:buttonMask];
+}
+*/
 
 - (void)keyDown:(NSEvent *)theEvent
 {

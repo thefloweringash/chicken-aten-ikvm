@@ -38,87 +38,6 @@
 
 static RFBConnectionManager*	sharedManager = nil;
 
-/* --------------------------------------------------------------------------------- */
-// jason removed signal handler, so the following function is extraneous
-static void	signal_handler(int signr)
-{
-static struct {
-    int		number;
-    BOOL	isFatal;		// if YES: terminate on signal
-    char	*message;
-} signals[] = {
-    {SIGHUP, 	NO, 	"Hangup"},
-    {SIGINT, 	YES, 	"Interrupt"},
-    {SIGQUIT, 	NO, 	"Quit"},
-    {SIGILL, 	YES, 	"Illegal instruction"},
-    {SIGTRAP, 	YES, 	"Trace trap"}, /* jason changed to YES for fatal */
-    {SIGIOT, 	YES, 	"IOT instruction"},
-#ifdef SIGEMT
-    {SIGEMT, 	YES, 	"EMT instruction"},
-#endif
-    {SIGFPE, 	YES, 	"Floating point exception"},
-    {SIGKILL, 	NO, 	"Kill"},
-    {SIGBUS, 	YES, 	"Bus error"},
-    {SIGSEGV, 	YES, 	"Segmentation violation"},
-#ifdef SIGSYS
-    {SIGSYS, 	YES, 	"Bad argument to system call"},
-#endif
-    {SIGPIPE, 	NO, 	"Write on a pipe with no one to read it"},
-    {SIGALRM, 	NO, 	"Alarm clock"},
-    {SIGTERM, 	NO, 	"Software termination"},
-    {SIGURG, 	NO, 	"Urgent condition present on socket"},
-    {SIGSTOP, 	NO, 	"Stop"},
-    {SIGTSTP, 	NO, 	"Stop signal generated from keyboard"},
-    {SIGCONT, 	NO, 	"Continue after stop"},
-    {SIGCHLD, 	NO, 	"Child status changed"},
-    {SIGTTIN, 	NO, 	"Background read attempted from control terminal"},
-    {SIGTTOU, 	NO, 	"Background write attempted to control terminal"},
-    {SIGIO, 	NO, 	"I/O is possible on a descriptor"},
-    {SIGXCPU, 	NO, 	"CPU time limit is exceeded"},
-    {SIGXFSZ, 	NO, 	"File size limit exceeded"},
-    {SIGVTALRM, NO, 	"Virtual timer alarm"},
-    {SIGPROF, 	NO, 	"Profiling timer alarm"},
-    {SIGWINCH, 	NO, 	"Window size change"},
-    {SIGUSR1, 	NO, 	"User defined signal 1"},
-    {SIGUSR2, 	NO, 	"User defined signal 2"},
-};
-char	*signame = NULL;
-int		i;
-BOOL	isFatal = NO;
-
-    for(i=0;i<sizeof(signals)/sizeof(signals[0]);i++){
-        if(signals[i].number == signr){
-            signame = signals[i].message;
-            isFatal = signals[i].isFatal;
-            break;
-        }
-    }
-    if(signame == NULL)
-        printf("%s: *** signal %d occured.\n", __FILE__, signr);
-    else
-		printf("%s: *** signal %d occured: %s.\n", __FILE__, signr, signame);
-    if(isFatal){
-        if(signr == SIGINT){	// exit normally, we want a profile
-            printf("terminating normally\n");
-            exit(1);
-        }else
-            exit(1);
-    }
-}
-
-/* --------------------------------------------------------------------------------- */
-// jason removed signal handler, so the following function is extraneous
-/*
-static void install_signals(void)
-{
-int		i;
-
-    for(i=0;i<32;i++){
-        signal(i, signal_handler);
-    }
-}
-*/
-
 @implementation RFBConnectionManager
 
 // Jason added the +initialize method
@@ -215,7 +134,6 @@ int		i;
     NSString* s;
     id ud = [NSUserDefaults standardUserDefaults];
 
-//    install_signals();  // jason removed signal handler
     [profileManager wakeup];
     i = [ud integerForKey:RFBColorModel];
     if(i == 0) {

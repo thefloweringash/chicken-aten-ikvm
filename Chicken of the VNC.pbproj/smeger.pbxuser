@@ -8,9 +8,6 @@
 			29B97326FDCFA39411CA2CEA,
 		);
 		breakpoints = (
-			F5C6C9D4033DCFF801A8010C,
-			F5C6C9D6033DCFFB01A8010C,
-			F5C6C9DA033DD26A01A8010C,
 			F5C6C9E8033E57F801A8010C,
 			F5E4C9A903415FFA01A8010C,
 		);
@@ -18,17 +15,15 @@
 			F5DA76F7033DB38701A8010C,
 		);
 		perUserDictionary = {
-			PBXPerProjectTemplateStateSaveDate = 55924133;
+			PBXPerProjectTemplateStateSaveDate = 56783419;
 			PBXWorkspaceContents = (
 				{
 					LeftSlideOut = {
 						Split0 = {
 							Split0 = {
 								NavContent0 = {
-									bookmark = F5E13C5E0355626901000103;
+									bookmark = F5B8B7EC03627ABB01000105;
 									history = (
-										F50A1D53033FD5DE01DE7258,
-										F50A1DA50340E73601DE7258,
 										F50A1DA70340E73601DE7258,
 										F50A1DA80340E73601DE7258,
 										F50A1DAA0340E73601DE7258,
@@ -38,29 +33,24 @@
 										F50A1DB10340E73601DE7258,
 										F50A1DB20340E73601DE7258,
 										F5E4C9AE03416E7001A8010C,
-										F5E4C9AF03416E7001A8010C,
-										F5E4C9B103416E7001A8010C,
 										F5E4C9B203416E7001A8010C,
 										F5D9E559034D724901A8010C,
 										F5D9E55A034D724901A8010C,
 										F5D9E55B034D724901A8010C,
-										F5D9E55C034D724901A8010C,
 										F5D9E55D034D724901A8010C,
-										F5E13C5A0355626901000103,
-										F5E13C5B0355626901000103,
-										F5CC370F0353A54001000102,
-									);
-									nextStack = (
-										F5E13C5C0355626901000103,
-										F5E13C5D0355626901000103,
+										F5F15C1A035D250C0190B485,
+										F575E42F035D53A80126EF48,
+										F5E6F51F035D590001943357,
+										F5E6F520035D590001943357,
+										F56EAA380360CC9001000105,
+										F5C32ECF03610C3B01000105,
+										F5B8B7EB03627ABB01000105,
 									);
 									prevStack = (
 										F5CF5910033EB2F301959CE6,
 										F5CF5911033EB2F301959CE6,
 										F5CF5912033EB2F301959CE6,
 										F50A1D54033FD5DE01DE7258,
-										F50A1D55033FD5DE01DE7258,
-										F50A1DB50340E73601DE7258,
 										F50A1DB60340E73601DE7258,
 										F50A1DB70340E73601DE7258,
 										F50A1DB80340E73601DE7258,
@@ -128,6 +118,17 @@
 										F5D9E56E034D724901A8010C,
 										F5D9E56F034D724901A8010C,
 										F5D9E570034D724901A8010C,
+										F575E433035D53A80126EF48,
+										F575E434035D53A80126EF48,
+										F575E435035D53A80126EF48,
+										F5E6F522035D590001943357,
+										F5E6F523035D590001943357,
+										F56EAA3B0360CC9001000105,
+										F56EAA3C0360CC9001000105,
+										F56EAA3D0360CC9001000105,
+										F56EAA3E0360CC9001000105,
+										F54382580360EA6601000105,
+										F5C32ED103610C3B01000105,
 									);
 								};
 								NavCount = 1;
@@ -213,19 +214,19 @@
 								LauncherConfigVersion = 7;
 							};
 							Tab1 = {
-								Frame = "{{0, 0}, {779, 124}}";
+								Frame = "{{0, 0}, {753, 123}}";
 								LauncherConfigVersion = 3;
 								Runner = {
-									Frame = "{{0, 0}, {779, 124}}";
+									Frame = "{{0, 0}, {753, 123}}";
 								};
 							};
 							Tab2 = {
-								BuildMessageFrame = "{{0, 0}, {712, 120}}";
-								BuildTranscriptFrame = "{{0, 129}, {712, 0}}";
-								Frame = "{{0, 0}, {710, 127}}";
+								BuildMessageFrame = "{{0, 0}, {755, 120}}";
+								BuildTranscriptFrame = "{{0, 129}, {755, 0}}";
+								Frame = "{{0, 0}, {753, 127}}";
 							};
 							Tab3 = {
-								Frame = "{{0, 0}, {710, 264}}";
+								Frame = "{{0, 0}, {753, 264}}";
 							};
 							TabCount = 4;
 							TabsVisible = YES;
@@ -234,22 +235,24 @@
 						Tab0 = {
 							Frame = "{{0, 0}, {217, 640}}";
 							GroupTreeTableConfiguration = (
+								SCMStatusColumn,
+								22,
 								TargetStatusColumn,
 								18,
 								MainColumn,
-								184,
+								162,
 							);
 						};
 						Tab1 = {
-							ClassesFrame = "{{0, 0}, {247, 330}}";
+							ClassesFrame = "{{0, 0}, {247, 385}}";
 							ClassesTreeTableConfiguration = (
 								PBXBookColumnIdentifier,
 								20,
 								PBXClassColumnIdentifier,
 								204,
 							);
-							Frame = "{{0, 0}, {245, 549}}";
-							MembersFrame = "{{0, 339}, {247, 210}}";
+							Frame = "{{0, 0}, {245, 640}}";
+							MembersFrame = "{{0, 394}, {247, 246}}";
 							MembersTreeTableConfiguration = (
 								PBXBookColumnIdentifier,
 								20,
@@ -287,13 +290,10 @@
 					WindowLocation = "{5, 21}";
 				},
 			);
-			PBXWorkspaceStateSaveDate = 55924133;
+			PBXWorkspaceStateSaveDate = 56783419;
 		};
 		perUserProjectItems = {
-			F50A1D53033FD5DE01DE7258 = F50A1D53033FD5DE01DE7258;
 			F50A1D54033FD5DE01DE7258 = F50A1D54033FD5DE01DE7258;
-			F50A1D55033FD5DE01DE7258 = F50A1D55033FD5DE01DE7258;
-			F50A1DA50340E73601DE7258 = F50A1DA50340E73601DE7258;
 			F50A1DA70340E73601DE7258 = F50A1DA70340E73601DE7258;
 			F50A1DA80340E73601DE7258 = F50A1DA80340E73601DE7258;
 			F50A1DAA0340E73601DE7258 = F50A1DAA0340E73601DE7258;
@@ -302,7 +302,6 @@
 			F50A1DB00340E73601DE7258 = F50A1DB00340E73601DE7258;
 			F50A1DB10340E73601DE7258 = F50A1DB10340E73601DE7258;
 			F50A1DB20340E73601DE7258 = F50A1DB20340E73601DE7258;
-			F50A1DB50340E73601DE7258 = F50A1DB50340E73601DE7258;
 			F50A1DB60340E73601DE7258 = F50A1DB60340E73601DE7258;
 			F50A1DB70340E73601DE7258 = F50A1DB70340E73601DE7258;
 			F50A1DB80340E73601DE7258 = F50A1DB80340E73601DE7258;
@@ -339,14 +338,26 @@
 			F51BCECD0342969901A8010C = F51BCECD0342969901A8010C;
 			F51BCECE0342969901A8010C = F51BCECE0342969901A8010C;
 			F51BCECF0342969901A8010C = F51BCECF0342969901A8010C;
-			F5CC370F0353A54001000102 = F5CC370F0353A54001000102;
+			F54382580360EA6601000105 = F54382580360EA6601000105;
+			F56EAA380360CC9001000105 = F56EAA380360CC9001000105;
+			F56EAA3B0360CC9001000105 = F56EAA3B0360CC9001000105;
+			F56EAA3C0360CC9001000105 = F56EAA3C0360CC9001000105;
+			F56EAA3D0360CC9001000105 = F56EAA3D0360CC9001000105;
+			F56EAA3E0360CC9001000105 = F56EAA3E0360CC9001000105;
+			F575E42F035D53A80126EF48 = F575E42F035D53A80126EF48;
+			F575E433035D53A80126EF48 = F575E433035D53A80126EF48;
+			F575E434035D53A80126EF48 = F575E434035D53A80126EF48;
+			F575E435035D53A80126EF48 = F575E435035D53A80126EF48;
+			F5B8B7EB03627ABB01000105 = F5B8B7EB03627ABB01000105;
+			F5B8B7EC03627ABB01000105 = F5B8B7EC03627ABB01000105;
+			F5C32ECF03610C3B01000105 = F5C32ECF03610C3B01000105;
+			F5C32ED103610C3B01000105 = F5C32ED103610C3B01000105;
 			F5CF5910033EB2F301959CE6 = F5CF5910033EB2F301959CE6;
 			F5CF5911033EB2F301959CE6 = F5CF5911033EB2F301959CE6;
 			F5CF5912033EB2F301959CE6 = F5CF5912033EB2F301959CE6;
 			F5D9E559034D724901A8010C = F5D9E559034D724901A8010C;
 			F5D9E55A034D724901A8010C = F5D9E55A034D724901A8010C;
 			F5D9E55B034D724901A8010C = F5D9E55B034D724901A8010C;
-			F5D9E55C034D724901A8010C = F5D9E55C034D724901A8010C;
 			F5D9E55D034D724901A8010C = F5D9E55D034D724901A8010C;
 			F5D9E560034D724901A8010C = F5D9E560034D724901A8010C;
 			F5D9E561034D724901A8010C = F5D9E561034D724901A8010C;
@@ -365,14 +376,7 @@
 			F5D9E56E034D724901A8010C = F5D9E56E034D724901A8010C;
 			F5D9E56F034D724901A8010C = F5D9E56F034D724901A8010C;
 			F5D9E570034D724901A8010C = F5D9E570034D724901A8010C;
-			F5E13C5A0355626901000103 = F5E13C5A0355626901000103;
-			F5E13C5B0355626901000103 = F5E13C5B0355626901000103;
-			F5E13C5C0355626901000103 = F5E13C5C0355626901000103;
-			F5E13C5D0355626901000103 = F5E13C5D0355626901000103;
-			F5E13C5E0355626901000103 = F5E13C5E0355626901000103;
 			F5E4C9AE03416E7001A8010C = F5E4C9AE03416E7001A8010C;
-			F5E4C9AF03416E7001A8010C = F5E4C9AF03416E7001A8010C;
-			F5E4C9B103416E7001A8010C = F5E4C9B103416E7001A8010C;
 			F5E4C9B203416E7001A8010C = F5E4C9B203416E7001A8010C;
 			F5E4C9B503416E7001A8010C = F5E4C9B503416E7001A8010C;
 			F5E4C9B603416E7001A8010C = F5E4C9B603416E7001A8010C;
@@ -388,6 +392,11 @@
 			F5E4C9C103416E7001A8010C = F5E4C9C103416E7001A8010C;
 			F5E4C9C203416E7001A8010C = F5E4C9C203416E7001A8010C;
 			F5E4C9C303416E7001A8010C = F5E4C9C303416E7001A8010C;
+			F5E6F51F035D590001943357 = F5E6F51F035D590001943357;
+			F5E6F520035D590001943357 = F5E6F520035D590001943357;
+			F5E6F522035D590001943357 = F5E6F522035D590001943357;
+			F5E6F523035D590001943357 = F5E6F523035D590001943357;
+			F5F15C1A035D250C0190B485 = F5F15C1A035D250C0190B485;
 		};
 		projectwideBuildSettings = {
 		};
@@ -400,45 +409,15 @@
 			F5DA76F7033DB38701A8010C,
 		);
 	};
-	F50A1D53033FD5DE01DE7258 = {
-		fRef = F5DC71C1033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "infblock.c: 118";
-		rLen = 14;
-		rLoc = 4380;
-		rType = 0;
-		vrLen = 1171;
-		vrLoc = 3907;
-	};
 	F50A1D54033FD5DE01DE7258 = {
 		fRef = F5DC71DE033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: updateStatistics:";
 		rLen = 0;
-		rLoc = 33531;
+		rLoc = 33950;
 		rType = 0;
 		vrLen = 425;
 		vrLoc = 32144;
-	};
-	F50A1D55033FD5DE01DE7258 = {
-		fRef = F5DC71C1033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "infblock.c: 118";
-		rLen = 14;
-		rLoc = 4380;
-		rType = 0;
-		vrLen = 1171;
-		vrLoc = 3907;
-	};
-	F50A1DA50340E73601DE7258 = {
-		fRef = F5DC71FD033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "zlib.h: Z_BUF_ERROR";
-		rLen = 11;
-		rLoc = 5863;
-		rType = 0;
-		vrLen = 1453;
-		vrLoc = 5691;
 	};
 	F50A1DA70340E73601DE7258 = {
 		fRef = F5DC71CD033DB4A801A8010C;
@@ -520,22 +499,12 @@
 		vrLen = 1968;
 		vrLoc = 1291;
 	};
-	F50A1DB50340E73601DE7258 = {
-		fRef = F5DC71FD033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "zlib.h: Z_BUF_ERROR";
-		rLen = 11;
-		rLoc = 5863;
-		rType = 0;
-		vrLen = 1453;
-		vrLoc = 5691;
-	};
 	F50A1DB60340E73601DE7258 = {
 		fRef = F5DC71DE033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 27842;
+		rLoc = 28261;
 		rType = 0;
 		vrLen = 1043;
 		vrLoc = 24940;
@@ -555,7 +524,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 27842;
+		rLoc = 28261;
 		rType = 0;
 		vrLen = 862;
 		vrLoc = 25635;
@@ -575,7 +544,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 27842;
+		rLoc = 28261;
 		rType = 0;
 		vrLen = 902;
 		vrLoc = 25522;
@@ -595,7 +564,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 27842;
+		rLoc = 28261;
 		rType = 0;
 		vrLen = 838;
 		vrLoc = 25635;
@@ -615,7 +584,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendKey:pressed:";
 		rLen = 0;
-		rLoc = 23807;
+		rLoc = 24185;
 		rType = 0;
 		vrLen = 731;
 		vrLoc = 21604;
@@ -675,7 +644,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: 683";
 		rLen = 68;
-		rLoc = 26132;
+		rLoc = 26510;
 		rType = 0;
 		vrLen = 1741;
 		vrLoc = 23700;
@@ -695,7 +664,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 14;
-		rLoc = 22935;
+		rLoc = 23386;
 		rType = 0;
 		vrLen = 2117;
 		vrLoc = 3765;
@@ -765,7 +734,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setDisplaySize:andPixelFormat:";
 		rLen = 14;
-		rLoc = 11159;
+		rLoc = 11669;
 		rType = 0;
 		vrLen = 1886;
 		vrLoc = 10227;
@@ -775,7 +744,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: 27";
 		rLen = 0;
-		rLoc = 1003;
+		rLoc = 1038;
 		rType = 0;
 		vrLen = 1578;
 		vrLoc = 0;
@@ -795,7 +764,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: 1034";
 		rLen = 18;
-		rLoc = 38480;
+		rLoc = 38823;
 		rType = 0;
 		vrLen = 1530;
 		vrLoc = 35220;
@@ -815,7 +784,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: 1044";
 		rLen = 0;
-		rLoc = 38719;
+		rLoc = 39062;
 		rType = 0;
 		vrLen = 1301;
 		vrLoc = 36229;
@@ -835,7 +804,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: mouseEntered:";
 		rLen = 50;
-		rLoc = 37949;
+		rLoc = 38292;
 		rType = 0;
 		vrLen = 1165;
 		vrLoc = 35420;
@@ -855,7 +824,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: installTrackingRects";
 		rLen = 0;
-		rLoc = 36895;
+		rLoc = 37238;
 		rType = 0;
 		vrLen = 1649;
 		vrLoc = 34610;
@@ -875,7 +844,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: scrollFullscreenView:";
 		rLen = 0;
-		rLoc = 39133;
+		rLoc = 39476;
 		rType = 0;
 		vrLen = 1498;
 		vrLoc = 36053;
@@ -890,23 +859,145 @@
 		vrLen = 1294;
 		vrLoc = 1126;
 	};
-	F5C6C9D4033DCFF801A8010C = {
-		fileReference = F5DC71C3033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 237;
-		state = 1;
+	F54382580360EA6601000105 = {
+		fRef = F5DC71DE033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.m: initWithDictionary:profile:owner:";
+		rLen = 0;
+		rLoc = 7108;
+		rType = 0;
+		vrLen = 1347;
+		vrLoc = 6493;
 	};
-	F5C6C9D6033DCFFB01A8010C = {
-		fileReference = F5DC71C3033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 240;
-		state = 1;
+	F56EAA380360CC9001000105 = {
+		fRef = F5DC71DD033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.h: 94";
+		rLen = 0;
+		rLoc = 3261;
+		rType = 0;
+		vrLen = 2048;
+		vrLoc = 2188;
 	};
-	F5C6C9DA033DD26A01A8010C = {
-		fileReference = F5DC71C3033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 206;
-		state = 1;
+	F56EAA3B0360CC9001000105 = {
+		fRef = F5DC71DE033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.m: processKey:pressed:";
+		rLen = 17;
+		rLoc = 29455;
+		rType = 0;
+		vrLen = 1082;
+		vrLoc = 28615;
+	};
+	F56EAA3C0360CC9001000105 = {
+		fRef = F5DC71DD033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.h: 94";
+		rLen = 0;
+		rLoc = 3261;
+		rType = 0;
+		vrLen = 2048;
+		vrLoc = 2188;
+	};
+	F56EAA3D0360CC9001000105 = {
+		fRef = F5DC71DE033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.m: minY";
+		rLen = 0;
+		rLoc = 36849;
+		rType = 0;
+		vrLen = 1879;
+		vrLoc = 36273;
+	};
+	F56EAA3E0360CC9001000105 = {
+		fRef = F5DC71E0033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnectionManager.m: connect:";
+		rLen = 11;
+		rLoc = 10079;
+		rType = 0;
+		vrLen = 898;
+		vrLoc = 8782;
+	};
+	F575E42F035D53A80126EF48 = {
+		fRef = F5E4C9AA03416C2701A8010C;
+		isa = PBXTextBookmark;
+		name = "FullscreenWindow.h: 12";
+		rLen = 0;
+		rLoc = 290;
+		rType = 0;
+		vrLen = 336;
+		vrLoc = 0;
+	};
+	F575E433035D53A80126EF48 = {
+		fRef = F5DC71DE033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.m: connectionWillGoFullscreen:returnCode:contextInfo:";
+		rLen = 0;
+		rLoc = 36692;
+		rType = 0;
+		vrLen = 1967;
+		vrLoc = 35650;
+	};
+	F575E434035D53A80126EF48 = {
+		fRef = F5E4C9AA03416C2701A8010C;
+		isa = PBXTextBookmark;
+		name = "FullscreenWindow.h: 12";
+		rLen = 0;
+		rLoc = 290;
+		rType = 0;
+		vrLen = 336;
+		vrLoc = 0;
+	};
+	F575E435035D53A80126EF48 = {
+		fRef = F5DC71DE033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.m: maxY";
+		rLen = 0;
+		rLoc = 37032;
+		rType = 0;
+		vrLen = 1996;
+		vrLoc = 35621;
+	};
+	F5B8B7EB03627ABB01000105 = {
+		fRef = F5DC71DE033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.m: makeConnectionWindowed:";
+		rLen = 14;
+		rLoc = 34422;
+		rType = 0;
+		vrLen = 1738;
+		vrLoc = 34350;
+	};
+	F5B8B7EC03627ABB01000105 = {
+		fRef = F5DC71DE033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnection.m: makeConnectionWindowed:";
+		rLen = 14;
+		rLoc = 34422;
+		rType = 0;
+		vrLen = 1738;
+		vrLoc = 34350;
+	};
+	F5C32ECF03610C3B01000105 = {
+		fRef = F5DC71E0033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnectionManager.m: 112";
+		rLen = 15;
+		rLoc = 3975;
+		rType = 0;
+		vrLen = 1212;
+		vrLoc = 2942;
+	};
+	F5C32ED103610C3B01000105 = {
+		fRef = F5DC71E0033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnectionManager.m: 112";
+		rLen = 15;
+		rLoc = 3975;
+		rType = 0;
+		vrLen = 1212;
+		vrLoc = 2942;
 	};
 	F5C6C9E8033E57F801A8010C = {
 		fileReference = F5DC71D8033DB4A801A8010C;
@@ -914,22 +1005,12 @@
 		lineNumber = 64;
 		state = 1;
 	};
-	F5CC370F0353A54001000102 = {
-		fRef = F5DC71DE033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBConnection.m: terminateConnection:";
-		rLen = 0;
-		rLoc = 9270;
-		rType = 0;
-		vrLen = 1742;
-		vrLoc = 5790;
-	};
 	F5CF5910033EB2F301959CE6 = {
 		fRef = F5DC71DE033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 27842;
+		rLoc = 28261;
 		rType = 0;
 		vrLen = 1728;
 		vrLoc = 24285;
@@ -949,7 +1030,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: _maxSizeForWindowSize:";
 		rLen = 10;
-		rLoc = 10160;
+		rLoc = 10670;
 		rType = 0;
 		vrLen = 1674;
 		vrLoc = 9049;
@@ -984,16 +1065,6 @@
 		vrLen = 1040;
 		vrLoc = 964;
 	};
-	F5D9E55C034D724901A8010C = {
-		fRef = F5DC71DD033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBConnection.h: kAutoscrollIncrement";
-		rLen = 0;
-		rLoc = 1388;
-		rType = 0;
-		vrLen = 1191;
-		vrLoc = 1036;
-	};
 	F5D9E55D034D724901A8010C = {
 		fRef = F5DC71DF033DB4A801A8010C;
 		isa = PBXTextBookmark;
@@ -1009,7 +1080,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: performButtonEmulation:at:";
 		rLen = 0;
-		rLoc = 16044;
+		rLoc = 16554;
 		rType = 0;
 		vrLen = 1699;
 		vrLoc = 15136;
@@ -1039,7 +1110,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 14;
-		rLoc = 21157;
+		rLoc = 21608;
 		rType = 0;
 		vrLen = 1335;
 		vrLoc = 19922;
@@ -1069,7 +1140,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: 135";
 		rLen = 11;
-		rLoc = 4832;
+		rLoc = 5019;
 		rType = 0;
 		vrLen = 918;
 		vrLoc = 3908;
@@ -1089,7 +1160,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: 135";
 		rLen = 12;
-		rLoc = 4866;
+		rLoc = 5053;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 3379;
@@ -1109,7 +1180,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: awakeFromNib";
 		rLen = 0;
-		rLoc = 8318;
+		rLoc = 8540;
 		rType = 0;
 		vrLen = 1375;
 		vrLoc = 6563;
@@ -1119,7 +1190,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: beginFullscreenScrolling";
 		rLen = 19;
-		rLoc = 38199;
+		rLoc = 38542;
 		rType = 0;
 		vrLen = 1492;
 		vrLoc = 36323;
@@ -1139,7 +1210,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: autoscrollIncrement";
 		rLen = 29;
-		rLoc = 38684;
+		rLoc = 39027;
 		rType = 0;
 		vrLen = 1206;
 		vrLoc = 36724;
@@ -1149,7 +1220,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: signal_handler";
 		rLen = 0;
-		rLoc = 3311;
+		rLoc = 3419;
 		rType = 0;
 		vrLen = 1276;
 		vrLoc = 3113;
@@ -1159,7 +1230,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: scrollFullscreenView:";
 		rLen = 0;
-		rLoc = 39110;
+		rLoc = 39453;
 		rType = 0;
 		vrLen = 1510;
 		vrLoc = 37387;
@@ -1169,7 +1240,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: savePrefs";
 		rLen = 0;
-		rLoc = 5038;
+		rLoc = 5225;
 		rType = 0;
 		vrLen = 1605;
 		vrLoc = 4372;
@@ -1190,60 +1261,10 @@
 		sourceDirectories = (
 		);
 	};
-	F5E13C5A0355626901000103 = {
-		fRef = F5DC71EB033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBView.m: 262";
-		rLen = 0;
-		rLoc = 7211;
-		rType = 0;
-		vrLen = 1276;
-		vrLoc = 5728;
-	};
-	F5E13C5B0355626901000103 = {
-		fRef = F5DC71E0033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBConnectionManager.m: signal_handler";
-		rLen = 0;
-		rLoc = 3351;
-		rType = 0;
-		vrLen = 1443;
-		vrLoc = 2448;
-	};
-	F5E13C5C0355626901000103 = {
-		fRef = F5DC71EB033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBView.m: 262";
-		rLen = 0;
-		rLoc = 7211;
-		rType = 0;
-		vrLen = 1276;
-		vrLoc = 5728;
-	};
-	F5E13C5D0355626901000103 = {
-		fRef = F5DC71E0033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBConnectionManager.m: signal_handler";
-		rLen = 0;
-		rLoc = 3351;
-		rType = 0;
-		vrLen = 1443;
-		vrLoc = 2448;
-	};
-	F5E13C5E0355626901000103 = {
-		fRef = F5DC71DE033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBConnection.m: 702";
-		rLen = 25;
-		rLoc = 25464;
-		rType = 0;
-		vrLen = 1584;
-		vrLoc = 25178;
-	};
 	F5E4C9A903415FFA01A8010C = {
 		fileReference = F5DC71DE033DB4A801A8010C;
 		isa = PBXFileBreakpoint;
-		lineNumber = 567;
+		lineNumber = 582;
 		state = 1;
 	};
 	F5E4C9AE03416E7001A8010C = {
@@ -1255,26 +1276,6 @@
 		rType = 0;
 		vrLen = 1075;
 		vrLoc = 455;
-	};
-	F5E4C9AF03416E7001A8010C = {
-		fRef = F5DC71EA033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBView.h: 51";
-		rLen = 76;
-		rLoc = 1671;
-		rType = 0;
-		vrLen = 1414;
-		vrLoc = 334;
-	};
-	F5E4C9B103416E7001A8010C = {
-		fRef = F5E4C9AA03416C2701A8010C;
-		isa = PBXTextBookmark;
-		name = "FullscreenWindow.h: 12";
-		rLen = 0;
-		rLoc = 290;
-		rType = 0;
-		vrLen = 336;
-		vrLoc = 0;
 	};
 	F5E4C9B203416E7001A8010C = {
 		fRef = F5E4C9AB03416C2701A8010C;
@@ -1291,7 +1292,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 27437;
+		rLoc = 27856;
 		rType = 0;
 		vrLen = 1787;
 		vrLoc = 24748;
@@ -1311,7 +1312,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 0;
-		rLoc = 22741;
+		rLoc = 23192;
 		rType = 0;
 		vrLen = 1485;
 		vrLoc = 20564;
@@ -1331,7 +1332,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 0;
-		rLoc = 22741;
+		rLoc = 23192;
 		rType = 0;
 		vrLen = 1703;
 		vrLoc = 20702;
@@ -1351,7 +1352,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: 703";
 		rLen = 58;
-		rLoc = 26762;
+		rLoc = 27140;
 		rType = 0;
 		vrLen = 1057;
 		vrLoc = 25336;
@@ -1371,7 +1372,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: makeConnectionFullscreen:";
 		rLen = 0;
-		rLoc = 35254;
+		rLoc = 35678;
 		rType = 0;
 		vrLen = 1333;
 		vrLoc = 32322;
@@ -1381,7 +1382,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: makeConnectionFullscreen:";
 		rLen = 0;
-		rLoc = 35252;
+		rLoc = 35676;
 		rType = 0;
 		vrLen = 1495;
 		vrLoc = 0;
@@ -1425,5 +1426,55 @@
 		rType = 0;
 		vrLen = 327;
 		vrLoc = 0;
+	};
+	F5E6F51F035D590001943357 = {
+		fRef = F5DC71F9033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "VNCViewer_main.m: __VERSION__";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 111;
+		vrLoc = 0;
+	};
+	F5E6F520035D590001943357 = {
+		fRef = F5DC71EA033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBView.h: setMessage:";
+		rLen = 10;
+		rLoc = 1232;
+		rType = 0;
+		vrLen = 715;
+		vrLoc = 331;
+	};
+	F5E6F522035D590001943357 = {
+		fRef = F5DC71F9033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "VNCViewer_main.m: __VERSION__";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 111;
+		vrLoc = 0;
+	};
+	F5E6F523035D590001943357 = {
+		fRef = F5DC71EA033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBView.h: setMessage:";
+		rLen = 10;
+		rLoc = 1232;
+		rType = 0;
+		vrLen = 715;
+		vrLoc = 331;
+	};
+	F5F15C1A035D250C0190B485 = {
+		fRef = F5DC71EB033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBView.m: 242";
+		rLen = 0;
+		rLoc = 6688;
+		rType = 0;
+		vrLen = 1108;
+		vrLoc = 6371;
 	};
 }

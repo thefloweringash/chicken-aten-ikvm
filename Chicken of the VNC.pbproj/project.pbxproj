@@ -8,6 +8,7 @@
 		1058C7A0FEA54F0111CA2CBB = {
 			children = (
 				1058C7A1FEA54F0111CA2CBB,
+				F5B8B7E9036275D101000105,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -177,7 +178,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Chicken of the VNC</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Chicken of the VNC version 1.3, Copyright 2002 Geekspiff.</string>
+	<string>Chicken of the VNC version 1.3.1, Copyright 2002 Geekspiff.</string>
 	<key>CFBundleIconFile</key>
 	<string>icon.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -189,11 +190,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>Chicken of the VNC version 1.3</string>
+	<string>Chicken of the VNC version 1.3.1</string>
 	<key>CFBundleSignature</key>
 	<string>çVnÇ</string>
 	<key>CFBundleVersion</key>
-	<string>1.3</string>
+	<string>1.3.1</string>
 	<key>NSMainNibFile</key>
 	<string>OSX_RFBViewer</string>
 	<key>NSPrincipalClass</key>
@@ -215,7 +216,6 @@
 				F5DC7213033DB92E01A8010C,
 				F5DC7215033DB92F01A8010C,
 				F5DC7219033DB93301A8010C,
-				F5DC721B033DB93401A8010C,
 				F5DC721C033DB93501A8010C,
 				F5DC721E033DB93701A8010C,
 				F5DC7220033DB93901A8010C,
@@ -225,11 +225,6 @@
 				F5DC7227033DB93E01A8010C,
 				F5DC7229033DB94301A8010C,
 				F5DC722B033DB94501A8010C,
-				F5DC722E033DB94701A8010C,
-				F5DC7230033DB94901A8010C,
-				F5DC7232033DB94B01A8010C,
-				F5DC7235033DB94E01A8010C,
-				F5DC7237033DB95001A8010C,
 				F5DC7238033DB95101A8010C,
 				F5DC723A033DB95301A8010C,
 				F5DC723D033DB95601A8010C,
@@ -252,10 +247,7 @@
 				F5DC725E033DB99C01A8010C,
 				F5DC7261033DB99E01A8010C,
 				F5DC7264033DB9A101A8010C,
-				F5DC7266033DB9A201A8010C,
 				F5DC7267033DB9A301A8010C,
-				F5DC7269033DB9A501A8010C,
-				F5DC726B033DB9A901A8010C,
 				F5E4C9AC03416C2701A8010C,
 			);
 			isa = PBXHeadersBuildPhase;
@@ -282,7 +274,6 @@
 		29B9732BFDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
 			files = (
-				F5DC7206033DB91901A8010C,
 				F5DC7208033DB91B01A8010C,
 				F5DC720A033DB91D01A8010C,
 				F5DC720C033DB91F01A8010C,
@@ -291,9 +282,7 @@
 				F5DC7212033DB92D01A8010C,
 				F5DC7214033DB92F01A8010C,
 				F5DC7216033DB93001A8010C,
-				F5DC7217033DB93101A8010C,
 				F5DC7218033DB93201A8010C,
-				F5DC721A033DB93301A8010C,
 				F5DC721D033DB93601A8010C,
 				F5DC721F033DB93801A8010C,
 				F5DC7221033DB93901A8010C,
@@ -302,12 +291,6 @@
 				F5DC7228033DB93F01A8010C,
 				F5DC722A033DB94401A8010C,
 				F5DC722C033DB94501A8010C,
-				F5DC722D033DB94601A8010C,
-				F5DC722F033DB94801A8010C,
-				F5DC7231033DB94A01A8010C,
-				F5DC7233033DB94C01A8010C,
-				F5DC7234033DB94D01A8010C,
-				F5DC7236033DB94F01A8010C,
 				F5DC7239033DB95201A8010C,
 				F5DC723B033DB95401A8010C,
 				F5DC723E033DB95701A8010C,
@@ -327,12 +310,10 @@
 				F5DC725B033DB99901A8010C,
 				F5DC725D033DB99B01A8010C,
 				F5DC725F033DB99D01A8010C,
-				F5DC7260033DB99D01A8010C,
 				F5DC7262033DB99F01A8010C,
 				F5DC7263033DB9A001A8010C,
 				F5DC7265033DB9A101A8010C,
 				F5DC7268033DB9A401A8010C,
-				F5DC726A033DB9A801A8010C,
 				F5E4C9AD03416C2701A8010C,
 			);
 			isa = PBXSourcesBuildPhase;
@@ -342,6 +323,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1058C7A3FEA54F0111CA2CBB,
+				F5B8B7EA036275D101000105,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -392,6 +374,18 @@
 			isa = PBXFileReference;
 			path = "Chicken of the VNC.rtf";
 			refType = 4;
+		};
+		F5B8B7E9036275D101000105 = {
+			isa = PBXFileReference;
+			name = libz.dylib;
+			path = /usr/lib/libz.dylib;
+			refType = 0;
+		};
+		F5B8B7EA036275D101000105 = {
+			fileRef = F5B8B7E9036275D101000105;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F5DC7172033DB3DC01A8010C = {
 			children = (
@@ -574,7 +568,6 @@
 		};
 		F5DC7198033DB4A801A8010C = {
 			children = (
-				F5DC719A033DB4A801A8010C,
 				F5DC719B033DB4A801A8010C,
 				F5DC719C033DB4A801A8010C,
 				F5DC719D033DB4A801A8010C,
@@ -591,11 +584,8 @@
 				F5DC71A8033DB4A801A8010C,
 				F5DC71A9033DB4A801A8010C,
 				F5DC71AA033DB4A801A8010C,
-				F5DC71AB033DB4A801A8010C,
 				F5DC71AC033DB4A801A8010C,
 				F5DC71AD033DB4A801A8010C,
-				F5DC71AE033DB4A801A8010C,
-				F5DC71AF033DB4A801A8010C,
 				F5DC71B0033DB4A801A8010C,
 				F5DC71B1033DB4A801A8010C,
 				F5DC71B2033DB4A801A8010C,
@@ -615,17 +605,6 @@
 				F5DC71BE033DB4A801A8010C,
 				F5DC71BF033DB4A801A8010C,
 				F5DC71C0033DB4A801A8010C,
-				F5DC71C1033DB4A801A8010C,
-				F5DC71C2033DB4A801A8010C,
-				F5DC71C3033DB4A801A8010C,
-				F5DC71C4033DB4A801A8010C,
-				F5DC71C5033DB4A801A8010C,
-				F5DC71C6033DB4A801A8010C,
-				F5DC71C7033DB4A801A8010C,
-				F5DC71C8033DB4A801A8010C,
-				F5DC71C9033DB4A801A8010C,
-				F5DC71CA033DB4A801A8010C,
-				F5DC71CB033DB4A801A8010C,
 				F5DC71CC033DB4A801A8010C,
 				F5DC71CD033DB4A801A8010C,
 				F5DC71CE033DB4A801A8010C,
@@ -666,26 +645,16 @@
 				F5DC71F1033DB4A801A8010C,
 				F5DC71F2033DB4A801A8010C,
 				F5DC71F3033DB4A801A8010C,
-				F5DC71F4033DB4A801A8010C,
 				F5DC71F5033DB4A801A8010C,
 				F5DC71F6033DB4A801A8010C,
 				F5DC71F7033DB4A801A8010C,
 				F5DC71F8033DB4A801A8010C,
 				F5DC71F9033DB4A801A8010C,
-				F5DC71FA033DB4A801A8010C,
 				F5DC71FB033DB4A801A8010C,
 				F5DC71FC033DB4A801A8010C,
-				F5DC71FD033DB4A801A8010C,
-				F5DC71FE033DB4A801A8010C,
-				F5DC71FF033DB4A801A8010C,
 			);
 			isa = PBXGroup;
 			path = Source;
-			refType = 4;
-		};
-		F5DC719A033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = adler32.c;
 			refType = 4;
 		};
 		F5DC719B033DB4A801A8010C = {
@@ -768,11 +737,6 @@
 			path = CoRREEncodingReader.m;
 			refType = 4;
 		};
-		F5DC71AB033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = crc32.c;
-			refType = 4;
-		};
 		F5DC71AC033DB4A801A8010C = {
 			isa = PBXFileReference;
 			path = d3des.c;
@@ -781,16 +745,6 @@
 		F5DC71AD033DB4A801A8010C = {
 			isa = PBXFileReference;
 			path = d3des.h;
-			refType = 4;
-		};
-		F5DC71AE033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = deflate.c;
-			refType = 4;
-		};
-		F5DC71AF033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = deflate.h;
 			refType = 4;
 		};
 		F5DC71B0033DB4A801A8010C = {
@@ -876,61 +830,6 @@
 		F5DC71C0033DB4A801A8010C = {
 			isa = PBXFileReference;
 			path = HighColorFrameBuffer.m;
-			refType = 4;
-		};
-		F5DC71C1033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = infblock.c;
-			refType = 4;
-		};
-		F5DC71C2033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = infblock.h;
-			refType = 4;
-		};
-		F5DC71C3033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = infcodes.c;
-			refType = 4;
-		};
-		F5DC71C4033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = infcodes.h;
-			refType = 4;
-		};
-		F5DC71C5033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = inffast.c;
-			refType = 4;
-		};
-		F5DC71C6033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = inffast.h;
-			refType = 4;
-		};
-		F5DC71C7033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = inflate.c;
-			refType = 4;
-		};
-		F5DC71C8033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = inftrees.c;
-			refType = 4;
-		};
-		F5DC71C9033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = inftrees.h;
-			refType = 4;
-		};
-		F5DC71CA033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = infutil.c;
-			refType = 4;
-		};
-		F5DC71CB033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = infutil.h;
 			refType = 4;
 		};
 		F5DC71CC033DB4A801A8010C = {
@@ -1133,11 +1032,6 @@
 			path = TightEncodingReader.m;
 			refType = 4;
 		};
-		F5DC71F4033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = trees.c;
-			refType = 4;
-		};
 		F5DC71F5033DB4A801A8010C = {
 			isa = PBXFileReference;
 			path = TrueColorFrameBuffer.h;
@@ -1163,11 +1057,6 @@
 			path = VNCViewer_main.m;
 			refType = 4;
 		};
-		F5DC71FA033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = zconf.h;
-			refType = 4;
-		};
 		F5DC71FB033DB4A801A8010C = {
 			isa = PBXFileReference;
 			path = ZipLengthReader.h;
@@ -1177,27 +1066,6 @@
 			isa = PBXFileReference;
 			path = ZipLengthReader.m;
 			refType = 4;
-		};
-		F5DC71FD033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = zlib.h;
-			refType = 4;
-		};
-		F5DC71FE033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = zutil.c;
-			refType = 4;
-		};
-		F5DC71FF033DB4A801A8010C = {
-			isa = PBXFileReference;
-			path = zutil.h;
-			refType = 4;
-		};
-		F5DC7206033DB91901A8010C = {
-			fileRef = F5DC719A033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5DC7207033DB91A01A8010C = {
 			fileRef = F5DC719B033DB4A801A8010C;
@@ -1295,12 +1163,6 @@
 			settings = {
 			};
 		};
-		F5DC7217033DB93101A8010C = {
-			fileRef = F5DC71AB033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5DC7218033DB93201A8010C = {
 			fileRef = F5DC71AC033DB4A801A8010C;
 			isa = PBXBuildFile;
@@ -1309,18 +1171,6 @@
 		};
 		F5DC7219033DB93301A8010C = {
 			fileRef = F5DC71AD033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC721A033DB93301A8010C = {
-			fileRef = F5DC71AE033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC721B033DB93401A8010C = {
-			fileRef = F5DC71AF033DB4A801A8010C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1423,72 +1273,6 @@
 		};
 		F5DC722C033DB94501A8010C = {
 			fileRef = F5DC71C0033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC722D033DB94601A8010C = {
-			fileRef = F5DC71C1033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC722E033DB94701A8010C = {
-			fileRef = F5DC71C2033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC722F033DB94801A8010C = {
-			fileRef = F5DC71C3033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7230033DB94901A8010C = {
-			fileRef = F5DC71C4033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7231033DB94A01A8010C = {
-			fileRef = F5DC71C5033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7232033DB94B01A8010C = {
-			fileRef = F5DC71C6033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7233033DB94C01A8010C = {
-			fileRef = F5DC71C7033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7234033DB94D01A8010C = {
-			fileRef = F5DC71C8033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7235033DB94E01A8010C = {
-			fileRef = F5DC71C9033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7236033DB94F01A8010C = {
-			fileRef = F5DC71CA033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7237033DB95001A8010C = {
-			fileRef = F5DC71CB033DB4A801A8010C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1733,12 +1517,6 @@
 			settings = {
 			};
 		};
-		F5DC7260033DB99D01A8010C = {
-			fileRef = F5DC71F4033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5DC7261033DB99E01A8010C = {
 			fileRef = F5DC71F5033DB4A801A8010C;
 			isa = PBXBuildFile;
@@ -1769,12 +1547,6 @@
 			settings = {
 			};
 		};
-		F5DC7266033DB9A201A8010C = {
-			fileRef = F5DC71FA033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5DC7267033DB9A301A8010C = {
 			fileRef = F5DC71FB033DB4A801A8010C;
 			isa = PBXBuildFile;
@@ -1783,24 +1555,6 @@
 		};
 		F5DC7268033DB9A401A8010C = {
 			fileRef = F5DC71FC033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC7269033DB9A501A8010C = {
-			fileRef = F5DC71FD033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC726A033DB9A801A8010C = {
-			fileRef = F5DC71FE033DB4A801A8010C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5DC726B033DB9A901A8010C = {
-			fileRef = F5DC71FF033DB4A801A8010C;
 			isa = PBXBuildFile;
 			settings = {
 			};

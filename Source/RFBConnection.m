@@ -967,8 +967,9 @@ static NSString* byteString(double d)
 	[window close];
 	window = [[NSWindow alloc] initWithContentRect:[NSWindow contentRectForFrameRect: _windowedFrame styleMask: _styleMask]
 										styleMask:_styleMask
-										  backing:NSBackingStoreBuffered
-										   defer:NO screen:[NSScreen mainScreen]];
+										backing:NSBackingStoreBuffered
+										defer:NO
+										screen:[NSScreen mainScreen]];
 	[window setDelegate: self];
 	[(NSWindow *)window setContentView: scrollView];
 	[scrollView release];
@@ -1007,10 +1008,9 @@ static NSString* byteString(double d)
 		[window close];
 		window = [[FullscreenWindow alloc] initWithContentRect:screenRect
 											styleMask:NSBorderlessWindowMask
-											//backing:NSBackingStoreNonretained
-											backing:NSBackingStoreRetained
-											//backing:NSBackingStoreBuffered
-												defer:NO screen:[NSScreen mainScreen]];
+											backing:NSBackingStoreBuffered
+											defer:NO
+											screen:[NSScreen mainScreen]];
 		[window setDelegate: self];
 		[(NSWindow *)window setContentView: scrollView];
 		[scrollView release];

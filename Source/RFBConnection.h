@@ -24,7 +24,8 @@
 #import "RFBProtocol.h"
 
 #define RFB_HOST		@"Host"
-#define RFB_PASSWORD	@"Password"
+#define RFB_PASSWORD		@"Password"
+#define RFB_REMEMBER		@"RememberPassword"
 #define RFB_DISPLAY		@"Display"
 #define RFB_SHARED		@"Shared"
 #define RFB_PORT		5900

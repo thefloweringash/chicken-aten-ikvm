@@ -50,6 +50,7 @@
                 frontInverseCPUSliderChanged = id; 
                 otherInverseCPUSliderChanged = id; 
                 preferencesChanged = id; 
+                selectedHostChanged = id; 
             }; 
             CLASS = RFBConnectionManager; 
             LANGUAGE = ObjC; 

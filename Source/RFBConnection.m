@@ -1154,7 +1154,9 @@ static NSString* byteString(double d)
 		[window setAcceptsMouseMovedEvents: YES];
 	else {
 		_currentTrackingTag = trackingNumber;
+            if ([self connectionIsFullscreen]) {
 		[self beginFullscreenScrolling];
+            }
 	}
 }
 
@@ -1196,7 +1198,10 @@ static NSString* byteString(double d)
 	else if (_currentTrackingTag == _bottomTrackingTag)
 		[contentView scrollToPoint: [contentView constrainScrollPoint: NSMakePoint(origin.x, origin.y - autoscrollIncrement)]];
 	else
-		NSLog(@"Illegal tracking rectangle");
+        {
+		NSLog(@"Illegal tracking rectangle of %d", _currentTrackingTag);
+            return;
+        }
     [scrollView reflectScrolledClipView: contentView];
 }
 

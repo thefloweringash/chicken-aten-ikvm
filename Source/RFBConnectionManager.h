@@ -21,6 +21,15 @@
 #import "Profile.h"
 @class ProfileManager;
 
+/* Constants, generally used for userdefaults */
+#define RFB_COLOR_MODEL		@"RFBColorModel"
+#define RFB_GAMMA_CORRECTION	@"RFBGammaCorrection"
+#define RFB_LAST_HOST		@"RFBLastHost"
+
+#define RFB_HOST_INFO		@"HostPreferences"
+#define RFB_LAST_DISPLAY	@"Display"
+#define RFB_LAST_PROFILE	@"Profile"
+
 @interface RFBConnectionManager : NSObject
 {
     IBOutlet NSTextField *display;
@@ -50,6 +59,10 @@
 - (void)removeConnection:(id)aConnection;
 - (IBAction)connect:(id)sender;
 
+- (void)selectedHostChanged: (NSString *) newHostName;
+
+- (NSDictionary *) selectedHostDictionary;
+
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
@@ -58,7 +71,7 @@
 - (IBAction)preferencesChanged:(id)sender;
 - (id)defaultFrameBufferClass;
 
-- (void)controlTextDidChange:(NSNotification *)aNotification;
+//- (void)controlTextDidChange:(NSNotification *)aNotification; no needed?
 
 - (void)makeAllConnectionsWindowed;
 

@@ -16,6 +16,7 @@
  *
  */
 
+#import "KeyChain.h"
 #import "RFBConnectionManager.h"
 #import "RFBConnection.h"
 #import "ProfileManager.h"
@@ -27,14 +28,6 @@
 #import "LowColorFrameBuffer.h"
 #import "HighColorFrameBuffer.h"
 #import "TrueColorFrameBuffer.h"
-
-#define RFBColorModel		@"RFBColorModel"
-#define RFBGammaCorrection	@"RFBGammaCorrection"
-#define RFBLastHost		@"RFBLastHost"
-
-#define RFBHostInfo		@"HostPreferences"
-#define RFBLastDisplay		@"Display"
-#define RFBLastProfile		@"Profile"
 
 static RFBConnectionManager*	sharedManager = nil;
 
@@ -52,20 +45,20 @@ static RFBConnectionManager*	sharedManager = nil;
     int i;
     NSString* s;
     id ud = [NSUserDefaults standardUserDefaults];
-	float updateDelay;
+    float updateDelay;
 
-	sigblock(sigmask(SIGPIPE));
-	connections = [[NSMutableArray alloc] init];
-	sharedManager = self;
-	[NSApp setDelegate:self];
-	[profileManager wakeup];
-    i = [ud integerForKey:RFBColorModel];
+    sigblock(sigmask(SIGPIPE));
+    connections = [[NSMutableArray alloc] init];
+    sharedManager = self;
+    [NSApp setDelegate:self];
+    [profileManager wakeup];
+    i = [ud integerForKey:RFB_COLOR_MODEL];
     if(i == 0) {
-        NSWindowDepth d = [[NSScreen mainScreen] depth];
-        if(NSNumberOfColorComponents(NSColorSpaceFromDepth(d)) == 1) {
+        NSWindowDepth windowDepth = [[NSScreen mainScreen] depth];
+        if(NSNumberOfColorComponents(NSColorSpaceFromDepth(windowDepth)) == 1) {
             i = 1;
         } else {
-            int bps = NSBitsPerSampleFromDepth(d);
+            int bps = NSBitsPerSampleFromDepth(windowDepth);
 
             if(bps < 4)		i = 2;
             else if(bps < 8)	i = 3;
@@ -73,29 +66,39 @@ static RFBConnectionManager*	sharedManager = nil;
         }
     }
     [colorModelMatrix selectCellWithTag:i - 1];
-    if((s = [ud objectForKey:RFBGammaCorrection]) == nil) {
+    if((s = [ud objectForKey:RFB_GAMMA_CORRECTION]) == nil) {
         s = [gamma stringValue];
     }
     [gamma setFloatingPointFormat:NO left:1 right:2];
     [gamma setFloatValue:[s floatValue]];
-	[psThreshold setStringValue: [ud stringForKey: @"PS_THRESHOLD"]];
-	[psMaxRects setStringValue: [ud stringForKey: @"PS_MAXRECTS"]];
+    
+    [psThreshold setStringValue: [ud stringForKey: @"PS_THRESHOLD"]];
+    [psMaxRects setStringValue: [ud stringForKey: @"PS_MAXRECTS"]];
+    
     [autoscrollIncrement setFloatValue: [ud floatForKey:@"FullscreenAutoscrollIncrement"]];
+    
     [fullscreenScrollbars setFloatValue: [ud boolForKey:@"FullscreenScrollbars"]];
-	updateDelay = [ud floatForKey: @"FrontFrameBufferUpdateSeconds"];
-	updateDelay = (float)[frontInverseCPUSlider maxValue] - updateDelay;
-	[frontInverseCPUSlider setFloatValue: updateDelay];
-	updateDelay = [ud floatForKey: @"OtherFrameBufferUpdateSeconds"];
-	updateDelay = (float)[otherInverseCPUSlider maxValue] - updateDelay;
-	[otherInverseCPUSlider setFloatValue: updateDelay];
-	// end jason
+    
+    updateDelay = [ud floatForKey: @"FrontFrameBufferUpdateSeconds"];
+    updateDelay = (float)[frontInverseCPUSlider maxValue] - updateDelay;
+    [frontInverseCPUSlider setFloatValue: updateDelay];
+    updateDelay = [ud floatForKey: @"OtherFrameBufferUpdateSeconds"];
+    updateDelay = (float)[otherInverseCPUSlider maxValue] - updateDelay;
+    [otherInverseCPUSlider setFloatValue: updateDelay];
+    
+    // end jason
     [self updateProfileList:nil];
-    if((s = [ud objectForKey:RFBLastHost]) != nil) {
+    if((s = [ud objectForKey:RFB_LAST_HOST]) != nil) {
         [hostName setStringValue:s];
+        [self selectedHostChanged:s];
     }
     [self updateLoginPanel];
     [loginPanel makeKeyAndOrderFront:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProfileList:) name:ProfileAddDeleteNotification object:nil];
+
+    // So we can tell when the hostName finished changing
+    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidEndEditing:) name: NSControlTextDidEndEditingNotification object: hostName];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidBeginEditing:) name: NSControlTextDidBeginEditingNotification object: hostName];
 }
 
 - (void)dealloc
@@ -108,8 +111,8 @@ static RFBConnectionManager*	sharedManager = nil;
 {
     id ud = [NSUserDefaults standardUserDefaults];
 
-    [ud setInteger:[[colorModelMatrix selectedCell] tag] + 1 forKey:RFBColorModel];
-    [ud setObject:[gamma stringValue] forKey:RFBGammaCorrection];
+    [ud setInteger:[[colorModelMatrix selectedCell] tag] + 1 forKey:RFB_COLOR_MODEL];
+    [ud setObject:[gamma stringValue] forKey:RFB_GAMMA_CORRECTION];
     [ud setObject:[psMaxRects stringValue] forKey:@"PS_MAXRECTS"];
     [ud setObject:[psThreshold stringValue] forKey:@"PS_THRESHOLD"];
 	// jason added the rest
@@ -128,31 +131,69 @@ static RFBConnectionManager*	sharedManager = nil;
     [profilePopup selectItemWithTitle:current];
 }
 
+/* Used to update the list of hosts in the combo box. */
 - (void)updateLoginPanel
 {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary* hi = [ud objectForKey:RFBHostInfo];
-    NSDictionary* h = [hi objectForKey:[hostName stringValue]];
+    NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
+    NSDictionary* hostDictionary = [self selectedHostDictionary];
 
-	[hostName removeAllItems];
-    if(h != nil) {
-		NSEnumerator *hostEnumerator = [hi keyEnumerator];
-		NSString *host;
-		
-        [display setStringValue:[h objectForKey:RFBLastDisplay]];
-        [profilePopup selectItemWithTitle:[h objectForKey:RFBLastProfile]];
-		while (host = [hostEnumerator nextObject]) {
-			[hostName addItemWithObjectValue: host];
-		}
+    [hostName removeAllItems];
+    if(hostDictionary != nil) {
+        NSEnumerator *hostEnumerator = [hostDictionaryList keyEnumerator];
+        NSString *host;
+
+        [display setStringValue:[hostDictionary objectForKey:RFB_LAST_DISPLAY]];
+        [profilePopup selectItemWithTitle:[hostDictionary objectForKey:RFB_LAST_PROFILE]];
+        while (host = [hostEnumerator nextObject]) {
+            [hostName addItemWithObjectValue: host];
+        }
     }
+}
+
+- (void)comboBoxSelectionDidChange:(NSNotification *)notification
+{
+    NSString *newSelection = [hostName objectValueOfSelectedItem];
+    
+    [self selectedHostChanged:newSelection];
+}
+
+- (void)selectedHostChanged:(NSString *) newHostName
+{
+    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
+    NSDictionary* selectedHostDict = [hostDictionaryList objectForKey:newHostName];
+
+    [passWord setStringValue:@""];
+    [rememberPwd setIntValue:0];
+    [display setStringValue:@""];
+    [shared setIntValue:0];
+    if (selectedHostDict != nil) {
+        [rememberPwd setIntValue:[[selectedHostDict objectForKey:RFB_REMEMBER] intValue]];
+        [display setStringValue:[selectedHostDict objectForKey:RFB_DISPLAY]];
+        [shared setIntValue:[[selectedHostDict objectForKey:RFB_SHARED] intValue]];
+        [shared setIntValue:[[selectedHostDict objectForKey:RFB_SHARED] intValue]];
+        if ([rememberPwd intValue]) {
+            [passWord setStringValue:[[KeyChain defaultKeyChain] genericPasswordForService:@"cotvnc" account:[hostName stringValue]]];
+        }
+    }
+}
+
+/* Returns the dictionary that corresponds to the currently selected host, or nil if there is none. */
+- (NSDictionary *) selectedHostDictionary
+{
+    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
+    NSDictionary* hostDictionary = [hostDictionaryList objectForKey:[hostName stringValue]];
+    return hostDictionary;
 }
 
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost
 {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary* hi = [ud objectForKey:RFBHostInfo];
-    NSDictionary* h = [hi objectForKey:aHost];
-    NSDictionary* names = [h objectForKey:@"NameTranslations"];
+    NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
+    NSDictionary* hostDictionary = [hostDictionaryList objectForKey:aHost];
+    NSDictionary* names = [hostDictionary objectForKey:@"NameTranslations"];
     NSString* news;
 	
     if((news = [names objectForKey:aName]) == nil) {
@@ -164,24 +205,24 @@ static RFBConnectionManager*	sharedManager = nil;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost
 {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary* hi, *h, *names;
+    NSMutableDictionary* hostDictionaryList, *hostDictionary, *names;
 
-    hi = [[[ud objectForKey:RFBHostInfo] mutableCopy] autorelease];
-    if(hi == nil) {
-        hi = [NSMutableDictionary dictionary];
+    hostDictionaryList = [[[ud objectForKey:RFB_HOST_INFO] mutableCopy] autorelease];
+    if(hostDictionaryList == nil) {
+        hostDictionaryList = [NSMutableDictionary dictionary];
     }
-    h = [[[hi objectForKey:aHost] mutableCopy] autorelease];
-    if(h == nil) {
-        h = [NSMutableDictionary dictionary];
+    hostDictionary = [[[hostDictionaryList objectForKey:aHost] mutableCopy] autorelease];
+    if(hostDictionary == nil) {
+        hostDictionary = [NSMutableDictionary dictionary];
     }
-    names = [[[h objectForKey:@"NameTranslations"] mutableCopy] autorelease];
+    names = [[[hostDictionary objectForKey:@"NameTranslations"] mutableCopy] autorelease];
     if(names == nil) {
         names = [NSMutableDictionary dictionary];
     }
     [names setObject:translation forKey:aName];
-    [h setObject:names forKey:@"NameTranslations"];
-    [hi setObject:h forKey:aHost];
-    [ud setObject:hi forKey:RFBHostInfo];
+    [hostDictionary setObject:names forKey:@"NameTranslations"];
+    [hostDictionaryList setObject:hostDictionary forKey:aHost];
+    [ud setObject:hostDictionaryList forKey:RFB_HOST_INFO];
 }
 
 - (void)removeConnection:(id)aConnection
@@ -194,35 +235,39 @@ static RFBConnectionManager*	sharedManager = nil;
 - (IBAction)connect:(id)sender
 {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary* d;
-    NSMutableDictionary* hi, *h;
+    NSDictionary* connectionDictionary;
+    NSMutableDictionary* hostDictionaryList, *hostDictionary;
     Profile* profile;
 
-    [ud setObject:[hostName stringValue] forKey:RFBLastHost];
-    hi = [[[ud objectForKey:RFBHostInfo] mutableCopy] autorelease];
-    if(hi == nil) {
-        hi = [NSMutableDictionary dictionary];
+    [ud setObject:[hostName stringValue] forKey:RFB_LAST_HOST];
+    hostDictionaryList = [[[ud objectForKey:RFB_HOST_INFO] mutableCopy] autorelease];
+    if(hostDictionaryList == nil) {
+        hostDictionaryList = [NSMutableDictionary dictionary];
     }
-    h = [[[hi objectForKey:[hostName stringValue]] mutableCopy] autorelease];
-    if(h == nil) {
-        h = [NSMutableDictionary dictionary];
+    hostDictionary = [[[hostDictionaryList objectForKey:[hostName stringValue]] mutableCopy] autorelease];
+    if(hostDictionary == nil) {
+        hostDictionary = [NSMutableDictionary dictionary];
     }
-    [hi setObject:h forKey:[hostName stringValue]];
-    [h setObject:[display stringValue] forKey:RFBLastDisplay];
-    [h setObject:[profilePopup titleOfSelectedItem] forKey:RFBLastProfile];
-    [ud setObject:hi forKey:RFBHostInfo];
+    [hostDictionaryList setObject:hostDictionary forKey:[hostName stringValue]];
+    [hostDictionary setObject:[display stringValue] forKey:RFB_LAST_DISPLAY];
+    [hostDictionary setObject:[profilePopup titleOfSelectedItem] forKey:RFB_LAST_PROFILE];
+    [hostDictionary setObject:[rememberPwd stringValue] forKey:RFB_REMEMBER];
+    [hostDictionary setObject:[shared stringValue] forKey:RFB_SHARED];
+    [ud setObject:hostDictionaryList forKey:RFB_HOST_INFO];
     
-    d = [NSDictionary dictionaryWithObjectsAndKeys:
+    connectionDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
         [hostName stringValue],			RFB_HOST,
         [passWord stringValue],			RFB_PASSWORD,
+        [shared intValue] ? @"1" : @"0",	RFB_SHARED,
         [display stringValue],			RFB_DISPLAY,
-        [shared intValue] ? @"1" : @"0" ,	RFB_SHARED,
         NULL, NULL];
     if(![rememberPwd intValue]) {
         [passWord setStringValue:@""];
+    } else {
+        [[KeyChain defaultKeyChain] setGenericPassword:[passWord stringValue] forService:@"cotvnc" account:[hostName stringValue]]; // How do I find my freakin' app name?
     }
     profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];
-    [self createConnectionWithDictionary:d profile:profile owner:self];
+    [self createConnectionWithDictionary:connectionDictionary profile:profile owner:self];
     [loginPanel orderOut:self];
 	[self updateLoginPanel];
 }
@@ -233,7 +278,7 @@ static RFBConnectionManager*	sharedManager = nil;
     RFBConnection* theConnection;
 
     theConnection = [[[RFBConnection alloc] initWithDictionary:someDict profile:someProfile owner:someOwner] autorelease];
-    //    theConnection = [[[RFBConnection alloc] initWithDictionary:d andProfile:profile] autorelease];
+    //    theConnection = [[[RFBConnection alloc] initWithDictionary:connectionDictionary andProfile:profile] autorelease];
     if(theConnection) {
         [theConnection setManager:self];
         [connections addObject:theConnection];
@@ -293,9 +338,23 @@ static RFBConnectionManager*	sharedManager = nil;
 }
 */
 
+/*
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
-    [self updateLoginPanel];
+    NSString *newSelection = [hostName objectValueOfSelectedItem];
+
+    [self selectedHostChanged:newSelection];
+}
+*/
+
+- (void)cellTextDidEndEditing:(NSNotification *)notif {
+    NSString *newSelection = [hostName stringValue];
+
+    [self selectedHostChanged:newSelection];
+}
+
+- (void)cellTextDidBeginEditing:(NSNotification *)notif {
+    [self selectedHostChanged:nil];
 }
 
 // Jason added the following for full-screen windows

@@ -43,7 +43,8 @@
 	bool mPostMessages;
 	
 	// Keeps track of search status
-	NSNetServiceBrowser *mServiceBrowser;
+	NSNetServiceBrowser *mServiceBrowser_VNC;
+	NSNetServiceBrowser *mServiceBrowser_RFB;
 	BOOL mSearching;
 	bool mUsingRendezvous;
 }

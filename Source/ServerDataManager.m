@@ -60,7 +60,8 @@ static ServerDataManager* gInstance = nil;
 		assert( nil != [mGroups objectForKey:@"Standard"] );
 		assert( nil != [mGroups objectForKey:@"Rendezvous"] );
 		
-		mServiceBrowser = nil;
+		mServiceBrowser_VNC = nil;
+		mServiceBrowser_RFB = nil;
 	}
 	
 	return self;
@@ -100,9 +101,13 @@ static ServerDataManager* gInstance = nil;
 		
     [mServers release];
 	[mGroups release];
-	if( nil != mServiceBrowser )
+	if( nil != mServiceBrowser_VNC )
 	{
-		[mServiceBrowser release];
+		[mServiceBrowser_VNC release];
+	}
+	if( nil != mServiceBrowser_RFB )
+	{
+		[mServiceBrowser_RFB release];
 	}
 	
     [super dealloc];
@@ -431,16 +436,24 @@ static ServerDataManager* gInstance = nil;
 		
 		if( mUsingRendezvous )
 		{
-			NSParameterAssert( nil == mServiceBrowser );
+			NSParameterAssert( nil == mServiceBrowser_VNC );
 			
-			mServiceBrowser = [[NSNetServiceBrowser alloc] init];
-			[mServiceBrowser setDelegate:self];
-			[mServiceBrowser searchForServicesOfType:@"_vnc._tcp" inDomain:@""];
+			mServiceBrowser_VNC = [[NSNetServiceBrowser alloc] init];
+			[mServiceBrowser_VNC setDelegate:self];
+			[mServiceBrowser_VNC searchForServicesOfType:@"_vnc._tcp" inDomain:@""];
+			
+			NSParameterAssert( nil == mServiceBrowser_RFB );
+			
+			mServiceBrowser_RFB = [[NSNetServiceBrowser alloc] init];
+			[mServiceBrowser_RFB setDelegate:self];
+			[mServiceBrowser_RFB searchForServicesOfType:@"_rfb._tcp" inDomain:@""];
 		}
 		else
 		{
-			[mServiceBrowser release];
-			mServiceBrowser = nil;
+			[mServiceBrowser_VNC release];
+			[mServiceBrowser_RFB release];
+			mServiceBrowser_VNC = nil;
+			mServiceBrowser_RFB = nil;
 			
 			NSMutableDictionary *rendezvousDict = [mGroups objectForKey:@"Rendezvous"];
 			NSEnumerator *rendEnum = [rendezvousDict keyEnumerator];

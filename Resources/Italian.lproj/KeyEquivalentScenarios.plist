@@ -6,22 +6,22 @@
 	<array>
 		<dict>
 			<key>Characters</key>
-			<string>p</string>
+			<string>`</string>
 			<key>Modifiers</key>
-			<integer>1048576</integer>
+			<integer>1835008</integer>
 			<key>Title</key>
-			<string>Mode plein écran</string>
+			<string>Modalità Tutto Schermo</string>
 		</dict>
 	</array>
 	<key>ConnectionWindowFrontmostScenario</key>
 	<array>
 		<dict>
 			<key>Characters</key>
-			<string>p</string>
+			<string>`</string>
 			<key>Modifiers</key>
-			<integer>1048576</integer>
+			<integer>1835008</integer>
 			<key>Title</key>
-			<string>Mode plein écran</string>
+			<string>Modalità Tutto Schermo</string>
 		</dict>
 	</array>
 	<key>NonConnectionWindowFrontmostScenario</key>
@@ -32,7 +32,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Aide Chicken of the VNC</string>
+			<string>Aiuto Chicken of the VNC</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -40,7 +40,7 @@
 			<key>Modifiers</key>
 			<integer>1572864</integer>
 			<key>Title</key>
-			<string>Profiles de connexion…</string>
+			<string>Profili delle Connessioni…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -48,7 +48,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Placer dans le Dock</string>
+			<string>Contrai</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -56,7 +56,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Coller</string>
+			<string>Incolla</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -64,7 +64,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Ouvrir une connexion…</string>
+			<string>Apri Connessione…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -72,7 +72,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Ouvrir le répondeur…</string>
+			<string>Open Listener…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -80,7 +80,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Fermer la fenêtre</string>
+			<string>Chiudi Finestra</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -88,7 +88,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Masquer Chicken of the VNC</string>
+			<string>Nascondi Chicken of the VNC</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -96,7 +96,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Couper</string>
+			<string>Taglia</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -104,7 +104,7 @@
 			<key>Modifiers</key>
 			<integer>1572864</integer>
 			<key>Title</key>
-			<string>Masquer les autres</string>
+			<string>Nascondi Altre</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -112,7 +112,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Quitter Chicken of the VNC</string>
+			<string>Esci da Chicken of the VNC</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -120,7 +120,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Préférences…</string>
+			<string>Preferenze…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -128,7 +128,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Rétablir</string>
+			<string>Ripristina</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -136,7 +136,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Tout sélectionner</string>
+			<string>Seleziona Tutto</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -144,7 +144,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Annuler</string>
+			<string>Annulla</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -152,15 +152,15 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Copier</string>
+			<string>Copia</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
-			<string>p</string>
+			<string>~</string>
 			<key>Modifiers</key>
-			<integer>1048576</integer>
+			<integer>1835008</integer>
 			<key>Title</key>
-			<string>Mode plein écran</string>
+			<string>Modalità Tutto Schermo</string>
 		</dict>
 	</array>
 </dict>

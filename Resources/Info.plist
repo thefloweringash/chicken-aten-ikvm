@@ -40,6 +40,6 @@
 	<key>NSMainNibFile</key>
 	<string>OSX_RFBViewer</string>
 	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
+	<string>MyApp</string>
 </dict>
 </plist>

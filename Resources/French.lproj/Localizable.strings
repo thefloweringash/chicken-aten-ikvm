@@ -1,42 +1,42 @@
 // Common Strings
-"Okay" = "Okay";
-"Cancel" = "Cancel";
+"Okay" = "Ok";
+"Cancel" = "Annuler";
 
 // Servers
-"RFBDefaultServerName" = "New Server";
-"Connecting..." = "Connecting...";
+"RFBDefaultServerName" = "Nouveau serveur";
+"Connecting..." = "Connexion en cours...";
 
 // Error Actions
-"OpenConnection" = "Open Connection";
-"NoNamedServer" = "Could not find a server with the name \"%@\"";
-"NoConnection" = "Could not connect to server %@:%d";
-"UnknownAuthType" = "Unknown authType %@";
-"UnknownAuthResult" = "Unknown authResult %@";
-"AuthenticationFailed" = "Authentication Failed";
-"AuthenticationFailedTooMany" = "Authentication Failed (too many failures)";
-"UnknownMessageType" = "Unknown message type %@\n";
+"OpenConnection" = "Ouvrir une connexion";
+"NoNamedServer" = "Impossible de trouver un serveur avec le nom \"%@\"";
+"NoConnection" = "Impossible de se connecter au serveur %@:%d";
+"UnknownAuthType" = "Type d'authentification inconnu %@";
+"UnknownAuthResult" = "Resultat d'authentification inconnu %@";
+"AuthenticationFailed" = "Echec de l'authentification";
+"AuthenticationFailedTooMany" = "Echec de l'authentification (trop d'echecs)";
+"UnknownMessageType" = "Message de type inconnu %@\n";
 
 // Profiles
-"defaultProfileName" = "Default Profile";
+"defaultProfileName" = "Profile par défaut";
 
 // Connection Terminated
-"ConnectionTerminated" = "Connection Terminated";
-"Reconnect" = "Reconnect";
-"ServerClosed" = "The server closed the connection";
-"ServerError" = "Write to server: %s";
+"ConnectionTerminated" = "Connexion interrompue";
+"Reconnect" = "Reconnecter";
+"ServerClosed" = "Le serveur a fermé la connexion";
+"ServerError" = "Ecrire au serveur: %s";
 
 // Fullscreen
-"FullscreenHeader" = "Your connection is entering fullscreen mode";
-"Fullscreen" = "Fullscreen";
-"FullscreenReason" = "You may return to windowed mode by pressing the proper key equivalent at any time.  You can change this key equivalent in the Preferences if necessary.";
+"FullscreenHeader" = "Vous allez passer en mode plein écran";
+"Fullscreen" = "Plein écran";
+"FullscreenReason" = "Vous pouvez retourner en mode fenêtre en appellant le raccourci clavier à tout moment.  Vous pouvez changer ce raccourci clavier dans les préférences.";
 
 // Listener
-"listenStart" = "Start";
-"listenStop" = "Stop";
-"listenRunning" = "Listening is on";
-"listenStopped" = "Listening is off";
-"listenAcceptMessage" = "Connection from %@:%d";
+"listenStart" = "Démarrer";
+"listenStop" = "Arrêter";
+"listenRunning" = "En écoute";
+"listenStopped" = "Hors écoute";
+"listenAcceptMessage" = "Connexion depuis %@:%d";
 
 // Rendezvous
-"AddressResolveFailed" = "address resolve failed";
-"Resolving" = "resolving...";
+"AddressResolveFailed" = "Echec de la résolution d'adresse";
+"Resolving" = "Résolution d'adresse...";

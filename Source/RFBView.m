@@ -220,29 +220,6 @@
     [delegate sendModifier:[theEvent modifierFlags]];
 }
 
-- (BOOL)performKeyEquivalent:(NSEvent *)theEvent
-{
-	// Jason rewrote this so we don't send multiple instances - we can use NSKeyDown and NSKeyUp instead
-
-	BOOL isPressed = ([theEvent type] == NSKeyDown) ? YES : NO;
-
-    if([NSApp keyWindow] == [self window]) {
-        [delegate processKey:theEvent pressed:isPressed];
-        return YES;
-    } else {
-        return NO;
-    }
-/*
-    if([NSApp keyWindow] == [self window]) {
-		[delegate processKey:theEvent pressed:YES];
-		[delegate processKey:theEvent pressed:NO];
-		return YES;
-	} else {
-		return NO;
-*/
-}
-
-
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender {}
 
 - (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender

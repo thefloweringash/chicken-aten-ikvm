@@ -1,0 +1,33 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changeSelectedScenario = id; restoreDefaults = id; }; 
+            CLASS = KeyEquivalentPrefsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {mConnectionType = NSPopUpButton; mOutlineView = NSOutlineView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                autoscrollSpeedChanged = id; 
+                frontInverseCPUSliderChanged = id; 
+                otherInverseCPUSliderChanged = id; 
+                toggleFullscreenScrollbars = id; 
+                toggleFullscreenWarning = id; 
+            }; 
+            CLASS = PrefController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                mAutoscrollIncrement = NSSlider; 
+                mDisplayFullscreenWarning = NSButton; 
+                mFrontInverseCPUSlider = NSSlider; 
+                mFullscreenScrollbars = NSButton; 
+                mOtherInverseCPUSlider = NSSlider; 
+                mWindow = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

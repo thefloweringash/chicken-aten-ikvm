@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {actionPressed = id; valueChanged = id; }; 
+            CLASS = ListenerController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                actionBtn = NSButton; 
+                localOnlyBtn = NSButton; 
+                portText = NSTextField; 
+                profilePopup = NSPopUpButton; 
+                statusText = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

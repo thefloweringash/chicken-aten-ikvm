@@ -965,23 +965,23 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb
 {
-    int i;
-    id sel, types, theType;
-    NSRange r;
-
+    int i, strLength;
+    id types, theType;
+	NSString *str;
+	
     types = [NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil];
     if((theType = [pb availableTypeFromArray:types]) == nil) {
         NSLog(@"No supported pasteboard type\n");
         return NO;
     }
-    sel = [pb stringForType:theType];
-    if([sel isKindOfClass:[NSArray class]]) {
-        sel = [sel objectAtIndex:0];
+    str = [pb stringForType:theType];
+    if([str isKindOfClass:[NSArray class]]) {
+        str = [(id)str objectAtIndex:0];
     }
     
-    r.length = 1;
-    for(i=0; i<[(NSString *)sel length]; i++) {
-        unichar c = [sel characterAtIndex:i];
+	strLength = [str length];
+    for(i=0; i<strLength; i++) {
+        unichar c = [str characterAtIndex:i];
         [self sendKey:c pressed:YES];
         [self sendKey:c pressed:NO];
     }
@@ -1008,26 +1008,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	NSString *characters;
 	int i, length;
 	
-	// Jason - decomposedStringWithCanonicalMapping is a jaguar-only API call
-	if (gIsJaguar)
-		characters = [[theEvent charactersIgnoringModifiers] decomposedStringWithCanonicalMapping];
-	else
-		characters = [theEvent charactersIgnoringModifiers];
-			
+	characters = [theEvent charactersIgnoringModifiers];
 	if ( mCapsLock )
 		characters = [characters uppercaseString];
-	
-	// if this is a key equivalent, perform it and get the rock outta here
-	if ( aFlag && characters && [[KeyEquivalentManager defaultManager] performEquivalentWithCharacters: [theEvent charactersIgnoringModifiers] modifiers: [theEvent modifierFlags] & 0xFFFF0000] )
-	{
-		// if we've closed down our window as a result of the key command, do nothing
-		if ( nil == socketHandler )
-			return;
-		[self clearEmulationActiveMask];
-		buttonEmulationKeyDownMask = 0;
-		[self sendModifier:0];
-		return;
-	}
 	
 	length = [characters length];
 	for (i = 0; i < length; ++i) {

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class KeyEquivalentScenario;
+@class KeyEquivalentScenario, RFBView;
 
 
 // Scenarios
@@ -20,6 +20,7 @@ extern NSString *kConnectionFullscreenScenario;
 	NSMutableDictionary *mScenarioDict;		// Scenario -> KeyEquivalentScenario
 	NSString *mCurrentScenarioName;
 	KeyEquivalentScenario *mCurrentScenario;
+	RFBView *mKeyRFBView;
 }
 
 // Obtaining An Instance
@@ -43,5 +44,8 @@ extern NSString *kConnectionFullscreenScenario;
 
 // Performing Key Equivalants
 - (BOOL)performEquivalentWithCharacters: (NSString *)characters modifiers: (unsigned int)modifiers;
+
+// Obtaining the current RFBView
+- (RFBView *)keyRFBView;
 
 @end

@@ -80,6 +80,7 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 
 - (void)rfbViewDidBecomeKey: (RFBView *)view
 {
+	mKeyRFBView = view;
 	RFBConnection *connection = [view delegate];
 	if (connection)
 	{
@@ -124,6 +125,7 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 			return;
 		}
 	}
+	mKeyRFBView = nil;
 	if (window)
 		[self setCurrentScenarioToName: kNonConnectionWindowFrontmostScenario];
 }
@@ -311,5 +313,13 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 	}
 	return NO;
 }
+
+
+#pragma mark -
+#pragma mark Performing Key Equivalants
+
+
+- (RFBView *)keyRFBView
+{  return mKeyRFBView;  }
 
 @end

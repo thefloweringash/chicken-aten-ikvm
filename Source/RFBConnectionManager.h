@@ -52,6 +52,10 @@
 	IBOutlet NSSlider *frontInverseCPUSlider;
 	IBOutlet NSSlider *otherInverseCPUSlider;
     NSMutableArray*	connections;
+    NSString *cmdlineHost;
+    NSString *cmdlineDisplay;
+    NSString *cmdlinePassword;
+    NSString *cmdlineFullscreen;
 }
 
 + (float)gammaCorrection;
@@ -61,6 +65,8 @@
 - (void)updateLoginPanel;
 - (void)removeConnection:(id)aConnection;
 - (IBAction)connect:(id)sender;
+- (void)processArguments;
+- (void)cmdlineUsage;
 
 - (void)selectedHostChanged: (NSString *) newHostName;
 

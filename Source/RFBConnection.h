@@ -28,6 +28,7 @@
 #define RFB_REMEMBER		@"RememberPassword"
 #define RFB_DISPLAY		@"Display"
 #define RFB_SHARED		@"Shared"
+#define RFB_FULLSCREEN          @"Fullscreen"
 #define RFB_PORT		5900
 
 #define	DEFAULT_HOST	@"localhost"

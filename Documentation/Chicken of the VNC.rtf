@@ -39,7 +39,7 @@ More information about VNC can be found at AT&T's compendium: \cf2 \ul http://ww
 
 \f1\b0 \
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
-\cf3 Note:  If you have used a previous version of Chicken of the VNC, you will need to either delete your preferences (in ~/Library/Preferences/com.geekspiff.chickenofthevnc.plist), or reset the modifier key mappings in all of your stored profiles.  If you wish, you may also delete the "Chicken of the VNC" folder in your preferences, as it is no longer used.\
+\cf3 Note:  If you have used a version of Chicken of the VNC prior to 1.3, you will need to either delete your preferences (in ~/Library/Preferences/com.geekspiff.chickenofthevnc.plist), or reset the modifier key mappings in all of your stored profiles.  If you wish, you may also delete the "Chicken of the VNC" folder in your preferences, as it is no longer used.\
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
 \cf0 \
 Use it just like any other VNC client - enter the address of a working VNC server, the display number (or port) and your password and rock'n'roll...\
@@ -61,7 +61,7 @@ You can use profiles to store settings for an individual VNC server or for a cla
 You can also use profiles to specify your default encoding.  VNC operates by transferring an image of the screen from the server to the client.  This obviously requires lots of bandwidth.  The better the encoding that you use to transfer this information, the less "lag" you'll experience while using the Chicken.  \
 \
 The different encodings are (in rough order of efficiency)\
-	Tight (but Tight encoding is not completely stable, see the Known Problems section)\
+	Tight\
 	Hextile\
 	CoRRE\
 	RRE\
@@ -118,11 +118,7 @@ You can see additional uses for the Function key at\
 \fs24 \ulnone \
 
 \f1\b0 \
-Tight encoding is not stable.  You can receive "Inflate errors" that terminate your connection.  You can reconnect immediately, but it's annoying.  \
-\
-When connecting to an OSXvnc server using Tight encoding, you will receive an inflate error immediately.  To work around this, you can switch to another encoding, connect, disconnect immediately, switch back to Tight encoding and reconnect.  You will still be disconnected with an Inflate error eventually, but it may take several hours.\
-\
-We are working on resolving this issue.\
+None - please feel free to let us know if you encounter any.\
 \
 \
 
@@ -134,28 +130,16 @@ Because this program is distributed under the GNU license, source code is availa
 \
 \
 
-\f0\b\fs28 \ul Distribution and License Agreement
-\f1\b0\fs24 \ulnone \
-\
-Chicken of the VNC is released under the GNU license.  \
-\
-Chicken of the VNC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\
-\
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\
-\
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.\
-\
-\
-
 \f0\b\fs28 \ul Version History
 \fs24 \ulnone \
 
 \f1\b0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f3 \cf0 \ul Version 1.3.1 (October 16, 2002)\
+\f3 \cf0 \ul Version 1.3.1 (October 19, 2002)\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 \cf0 \ulnone \'a5 Now supports versions of Mac OS X lower than 10.2.\
+\'a5 Fixed connection issues when using Tight encoding.\
 \'a5 Added support for entry of a port number instead of a display number.\
 \'a5 Fixed a bug that caused Chicken to crash on machines with Unsanity's FruitMenu installed.\
 \'a5 Chicken is now hosted on SourceForge.\
@@ -187,7 +171,20 @@ You should have received a copy of the GNU General Public License along with thi
 \
 \pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
 
-\f0\b\fs28 \cf0 \ul Contact Information
+\f0\b\fs28 \cf0 \ul Distribution and License Agreement
+\f1\b0\fs24 \ulnone \
+\
+Chicken of the VNC is released under the GNU license.  \
+\
+Chicken of the VNC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\
+\
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\
+\
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.\
+\
+\
+
+\f0\b\fs28 \ul Contact Information
 \fs24 \ulnone \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 

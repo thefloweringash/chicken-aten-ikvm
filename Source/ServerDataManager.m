@@ -170,6 +170,13 @@ static ServerDataManager* gInstance = nil;
 		[mGroups release];
 		mGroups = [[coder decodeObjectForKey:RFB_GROUP_LIST] retain];
 		
+		if( nil == mGroups )
+		{
+			mGroups                  = [[NSMutableDictionary alloc] init];
+			[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Standard"];
+			[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Rendezvous"];
+		}
+
 		[mGroups setObject:mServers forKey:@"All"];
 		
 		assert( nil != [mGroups objectForKey:@"All"] );

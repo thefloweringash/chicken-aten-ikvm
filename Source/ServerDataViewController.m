@@ -104,6 +104,7 @@
         [rememberPwd setIntValue:[mServer rememberPassword]];
         [display setIntValue:[mServer display]];
         [shared setIntValue:[mServer shared]];
+		[fullscreen setIntValue:[mServer fullscreen]];
 		[self setProfilePopupToProfile: [mServer lastProfile]];
 		
 		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
@@ -127,6 +128,7 @@
 		[rememberPwd setIntValue:0];
 		[display setStringValue:@""];
 		[shared setIntValue:0];
+		[fullscreen setIntValue:0];
 		[self setProfilePopupToProfile: nil];
 	}
 }
@@ -199,6 +201,14 @@
 	if( nil != mServer )
 	{
 		[mServer setRememberPassword:![mServer rememberPassword]];
+	}
+}
+
+- (IBAction)fullscreenChanged:(id)sender
+{
+	if( nil != mServer )
+	{
+		[mServer setFullscreen:![mServer fullscreen]];
 	}
 }
 

@@ -2,8 +2,24 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {addServer = id; deleteSelectedServer = id; showConnectionDialog = id; }; 
+            CLASS = RFBConnectionManager; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                groupList = NSTableView; 
+                serverDataBoxLocal = NSBox; 
+                serverDeleteBtn = NSButton; 
+                serverGroupBox = NSBox; 
+                serverList = NSTableView; 
+                serverListBox = NSBox; 
+                splitView = NSSplitView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
             ACTIONS = {
                 connectToServer = id; 
+                fullscreenChanged = id; 
                 profileSelectionChanged = id; 
                 rememberPwdChanged = id; 
                 sharedChanged = id; 
@@ -16,6 +32,7 @@
                 connectIndicator = NSProgressIndicator; 
                 connectIndicatorText = NSTextField; 
                 display = NSTextField; 
+                fullscreen = NSButton; 
                 hostName = NSTextField; 
                 mDelegate = id; 
                 mServer = id; 

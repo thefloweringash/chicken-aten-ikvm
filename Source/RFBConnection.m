@@ -178,7 +178,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [frameBuffer release];
     [socketHandler release];
     close(fd);
-    [optionPanel release];
+    //[optionPanel release];  We don't create this!
     [profile release];
     [host release];
     [realDisplayName release];
@@ -867,6 +867,10 @@ static void print_data(unsigned char* data, int length)
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
+    // terminateConnection closes the window, so we have to null it out here
+    // The window will autorelease itself when closed.  If we allow terminateConnection
+    // to close it again, it will get double-autoreleased.  Bummer.
+    window = NULL;
     [self terminateConnection:nil];
 }
 

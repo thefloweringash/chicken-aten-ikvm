@@ -51,39 +51,54 @@
                 addServer = id; 
                 connect = id; 
                 deleteSelectedServer = id; 
-                displayChanged = id; 
                 frontInverseCPUSliderChanged = id; 
-                hostChanged = id; 
                 otherInverseCPUSliderChanged = id; 
-                passwordChanged = id; 
                 preferencesChanged = id; 
-                profileSelectionChanged = id; 
-                rememberPwdChanged = id; 
-                sharedChanged = id; 
             }; 
             CLASS = RFBConnectionManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 autoscrollIncrement = NSSlider; 
                 colorModelMatrix = NSMatrix; 
-                display = NSTextField; 
                 displayFullscreenWarning = NSButton; 
                 frontInverseCPUSlider = NSSlider; 
                 fullscreenScrollbars = NSButton; 
                 gamma = NSTextField; 
-                hostName = NSTextField; 
                 loginPanel = NSPanel; 
                 otherInverseCPUSlider = NSSlider; 
-                passWord = NSSecureTextField; 
                 profileManager = ProfileManager; 
                 profilePopup = NSPopUpButton; 
                 psMaxRects = NSTextField; 
                 psThreshold = NSTextField; 
-                rememberPwd = NSButton; 
+                serverCtrler = ServerDataViewController; 
+                serverDataBox = NSBox; 
+                serverDataBoxLocal = NSBox; 
                 serverList = NSTableView; 
-                shared = NSButton; 
             }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = ServerDataManager; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                displayChanged = id; 
+                hostChanged = id; 
+                passwordChanged = id; 
+                profileSelectionChanged = id; 
+                rememberPwdChanged = id; 
+                sharedChanged = id; 
+            }; 
+            CLASS = ServerDataViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                display = NSTextField; 
+                hostName = NSTextField; 
+                passWord = NSSecureTextField; 
+                profilePopup = NSPopUpButton; 
+                rememberPwd = NSButton; 
+                "server_" = id; 
+                shared = NSButton; 
+            }; 
+            SUPERCLASS = NSWindowController; 
         }
     ); 
     IBVersion = 1; 

@@ -563,7 +563,6 @@ static void print_data(unsigned char* data, int length)
     rfbKeyEventMsg msg;
     unsigned int diff = m ^ lastModifier;
 
-	NSLog(@"RFBConnection sendModifier: %d", m); // REMOVE ME
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
     if(diff & NSShiftKeyMask) {
@@ -641,7 +640,6 @@ static void print_data(unsigned char* data, int length)
     rfbKeyEventMsg msg;
     int kc;
 
-	NSLog(@"RFBConnection sendKey: %d pressed: %d", c, aFlag); // REMOVE ME
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
     msg.down = aFlag;
@@ -740,7 +738,6 @@ static void print_data(unsigned char* data, int length)
 	NSString *characters;
 	int i, length;
 
-	NSLog(@"RFBConnection processKey: %@ pressed: %d", [theEvent charactersIgnoringModifiers], aFlag); // REMOVE ME
 	characters = [[theEvent charactersIgnoringModifiers] decomposedStringWithCanonicalMapping];
 	length = [characters length];
 	for (i = 0; i < length; ++i) {

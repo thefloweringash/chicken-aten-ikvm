@@ -220,19 +220,16 @@
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-	NSLog(@"RFBView keyDown"); // REMOVE ME
     [delegate processKey:theEvent pressed:YES];
 }
 
 - (void)keyUp:(NSEvent *)theEvent
 {
-	NSLog(@"RFBView keyUp"); // REMOVE ME
     [delegate processKey:theEvent pressed:NO];
 }
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-	NSLog(@"RFBView flagsChanged"); // REMOVE ME
     [delegate sendModifier:[theEvent modifierFlags]];
 }
 
@@ -242,7 +239,6 @@
 
 	BOOL isPressed = ([theEvent type] == NSKeyDown) ? YES : NO;
 
-	NSLog(@"RFBView performKeyEquivalent"); // REMOVE ME
     if([NSApp keyWindow] == [self window]) {
         [delegate processKey:theEvent pressed:isPressed];
         return YES;

@@ -1,0 +1,48 @@
+{
+    IBClasses = (
+        {
+            CLASS = ByteReader; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {target = id; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                openOptions = id; 
+                paste = id; 
+                pasteViaKeypress = id; 
+                setDisplayName = id; 
+                setNewTitle = id; 
+                updateEncodings = id; 
+                updateStatistics = id; 
+            }; 
+            CLASS = RFBConnection; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                currentReader = id; 
+                dictionary = id; 
+                emulate3ButtonTimer = id; 
+                frameBuffer = id; 
+                handshaker = id; 
+                infoField = id; 
+                manager = id; 
+                mouseLocationTimer = id; 
+                newTitleField = id; 
+                newTitlePanel = id; 
+                optionPanel = id; 
+                rfbProtocol = id; 
+                rfbView = id; 
+                scrollView = id; 
+                serverVersion = id; 
+                socketHandler = id; 
+                statisticField = id; 
+                versionReader = id; 
+                window = id; 
+            }; 
+            SUPERCLASS = ByteReader; 
+        }, 
+        {CLASS = RFBView; LANGUAGE = ObjC; SUPERCLASS = NSView; }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,60 @@
+/* SetColorMapEntriesReader.m created by helmut on Wed 17-Jun-1998 */
+
+/* Copyright (C) 1998-2000  Helmut Maierhofer <helmut.maierhofer@chello.at>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
+#import "SetColorMapEntriesReader.h"
+#import "ByteBlockReader.h"
+
+@implementation SetColorMapEntriesReader
+
+- (id)initTarget:(id)aTarget action:(SEL)anAction
+{
+    headerReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setHeader:) size:5];
+    colorReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setColors:)];
+    return [super initTarget:aTarget action:anAction];
+}
+
+- (void)dealloc
+{
+    [headerReader release];
+    [colorReader release];
+    [super dealloc];
+}
+
+- (void)resetReader
+{
+    [target setReader:headerReader];
+}
+
+- (void)setHeader:(NSData*)header
+{
+    rfbSetColourMapEntriesMsg msg;
+
+    memcpy(&msg.pad, [header bytes], sizeof(msg) - 1);
+    numberOfColors = ntohs(msg.nColours);
+    [colorReader setBufferSize:numberOfColors * 3 * sizeof(CARD16)];
+    [target setReader:colorReader];
+}
+
+- (void)setColors:(NSData*)colors
+{
+    [target performSelector:action withObject:self];
+}
+
+@end

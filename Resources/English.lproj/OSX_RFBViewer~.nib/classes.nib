@@ -1,0 +1,72 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                makeConnectionFullscreen = id; 
+                makeConnectionWindowed = id; 
+                openNewTitlePanel = id; 
+                openOptions = id; 
+                pasteViaKeypress = id; 
+            }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = Profile; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addProfile = id; 
+                changeEncodingState = id; 
+                deleteProfile = id; 
+                profileChanged = id; 
+                profileSelected = id; 
+                reorderEncodings = id; 
+            }; 
+            CLASS = ProfileManager; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                altKey = id; 
+                canvas = id; 
+                commandKey = id; 
+                controlKey = id; 
+                deleteProfileButton = id; 
+                enableCopyRect = id; 
+                encodingTableView = id; 
+                m3bTimeout = id; 
+                newProfileButton = id; 
+                pixelFormatMatrix = id; 
+                profileBrowser = id; 
+                profileField = id; 
+                profilePanel = id; 
+                profileView = id; 
+                shiftKey = id; 
+                upDownButtonMatrix = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {connect = id; preferencesChanged = id; }; 
+            CLASS = RFBConnectionManager; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                autoscrollIncrement = id; 
+                colorModelMatrix = id; 
+                connect = id; 
+                display = id; 
+                fullscreenScrollbars = id; 
+                gamma = id; 
+                hostName = id; 
+                loginPanel = id; 
+                passWord = id; 
+                profileManager = id; 
+                profilePopup = id; 
+                psMaxRects = id; 
+                psThreshold = id; 
+                rememberPwd = id; 
+                shared = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

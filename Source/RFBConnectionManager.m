@@ -120,7 +120,10 @@ static RFBConnectionManager*	sharedManager = nil;
             NULL, NULL];
 
 	profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];	
-	[self createConnectionWithDictionary:connectionDictionary profile:profile owner:self];
+	
+	// BUG
+	// This needs to be added back in before release -Jared
+	//[self createConnectionWithDictionary:connectionDictionary profile:profile owner:self];
 
     } else {
 	if((s = [ud objectForKey:RFB_LAST_HOST]) != nil) {
@@ -253,7 +256,7 @@ static RFBConnectionManager*	sharedManager = nil;
     if (currentServer != nil)
 	{
         [rememberPwd setIntValue:[currentServer rememberPassword]];
-        [display setStringValue:[currentServer display]];
+        [display setIntValue:[currentServer display]];
         [shared setIntValue:[currentServer shared]];
 		[hostName setStringValue:[currentServer host]];
         if ([currentServer rememberPassword])
@@ -314,10 +317,10 @@ static RFBConnectionManager*	sharedManager = nil;
 - (IBAction)connect:(id)sender
 {
 	/* change */
+	/*
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     NSDictionary* connectionDictionary;
     NSMutableDictionary* hostDictionaryList, *hostDictionary;
-    Profile* profile;
 
     [ud setObject:[hostName stringValue] forKey:RFB_LAST_HOST];
     hostDictionaryList = [[[ud objectForKey:RFB_HOST_INFO] mutableCopy] autorelease];
@@ -347,29 +350,26 @@ static RFBConnectionManager*	sharedManager = nil;
     } else {
         [[KeyChain defaultKeyChain] setGenericPassword:[passWord stringValue] forService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]]; // How do I find my freakin' app name?
     }
-    profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];
+	 */
+	
+	id<IServerData> currentServer = [self getSelectedServer];
+    Profile* profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];
     
     // Only close the open dialog of the connection was successful
-    if( YES == [self createConnectionWithDictionary:connectionDictionary profile:profile owner:self] ) {
-		if(![rememberPwd intValue]) {
-			[passWord setStringValue:@""];
-			[[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]];
-		} else {
-			[[KeyChain defaultKeyChain] setGenericPassword:[passWord stringValue] forService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]]; // How do I find my freakin' app name?
-		}
+    if( YES == [self createConnectionWithServer:currentServer profile:profile owner:self] )
+	{
         [loginPanel orderOut:self];
     }
 }
 
 /* Do the work of creating a new connection and add it to the list of connections. */
-- (BOOL)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner
+- (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner
 {
 	/* change */
     RFBConnection* theConnection;
     bool returnVal = YES;
 
-    theConnection = [[[RFBConnection alloc] initWithDictionary:someDict profile:someProfile owner:someOwner] autorelease];
-    //    theConnection = [[[RFBConnection alloc] initWithDictionary:connectionDictionary andProfile:profile] autorelease];
+    theConnection = [[[RFBConnection alloc] initWithServer:server profile:someProfile owner:someOwner] autorelease];
     if(theConnection) {
         [theConnection setManager:self];
         [connections addObject:theConnection];
@@ -435,7 +435,7 @@ static RFBConnectionManager*	sharedManager = nil;
 	if( nil != currentServer )
 	{
 		[currentServer setLastDisplay:[currentServer display]];
-		[currentServer setDisplay:[sender stringValue]];
+		[currentServer setDisplay:[sender intValue]];
 	}
 }
 
@@ -592,6 +592,7 @@ static RFBConnectionManager*	sharedManager = nil;
 - (void)serverListDidChange:(NSNotification*)notification
 {
 	[serverList reloadData];
+	[self selectedHostChanged];
 }
 
 @end

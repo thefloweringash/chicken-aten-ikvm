@@ -74,7 +74,7 @@
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
-- (BOOL)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner;
+- (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner;
 
 - (IBAction)preferencesChanged:(id)sender;
 - (IBAction)hostChanged:(id)sender;

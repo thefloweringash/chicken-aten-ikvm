@@ -27,6 +27,7 @@
 #import "RectangleList.h"
 #import "FrameBufferUpdateReader.h"
 #import "EncodingReader.h"
+#import "IServerData.h"
 #include <unistd.h>
 #include <libc.h>
 #include "FullscreenWindow.h" // added by Jason for fullscreen mode
@@ -120,7 +121,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 }
 
 // jason changed for fullscreen display
-- (id)initWithDictionary:(NSDictionary*)aDictionary profile:(Profile*)p owner:(id)owner
+- (id)initWithServer:(id<IServerData>)server profile:(Profile*)p owner:(id)owner
 {
     if (self = [super init]) {
 		struct sockaddr_in	remote;
@@ -134,12 +135,12 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 			[self release];
 			return nil;
 		}
-		if((host = [aDictionary objectForKey:RFB_HOST]) == nil) {
+		if((host = [server host]) == nil) {
 			host = [DEFAULT_HOST retain];
 		} else {
 			[host retain];
 		}
-		port = [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+		port = [server display];
 		// displays >= 100 are treated as port numbers, in the
 		// same way as RealVNC and others does. 
 		if (port < 100)
@@ -151,7 +152,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 			return nil;
 		}
 		[NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
-		dictionary = [aDictionary retain];
+		server_ = [(id)server retain];
 	
 		versionReader = [[NLTStringReader alloc] initTarget:self action:@selector(setServerVersion:)];
 		[self setReader:versionReader];
@@ -162,7 +163,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		[rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil]];
 
 
-		if ([[dictionary objectForKey:RFB_FULLSCREEN] intValue]) {
+		if ([server fullscreen]) {
 			[self makeConnectionFullscreen: self];
 		}
 	}
@@ -179,7 +180,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [manager release];
     [versionReader release];
     [handshaker release];
-    [dictionary release];
+    [(id)server_ release];
     [serverVersion release];
     [rfbProtocol release];
     [frameBuffer release];
@@ -252,7 +253,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
             /* One might reasonably argue that this should be handled by the connection manager. */
             switch (alertValue) {
                 case -1:
-                    [_owner createConnectionWithDictionary:dictionary profile:profile owner:_owner];
+                    [_owner createConnectionWithServer:server_ profile:profile owner:_owner];
                     break;
                 case 0:
                     [NSApp terminate:self];
@@ -387,12 +388,12 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (NSString*)password
 {
-    return [dictionary objectForKey:RFB_PASSWORD];
+    return [server_ password];
 }
 
 - (BOOL)connectShared
 {
-    return [[dictionary objectForKey:RFB_SHARED] intValue] ? YES : NO;
+    return [server_ shared];
 }
 
 - (NSRect)visibleRect

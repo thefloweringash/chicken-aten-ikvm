@@ -165,6 +165,7 @@ static ServerDataManager* instance = nil;
 - (void)removeServer:(id<IServerData>)server
 {
 	[servers removeObjectForKey:[server name]];
+	[servers removeObjectForKey:[server name]];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 														object:self];

@@ -49,12 +49,12 @@
 		_name =             [[NSString stringWithString:host] retain];
 		_host =             [host retain];
 		_password =         [[NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]] retain];
-		_rememberPassword = [prefDict objectForKey:RFB_REMEMBER];
-		_display =          [prefDict objectForKey:RFB_DISPLAY];
-		_lastDisplay =      [prefDict objectForKey:RFB_LAST_DISPLAY];
+		_rememberPassword = [[prefDict objectForKey:RFB_REMEMBER] intValue] == 0 ? NO : YES;
+		_display =          [[prefDict objectForKey:RFB_DISPLAY] intValue];
+		_lastDisplay =      [[prefDict objectForKey:RFB_LAST_DISPLAY] intValue];
 		_lastProfile =      [prefDict objectForKey:RFB_LAST_PROFILE];
-		_shared =           [prefDict objectForKey:RFB_SHARED];
-		_fullscreen =       [prefDict objectForKey:RFB_FULLSCREEN];
+		_shared =           [[prefDict objectForKey:RFB_SHARED] intValue] == 0 ? NO : YES;
+		_fullscreen =       [[prefDict objectForKey:RFB_FULLSCREEN] intValue] == 0 ? NO : YES;
 	}
 	
 	return self;
@@ -67,12 +67,12 @@
 		_name =             [[NSString stringWithString:@"new server"] retain];
 		_host =             [[NSString stringWithString:@"localhost"] retain];
 		_password =         [[NSString alloc] init];
-		_rememberPassword = [[NSString alloc] init];
-		_display =          [[NSString alloc] init];
-		_lastDisplay =      [[NSString alloc] init];
+		_rememberPassword = NO;
+		_display =          0;
+		_lastDisplay =      0;
 		_lastProfile =      [[NSString alloc] init];
-		_shared =           [[NSString alloc] init];
-		_fullscreen =       [[NSString alloc] init];
+		_shared =           NO;
+		_fullscreen =       NO;
 	}
 	
 	return self;
@@ -102,14 +102,14 @@
 {
     assert( [coder allowsKeyedCoding] );
 
-	[coder encodeObject:_name             forKey:RFB_NAME];
-	[coder encodeObject:_host             forKey:RFB_HOST];
-	[coder encodeObject:_rememberPassword forKey:RFB_REMEMBER];
-	[coder encodeObject:_display          forKey:RFB_DISPLAY];
-	[coder encodeObject:_lastDisplay      forKey:RFB_LAST_DISPLAY];
-	[coder encodeObject:_lastProfile      forKey:RFB_LAST_PROFILE];
-	[coder encodeObject:_shared           forKey:RFB_SHARED];
-	[coder encodeObject:_fullscreen       forKey:RFB_FULLSCREEN];
+	[coder encodeObject:_name			 forKey:RFB_NAME];
+	[coder encodeObject:_host			 forKey:RFB_HOST];
+	[coder encodeBool:_rememberPassword  forKey:RFB_REMEMBER];
+	[coder encodeInt:_display			 forKey:RFB_DISPLAY];
+	[coder encodeInt:_lastDisplay		 forKey:RFB_LAST_DISPLAY];
+	[coder encodeObject:_lastProfile	 forKey:RFB_LAST_PROFILE];
+	[coder encodeBool:_shared			 forKey:RFB_SHARED];
+	[coder encodeBool:_fullscreen		 forKey:RFB_FULLSCREEN];
    	
     return;
 }
@@ -124,12 +124,12 @@
 		// Can decode keys in any order
 		_name =             [[coder decodeObjectForKey:RFB_NAME] retain];
 		_host =             [[coder decodeObjectForKey:RFB_HOST] retain];
-		_rememberPassword = [[coder decodeObjectForKey:RFB_REMEMBER] retain];
-		_display =          [[coder decodeObjectForKey:RFB_DISPLAY] retain];
-		_lastDisplay =      [[coder decodeObjectForKey:RFB_LAST_DISPLAY] retain];
+		_rememberPassword = [coder decodeBoolForKey:RFB_REMEMBER];
+		_display =          [coder decodeIntForKey:RFB_DISPLAY];
+		_lastDisplay =      [coder decodeIntForKey:RFB_LAST_DISPLAY];
 		_lastProfile =      [[coder decodeObjectForKey:RFB_LAST_PROFILE] retain];
-		_shared =           [[coder decodeObjectForKey:RFB_SHARED] retain];
-		_fullscreen =       [[coder decodeObjectForKey:RFB_FULLSCREEN] retain];
+		_shared =           [coder decodeBoolForKey:RFB_SHARED];
+		_fullscreen =       [coder decodeBoolForKey:RFB_FULLSCREEN];
 			
 		_password = [[NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]] retain];
 	}
@@ -154,27 +154,27 @@
 
 - (bool)rememberPassword
 {
-	return [_rememberPassword intValue] == 0 ? NO : YES;
+	return _rememberPassword;
 }
 
-- (NSString*)display
+- (int)display
 {
 	return _display;
 }
 
-- (NSString*)lastDisplay
+- (int)lastDisplay
 {
 	return _lastDisplay;
 }
 
 - (bool)shared
 {
-	return [_shared intValue] == 0 ? NO : YES;
+	return _shared;
 }
 
 - (bool)fullscreen
 {
-	return [_fullscreen intValue] == 0 ? NO : YES;
+	return _fullscreen;
 }
 
 - (NSString*)lastProfile
@@ -185,7 +185,7 @@
 - (void)setName: (NSString*)name
 {
 	// if the password is saved, destroy the one off the old name key
-	if( 0 != [_rememberPassword intValue] )
+	if( YES == _rememberPassword)
 	{
 		[[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name];
 	}
@@ -195,7 +195,7 @@
 	[_name retain];
 	
 	// if the password should be saved, save it with the new name key
-	if( 0 != [_rememberPassword intValue] )
+	if( YES == _rememberPassword)
 	{
 		[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_SERVICE_NAME account:_name];
 	}
@@ -223,14 +223,10 @@
 
 - (void)setRememberPassword: (bool)rememberPassword
 {
-	[_rememberPassword release];
-	_rememberPassword = [NSString stringWithFormat:@"%d", rememberPassword];
-	[_rememberPassword retain];
-	
-	//[_prefDict setObject:_rememberPassword forKey:RFB_REMEMBER];
+	_rememberPassword = rememberPassword;
 	
 	// make sure that the saved password reflects the new remember password setting
-	if( 0 != [_rememberPassword intValue] )
+	if( YES == _rememberPassword )
 	{
 		[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_SERVICE_NAME account:_name];
 	}
@@ -240,40 +236,24 @@
 	}
 }
 
-- (void)setDisplay: (NSString*)display
+- (void)setDisplay: (int)display
 {
-	[_display release];
 	_display = display;
-	[_display retain];
-	
-	//[_prefDict setObject:_display forKey:RFB_DISPLAY];
 }
 
-- (void)setLastDisplay: (NSString*)lastDisplay
+- (void)setLastDisplay: (int)lastDisplay
 {
-	[_lastDisplay release];
 	_lastDisplay = lastDisplay;
-	[_lastDisplay retain];
-	
-	//[_prefDict setObject:_lastDisplay forKey:RFB_LAST_DISPLAY];
 }
 
 - (void)setShared: (bool)shared
 {
-	[_shared release];
-	_shared = [NSString stringWithFormat:@"%d", shared];
-	[_shared retain];
-	
-	//[_prefDict setObject:_shared forKey:RFB_SHARED];
+	_shared = shared;
 }
 
 - (void)setFullscreen: (bool)fullscreen
 {
-	[_fullscreen release];
-	_fullscreen =  [NSString stringWithFormat:@"%d", fullscreen];
-	[_fullscreen retain];
-	
-	//[_prefDict setObject:_fullscreen forKey:RFB_FULLSCREEN];
+	_fullscreen =  fullscreen;
 }
 
 - (void)setLastProfile: (NSString*)lastProfile
@@ -281,8 +261,6 @@
 	[_lastProfile release];
 	_lastProfile = lastProfile;
 	[_lastProfile retain];
-	
-	//[_prefDict setObject:_lastProfile forKey:RFB_LAST_PROFILE];
 }
 
 @end

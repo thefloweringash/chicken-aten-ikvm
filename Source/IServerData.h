@@ -28,8 +28,8 @@
 - (NSString*)host;
 - (NSString*)password;
 - (bool)rememberPassword;
-- (NSString*)display;
-- (NSString*)lastDisplay;
+- (int)display;
+- (int)lastDisplay;
 - (int)shared;
 - (bool)fullscreen;
 - (NSString*)lastProfile;
@@ -38,8 +38,8 @@
 - (void)setHost: (NSString*)host;
 - (void)setPassword: (NSString*)password;
 - (void)setRememberPassword: (bool)rememberPassword;
-- (void)setDisplay: (NSString*)display;
-- (void)setLastDisplay: (NSString*)lastDisplay;
+- (void)setDisplay: (int)display;
+- (void)setLastDisplay: (int)lastDisplay;
 - (void)setShared: (int)shared;
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setLastProfile: (NSString*)lastProfile;

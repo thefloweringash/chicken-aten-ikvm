@@ -26,11 +26,11 @@
 	NSString* _name;
 	NSString* _host;
 	NSString* _password;
-	NSString* _rememberPassword;
-	NSString* _display;
-	NSString* _lastDisplay;
-	NSString* _shared;
-	NSString* _fullscreen;
+	bool      _rememberPassword;
+	int       _display;
+	int       _lastDisplay;
+	bool      _shared;
+	bool      _fullscreen;
 	NSString* _lastProfile;
 	
 	NSMutableDictionary* _prefDict;
@@ -55,8 +55,8 @@
 - (NSString*)host;
 - (NSString*)password;
 - (bool)rememberPassword;
-- (NSString*)display;
-- (NSString*)lastDisplay;
+- (int)display;
+- (int)lastDisplay;
 - (bool)shared;
 - (bool)fullscreen;
 - (NSString*)lastProfile;
@@ -65,8 +65,8 @@
 - (void)setHost: (NSString*)host;
 - (void)setPassword: (NSString*)password;
 - (void)setRememberPassword: (bool)rememberPassword;
-- (void)setDisplay: (NSString*)display;
-- (void)setLastDisplay: (NSString*)lastDisplay;
+- (void)setDisplay: (int)display;
+- (void)setLastDisplay: (int)lastDisplay;
 - (void)setShared: (bool)shared;
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setLastProfile: (NSString*)lastProfile;

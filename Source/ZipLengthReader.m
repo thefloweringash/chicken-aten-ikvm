@@ -38,15 +38,15 @@ static const unsigned int _shift[3] = {
 
 - (unsigned)readBytes:(unsigned char*)theBytes length:(unsigned)aLength
 {
-    unsigned canConsume = 1;
+    unsigned canConsume = 0;
     
     while(aLength > 0) {
+        canConsume++;
         value |= ((int)(*theBytes) & _mask[bytenr]) << _shift[bytenr];
         if((++bytenr >= 3) || ((*theBytes & 0x80) == 0)) {
             [target performSelector:action withObject:[NSNumber numberWithUnsignedInt:value]];
             return canConsume;
         }
-        canConsume++;
         aLength--;
         theBytes++;
     }

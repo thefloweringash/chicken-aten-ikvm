@@ -28,6 +28,7 @@
 #import "CopyRectangleEncodingReader.h"
 #import "RFBConnectionManager.h"
 #import "TightEncodingReader.h"
+#import "ZlibEncodingReader.h"
 
 @implementation FrameBufferUpdateReader
 
@@ -45,6 +46,7 @@
     coRreEncodingReader = [[CoRREEncodingReader alloc] initTarget:self action:@selector(didRect:)];
     hextileEncodingReader = [[HextileEncodingReader alloc] initTarget:self action:@selector(didRect:)];
     tightEncodingReader = [[TightEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+	zlibEncodingReader = [[ZlibEncodingReader alloc] initTarget:self action:@selector(didRect:)];
     rectHeaderReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setRect:) size:12];
     connection = [target topTarget];
     if(pst) {
@@ -68,6 +70,7 @@
     [coRreEncodingReader setFrameBuffer:aBuffer];
     [hextileEncodingReader setFrameBuffer:aBuffer];
     [tightEncodingReader setFrameBuffer:aBuffer];
+	[zlibEncodingReader setFrameBuffer:aBuffer];
 }
 
 - (void)dealloc
@@ -80,6 +83,7 @@
     [hextileEncodingReader release];
     [tightEncodingReader release];
     [rectHeaderReader release];
+	[zlibEncodingReader release];
     [super dealloc];
 }
 
@@ -130,6 +134,9 @@
         case rfbEncodingHextile:
             theReader = hextileEncodingReader;
             break;
+		case rfbEncodingZlib:
+			theReader = zlibEncodingReader;
+			break;
         case rfbEncodingTight:
             theReader = tightEncodingReader;
             break;

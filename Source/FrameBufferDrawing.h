@@ -223,10 +223,15 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
 }
 
 /* --------------------------------------------------------------------------------- */
+#define CLUT(c,p)																\
+c = redClut[(p >> pixelFormat.redShift) & pixelFormat.redMax];					\
+c += greenClut[(p >> pixelFormat.greenShift) & pixelFormat.greenMax]; 			\
+c += blueClut[(p >> pixelFormat.blueShift) & pixelFormat.blueMax]
+
 - (void)putRect:(NSRect)aRect fromData:(unsigned char*)data
 {
     FBColor* start;
-    unsigned int stride, i, lines;
+    unsigned int stride, i, lines, pix, col;
 
 #ifdef DEBUG_DRAW
 printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height);
@@ -240,13 +245,67 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
     start = pixels + (int)(aRect.origin.y * size.width) + (int)aRect.origin.x;
     lines = aRect.size.height;
     stride = size.width - aRect.size.width;
-    while(lines--) {
-        for(i=0; i<aRect.size.width; i++) {
-            *start++ = cvt_pixel(data, self);
-            data += bytesPerPixel;
-        }
-        start += stride;
-    }
+
+	switch(pixelFormat.bitsPerPixel / 8) {
+		case 1:
+			while(lines--) {
+				for(i=0; i<aRect.size.width; i++) {
+					pix = *data++;
+					CLUT(col, pix);
+					*start++ = col;
+				}
+				start += stride;
+			}
+			break;
+		case 2:
+			if(pixelFormat.bigEndian) {
+				while(lines--) {
+					for(i=0; i<aRect.size.width; i++) {
+						pix = *data++; pix <<= 8; pix += *data++;
+						CLUT(col, pix);
+						*start++ = col;
+					}
+					start += stride;
+				}
+			} else {
+				while(lines--) {
+					for(i=0; i<aRect.size.width; i++) {
+						pix = *data++; pix += (((unsigned int)*data++) << 8);
+						CLUT(col, pix);
+						*start++ = col;
+					}
+					start += stride;
+				}
+			}
+			break;
+		case 4:
+			if(pixelFormat.bigEndian) {
+				while(lines--) {
+					for(i=0; i<aRect.size.width; i++) {
+						pix = *data++; pix <<= 8;
+						pix += *data++; pix <<= 8;
+						pix += *data++; pix <<= 8;
+						pix += *data++;
+						CLUT(col, pix);
+						*start++ = col;
+					}
+					start += stride;
+				}
+			} else {
+				while(lines--) {
+					for(i=0; i<aRect.size.width; i++) {
+						pix = *data++;
+						pix += (((unsigned int)*data++) << 8);
+						pix += (((unsigned int)*data++) << 16);
+						pix += (((unsigned int)*data++) << 24);
+						CLUT(col, pix);
+						*start++ = col;
+					}
+					start += stride;
+				}
+			}
+			break;
+	}
 }
 
 /* --------------------------------------------------------------------------------- */

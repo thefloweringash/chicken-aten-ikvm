@@ -87,8 +87,8 @@
         if((cntl & 0x01) && zStreamActive[streamId]) {
             if((inflateEnd(&zStream[streamId]) != Z_OK) && (zStream[streamId].msg != NULL)) {
                 NSLog(@"inflateEnd: %s\n", zStream[streamId].msg); // jason - correct spelling from 'infalte'
-				zStreamActive[streamId] = NO;
             }
+			zStreamActive[streamId] = NO;
         }
 		cntl >>= 1;
     }
@@ -202,7 +202,7 @@
             return;
         }
         zStreamActive[streamId] = YES;
-    }
+	}
     compressedLength = [zl unsignedIntValue];
     zBufPos = 0;
     rowsDone = 0;
@@ -216,6 +216,11 @@
     int numRows, error;
     z_stream* stream;
     NSRect r;
+	
+#ifdef ZDEBUG
+	fwrite([data bytes], 1, [data length], debugFiles[cntl & 3]);
+	fflush(debugFiles[cntl & 3]);
+#endif
 
 #ifdef COLLECT_STATS
     bytesTransferred += [data length];
@@ -227,6 +232,8 @@
         stream->next_out = [zBuffer mutableBytes] + zBufPos;
         stream->avail_out = Z_BUFSIZE - zBufPos;
         error = inflate(stream, Z_SYNC_FLUSH);
+		if (error == Z_BUF_ERROR)   /* Input exhausted -- no problem. */
+			break;
         if((error != Z_OK) && (error != Z_STREAM_END)) {
             if(stream->msg != NULL) {
                 [connection terminateConnection:[NSString stringWithFormat:@"Inflate error: %s.\n", stream->msg]];
@@ -247,7 +254,7 @@
             char* z = [zBuffer mutableBytes];
             memcpy(z, z + numRows * rowSize, zBufPos);
         }
-    } while(stream->avail_out == 0 && (rowsDone < frame.size.height));
+    } while(stream->avail_out == 0);
     if((compressedLength -= [data length]) > 0) {
         [zippedDataReader setBufferSize:MIN(compressedLength, Z_BUFSIZE)];
         [target setReader:zippedDataReader];
@@ -257,4 +264,3 @@
 }
 
 @end
-

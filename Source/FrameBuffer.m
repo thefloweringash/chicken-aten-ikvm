@@ -62,114 +62,142 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 }
 
 /* --------------------------------------------------------------------------------- */
+#define TO_PIX(p,s)																\
+	p = (*s++ & pixelFormat.redMax) << pixelFormat.redShift;					\
+	p |= (*s++ & pixelFormat.greenMax) << pixelFormat.greenShift;				\
+	p |= (*s++ & pixelFormat.blueMax) << pixelFormat.blueShift	
+
 - (void)combineRGB:(int*)rgb pixels:(unsigned)length into:(unsigned char*)v
 {
     int pix, bpp = [self tightBytesPerPixel];
 
-    while(length--) {
-        pix = (*rgb++ & pixelFormat.redMax) << pixelFormat.redShift;
-        pix |= (*rgb++ & pixelFormat.greenMax) << pixelFormat.greenShift;
-        pix |= (*rgb++ & pixelFormat.blueMax) << pixelFormat.blueShift;
-        switch(bpp) {
-            case 1:
-                *v++ = pix;
-                break;
-            case 2:
-                if(pixelFormat.bigEndian) {
+	switch(bpp) {
+		case 1:
+			while(length--) {
+				TO_PIX(pix, rgb);
+				*v++ = pix;
+			}
+			break;
+		case 2:
+			if(pixelFormat.bigEndian) {
+				while(length--) {
+					TO_PIX(pix, rgb);
                     *v++ = (pix >> 8) & 0xff;
                     *v++ = pix & 0xff;
-                } else {
+				}
+			} else {
+				while(length--) {
+					TO_PIX(pix, rgb);
                     *v++ = pix & 0xff;
                     *v++ = (pix >> 8) & 0xff;
-                }
-                break;
-            case 3:
-               	if(pixelFormat.bigEndian) {
+				}
+			}
+			break;
+		case 3:
+			if(pixelFormat.bigEndian) {
+				while(length--) {
+					TO_PIX(pix, rgb);
                     *v++ = (pix >> 16) & 0xff;
                     *v++ = (pix >> 8) & 0xff;
                     *v++ = pix & 0xff;
-                } else {
+				}
+			} else {
+				while(length--) {
+					TO_PIX(pix, rgb);
                     *v++ = pix & 0xff;
                     *v++ = (pix >> 8) & 0xff;
                     *v++ = (pix >> 16) & 0xff;
-                }
-                break;
-            case 4:
-                if(pixelFormat.bigEndian) {
+				}
+			}
+			break;
+		case 4:
+			if(pixelFormat.bigEndian) {
+				while(length--) {
+					TO_PIX(pix, rgb);
                     *v++ = (pix >> 24) & 0xff;
                     *v++ = (pix >> 16) & 0xff;
                     *v++ = (pix >> 8) & 0xff;
                     *v++ = pix & 0xff;
-                } else {
+				}
+			} else {
+				while(length--) {
+					TO_PIX(pix, rgb);
                     *v++ = pix & 0xff;
                     *v++ = (pix >> 8) & 0xff;
                     *v++ = (pix >> 16) & 0xff;
                     *v++ = (pix >> 24) & 0xff;
-                }
-                break;
-        }
-    }
+				}
+			}
+			break;
+	}
 }
 
 /* --------------------------------------------------------------------------------- */
+#define TO_RGB(d,c)														\
+	*d++ = (c >> pixelFormat.redShift) & pixelFormat.redMax;			\
+	*d++ = (c >> pixelFormat.greenShift) & pixelFormat.greenMax;		\
+	*d++ = (c >> pixelFormat.blueShift) & pixelFormat.blueMax
+
 - (void)splitRGB:(unsigned char*)v pixels:(unsigned)length into:(int*)rgb
 {
+	unsigned char c;
     int pix;
     
     switch([self tightBytesPerPixel]) {
         case 1:
             while(length--) {
-                *rgb++ = (*v >> pixelFormat.redShift) & pixelFormat.redMax;
-                *rgb++ = (*v >> pixelFormat.greenShift) & pixelFormat.greenMax;
-                *rgb++ = (*v >> pixelFormat.blueShift) & pixelFormat.blueMax;
-                v++;
+				c = *v++;
+				TO_RGB(rgb, c);
             }
             break;
         case 2:
-            while(length--) {
-                if(pixelFormat.bigEndian) {
+			if(pixelFormat.bigEndian) {
+				while(length--) {
                     pix = *v++; pix <<= 8; pix += *v++;
-                } else {
-                    pix = *v++; pix += (((unsigned int)*v++) << 8);
-                }
-                *rgb++ = (pix >> pixelFormat.redShift) & pixelFormat.redMax;
-                *rgb++ = (pix >> pixelFormat.greenShift) & pixelFormat.greenMax;
-                *rgb++ = (pix >> pixelFormat.blueShift) & pixelFormat.blueMax;
-            }
+					TO_RGB(rgb, pix);
+				}
+			} else {
+				while(length--) {
+					pix = *v++; pix += (((unsigned int)*v++) << 8);
+					TO_RGB(rgb, pix);
+				}
+			}
             break;
         case 3:
-            while(length--) {
-                if(pixelFormat.bigEndian) {
-                    pix = *v++; pix <<= 8;
-                    pix += *v++; pix <<= 8;
-                    pix += *v++;
-                } else {
-                    pix = *v++;
-                    pix += (((unsigned int)*v++) << 8);
-                    pix += (((unsigned int)*v++) << 16);
-                }
-                *rgb++ = (pix >> pixelFormat.redShift) & pixelFormat.redMax;
-                *rgb++ = (pix >> pixelFormat.greenShift) & pixelFormat.greenMax;
-                *rgb++ = (pix >> pixelFormat.blueShift) & pixelFormat.blueMax;
-            }
+			if(pixelFormat.bigEndian) {
+				while(length--) {
+					pix = *v++; pix <<= 8;
+					pix += *v++; pix <<= 8;
+					pix += *v++;
+					TO_RGB(rgb, pix);
+				}
+			} else {
+				while(length--) {
+					pix = *v++;
+					pix += (((unsigned int)*v++) << 8);
+					pix += (((unsigned int)*v++) << 16);
+					TO_RGB(rgb, pix);
+				}
+			}
             break;
         case 4:
-            while(length--) {
-                if(pixelFormat.bigEndian) {
+			if(pixelFormat.bigEndian) {
+				while(length--) {
                     pix = *v++; pix <<= 8;
                     pix += *v++; pix <<= 8;
                     pix += *v++; pix <<= 8;
                     pix += *v++;
-                } else {
+					TO_RGB(rgb, pix);
+				}
+			} else {
+				while(length--) {
                     pix = *v++;
                     pix += (((unsigned int)*v++) << 8);
                     pix += (((unsigned int)*v++) << 16);
                     pix += (((unsigned int)*v++) << 24);
-                }
-                *rgb++ = (pix >> pixelFormat.redShift) & pixelFormat.redMax;
-                *rgb++ = (pix >> pixelFormat.greenShift) & pixelFormat.greenMax;
-                *rgb++ = (pix >> pixelFormat.blueShift) & pixelFormat.blueMax;
-            }
+					TO_RGB(rgb, pix);
+				}
+			}
             break;
     }
 }

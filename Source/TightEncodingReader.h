@@ -20,7 +20,7 @@
 
 #import <AppKit/AppKit.h>
 #import "EncodingReader.h"
-#import "zlib.h"
+#import <zlib.h>
 
 #define NUM_ZSTREAMS		4
 #define Z_BUFSIZE		4096
@@ -48,7 +48,7 @@
     CARD8	cntl;
     BOOL	zStreamActive[NUM_ZSTREAMS];
     z_stream	zStream[NUM_ZSTREAMS];
-    
+
     id		zBuffer;
     int		zBufPos;
     id		connection;

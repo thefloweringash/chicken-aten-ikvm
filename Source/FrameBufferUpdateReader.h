@@ -21,8 +21,6 @@
 #import <AppKit/AppKit.h>
 #import "ByteReader.h"
 
-#define MAX_ENCODING	6
-
 @interface FrameBufferUpdateReader : ByteReader
 {
     id	headerReader;
@@ -33,6 +31,7 @@
     id	coRreEncodingReader;
     id	hextileEncodingReader;
     id	tightEncodingReader;
+	id	zlibEncodingReader;
     id	connection;
     NSRect currentRect;
     CARD16 numberOfRects;

@@ -48,10 +48,7 @@
 
 - (void)setConnectionDelegate:(id<ConnectionDelegate>)delegate;
 
-- (IBAction)hostChanged:(id)sender;
-- (IBAction)passwordChanged:(id)sender;
 - (IBAction)rememberPwdChanged:(id)sender;
-- (IBAction)displayChanged:(id)sender;
 - (IBAction)profileSelectionChanged:(id)sender;
 - (IBAction)sharedChanged:(id)sender;
 - (IBAction)connectToServer:(id)sender;

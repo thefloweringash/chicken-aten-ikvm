@@ -163,19 +163,30 @@
 	mDelegate = delegate;
 }
 
-- (void)hostChanged:(id)sender
+- (void)controlTextDidChange:(NSNotification *)aNotification
 {
-	if( nil != mServer && [mServer doYouSupport:EDIT_ADDRESS] )
+	NSControl* sender = [aNotification object];
+	
+	if( display == sender )
 	{
-		[mServer setHost:[sender stringValue]];
+		if( nil != mServer && [mServer doYouSupport:EDIT_PORT] )
+		{
+			[mServer setDisplay:[sender intValue]];
+		}
 	}
-}
-
-- (void)passwordChanged:(id)sender
-{
-	if( nil != mServer )
+	else if( hostName == sender )
 	{
-		[mServer setPassword:[sender stringValue]];
+		if( nil != mServer && [mServer doYouSupport:EDIT_ADDRESS] )
+		{
+			[mServer setHost:[sender stringValue]];
+		}
+	}
+	else if( password == sender )
+	{
+		if( nil != mServer )
+		{
+			[mServer setPassword:[sender stringValue]];
+		}
 	}
 }
 
@@ -184,14 +195,6 @@
 	if( nil != mServer )
 	{
 		[mServer setRememberPassword:![mServer rememberPassword]];
-	}
-}
-
-- (IBAction)displayChanged:(id)sender
-{
-	if( nil != mServer && [mServer doYouSupport:EDIT_PORT] )
-	{
-		[mServer setDisplay:[sender intValue]];
 	}
 }
 

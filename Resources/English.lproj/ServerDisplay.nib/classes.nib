@@ -4,9 +4,6 @@
         {
             ACTIONS = {
                 connectToServer = id; 
-                displayChanged = id; 
-                hostChanged = id; 
-                passwordChanged = id; 
                 profileSelectionChanged = id; 
                 rememberPwdChanged = id; 
                 sharedChanged = id; 
@@ -20,7 +17,9 @@
                 connectIndicatorText = NSTextField; 
                 display = NSTextField; 
                 hostName = NSTextField; 
-                password = NSSecureTextField; 
+                mDelegate = id; 
+                mServer = id; 
+                password = NSTextField; 
                 profilePopup = NSPopUpButton; 
                 rememberPwd = NSButton; 
                 shared = NSButton; 

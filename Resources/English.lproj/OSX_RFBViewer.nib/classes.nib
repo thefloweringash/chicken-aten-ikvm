@@ -48,11 +48,18 @@
         }, 
         {
             ACTIONS = {
+                addServer = id; 
                 connect = id; 
+                deleteSelectedServer = id; 
+                displayChanged = id; 
                 frontInverseCPUSliderChanged = id; 
-                hostSelectionDidChange = id; 
+                hostChanged = id; 
                 otherInverseCPUSliderChanged = id; 
+                passwordChanged = id; 
                 preferencesChanged = id; 
+                profileSelectionChanged = id; 
+                rememberPwdChanged = id; 
+                sharedChanged = id; 
             }; 
             CLASS = RFBConnectionManager; 
             LANGUAGE = ObjC; 
@@ -64,7 +71,7 @@
                 frontInverseCPUSlider = NSSlider; 
                 fullscreenScrollbars = NSButton; 
                 gamma = NSTextField; 
-                hostName = NSComboBox; 
+                hostName = NSTextField; 
                 loginPanel = NSPanel; 
                 otherInverseCPUSlider = NSSlider; 
                 passWord = NSSecureTextField; 
@@ -73,6 +80,7 @@
                 psMaxRects = NSTextField; 
                 psThreshold = NSTextField; 
                 rememberPwd = NSButton; 
+                serverList = NSTableView; 
                 shared = NSButton; 
             }; 
             SUPERCLASS = NSObject; 

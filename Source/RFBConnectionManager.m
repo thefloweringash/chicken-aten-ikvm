@@ -21,7 +21,6 @@
 #import "RFBConnection.h"
 #import "ProfileManager.h"
 #import "Profile.h"
-// #import <signal.h> // jason removed signal handler
 #import "rfbproto.h"
 #import "vncauth.h"
 
@@ -29,6 +28,7 @@
 #import "LowColorFrameBuffer.h"
 #import "HighColorFrameBuffer.h"
 #import "TrueColorFrameBuffer.h"
+#import "ServerDataManager.h"
 
 static RFBConnectionManager*	sharedManager = nil;
 
@@ -124,18 +124,18 @@ static RFBConnectionManager*	sharedManager = nil;
 
     } else {
 	if((s = [ud objectForKey:RFB_LAST_HOST]) != nil) {
-	    [hostName setStringValue:s];
-	    [self selectedHostChanged:s];
+	    [serverList setStringValue:s];
+	    [self selectedHostChanged];
 	}
-	
-        [self updateLoginPanel];
-        [loginPanel makeKeyAndOrderFront:self];
+		
+	[loginPanel makeKeyAndOrderFront:self];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProfileList:) name:ProfileAddDeleteNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverListDidChange:) name:ServerListChangeMsg object:nil];
 
-	// So we can tell when the hostName finished changing
-	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidEndEditing:) name: NSControlTextDidEndEditingNotification object: hostName];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidBeginEditing:) name: NSControlTextDidBeginEditingNotification object: hostName];
+	// So we can tell when the serverList finished changing
+	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidEndEditing:) name: NSControlTextDidEndEditingNotification object: serverList];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(cellTextDidBeginEditing:) name: NSControlTextDidBeginEditingNotification object: serverList];
     }
 }
 
@@ -202,6 +202,7 @@ static RFBConnectionManager*	sharedManager = nil;
 
 - (void)dealloc
 {
+	[[NSUserDefaults standardUserDefaults] synchronize];
     [connections release];
     [super dealloc];
 }
@@ -231,64 +232,40 @@ static RFBConnectionManager*	sharedManager = nil;
     [profilePopup selectItemWithTitle:current];
 }
 
-/* Used to update the list of hosts in the combo box. */
-- (void)updateLoginPanel
+- (id<IServerData>)getSelectedServer
 {
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
-    NSDictionary* hostDictionary = [self selectedHostDictionary];
-
-    [hostName removeAllItems];
-    if(hostDictionary != nil) {
-        NSEnumerator *hostEnumerator = [hostDictionaryList keyEnumerator];
-        NSString *host;
-
-        [display setStringValue:[hostDictionary objectForKey:RFB_LAST_DISPLAY]];
-        [profilePopup selectItemWithTitle:[hostDictionary objectForKey:RFB_LAST_PROFILE]];
-        while (host = [hostEnumerator nextObject]) {
-            [hostName addItemWithObjectValue: host];
-        }
-    }
+	return [[ServerDataManager sharedInstance] getServerAtIndex:[serverList selectedRow]];
 }
 
-- (IBAction)hostSelectionDidChange:(id)sender
+- (void)selectedHostChanged
 {
-    NSString *newSelection = [hostName objectValueOfSelectedItem];
-    
-    [self selectedHostChanged:newSelection];
-}
-
-- (void)selectedHostChanged:(NSString *) newHostName
-{
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
-    NSDictionary* selectedHostDict = [hostDictionaryList objectForKey:newHostName];
-
+	// Set default values
+	// Is this really necessary for anything other than password or should it only happen
+	// if currentServer is nil? - Jared
+	[hostName setStringValue:@""];
     [passWord setStringValue:@""];
     [rememberPwd setIntValue:0];
     [display setStringValue:@""];
     [shared setIntValue:0];
-    if (selectedHostDict != nil) {
-        [rememberPwd setIntValue:[[selectedHostDict objectForKey:RFB_REMEMBER] intValue]];
-        [display setStringValue:[selectedHostDict objectForKey:RFB_DISPLAY]];
-        [shared setIntValue:[[selectedHostDict objectForKey:RFB_SHARED] intValue]];
-        if ([rememberPwd intValue]) {
-            [passWord setStringValue:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]]];
+	
+	// Get current server and set properties in dialog box
+	id<IServerData> currentServer = [self getSelectedServer];
+    if (currentServer != nil)
+	{
+        [rememberPwd setIntValue:[currentServer rememberPassword]];
+        [display setStringValue:[currentServer display]];
+        [shared setIntValue:[currentServer shared]];
+		[hostName setStringValue:[currentServer host]];
+        if ([currentServer rememberPassword])
+		{
+            [passWord setStringValue:[currentServer password]];
         }
     }
 }
 
-/* Returns the dictionary that corresponds to the currently selected host, or nil if there is none. */
-- (NSDictionary *) selectedHostDictionary
-{
-    NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
-    NSDictionary* hostDictionary = [hostDictionaryList objectForKey:[hostName stringValue]];
-    return hostDictionary;
-}
-
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost
 {
+	/* change */
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     NSDictionary* hostDictionaryList = [ud objectForKey:RFB_HOST_INFO];
     NSDictionary* hostDictionary = [hostDictionaryList objectForKey:aHost];
@@ -303,6 +280,7 @@ static RFBConnectionManager*	sharedManager = nil;
 
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost
 {
+	/* change */
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary* hostDictionaryList, *hostDictionary, *names;
 
@@ -335,6 +313,7 @@ static RFBConnectionManager*	sharedManager = nil;
 
 - (IBAction)connect:(id)sender
 {
+	/* change */
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     NSDictionary* connectionDictionary;
     NSMutableDictionary* hostDictionaryList, *hostDictionary;
@@ -380,13 +359,12 @@ static RFBConnectionManager*	sharedManager = nil;
 		}
         [loginPanel orderOut:self];
     }
-
-    [self updateLoginPanel];
 }
 
 /* Do the work of creating a new connection and add it to the list of connections. */
 - (BOOL)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner
 {
+	/* change */
     RFBConnection* theConnection;
     bool returnVal = YES;
 
@@ -403,9 +381,90 @@ static RFBConnectionManager*	sharedManager = nil;
     return returnVal;
 }
 
+- (void)controlTextDidEndEditing:(NSNotification*)notification
+{
+	if( [notification object] == display )
+	{
+		[self displayChanged:display];
+	}
+	else if( [notification object] == passWord )
+	{
+		[self passwordChanged:passWord];
+	}
+	else if( [notification object] == hostName )
+	{
+		[self hostChanged:hostName];
+	}
+}
+
 - (IBAction)preferencesChanged:(id)sender
 {
     [self savePrefs];
+}
+
+- (IBAction)hostChanged:(id)sender
+{
+	id<IServerData> currentServer = [self getSelectedServer];
+	if( nil != currentServer )
+	{
+		[currentServer setHost:[sender stringValue]];
+	}
+}
+
+- (IBAction)passwordChanged:(id)sender
+{
+	id<IServerData> currentServer = [self getSelectedServer];
+	if( nil != currentServer )
+	{
+		[currentServer setPassword:[sender stringValue]];
+	}
+}
+
+- (IBAction)rememberPwdChanged:(id)sender
+{
+	id<IServerData> currentServer = [self getSelectedServer];
+	if( nil != currentServer )
+	{
+		[currentServer setRememberPassword:![currentServer rememberPassword]];
+	}
+}
+
+- (IBAction)displayChanged:(id)sender
+{
+	id<IServerData> currentServer = [self getSelectedServer];
+	if( nil != currentServer )
+	{
+		[currentServer setLastDisplay:[currentServer display]];
+		[currentServer setDisplay:[sender stringValue]];
+	}
+}
+
+- (IBAction)profileSelectionChanged:(id)sender
+{
+	id<IServerData> currentServer = [self getSelectedServer];
+	if( nil != currentServer )
+	{
+		[currentServer setLastProfile:[sender stringValue]];
+	}
+}
+
+- (IBAction)sharedChanged:(id)sender
+{
+	id<IServerData> currentServer = [self getSelectedServer];
+	if( nil != currentServer )
+	{
+		[currentServer setShared:![currentServer shared]];
+	}
+}
+
+- (IBAction)addServer:(id)sender
+{
+	[[ServerDataManager sharedInstance] createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
+}
+
+- (IBAction)deleteSelectedServer:(id)sender
+{
+	[[ServerDataManager sharedInstance] removeServer:[self getSelectedServer]];
 }
 
 - (id)defaultFrameBufferClass
@@ -449,30 +508,12 @@ static RFBConnectionManager*	sharedManager = nil;
     }
 }
 
-/* Neither is this needed, nor is it called (until now that I've set the app delegate)
-- (void)applicationWillTerminate:(NSNotification *)aNotification
-{
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-*/
-
-/*
-- (void)controlTextDidChange:(NSNotification *)aNotification
-{
-    NSString *newSelection = [hostName objectValueOfSelectedItem];
-
-    [self selectedHostChanged:newSelection];
-}
-*/
-
 - (void)cellTextDidEndEditing:(NSNotification *)notif {
-    NSString *newSelection = [hostName stringValue];
-
-    [self selectedHostChanged:newSelection];
+    [self selectedHostChanged];
 }
 
 - (void)cellTextDidBeginEditing:(NSNotification *)notif {
-    [self selectedHostChanged:nil];
+    [self selectedHostChanged];
 }
 
 // Jason added the following for full-screen windows
@@ -530,6 +571,27 @@ static RFBConnectionManager*	sharedManager = nil;
 - (float)maxPossibleFrameBufferUpdateSeconds;
 {
 	return [frontInverseCPUSlider maxValue];
+}
+
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+	return [[[[ServerDataManager sharedInstance] getServerEnumerator] allObjects] count];
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+	return [[[[[ServerDataManager sharedInstance] getServerEnumerator] allObjects] objectAtIndex:rowIndex] name];
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+	[self selectedHostChanged];
+}
+
+
+- (void)serverListDidChange:(NSNotification*)notification
+{
+	[serverList reloadData];
 }
 
 @end

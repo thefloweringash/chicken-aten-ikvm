@@ -20,6 +20,7 @@
 #import "rfbproto.h"
 #import "Profile.h"
 @class ProfileManager;
+@protocol IServerData;
 
 /* Constants, generally used for userdefaults */
 #define RFB_COLOR_MODEL		@"RFBColorModel"
@@ -35,7 +36,7 @@
 @interface RFBConnectionManager : NSObject
 {
     IBOutlet NSTextField *display;
-    IBOutlet NSComboBox *hostName;
+    IBOutlet NSTextField *hostName;
     IBOutlet NSSecureTextField *passWord;
     IBOutlet NSButton *shared;
     IBOutlet NSPanel *loginPanel;
@@ -51,6 +52,7 @@
 	IBOutlet NSButton *displayFullscreenWarning;
 	IBOutlet NSSlider *frontInverseCPUSlider;
 	IBOutlet NSSlider *otherInverseCPUSlider;
+	IBOutlet NSTableView *serverList;
     NSMutableArray*	connections;
     NSString *cmdlineHost;
     NSString *cmdlineDisplay;
@@ -62,15 +64,12 @@
 + (void)getLocalPixelFormat:(rfbPixelFormat*)pf;
 
 - (void)updateProfileList:(id)notification;
-- (void)updateLoginPanel;
 - (void)removeConnection:(id)aConnection;
 - (IBAction)connect:(id)sender;
 - (void)processArguments;
 - (void)cmdlineUsage;
 
-- (void)selectedHostChanged: (NSString *) newHostName;
-
-- (NSDictionary *) selectedHostDictionary;
+- (void)selectedHostChanged;
 
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
@@ -78,6 +77,16 @@
 - (BOOL)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner;
 
 - (IBAction)preferencesChanged:(id)sender;
+- (IBAction)hostChanged:(id)sender;
+- (IBAction)passwordChanged:(id)sender;
+- (IBAction)rememberPwdChanged:(id)sender;
+- (IBAction)displayChanged:(id)sender;
+- (IBAction)profileSelectionChanged:(id)sender;
+- (IBAction)sharedChanged:(id)sender;
+
+- (IBAction)addServer:(id)sender;
+- (IBAction)deleteSelectedServer:(id)sender;
+
 - (id)defaultFrameBufferClass;
 
 //- (void)controlTextDidChange:(NSNotification *)aNotification; no needed?
@@ -91,6 +100,9 @@
 - (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender;
 - (float)maxPossibleFrameBufferUpdateSeconds;
 
-- (IBAction)hostSelectionDidChange:(id)sender;
+- (void)controlTextDidEndEditing:(NSNotification*)notification;
+- (void)serverListDidChange:(NSNotification*)notification;
+
+- (id<IServerData>)getSelectedServer;
 
 @end

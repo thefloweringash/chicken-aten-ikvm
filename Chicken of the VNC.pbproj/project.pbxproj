@@ -262,8 +262,8 @@
 				7FC6DF2905C315C20028A970,
 				7FC6DF6905C31AF50028A970,
 				7FC6DF6F05C31B0D0028A970,
-				7FF0C9AD05CDCA89008E39DD,
 				7F088F2605E1D81200336456,
+				7F088F2A05E1DA4800336456,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,8 +338,8 @@
 				E2F48D77040EDD2200BD55BA,
 				7FC6DF6A05C31AF50028A970,
 				7FC6DF7005C31B0D0028A970,
-				7FF0C9AE05CDCA89008E39DD,
 				7F088F2705E1D81200336456,
+				7F088F2B05E1DA4800336456,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -452,6 +452,34 @@
 		};
 		7F088F2705E1D81200336456 = {
 			fileRef = 7F088F2505E1D81100336456;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7F088F2805E1DA4800336456 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = URLHandlerCommand.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7F088F2905E1DA4800336456 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = URLHandlerCommand.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7F088F2A05E1DA4800336456 = {
+			fileRef = 7F088F2805E1DA4800336456;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7F088F2B05E1DA4800336456 = {
+			fileRef = 7F088F2905E1DA4800336456;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -569,36 +597,6 @@
 		};
 		7FF0C9A805CDC9A0008E39DD = {
 			fileRef = 7FF0C9A705CDC9A0008E39DD;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7FF0C9AB05CDCA89008E39DD = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = URLHandlerCommand.h;
-			path = Resources/URLHandlerCommand.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7FF0C9AC05CDCA89008E39DD = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = URLHandlerCommand.m;
-			path = Resources/URLHandlerCommand.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7FF0C9AD05CDCA89008E39DD = {
-			fileRef = 7FF0C9AB05CDCA89008E39DD;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7FF0C9AE05CDCA89008E39DD = {
-			fileRef = 7FF0C9AC05CDCA89008E39DD;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1077,8 +1075,8 @@
 				F536C26703937E5301178D82,
 				F536C26803937E5301178D82,
 				F536C26903937E5301178D82,
-				7FF0C9AB05CDCA89008E39DD,
-				7FF0C9AC05CDCA89008E39DD,
+				7F088F2805E1DA4800336456,
+				7F088F2905E1DA4800336456,
 			);
 			isa = PBXGroup;
 			path = Source;

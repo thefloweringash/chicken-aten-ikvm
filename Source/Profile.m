@@ -24,19 +24,18 @@
 
 @implementation Profile
 
-// Jason - replaced the following routine so that we use indices instead of string constants
 static CARD32 getcode(id s)
 {
 	if([s shortValue] == kOptionKeyPopupIndex) {
-		return 0xffe7;
+		return kMetaKeyCode;
 	} else if([s shortValue] == kControlKeyPopupIndex) {
-		return 0xffe3;
+		return kControlKeyCode;
 	} else if([s shortValue] == kCommmandKeyPopupIndex) {
-		return 0xffe9;
+		return kAltKeyCode;
 	} else if([s shortValue] == kShiftKeyPopupIndex) {
-		return 0xffe1;
+		return kShiftKeyCode;
 	} else {
-		return 0xffeb;
+		return kWindowsKeyCode;
 	}
 }
 /*

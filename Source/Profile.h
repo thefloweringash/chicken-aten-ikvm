@@ -30,6 +30,12 @@ typedef enum {
 	kWindowsKeyPopupIndex		= 4
 } ModifierKeyIndex;
 
+#define kMetaKeyCode 0xffe7
+#define kControlKeyCode 0xffe3
+#define kAltKeyCode 0xffe9
+#define kShiftKeyCode 0xffe1
+#define kWindowsKeyCode 0xffeb
+
 // end of Jason's addition
 
 @interface Profile : NSObject

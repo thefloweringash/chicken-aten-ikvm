@@ -57,7 +57,7 @@
     id emulate3ButtonTimer;
     id statisticField;
     unsigned lastButtonMask;				// no emulation
-    unsigned lastComuptedMask;				// emulated
+    unsigned lastComputedMask;				// emulated
     unsigned int lastModifier;
     unsigned lastMask;					// emulation
     BOOL terminating;
@@ -112,6 +112,7 @@
 - (void)drawRectFromBuffer:(NSRect)aRect;
 - (void)drawRectList:(id)aList;
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned)mask;
+- (void)mouseMovedTo:(NSPoint)thePoint;
 - (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag;
 - (void)sendModifier:(unsigned int)m;
 - (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length;

@@ -431,9 +431,12 @@ static void print_data(unsigned char* data, int length)
 
 - (void)emulateButtonTimeout:(id)sender
 {
+	NSPoint p = [window mouseLocationOutsideOfEventStream];
     [emulate3ButtonTimer invalidate];
     emulate3ButtonTimer = nil;
-    lastComuptedMask = lastButtonMask;
+    lastComputedMask = lastButtonMask;
+	p = [rfbView convertPoint:p fromView:nil];
+	[self mouseMovedTo: p];
 }
 
 #define _ABS(x)	(((x)<0.0)?(-(x)):(x))
@@ -445,96 +448,96 @@ static void print_data(unsigned char* data, int length)
     unsigned released = diff & lastButtonMask;
 
     if(pressed) {
-        	// button 1 or 3 pressed
+		// button 1 or 3 pressed
         if((mask & (rfbButton1Mask | rfbButton3Mask)) == (rfbButton1Mask | rfbButton3Mask)) {
-            	// both buttons pressed
+			// both buttons pressed
             if(emulate3ButtonTimer) {
-                	// timer is running, so the second button has been pressed.
+				// timer is running, so the second button has been pressed.
                 [emulate3ButtonTimer invalidate];
-             	emulate3ButtonTimer = nil;
-                	// emulate button 2 in lastComputedMask
-                lastComuptedMask = rfbButton2Mask;
+				emulate3ButtonTimer = nil;
+				// emulate button 2 in lastComputedMask
+                lastComputedMask = rfbButton2Mask;
             } else {
-                	// Timer is not running, so the second button press was too late.
-                	// don't emulate button 2 but set mask to 1 and 3.
-                lastComuptedMask = mask;
+				// Timer is not running, so the second button press was too late.
+				// don't emulate button 2 but set mask to 1 and 3.
+                lastComputedMask = mask;
             }
         } else {
-            	// only one button is pressed
+			// only one button is pressed
             if(emulate3ButtonTimer) {
-                	// only one but the timer is running -> bug
+				// only one but the timer is running -> bug
                 NSLog(@"emulate3ButtonTimer running when no button was pressed ???\n");
             } else {
-		if(buttonEmulationActiveMask) {
-			// we should emulate buttons
-                    lastComuptedMask = buttonEmulationActiveMask;
-		} else {
-                            // first button is pressed, start emulation-timer
+				if(buttonEmulationActiveMask) {
+					// we should emulate buttons
+                    lastComputedMask = buttonEmulationActiveMask;
+				} else {
+					// first button is pressed, start emulation-timer
                     float to = [profile emulate3ButtonTimeout];
 
                     mouseButtonPressedLocation = thePoint;
                     emulate3ButtonTimer = [NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(emulateButtonTimeout:) userInfo:nil repeats:NO];
-		}
+				}
             }
         }
     }
     if(released) {
-        	// button 1 or 3 released
+		// button 1 or 3 released
         if(emulate3ButtonTimer) {
-            	// timer running, so this was a short press of either button 1 or button 3
-            	// we must generate a button down/up in quick succession.
+			// timer running, so this was a short press of either button 1 or button 3
+   // we must generate a button down/up in quick succession.
             [emulate3ButtonTimer invalidate];
             emulate3ButtonTimer = nil;
-            	// in order to generate the down/up sequence we set lastComputed to
-            	// lastButtonMask which contains the released button in down-state.
-            	// next time we get here the button is reported up again.
-            lastComuptedMask = lastButtonMask;
+			// in order to generate the down/up sequence we set lastComputed to
+   // lastButtonMask which contains the released button in down-state.
+   // next time we get here the button is reported up again.
+            lastComputedMask = lastButtonMask;
         } else {
-            if(lastComuptedMask == rfbButton2Mask) {
-					// button up during emulation
+            if(lastComputedMask == rfbButton2Mask) {
+				// button up during emulation
                	if(mask & (rfbButton1Mask | rfbButton3Mask)) {
-                    lastComuptedMask = rfbButton2Mask;
+                    lastComputedMask = rfbButton2Mask;
                 } else {
-                    lastComuptedMask = mask;
+                    lastComputedMask = mask;
                 }
             } else {
-					// normal button up event.
-				lastComuptedMask = mask;
+				// normal button up event.
+				lastComputedMask = mask;
             }
         }
-	if(!(mask & rfbButton1Mask)) {
-		buttonEmulationActiveMask = 0;
-		buttonEmulationKeyDownMask = 0;
-        	[rfbView setCursorTo:@"rfbCursor" hotSpot:7];
-	}
+		if(!(mask & rfbButton1Mask)) {
+			buttonEmulationActiveMask = 0;
+			buttonEmulationKeyDownMask = 0;
+			[rfbView setCursorTo:@"rfbCursor" hotSpot:7];
+		}
     }
 
     if(emulate3ButtonTimer) {
-        	// Timer is running, check if the mouse has moved too much and abort
-        	// emulation mode if so
+		// Timer is running, check if the mouse has moved too much and abort
+  // emulation mode if so
         float dx = thePoint.x - mouseButtonPressedLocation.x;
         float dy = thePoint.y - mouseButtonPressedLocation.y;
 
         dx = _ABS(dx); dy = _ABS(dy);
         if((dx > 5) || (dy > 5)) {
-            	// If the mouse moved too far, terminate emulation-timer
-            	// and return the physical state
+			// If the mouse moved too far, terminate emulation-timer
+   // and return the physical state
             [emulate3ButtonTimer invalidate];
             emulate3ButtonTimer = nil;
-            lastComuptedMask = lastButtonMask;
+            lastComputedMask = lastButtonMask;
         }
     }
-    
+
    	// If nothing changed and we are not in emulation-mode or waiting for the
-    	// second press, we return the last physical state.
-    	// This the default case.
-    if(!diff && (lastComuptedMask != rfbButton2Mask) && !emulate3ButtonTimer && !buttonEmulationActiveMask) {
-        lastComuptedMask = lastButtonMask;
+	// second press, we return the last physical state.
+ // This the default case.
+    if(!diff && (lastComputedMask != rfbButton2Mask) && !emulate3ButtonTimer && !buttonEmulationActiveMask) {
+        lastComputedMask = lastButtonMask;
     }
-    	// update last physical state and
+	// update last physical state and
     lastButtonMask = mask;
-    	// return the modified state
-    return lastComuptedMask;
+	// return the modified state
+    return lastComputedMask;
 }
 
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned)mask
@@ -559,6 +562,11 @@ static void print_data(unsigned char* data, int length)
     }
 }
 
+- (void)mouseMovedTo:(NSPoint)thePoint
+{
+	[self mouseAt: thePoint buttons: lastButtonMask];
+}
+
 - (void)sendModifier:(unsigned int)m
 {
     rfbKeyEventMsg msg;
@@ -569,7 +577,7 @@ static void print_data(unsigned char* data, int length)
     if(diff & NSShiftKeyMask) {
         msg.down = (m & NSShiftKeyMask) ? YES : NO;
         msg.key = htonl([profile shiftKeyCode]);
-//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down); 
+		//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
         if(msg.down) {
             if(!(lastButtonMask & rfbButton1Mask)) {
@@ -584,19 +592,19 @@ static void print_data(unsigned char* data, int length)
                     buttonEmulationActiveMask = rfbButton3Mask;
                     [rfbView setCursorTo:@"rfbCursor3" hotSpot:13];
                 }
-	    }
+			}
         }
     }
     if(diff & NSControlKeyMask) {
         msg.down = (m & NSControlKeyMask) ? YES : NO;
         msg.key = htonl([profile controlKeyCode]);
-//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down); 
+		//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-	if(msg.down) {
+		if(msg.down) {
             if(!(lastButtonMask & rfbButton1Mask)) {
                 buttonEmulationKeyDownMask = rfbButton2Mask;
             }
-	} else {
+		} else {
             if(buttonEmulationKeyDownMask & rfbButton2Mask) {
                 if(buttonEmulationActiveMask) {
                     buttonEmulationActiveMask = 0;
@@ -606,18 +614,18 @@ static void print_data(unsigned char* data, int length)
                     [rfbView setCursorTo:@"rfbCursor2" hotSpot:13];
                 }
             }
-	}
+		}
     }
     if(diff & NSAlternateKeyMask) {
         msg.down = (m & NSAlternateKeyMask) ? YES : NO;
         msg.key = htonl([profile altKeyCode]);
-//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down); 
+		//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     }
     if(diff & NSCommandKeyMask) {
         msg.down = (m & NSCommandKeyMask) ? YES : NO;
         msg.key = htonl([profile commandKeyCode]);
-//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down); 
+		//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     }
     if(diff & NSHelpKeyMask) {		// this is F1
@@ -654,6 +662,41 @@ static void print_data(unsigned char* data, int length)
     msg.key = htonl(kc);
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     buttonEmulationKeyDownMask = 0;
+}
+
+- (void)sendCtrlAltDel: (id)sender
+{
+    rfbKeyEventMsg msg;
+
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kControlKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kAltKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(0xffff);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(0xffff);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kAltKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kControlKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
 }
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb

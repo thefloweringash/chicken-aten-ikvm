@@ -159,7 +159,7 @@
 - (void)mouseMoved:(NSEvent *)theEvent
 {
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    [delegate mouseAt:p buttons:buttonMask];
+    [delegate mouseMovedTo:p];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent

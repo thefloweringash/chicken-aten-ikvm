@@ -26,13 +26,19 @@
 {
     [super init];
     [self startWithNumber:number];
+    rectList = NULL;
+    rgbList = NULL;
     return self;
 }
 
 - (void)dealloc
 {
-    free(rectList);
-    free(rgbList);
+    if (rectList != NULL) {
+        free(rectList);
+    }
+    if (rgbList != NULL) {
+        free(rgbList);
+    }
     [super dealloc];
 }
 

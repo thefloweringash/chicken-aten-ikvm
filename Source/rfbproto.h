@@ -304,12 +304,15 @@ typedef struct {
 #define rfbEncodingZlib 6
 #define rfbEncodingTight 7
 #define rfbEncodingZlibHex 8
+#define rfbEncodingZRLE 16
 
 /*
  * Special encoding numbers:
  *   0xFFFFFF00 .. 0xFFFFFF0F -- encoding-specific compression levels;
  *   0xFFFFFF10 .. 0xFFFFFF1F -- mouse cursor shape data;
- *   0xFFFFFF20 .. 0xFFFFFFEF -- not allocated yet;
+ *   0xFFFFFF20 .. 0xFFFFFF2F -- various protocol extensions;
+ *   0xFFFFFF30 .. 0xFFFFFFDF -- not allocated yet;
+ *   0xFFFFFFE0 .. 0xFFFFFFEF -- quality level for JPEG compressor;
  *   0xFFFFFFF0 .. 0xFFFFFFFF -- cross-encoding compression levels.
  */
 
@@ -326,6 +329,19 @@ typedef struct {
 
 #define rfbEncodingXCursor         0xFFFFFF10
 #define rfbEncodingRichCursor      0xFFFFFF11
+
+#define rfbEncodingLastRect        0xFFFFFF20
+
+#define rfbEncodingQualityLevel0   0xFFFFFFE0
+#define rfbEncodingQualityLevel1   0xFFFFFFE1
+#define rfbEncodingQualityLevel2   0xFFFFFFE2
+#define rfbEncodingQualityLevel3   0xFFFFFFE3
+#define rfbEncodingQualityLevel4   0xFFFFFFE4
+#define rfbEncodingQualityLevel5   0xFFFFFFE5
+#define rfbEncodingQualityLevel6   0xFFFFFFE6
+#define rfbEncodingQualityLevel7   0xFFFFFFE7
+#define rfbEncodingQualityLevel8   0xFFFFFFE8
+#define rfbEncodingQualityLevel9   0xFFFFFFE9
 
 
 /*****************************************************************************
@@ -464,6 +480,8 @@ typedef struct {
 #define rfbHextileForegroundSpecified	(1 << 2)
 #define rfbHextileAnySubrects		(1 << 3)
 #define rfbHextileSubrectsColoured	(1 << 4)
+#define rfbHextileZlibRaw		(1 << 5)
+#define rfbHextileZlibHex		(1 << 6)
 
 #define rfbHextilePackXY(x,y) (((x) << 4) | (y))
 #define rfbHextilePackWH(w,h) ((((w)-1) << 4) | ((h)-1))
@@ -479,6 +497,7 @@ typedef struct {
 
 #define rfbTightExplicitFilter         0x04
 #define rfbTightFill                   0x08
+#define rfbTightJpeg                   0x09
 #define rfbTightMaxSubencoding         0x08
 
 /* Filters to improve compression efficiency */

@@ -19,7 +19,7 @@
 #import "ProfileManager.h"
 
 #define PROFILES			@"ConnectProfiles"
-#define NUMENCODINGS			6
+#define NUMENCODINGS			8
 
 static const NSString* encodingNames[NUMENCODINGS] = {
     @"Hextile",
@@ -27,7 +27,9 @@ static const NSString* encodingNames[NUMENCODINGS] = {
     @"CoRRE",
     @"Raw",
     @"Tight",
-	@"Zlib"
+	@"Zlib",
+	@"ZRLE",
+	@"ZlibHex"
 };
 
 static const unsigned int encodingValues[NUMENCODINGS] = {
@@ -36,7 +38,9 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
     rfbEncodingCoRRE,
     rfbEncodingRaw,
     rfbEncodingTight,
-	rfbEncodingZlib
+	rfbEncodingZlib,
+	rfbEncodingZRLE,
+	rfbEncodingZlibHex
 };
 
 @implementation ProfileManager

@@ -27,6 +27,42 @@
 #import "ByteBlockReader.h"
 #import "RFBConnection.h"
 
+#ifdef SUPPORT_JPEG
+
+static void JpegInitSource(j_decompress_ptr cinfo)
+{
+}
+
+static boolean JpegFillInputBuffer(j_decompress_ptr cinfo)
+{
+	return YES;
+}
+
+static void JpegSkipInputData(j_decompress_ptr cinfo, long num_bytes)
+{
+	if (num_bytes > 0 && num_bytes <= cinfo->src->bytes_in_buffer) {
+		cinfo->src->next_input_byte += (size_t) num_bytes;
+		cinfo->src->bytes_in_buffer -= (size_t) num_bytes;
+	}
+}
+
+static void JpegTermSource(j_decompress_ptr cinfo)
+{
+}
+
+static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int compressedLen)
+{
+	cinfo->src->init_source = JpegInitSource;
+	cinfo->src->fill_input_buffer = JpegFillInputBuffer;
+	cinfo->src->skip_input_data = JpegSkipInputData;
+	cinfo->src->resync_to_restart = jpeg_resync_to_restart;
+	cinfo->src->term_source = JpegTermSource;
+	cinfo->src->next_input_byte = compressedData;
+	cinfo->src->bytes_in_buffer = compressedLen;
+}
+
+#endif
+
 @implementation TightEncodingReader
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
@@ -96,8 +132,14 @@
         [target setReader:backPixReader];
         return;
     }
+#ifdef SUPPORT_JPEG
+	if(cntl == rfbTightJpeg) {
+		[target setReader:zipLengthReader];
+		return;
+	}
+#endif
     if(cntl > rfbTightMaxSubencoding) {
-	[connection terminateConnection:@"Tight encoding: bad subencoding value received.\n"];
+		[connection terminateConnection:@"Tight encoding: bad subencoding value received.\n"];
         return;
     }
     if(cntl & rfbTightExplicitFilter) {
@@ -186,6 +228,13 @@
 	bytesTransferred += 3;
     }
 #endif
+#ifdef SUPPORT_JPEG
+	if(cntl == rfbTightJpeg) {
+		[zippedDataReader setBufferSize:[zl unsignedIntValue]];
+		[target setReader:zippedDataReader];
+		return;
+	}
+#endif
     streamId = cntl & 0x03;
     stream = zStream + streamId;
     if(!zStreamActive[streamId]) {
@@ -224,6 +273,42 @@
 
 #ifdef COLLECT_STATS
     bytesTransferred += [data length];
+#endif
+#ifdef SUPPORT_JPEG
+	if(cntl == rfbTightJpeg) {
+		struct jpeg_decompress_struct cinfo;
+		struct jpeg_error_mgr jerr;
+		JSAMPROW rowPointer[1];
+		unsigned char* buffer;
+		NSRect r;
+
+		cinfo.err = jpeg_std_error(&jerr);
+		jpeg_create_decompress(&cinfo);
+		cinfo.src = &jpegSrcManager;
+		JpegSetSrcManager(&cinfo, (char*)[data bytes], [data length]);
+		jpeg_read_header(&cinfo, TRUE);
+		cinfo.out_color_space = JCS_RGB;
+		jpeg_start_decompress(&cinfo);
+		if(cinfo.output_width != frame.size.width || cinfo.output_height != frame.size.height || cinfo.output_components != 3) {
+			[connection terminateConnection:[NSString stringWithFormat:@"Tight Encoding: Wrong JPEG data received.\n"]];
+			jpeg_destroy_decompress(&cinfo);
+			return;
+		}
+		buffer = malloc(3 * frame.size.width);
+		rowPointer[0] = (JSAMPROW)buffer;
+		r = frame;
+		r.size.height = 1;
+		while(cinfo.output_scanline < cinfo.output_height) {
+			jpeg_read_scanlines(&cinfo, rowPointer, 1);
+			[frameBuffer putRect:r fromRGBBytes:buffer];
+			r.origin.y += 1;
+		}
+		free(buffer);
+		jpeg_finish_decompress(&cinfo);
+		jpeg_destroy_decompress(&cinfo);
+        [target performSelector:action withObject:self];
+		return;
+	}
 #endif
     stream = zStream + (cntl & 0x03);
     stream->next_in = (char*)[data bytes];

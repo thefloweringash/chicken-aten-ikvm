@@ -16,17 +16,24 @@
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
 {
+	int inflateResult;
+	
     [super initTarget:aTarget action:anAction];
 	capacity = 4096;
 	pixels = malloc(capacity);
 	numBytesReader = [[CARD32Reader alloc] initTarget:self action:@selector(setNumBytes:)];
     pixelReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setCompressedData:)];
     connection = [aTarget topTarget];
+	inflateResult = inflateInit(&stream);
+	if (inflateResult != Z_OK) {
+		[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", stream.msg]];
+	}
     return self;
 }
 
 - (void)dealloc
 {
+	free(pixels);
 	[numBytesReader release];
     [pixelReader release];
     [super dealloc];
@@ -60,14 +67,6 @@
 	stream.next_out  = pixels;
 	stream.avail_out = capacity;
 	stream.data_type = Z_BINARY;
-	if(!streamInited) {
-		inflateResult = inflateInit(&stream);
-		if (inflateResult != Z_OK) {
-			[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", stream.msg]];
-			return;
-		}
-		streamInited = YES;
-	}
 	inflateResult = inflate(&stream, Z_SYNC_FLUSH);
     if(inflateResult == Z_NEED_DICT ) {
 		[connection terminateConnection:@"Zlib inflate needs a dictionary.\n"];
@@ -77,6 +76,11 @@
 		[connection terminateConnection:[NSString stringWithFormat:@"Zlib inflate error: %s\n", stream.msg]];
 		return;
     }
+	[self setUncompressedData:pixels length:capacity - stream.avail_out];
+}
+
+- (void)setUncompressedData:(unsigned char*)data length:(int)length
+{
 	[frameBuffer putRect:frame fromData:pixels];
     [target performSelector:action withObject:self];
 }

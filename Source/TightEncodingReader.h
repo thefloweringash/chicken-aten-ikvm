@@ -22,6 +22,11 @@
 #import "EncodingReader.h"
 #import <zlib.h>
 
+#undef	SUPPORT_JPEG
+#ifdef SUPPORT_JPEG
+#import "/sw/include/jpeglib.h"
+#endif
+
 #define NUM_ZSTREAMS		4
 #define Z_BUFSIZE		4096
 #define TIGHT_BUFSIZE		16384
@@ -52,6 +57,9 @@
     id		zBuffer;
     int		zBufPos;
     id		connection;
+#ifdef SUPPORT_JPEG
+	struct 	jpeg_source_mgr jpegSrcManager;
+#endif
 }
 
 @end

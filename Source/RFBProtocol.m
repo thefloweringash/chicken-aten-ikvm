@@ -45,7 +45,7 @@
 {
     int i;
     rfbSetEncodingsMsg msg;
-    CARD32	enc[16];
+    CARD32	enc[64];
 
     numberOfEncodings = l;
     msg.type = rfbSetEncodings;
@@ -62,7 +62,7 @@
 {
     Profile* profile = [target profile];
     CARD16 i, l = [profile numberOfEnabledEncodings];
-    CARD32	enc[16];
+    CARD32	enc[64];
 
     for(i=0; i<l; i++) {
         enc[i] = [profile encodingAtIndex:i];

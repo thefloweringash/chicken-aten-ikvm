@@ -14,11 +14,12 @@
 {
 	unsigned char*	pixels;
 	unsigned int	capacity;
-	BOOL			streamInited;
 	id				numBytesReader;
 	id				pixelReader;
 	id				connection;
 	z_stream		stream;
 }
+
+- (void)setUncompressedData:(unsigned char*)data length:(int)length;
 
 @end

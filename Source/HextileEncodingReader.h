@@ -39,4 +39,9 @@
     NSRect		currentTile;
 }
 
+- (void)nextTile;
+- (void)drawSubColorRects:(NSData*)data;
+- (void)drawSubRects:(NSData*)data;
+- (void)drawRawTile:(NSData*)data;
+
 @end

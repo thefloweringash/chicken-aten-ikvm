@@ -32,6 +32,8 @@
     id	hextileEncodingReader;
     id	tightEncodingReader;
 	id	zlibEncodingReader;
+	id	zrleEncodingReader;
+	id	zlibHexEncodingReader;
     id	connection;
     NSRect currentRect;
     CARD16 numberOfRects;

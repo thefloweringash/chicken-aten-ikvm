@@ -29,6 +29,8 @@
 #import "RFBConnectionManager.h"
 #import "TightEncodingReader.h"
 #import "ZlibEncodingReader.h"
+#import "ZRLEEncodingReader.h"
+#import "ZlibHexEncodingReader.h"
 
 @implementation FrameBufferUpdateReader
 
@@ -47,6 +49,8 @@
     hextileEncodingReader = [[HextileEncodingReader alloc] initTarget:self action:@selector(didRect:)];
     tightEncodingReader = [[TightEncodingReader alloc] initTarget:self action:@selector(didRect:)];
 	zlibEncodingReader = [[ZlibEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+	zrleEncodingReader = [[ZRLEEncodingReader alloc] initTarget:self action:@selector(didRect:)];
+	zlibHexEncodingReader = [[ZlibHexEncodingReader alloc] initTarget:self action:@selector(didRect:)];
     rectHeaderReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setRect:) size:12];
     connection = [target topTarget];
     if(pst) {
@@ -71,6 +75,8 @@
     [hextileEncodingReader setFrameBuffer:aBuffer];
     [tightEncodingReader setFrameBuffer:aBuffer];
 	[zlibEncodingReader setFrameBuffer:aBuffer];
+	[zrleEncodingReader setFrameBuffer:aBuffer];
+	[zlibHexEncodingReader setFrameBuffer:aBuffer];
 }
 
 - (void)dealloc
@@ -84,6 +90,8 @@
     [tightEncodingReader release];
     [rectHeaderReader release];
 	[zlibEncodingReader release];
+	[zrleEncodingReader release];
+	[zlibHexEncodingReader release];
     [super dealloc];
 }
 
@@ -140,6 +148,12 @@
         case rfbEncodingTight:
             theReader = tightEncodingReader;
             break;
+		case rfbEncodingZlibHex:
+			theReader = zlibHexEncodingReader;
+			break;
+		case rfbEncodingZRLE:
+			theReader = zrleEncodingReader;
+			break;
     }
     if(theReader == nil) {
         [connection terminateConnection:[NSString stringWithFormat:

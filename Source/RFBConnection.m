@@ -117,7 +117,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 // jason changed for fullscreen display
 - (id)initWithDictionary:(NSDictionary*)aDictionary profile:(Profile*)p owner:(id)owner
-//- (id)initWithDictionary:(NSDictionary*)aDictionary andProfile:(Profile*)p
 {
     struct sockaddr_in	remote;
     int sock, port;
@@ -223,6 +222,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 - (void)terminateConnection:(NSString*)aReason
 {
     if(!terminating) {
+        int alertValue;
+        NSString *terminateString = NULL;
         terminating = YES;
         [[NSNotificationCenter defaultCenter] removeObserver:self
             name:NSFileHandleReadCompletionNotification object:socketHandler];
@@ -230,9 +231,26 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		if (_isFullscreen)
 			[self makeConnectionWindowed: self];
 		// end jason
+
+	[window close];
         if(aReason) {
-            [window close];
-            NSRunAlertPanel(@"Terminate Connection", aReason, @"Ok", NULL, NULL, NULL);
+            if (![_owner haveMultipleConnections]) {
+                terminateString = @"Quit";
+            }
+            alertValue = NSRunAlertPanel(@"Terminate Connection", aReason, @"Ok", terminateString, @"Reconnect", NULL);
+
+            /* One might reasonably argue that this should be handled by the connection manager. */
+            switch (alertValue) {
+                case -1:
+                    [_owner createConnectionWithDictionary:dictionary profile:profile owner:_owner];
+                    break;
+                case 0:
+                    [NSApp terminate:self];
+                case 1:
+                    break;
+                default:
+                    NSLog(@"Unknown alert returnvalue: %d", alertValue);
+            }
         }
         [manager removeConnection:self];
     }

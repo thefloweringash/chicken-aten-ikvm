@@ -53,6 +53,8 @@
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
+- (void)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner;
+
 - (void)preferencesChanged:(id)sender;
 - (id)defaultFrameBufferClass;
 - (void)applicationWillTerminate:(NSNotification *)aNotification;
@@ -61,5 +63,8 @@
 
 // Jason added the following for full-screen windows
 - (void)makeAllConnectionsWindowed;
+
+- (BOOL)haveMultipleConnections; // True if there is more than one connection open.
+- (BOOL)haveAnyConnections;      // True if there are any connections open.
 
 @end

@@ -187,7 +187,6 @@ static RFBConnectionManager*	sharedManager = nil;
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     NSDictionary* d;
     NSMutableDictionary* hi, *h;
-    RFBConnection* theConnection;
     Profile* profile;
 
     [ud setObject:[hostName stringValue] forKey:RFBLastHost];
@@ -214,13 +213,20 @@ static RFBConnectionManager*	sharedManager = nil;
         [passWord setStringValue:@""];
     }
     profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];
-	// Jason changed for fullscreen mode
-    theConnection = [[[RFBConnection alloc] initWithDictionary:d profile:profile owner:self] autorelease];
-//    theConnection = [[[RFBConnection alloc] initWithDictionary:d andProfile:profile] autorelease];
+    [self createConnectionWithDictionary:d profile:profile owner:self];
+    [loginPanel orderOut:self];
+}
+
+/* Do the work of creating a new connection and add it to the list of connections. */
+- (void)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner
+{
+    RFBConnection* theConnection;
+
+    theConnection = [[[RFBConnection alloc] initWithDictionary:someDict profile:someProfile owner:someOwner] autorelease];
+    //    theConnection = [[[RFBConnection alloc] initWithDictionary:d andProfile:profile] autorelease];
     if(theConnection) {
         [theConnection setManager:self];
         [connections addObject:theConnection];
-        [loginPanel orderOut:self];
     }
 }
 
@@ -277,6 +283,14 @@ static RFBConnectionManager*	sharedManager = nil;
 		if ([thisConnection connectionIsFullscreen])
 			[thisConnection makeConnectionWindowed: self];
 	}
+}
+
+- (BOOL)haveMultipleConnections {
+    return [connections count] > 1;
+}
+
+- (BOOL)haveAnyConnections {
+    return [connections count] > 0;
 }
 
 @end

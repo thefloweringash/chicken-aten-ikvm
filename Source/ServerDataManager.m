@@ -138,6 +138,11 @@ static ServerDataManager* gInstance = nil;
 				[gInstance save];
 			}
 		}
+		
+		if( nil == [gInstance getServerAtIndex:0] )
+		{
+			[gInstance createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
+		}
 	}
 	
 	return gInstance;
@@ -148,7 +153,7 @@ static ServerDataManager* gInstance = nil;
     NSParameterAssert( [coder allowsKeyedCoding] );
 
 	[coder encodeObject:mServers forKey:RFB_SERVER_LIST];
-	//[coder encodeObject:mGroups forKey:RFB_GROUP_LIST];
+	[coder encodeObject:mGroups forKey:RFB_GROUP_LIST];
 }
 
 - (id)initWithCoder:(NSCoder *)coder
@@ -164,6 +169,14 @@ static ServerDataManager* gInstance = nil;
 		
 		[mGroups release];
 		mGroups = [[coder decodeObjectForKey:RFB_GROUP_LIST] retain];
+		
+		[mGroups setObject:mServers forKey:@"All"];
+		
+		assert( nil != [mGroups objectForKey:@"All"] );
+		assert( mServers == [mGroups objectForKey:@"All"] );
+		assert( nil != [mGroups objectForKey:@"Standard"] );
+		assert( nil != [mGroups objectForKey:@"Rendezvous"] );
+
 		
 		// This next bit will fix issues where the key and the name
 		// didn't always match due to a bug in the name change code.
@@ -250,7 +263,7 @@ static ServerDataManager* gInstance = nil;
 
 - (id<IServerData>)getServerAtIndex:(int)index
 {
-	if( 0 > index )
+	if( 0 > index || 0 == [mServers count] )
 	{
 		return nil;
 	}
@@ -267,8 +280,6 @@ static ServerDataManager* gInstance = nil;
 		[[mGroups objectForKey:name] removeObjectForKey:[server name]];
 	}
 	
-	assert( nil != [mServers objectForKey:[server name]] );
-	[mServers removeObjectForKey:[server name]];
 	assert( nil == [mServers objectForKey:[server name]] );
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg

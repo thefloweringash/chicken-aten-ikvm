@@ -248,6 +248,7 @@
 				F5DC7264033DB9A101A8010C,
 				F5DC7267033DB9A301A8010C,
 				F5E4C9AC03416C2701A8010C,
+				F564F4B90392E07E01303550,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,6 +314,7 @@
 				F5DC7265033DB9A101A8010C,
 				F5DC7268033DB9A401A8010C,
 				F5E4C9AD03416C2701A8010C,
+				F564F4B80392E07E01303550,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,6 +379,28 @@
 			isa = PBXFileReference;
 			path = "GNU Public License.txt";
 			refType = 4;
+		};
+		F564F4B60392E07E01303550 = {
+			isa = PBXFileReference;
+			path = ZlibEncodingReader.m;
+			refType = 4;
+		};
+		F564F4B70392E07E01303550 = {
+			isa = PBXFileReference;
+			path = ZlibEncodingReader.h;
+			refType = 4;
+		};
+		F564F4B80392E07E01303550 = {
+			fileRef = F564F4B60392E07E01303550;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F564F4B90392E07E01303550 = {
+			fileRef = F564F4B70392E07E01303550;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F5B8B7E9036275D101000105 = {
 			isa = PBXFileReference;
@@ -648,6 +672,8 @@
 				F5DC71F9033DB4A801A8010C,
 				F5DC71FB033DB4A801A8010C,
 				F5DC71FC033DB4A801A8010C,
+				F564F4B70392E07E01303550,
+				F564F4B60392E07E01303550,
 			);
 			isa = PBXGroup;
 			path = Source;

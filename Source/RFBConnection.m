@@ -738,7 +738,12 @@ static void print_data(unsigned char* data, int length)
 	NSString *characters;
 	int i, length;
 
-	characters = [[theEvent charactersIgnoringModifiers] decomposedStringWithCanonicalMapping];
+	// Jason - decomposedStringWithCanonicalMapping is a jaguar-only API call
+	if ([NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)])
+		characters = [[theEvent charactersIgnoringModifiers] decomposedStringWithCanonicalMapping];
+	else
+		characters = [theEvent charactersIgnoringModifiers];
+
 	length = [characters length];
 	for (i = 0; i < length; ++i) {
 		unichar c;

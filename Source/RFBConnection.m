@@ -658,8 +658,16 @@ static void print_data(unsigned char* data, int length)
 - (void)sendModifier:(unsigned int)m
 {
     rfbKeyEventMsg msg;
-    unsigned int diff = m ^ lastModifier;
-
+    unsigned int diff;
+    
+    // The API says the lower 16 bits of the modifier are reserved for device-dependent
+    // modifiers.  Since INTs used to be 16 bits, and may someday be 128 bits, rather
+    // than AND with 0xFFFF0000, I choose to flip the bits, set the lower 16, and then
+    // flip them back, thus setting the lower 16 bits to 0.
+    m = ~(~m | 0xFFFF);
+    
+    diff = m ^ lastModifier;
+    
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
     if(diff & NSShiftKeyMask) {

@@ -30,6 +30,8 @@
 #define RFB_LAST_DISPLAY	@"Display"
 #define RFB_LAST_PROFILE	@"Profile"
 
+#define KEYCHAIN_SERVICE_NAME	@"cotvnc" // This should really be the appname, but I'm too lame to know how to find that - kjw
+
 @interface RFBConnectionManager : NSObject
 {
     IBOutlet NSTextField *display;

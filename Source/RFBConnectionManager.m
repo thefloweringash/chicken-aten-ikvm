@@ -174,7 +174,7 @@ static RFBConnectionManager*	sharedManager = nil;
         [shared setIntValue:[[selectedHostDict objectForKey:RFB_SHARED] intValue]];
         [shared setIntValue:[[selectedHostDict objectForKey:RFB_SHARED] intValue]];
         if ([rememberPwd intValue]) {
-            [passWord setStringValue:[[KeyChain defaultKeyChain] genericPasswordForService:@"cotvnc" account:[hostName stringValue]]];
+            [passWord setStringValue:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]]];
         }
     }
 }
@@ -263,8 +263,9 @@ static RFBConnectionManager*	sharedManager = nil;
         NULL, NULL];
     if(![rememberPwd intValue]) {
         [passWord setStringValue:@""];
+        [[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]];
     } else {
-        [[KeyChain defaultKeyChain] setGenericPassword:[passWord stringValue] forService:@"cotvnc" account:[hostName stringValue]]; // How do I find my freakin' app name?
+        [[KeyChain defaultKeyChain] setGenericPassword:[passWord stringValue] forService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]]; // How do I find my freakin' app name?
     }
     profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];
     [self createConnectionWithDictionary:connectionDictionary profile:profile owner:self];

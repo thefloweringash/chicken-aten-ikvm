@@ -280,6 +280,12 @@ static RFBConnectionManager*	sharedManager = nil;
     
     // Only close the open dialog of the connection was successful
     if( YES == [self createConnectionWithDictionary:connectionDictionary profile:profile owner:self] ) {
+		if(![rememberPwd intValue]) {
+			[passWord setStringValue:@""];
+			[[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]];
+		} else {
+			[[KeyChain defaultKeyChain] setGenericPassword:[passWord stringValue] forService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]]; // How do I find my freakin' app name?
+		}
         [loginPanel orderOut:self];
     }
 

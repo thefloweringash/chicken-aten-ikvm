@@ -103,7 +103,7 @@
         [shared setIntValue:[mServer shared]];
 		[self setProfilePopupToProfile: [mServer lastProfile]];
 		
-		[hostName    setEditable:[mServer doYouSupport:EDIT_ADDRESS]];
+		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
 		[display     setEditable:[mServer doYouSupport:EDIT_PORT]];
 		[rememberPwd setEnabled: [mServer doYouSupport:SAVE_PASSWORD]];
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];

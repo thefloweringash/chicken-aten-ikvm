@@ -328,7 +328,26 @@
 
 - (IBAction)addServer:(id)sender
 {
-	[[ServerDataManager sharedInstance] createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
+	ServerDataManager *serverDataManager = [ServerDataManager sharedInstance];
+	id<IServerData> newServer = [serverDataManager createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
+	NSString *newName = [newServer name];
+	NSParameterAssert( newName != nil );
+	
+	int index = 0;
+	NSEnumerator *serverEnumerator = [serverDataManager getServerEnumerator];
+	id<IServerData> server;
+	
+	while ( server = [serverEnumerator nextObject] )
+	{
+		NSString *name = [server name];
+		if ( name && [name isEqualToString: newName] )
+		{
+			[serverList selectRow: index byExtendingSelection: NO];
+			[serverList editColumn: 0 row: index withEvent: nil select: YES];
+			break;
+		}
+		index++;
+	}
 }
 
 - (IBAction)deleteSelectedServer:(id)sender

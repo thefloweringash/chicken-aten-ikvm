@@ -34,6 +34,24 @@
 
 static ServerDataManager* gInstance = nil;
 
+- (id)retain
+{
+	return [super retain];
+}
+
+
+- (oneway void)release
+{
+	[super release];
+}
+
+
+- (id)autorelease
+{
+	return [super autorelease];
+}
+
+
 + (void)initialize
 {
 	[ServerDataManager setVersion:1];
@@ -93,7 +111,6 @@ static ServerDataManager* gInstance = nil;
 - (void)dealloc
 {
 	NSParameterAssert( gInstance == self );
-	gInstance = nil;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
@@ -107,6 +124,7 @@ static ServerDataManager* gInstance = nil;
 	}
 	
     [super dealloc];
+	gInstance = nil;
 }
 
 - (void)save

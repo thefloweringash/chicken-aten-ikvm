@@ -22,7 +22,6 @@
 
 @interface RFBConnectionManager : NSObject
 {
-    id connect;
     id display;
     id hostName;
     id passWord;

@@ -86,9 +86,16 @@ static RFBConnectionManager*	sharedManager = nil;
     NSDictionary* hi = [ud objectForKey:RFBHostInfo];
     NSDictionary* h = [hi objectForKey:[hostName stringValue]];
 
+	[hostName removeAllItems];
     if(h != nil) {
+		NSEnumerator *hostEnumerator = [hi keyEnumerator];
+		NSString *host;
+		
         [display setStringValue:[h objectForKey:RFBLastDisplay]];
         [profilePopup selectItemWithTitle:[h objectForKey:RFBLastProfile]];
+		while (host = [hostEnumerator nextObject]) {
+			[hostName addItemWithObjectValue: host];
+		}
     }
 }
 
@@ -216,6 +223,7 @@ static RFBConnectionManager*	sharedManager = nil;
     profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];
     [self createConnectionWithDictionary:d profile:profile owner:self];
     [loginPanel orderOut:self];
+	[self updateLoginPanel];
 }
 
 /* Do the work of creating a new connection and add it to the list of connections. */
@@ -271,7 +279,6 @@ static RFBConnectionManager*	sharedManager = nil;
     // If you  want to cache this, make a class so we can refactor it from everywhere else
     BOOL gIsJaguar = [NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)];
 
-    
     // [[NSApp windows] count] is the best option, but it don't work pre-jaguar
     if ((gIsJaguar && ([[NSApp windows] count] == 0)) || ((!gIsJaguar) && (![self haveAnyConnections]))) {
         [loginPanel makeKeyAndOrderFront:self];

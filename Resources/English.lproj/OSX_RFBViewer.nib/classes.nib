@@ -4,6 +4,7 @@
             ACTIONS = {
                 changeRendezvousUse = id; 
                 showConnectionDialog = id; 
+                showHelp = id; 
                 showPreferences = id; 
                 showProfileManager = id; 
             }; 

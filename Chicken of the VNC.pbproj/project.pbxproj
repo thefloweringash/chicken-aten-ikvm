@@ -88,6 +88,7 @@
 				E21FE256062B6C8D0059585C,
 				F5DC7172033DB3DC01A8010C,
 				F5DC7175033DB40D01A8010C,
+				E2CA650906DA451500B70BDF,
 				F5DC7177033DB40D01A8010C,
 				E21FE430062B79350059585C,
 				F5DC717C033DB40D01A8010C,
@@ -630,6 +631,7 @@
 				E2F3A34006D44E0E005EB917,
 				E2F3A7E806D4A687005EB917,
 				E2F3A99E06D4BFD8005EB917,
+				E2CA651806DA451600B70BDF,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1640,12 +1642,19 @@
 			shellPath = /bin/sh;
 			shellScript = "strip -urx \"$TARGET_BUILD_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION/Contents/MacOS/$PRODUCT_NAME\"";
 		};
-		E24E517806D351FE00FA69F7 = {
+		E2CA650906DA451500B70BDF = {
 			isa = PBXFileReference;
-			lastKnownFileType = wrapper.rtfd;
-			path = "About Chicken of the VNC.rtfd";
+			lastKnownFileType = folder;
+			name = help;
+			path = Resources/help;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		E2CA651806DA451600B70BDF = {
+			fileRef = E2CA650906DA451500B70BDF;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		E2F3A2C906D44755005EB917 = {
 			fileEncoding = 4;
@@ -2070,7 +2079,6 @@
 		};
 		F5DC718B033DB45F01A8010C = {
 			children = (
-				E24E517806D351FE00FA69F7,
 				E228FA2704439B7D00F873F6,
 				F52128E40368AF9F01F702E0,
 				F5DC7191033DB45F01A8010C,

@@ -1,0 +1,123 @@
+body {
+	padding: 0 1em 2em 1em;
+}
+
+p, li {
+	font-size: smaller;
+	margin: 0;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+}
+
+#PageContainer {
+	margin-right: auto;
+	margin-left: auto;
+	position: relative;
+}
+
+#header {
+	text-align: center;
+}
+
+#header h1 {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	font-size: 24pt;
+	font-weight: bold;
+	letter-spacing: 0.2em;
+}
+
+#header h2 {
+	font-family: Arial, sans-serif;
+	font-size: large;
+	font-weight: bold;
+	letter-spacing: 0.2em;
+}
+
+#header h3 {
+	color: #888888;
+	font-family: Helvetica, serif;
+	font-size: small;
+}
+
+.section h1 {
+	color: #000A9C;
+	font-size: large;
+	font-weight: bold;
+	margin-top: 2em;
+	text-align: center;
+	letter-spacing: 0.1em;
+}
+
+.section .ss {
+	margin-top: 2em;
+	text-align: center;
+}
+
+.section p {
+	margin-bottom: 1em;
+}
+
+.section p.noMargin {
+	margin: 0;
+}
+
+.explanation {
+	margin: 0 2em 0 2em;
+}
+
+.explanation li {
+	margin-bottom: 1em;
+}
+
+.explanation .item {
+	font-weight: bold;
+}
+
+#encodingList {
+	margin: 0 0 0 0.5em;
+	color: #890103;
+}
+
+#encodingList li {
+	list-style-type: none;
+}
+
+#versionHistory dt {
+	font-weight: bold;
+	margin-bottom: 0;
+}
+
+#versionHistory dd {
+	list-style-type: none;
+	margin-left: 0;
+}
+
+#versionHistory ul {
+	list-style-type: none;
+	margin-top: 0;
+}
+
+.unreleased {
+	color: red;
+}
+
+.contributor {
+	font-style: italic;
+	font-weight: bold;
+}
+
+#contactInfo p {
+	margin-bottom: 0;
+}
+
+#contactInfo .address {
+	margin: 0 0 1.5em 0;
+	text-align: center;
+}
+
+#footer {
+	color: #666666;
+	font-size: x-small;
+	padding-top: 2em;
+	text-align: center;
+}

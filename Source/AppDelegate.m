@@ -48,4 +48,11 @@
 - (IBAction)showProfileManager: (id)sender
 {  [[ProfileManager sharedManager] showWindow: nil];  }
 
+
+- (IBAction)showHelp: (id)sender
+{
+	NSString *path = [[NSBundle mainBundle] pathForResource: @"index" ofType: @"html" inDirectory: @"help"];
+	[[NSWorkspace sharedWorkspace] openFile: path];
+}
+
 @end

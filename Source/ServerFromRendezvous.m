@@ -56,11 +56,11 @@
 		NSMutableDictionary* propertyDict = [rendServerDict objectForKey:[service_ name]];
 		if ( propertyDict )
 		{
-			_rememberPassword = [[propertyDict objectForKey:@"rememberPassword"] boolValue];
-			_display          = [[propertyDict objectForKey:@"display"] intValue];
-			_shared           = [[propertyDict objectForKey:@"shared"] boolValue];
-			_fullscreen       = [[propertyDict objectForKey:@"fullscreen"] boolValue];
-			_lastProfile      = [propertyDict objectForKey:@"lastProfile"];
+			[self setRememberPassword: [[propertyDict objectForKey:@"rememberPassword"] boolValue]];
+			[self setDisplay:          [[propertyDict objectForKey:@"display"] intValue]];
+			[self setShared:           [[propertyDict objectForKey:@"shared"] boolValue]];
+			[self setFullscreen:       [[propertyDict objectForKey:@"fullscreen"] boolValue]];
+			[self setLastProfile:       [propertyDict objectForKey:@"lastProfile"]];
 		}
 	}
 	

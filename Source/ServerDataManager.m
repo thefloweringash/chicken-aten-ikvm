@@ -92,6 +92,9 @@ static ServerDataManager* gInstance = nil;
 
 - (void)dealloc
 {
+	NSParameterAssert( gInstance == self );
+	gInstance = nil;
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[self save];
@@ -226,9 +229,7 @@ static ServerDataManager* gInstance = nil;
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-	NSParameterAssert( gInstance == self );
-	[gInstance release];
-	gInstance = nil;
+	[self release];
 }
 
 - (unsigned) serverCount

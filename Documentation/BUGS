@@ -1,4 +1,4 @@
-Known Bugs (Version 1.24):
+Known Bugs (Version 1.24): 
 ==========================
 - When a connected server crashes, it sometimes takes the viewer with it.
 - Statistic info does not agree with info of server because copyrect

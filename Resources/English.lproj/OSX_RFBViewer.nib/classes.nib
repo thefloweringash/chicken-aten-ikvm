@@ -22,7 +22,12 @@
                 openNewTitlePanel = id; 
                 openOptions = id; 
                 pasteViaKeypress = id; 
+                sendBreakKeyCode = id; 
+                sendCmdOptEsc = id; 
                 sendCtrlAltDel = id; 
+                sendExecuteKeyCode = id; 
+                sendPauseKeyCode = id; 
+                sendPrintKeyCode = id; 
                 toggleFullscreenMode = id; 
             }; 
             CLASS = FirstResponder; 

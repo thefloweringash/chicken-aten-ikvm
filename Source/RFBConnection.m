@@ -37,9 +37,13 @@
 #define	F1_KEYCODE		0xffbe
 #define F2_KEYCODE		0xffbf
 #define	F3_KEYCODE		0xffc0
-
-// jason added definition for capslock
 #define CAPSLOCK		0xffe5
+#define kPauseKeyCode	0xff13
+#define kBreakKeyCode	0xff6b
+#define kPrintKeyCode	0xff61
+#define kExecuteKeyCode	0xff62
+#define kEscapeKeyCode	0xff1b
+
 
 // jason added a check for Jaguar
 BOOL gIsJaguar;
@@ -68,7 +72,7 @@ const unsigned int page0[256] = {
 };
 
 const unsigned int pagef7[256] = {
-    0xff52, 0xff54, 0xff51, 0xff53, 0xf704, 0xffbf, 0xffc0, 0xffc1, 0xffc2, 0xffc3, 0xffc4, 0xffc5, 0xffc6, 0xffc7, 0xffc8, 0xffc9,
+    0xff52, 0xff54, 0xff51, 0xff53, 0xffbe, 0xffbf, 0xffc0, 0xffc1, 0xffc2, 0xffc3, 0xffc4, 0xffc5, 0xffc6, 0xffc7, 0xffc8, 0xffc9,
     0xf710, 0xf711, 0xf712, 0xf713, 0xf714, 0xf715, 0xf716, 0xf717, 0xf718, 0xf719, 0xf71a, 0xf71b, 0xf71c, 0xf71d, 0xf71e, 0xf71f,
     0xf720, 0xf721, 0xf722, 0xf723, 0xf724, 0xf725, 0xf726, 0xff63, 0xffff, 0xff50, 0xf72a, 0xff57, 0xff55, 0xff56, 0xf72e, 0xf72f,
     0xf730, 0xf731, 0xf732, 0xf733, 0xf734, 0xf735, 0xf736, 0xf737, 0xf738, 0xf739, 0xf73a, 0xf73b, 0xf73c, 0xf73d, 0xf73e, 0xf73f,
@@ -928,10 +932,45 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	}
 }
 
+- (void)sendCmdOptEsc: (id)sender
+{
+    rfbKeyEventMsg msg;
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kAltKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kMetaKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kEscapeKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kEscapeKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kMetaKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kAltKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+}
+
 - (void)sendCtrlAltDel: (id)sender
 {
     rfbKeyEventMsg msg;
-
+	
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
     msg.down = YES;
@@ -946,7 +985,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     msg.down = YES;
 	msg.key = htonl(0xffff);
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-
+	
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
     msg.down = NO;
@@ -961,6 +1000,70 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     msg.down = NO;
 	msg.key = htonl(kControlKeyCode);
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+}
+
+- (void)sendPauseKeyCode: (id)sender
+{
+    rfbKeyEventMsg msg;
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kPauseKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kPauseKeyCode);
+}
+
+- (void)sendBreakKeyCode: (id)sender
+{
+    rfbKeyEventMsg msg;
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kBreakKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kBreakKeyCode);
+}
+
+- (void)sendPrintKeyCode: (id)sender
+{
+    rfbKeyEventMsg msg;
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kPrintKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kPrintKeyCode);
+}
+
+- (void)sendExecuteKeyCode: (id)sender
+{
+    rfbKeyEventMsg msg;
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kExecuteKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kExecuteKeyCode);
 }
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb

@@ -23,8 +23,6 @@
 #import "rfbproto.h"
 #import "RFBProtocol.h"
 
-@protocol IServerData;
-
 #define RFB_HOST		@"Host"
 #define RFB_PASSWORD		@"Password"
 #define RFB_REMEMBER		@"RememberPassword"
@@ -53,7 +51,7 @@
     id currentReader;
     id versionReader;
     id handshaker;
-    id<IServerData> server_;
+    id dictionary;
     id serverVersion;
     RFBProtocol *rfbProtocol;
     id scrollView;
@@ -104,8 +102,8 @@
 }
 
 // jason added 'owner' for fullscreen display
-- (id)initWithServer:(id<IServerData>)server profile:(Profile*)p owner:(id)owner;
-
+- (id)initWithDictionary:(NSDictionary*)aDictionary profile:(Profile*)p owner:(id)owner;
+//- (id)initWithDictionary:(NSDictionary*)aDictionary andProfile:(Profile*)p;
 - (void)setManager:(id)aManager;
 - (void)dealloc;
 

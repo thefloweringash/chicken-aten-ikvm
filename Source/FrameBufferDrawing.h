@@ -23,6 +23,9 @@
 
 #undef PINFO
 
+#warning ALL THIS CODE HERE IS CRAZY - IT BELONGS IN THE CLASSFILE
+#warning SUBCLASSES CAN DEAL WITH DIFFERENCES
+
 static inline unsigned int cvt_pixel24(unsigned char* v, FrameBuffer* this)
 {
     unsigned int pix = 0, col;
@@ -423,13 +426,13 @@ printf("draw x=%f y=%f w=%f h=%f at x=%f y=%f\n", aRect.origin.x, aRect.origin.y
                      8, bpr, NO, NO, NSDeviceRGBColorSpace, (unsigned char**)&start); */
     } else {
         FBColor* sp = scratchpad;
-        int x, lines = r.size.height;
+        int lines = r.size.height;
         int stride = (unsigned int)size.width - (unsigned int)r.size.width;
 
         while(lines--) {
-            for(x=0; x<r.size.width; x++) {
-                *sp++ = *start++;
-            }
+            memcpy(sp, start, r.size.width * sizeof(sp));
+            start += (unsigned int) r.size.width;
+            sp += (unsigned int) r.size.width;
             start += stride;
         }
         bpr = r.size.width * sizeof(FBColor);

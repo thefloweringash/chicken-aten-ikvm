@@ -413,6 +413,15 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [window flushWindow];
 }
 
+- (void)pauseDrawing {
+    [window disableFlushWindow];
+}
+
+- (void)flushDrawing {
+    [window enableFlushWindow];
+    [window flushWindow];
+}
+
 // Jason - print_data is never used, so I'm commenting it out
 /*
 static void print_data(unsigned char* data, int length)

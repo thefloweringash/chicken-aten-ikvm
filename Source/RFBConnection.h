@@ -113,8 +113,13 @@
 - (void)setNewTitle:(id)sender;
 - (void)setDisplayName:(NSString*)aName;
 - (void)ringBell;
+
 - (void)drawRectFromBuffer:(NSRect)aRect;
 - (void)drawRectList:(id)aList;
+
+- (void)pauseDrawing;
+- (void)flushDrawing;
+
 - (void)queueUpdateRequest;
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned)mask;
 - (void)mouseMovedTo:(NSPoint)thePoint;

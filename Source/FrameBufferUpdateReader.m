@@ -111,6 +111,7 @@
 #endif
     memcpy(&msg.pad, [header bytes], sizeof(msg) - 1);
     numberOfRects = ntohs(msg.nRects);
+    [connection pauseDrawing];
     [target setReader:rectHeaderReader];
 }
 
@@ -189,6 +190,7 @@
         [target setReader:rectHeaderReader];
     } else {
         [target performSelector:action withObject:self];
+        [connection flushDrawing];
     }
 }
 

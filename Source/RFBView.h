@@ -18,11 +18,13 @@
 
 #import <AppKit/AppKit.h>
 
+#import "FrameBuffer.h"
+
 @interface RFBView : NSView
 {
     id delegate;
     id cursor;
-    id fbuf;
+    FrameBuffer *fbuf;
     unsigned buttonMask;
 }
 

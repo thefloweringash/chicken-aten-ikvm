@@ -40,6 +40,8 @@
 	NSMutableDictionary* mGroups;
 	NSMutableDictionary* mRendezvousNameToServer;
 	
+	bool mPostMessages;
+	
 	// Keeps track of search status
 	NSNetServiceBrowser *mServiceBrowser;
 	BOOL mSearching;

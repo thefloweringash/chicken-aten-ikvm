@@ -43,6 +43,8 @@ static ServerDataManager* gInstance = nil;
 {
 	if( self = [super init] )
 	{
+		mPostMessages = true;
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(applicationWillTerminate:)
 													 name:NSApplicationWillTerminateNotification object:NSApp];
@@ -83,6 +85,13 @@ static ServerDataManager* gInstance = nil;
 				[server setDelegate:self];
 				[mServers setObject:server forKey:[server name]];
 			}
+		}
+		
+		if( 0 == [mServers count] )
+		{
+			mPostMessages = false;
+			[self createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
+			mPostMessages = true;
 		}
 	}
 	
@@ -270,8 +279,11 @@ static ServerDataManager* gInstance = nil;
 	[mServers removeObjectForKey:[server name]];
 	assert( nil == [mServers objectForKey:[server name]] );
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
-														object:self];
+	if( mPostMessages )
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
+															object:self];
+	}
 }
 
 - (void)makeNameUnique:(NSMutableString*)name
@@ -305,8 +317,11 @@ static ServerDataManager* gInstance = nil;
 	
 	[newServer setDelegate:self];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
-														object:self];
+	if( mPostMessages )
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
+															object:self];
+	}
 	
 	return newServer;
 }
@@ -399,8 +414,11 @@ static ServerDataManager* gInstance = nil;
 			[rendezvousDict removeAllObjects];
 			[mRendezvousNameToServer removeAllObjects];
 			
-			[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
-																object:self];
+			if( mPostMessages )
+			{
+				[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
+																	object:self];
+			}
 		}
 	}
 }
@@ -456,7 +474,7 @@ static ServerDataManager* gInstance = nil;
 	NSParameterAssert( newServer == [mServers objectForKey:[newServer name]] );
 	NSParameterAssert( newServer == [[mGroups objectForKey:@"Rendezvous"] objectForKey:[newServer name]] );
 	
-    if(!moreComing)
+    if(!moreComing && mPostMessages)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 															object:self];
@@ -479,7 +497,7 @@ static ServerDataManager* gInstance = nil;
 	
 	[serverToRemove release];
     
-    if(!moreComing)
+    if(!moreComing && mPostMessages)
     {		
         [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 															object:self];

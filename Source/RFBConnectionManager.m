@@ -267,8 +267,13 @@ static RFBConnectionManager*	sharedManager = nil;
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
-	//if ([[NSApp windows] count] == 0) {  // Good idea, but it don't work (under 10.1)
-	if (![self haveAnyConnections]) {
+    // Don't bother caching - this won't happen often enough to matter.
+    // If you  want to cache this, make a class so we can refactor it from everywhere else
+    BOOL gIsJaguar = [NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)];
+
+    
+    // [[NSApp windows] count] is the best option, but it don't work pre-jaguar
+    if ((gIsJaguar && ([[NSApp windows] count] == 0)) || ((!gIsJaguar) && (![self haveAnyConnections]))) {
         [loginPanel makeKeyAndOrderFront:self];
     }
 }

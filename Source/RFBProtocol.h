@@ -40,6 +40,8 @@
 - (void)continueUpdate;
 - (void)stopUpdate;
 
+- (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag;
+
 - (CARD16)numberOfEncodings;
 - (CARD32*)encodings;
 - (void)changeEncodingsTo:(CARD32*)newEncodings length:(CARD16)l;

@@ -76,6 +76,7 @@
 
     r.origin.y = b.size.height - NSMaxY(r);
     [fbuf drawRect:r at:destRect.origin];
+    [delegate queueUpdateRequest];
 }
 
 - (void)displayFromBuffer:(NSRect)aRect

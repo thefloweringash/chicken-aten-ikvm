@@ -31,6 +31,8 @@
 #include <libc.h>
 #include "FullscreenWindow.h" // added by Jason for fullscreen mode
 
+#include "debug.h" // added by Jason for fullscreen mode
+
 #define	F1_KEYCODE		0xffbe
 #define F2_KEYCODE		0xffbf
 #define	F3_KEYCODE		0xffc0
@@ -429,6 +431,7 @@ static void print_data(unsigned char* data, int length)
     unsigned consumed, length = [data length];
     unsigned char* bytes = (unsigned char*)[data bytes];
 
+    FULLDebug(@"%@: readData length: %d", [self className], length);
     if(!length) {	// server closed socket obviously
         [self terminateConnection:@"The server closed the connection"];
         return;
@@ -592,6 +595,25 @@ static void print_data(unsigned char* data, int length)
         }
         /* Sigh */
     }
+    [self queueUpdateRequest];
+}
+
+- (void)queueUpdateRequest {
+    SEL selector = @selector(getUpdate:);
+    NSObject *withObject = self;
+    NSObject *targetObject = self;
+    
+    if (!updateRequested) {
+        updateRequested = TRUE;
+    } else {
+        [NSObject cancelPreviousPerformRequestsWithTarget:withObject selector:selector object:targetObject];
+    }
+    [targetObject performSelector:selector withObject:withObject afterDelay:.01];
+}
+
+- (void)getUpdate:(id)sender {
+    [rfbProtocol requestUpdate:[window frame] incremental:TRUE];
+    updateRequested = FALSE;
 }
 
 - (void)mouseMovedTo:(NSPoint)thePoint

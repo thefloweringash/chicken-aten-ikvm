@@ -21,6 +21,7 @@
 #import "FrameBuffer.h"
 #import "Profile.h"
 #import "rfbproto.h"
+#import "RFBProtocol.h"
 
 #define RFB_HOST		@"Host"
 #define RFB_PASSWORD	@"Password"
@@ -41,7 +42,7 @@
 @interface RFBConnection : ByteReader
 {
     id rfbView;
-    id window;
+    NSWindow *window;
     FrameBuffer* frameBuffer;
     id manager;
     id socketHandler;
@@ -50,7 +51,7 @@
     id handshaker;
     id dictionary;
     id serverVersion;
-    id rfbProtocol;
+    RFBProtocol *rfbProtocol;
     id scrollView;
     id newTitleField;
     NSPanel *newTitlePanel;
@@ -76,6 +77,8 @@
     BOOL	umlautEscape;					// next keydown/up is "umlauted"
     BOOL	umlautSwitching;				// umlaute-escape is being toggled (key not up yet)
 
+    BOOL	updateRequested;				// Has someone already requested an update?
+    
     NSString*		realDisplayName;
     NSString*		host;
 	
@@ -112,6 +115,7 @@
 - (void)ringBell;
 - (void)drawRectFromBuffer:(NSRect)aRect;
 - (void)drawRectList:(id)aList;
+- (void)queueUpdateRequest;
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned)mask;
 - (void)mouseMovedTo:(NSPoint)thePoint;
 - (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag;

@@ -128,6 +128,9 @@
     currentRect.size.width = ntohs(msg->r.w);
     currentRect.size.height = ntohs(msg->r.h);
     FULLDebug(@"currentRect: %@", NSStringFromRect(currentRect));
+    if ((currentRect.size.width == 0) && (currentRect.size.height == 0)) {
+        //return;
+    }
     e = ntohl(msg->encoding);
     switch(e) {
         case rfbEncodingRaw:

@@ -39,6 +39,9 @@
 // jason added definition for capslock
 #define CAPSLOCK		0xffe5
 
+// jason added a check for Jaguar
+BOOL gIsJaguar;
+
 #define UMLAUTE			'u'
 
 @implementation RFBConnection
@@ -108,12 +111,18 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     NSRunAlertPanel(theAction, s, @"Ok", NULL, NULL, NULL);
 }
 
+// jason added for Jaguar check
++ (void)initialize {
+	gIsJaguar = [NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)];
+}
+
 // jason changed for fullscreen display
 - (id)initWithDictionary:(NSDictionary*)aDictionary profile:(Profile*)p owner:(id)owner
 //- (id)initWithDictionary:(NSDictionary*)aDictionary andProfile:(Profile*)p
 {
     struct sockaddr_in	remote;
     int sock, port;
+	int display; // jason added to handle a direct port specification
 
     [super init];
     profile = [p retain];
@@ -130,7 +139,14 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     } else {
         [host retain];
     }
-    port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+	// jason added for direct port specification
+	display = [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+	if (display > 10)
+		port = display;
+	else
+		port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+	// end jason
+//	port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
     socket_address(&remote, host, port);
     if(connect(sock, (struct sockaddr *)&remote, sizeof(remote)) < 0) {
         [self perror:@"Open Connection" call:@"connect()"];
@@ -739,7 +755,7 @@ static void print_data(unsigned char* data, int length)
 	int i, length;
 
 	// Jason - decomposedStringWithCanonicalMapping is a jaguar-only API call
-	if ([NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)])
+	if (gIsJaguar)
 		characters = [[theEvent charactersIgnoringModifiers] decomposedStringWithCanonicalMapping];
 	else
 		characters = [theEvent charactersIgnoringModifiers];

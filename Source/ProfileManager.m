@@ -165,18 +165,11 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
 
 - (void)selectProfileNamed:(NSString*)aProfile
 {
-    if(![profiles objectForKey:aProfile]) {
-        [profileView removeFromSuperview];
-    } else {
-        if(![profileView superview]) {
-            [canvas addSubview:profileView];
-        }
-        [profileBrowser loadColumnZero];
-        [profileBrowser setPath:[NSString stringWithFormat:@"/%@", aProfile]];
-        [profileField setStringValue:aProfile];
-        [self updateBrowserButtons:self];
-        [self updateProfileInfo:self];
-    }
+	[profileBrowser loadColumnZero];
+	[profileBrowser setPath:[NSString stringWithFormat:@"/%@", aProfile]];
+	[profileField setStringValue:aProfile];
+	[self updateBrowserButtons:self];
+	[self updateProfileInfo:self];
 }
 
 - (void)addProfile:(id)sender

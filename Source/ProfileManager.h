@@ -52,8 +52,6 @@
     id profilePanel;
     id shiftKey;
     id upDownButtonMatrix;
-    id profileView;
-    id canvas;
 
     NSMutableDictionary*		profiles;
 }

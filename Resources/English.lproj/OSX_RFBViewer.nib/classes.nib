@@ -27,7 +27,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 altKey = id; 
-                canvas = id; 
                 commandKey = id; 
                 controlKey = id; 
                 deleteProfileButton = id; 
@@ -39,7 +38,6 @@
                 profileBrowser = id; 
                 profileField = id; 
                 profilePanel = id; 
-                profileView = id; 
                 shiftKey = id; 
                 upDownButtonMatrix = id; 
             }; 
@@ -52,7 +50,6 @@
             OUTLETS = {
                 autoscrollIncrement = id; 
                 colorModelMatrix = id; 
-                connect = id; 
                 display = id; 
                 fullscreenScrollbars = id; 
                 gamma = id; 

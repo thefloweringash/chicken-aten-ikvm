@@ -179,6 +179,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)dealloc
 {
+	[newTitlePanel orderOut:self];
+	[optionPanel orderOut:self];
+	
 	[window close];
 	[self terminateConnection: nil]; // just in case it didn't already get called somehow
     [super dealloc];

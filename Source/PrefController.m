@@ -42,7 +42,7 @@ static int const kPrefsVersion = 0x00000001;
 		[NSNumber numberWithBool: NO],			kPrefs_FullscreenScrollbars_Key,
 		[NSNumber numberWithInt: 128],			kPrefs_PSMaxRect_Key,
 		[NSNumber numberWithInt: 10000],		kPrefs_PSThreshold_Key,
-		[NSNumber numberWithBool: YES],			kPrefs_UseRendezvous_Key,
+		[NSNumber numberWithBool: NO],			kPrefs_UseRendezvous_Key,
 		[NSNumber numberWithFloat: 0],			kPrefs_FrontFrameBufferUpdateSeconds_Key,
 		[NSNumber numberWithFloat: 0.9],		kPrefs_OtherFrameBufferUpdateSeconds_Key, 
 		nil,									nil];
@@ -186,7 +186,7 @@ static int const kPrefsVersion = 0x00000001;
 
 
 - (BOOL)usesRendezvous
-{  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_UseRendezvous_Key] boolValue];  }
+{  return [[NSUserDefaults standardUserDefaults] boolForKey: kPrefs_UseRendezvous_Key];  }
 
 
 - (NSDictionary *)hostInfo

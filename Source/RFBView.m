@@ -35,23 +35,17 @@
 
 - (void)setFrameBuffer:(id)aBuffer;
 {
-    NSRect bb;
     NSRect f = [self frame];
     
     [fbuf autorelease];
     fbuf = [aBuffer retain];
     f.size = [aBuffer size];
     [self setFrame:f];
-    messageFont = [NSFont userFontOfSize:12.0];
-    bb = [messageFont boundingRectForFont];
-    fontHeight = bb.size.height + 1.0;
-    messagePosition.height = (f.size.height - bb.size.height) / 2;
 }
 
 - (void)dealloc
 {
     [fbuf release];
-    [messages release];
     [super dealloc];
 }
 
@@ -77,33 +71,6 @@
     }
 }
 
-- (void)overlayMessage
-{
-    NSEnumerator* e;
-    NSString* s;
-    float h = messagePosition.height;
-    NSRect theRect = NSMakeRect(messageBG.origin.x, messageBG.origin.y, messageBG.size.width, messageBG.size.height); // jason added this variable to avoid PS functions
-    
-    [messageFont set];
-	// Jason - no PS functions
-    [[NSColor colorWithCalibratedWhite: 0.66 alpha: 1.0] set];
-    [NSBezierPath fillRect: theRect];
-    [[NSColor colorWithCalibratedWhite: 0.0 alpha: 1.0] set];
-    [NSBezierPath strokeRect: theRect];
-/*    PSsetgray(0.66);
-    PSrectfill(messageBG.origin.x, messageBG.origin.y, messageBG.size.width, messageBG.size.height);
-    PSsetgray(0.0);
-    PSrectstroke(messageBG.origin.x, messageBG.origin.y, messageBG.size.width, messageBG.size.height); */
-    e = [messages objectEnumerator];
-    while((s = [e nextObject]) != nil) {
-		// Jason - no PS functions
-        [s drawAtPoint: NSMakePoint(messagePosition.width, h) withAttributes: nil];
-/*        PSmoveto(messagePosition.width, h);
-        PSshow([s cString]); */
-        h -= fontHeight;
-    }
-}
-
 - (void)drawRect:(NSRect)destRect
 {
     NSRect b = [self bounds];
@@ -111,9 +78,6 @@
 
     r.origin.y = b.size.height - NSMaxY(r);
     [fbuf drawRect:r at:destRect.origin];
-    if(messages) {
-        [self overlayMessage];
-    }
 }
 
 - (void)displayFromBuffer:(NSRect)aRect
@@ -125,42 +89,10 @@
     [self displayRect:r];
 }
 
-- (void)setMessage:(NSString*)aMessage
-{
-    float max = 0.0;
-    int i;
-    NSRect f = [self frame];
-
-    if((aMessage == nil) || ([aMessage isEqualToString:@""])) {
-        if(messages) {
-            [messages release];
-            messages = nil;
-            [self display];
-        }
-    } else {
-        [messages release];
-        messages = [[aMessage componentsSeparatedByString:[NSString stringWithFormat:@"\n"]] retain];
-        for(i=0; i<[messages count]; i++) {
-            if([messageFont widthOfString:[messages objectAtIndex:i]] > max) {
-                max = [messageFont widthOfString:[messages objectAtIndex:i]];
-            }
-        }
-        messagePosition.width = (f.size.width - max) / 2;
-        messageBG.size.width = max + 10.0;
-        messageBG.size.height = [messages count] * fontHeight + 10.0;
-        messageBG.origin.x = messagePosition.width - 5.0;
-        messageBG.origin.y = messagePosition.height - 7.5 - ([messages count] - 1) * fontHeight;
-        [self display];
-    }
-}
-
 - (void)drawRectList:(id)aList
 {
     [self lockFocus];
     [aList drawRectsInRect:[self bounds]];
-    if(messages) {
-        [self overlayMessage];
-    }
     [self unlockFocus];
 }
 
@@ -318,12 +250,6 @@
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
     return YES;
-}
-
-// jason added the -isDisplayingMessage method
-- (BOOL)isDisplayingMessage
-{
-	return messages != nil;
 }
 
 @end

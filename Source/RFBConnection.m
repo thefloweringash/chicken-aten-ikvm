@@ -737,16 +737,6 @@ static void print_data(unsigned char* data, int length)
     [self sendModifier:lastModifier & ~NSCommandKeyMask];
 }
 
-- (void)showWarningForKey:(unsigned short)code character:(unichar)c
-{
-    NSString* s;
-
-    NSBeep();
-    s = [NSString stringWithFormat:@"The combination of keys you pressed has not yet been used on this site and may not work properly.\n\nPlease press this key again without any modifiers activated.\nThis will enable Chicken of the VNC to learn the keycode"];
-/*    s = [NSString stringWithFormat:@"The keycode 0x%x is not known yet and may not work properly.\nPlease press this key again without any modifiers activated.\nThis enables Chicken of the VNC to learn the keycode", code]; */ // jason
-    [rfbView setMessage:s];
-}
-
 - (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag
 {
 	// Jason rewrote this routine.  My rationale is that since the key is being sent to the server anyway, we'll just go ahead and map it into AutoKeyCodes.  This way, it seems transparent to the user, but we've still got a keymap that can be edited if the user has problems.  Also, I intercept kFullscreenSwitchKey and kFullscreenSwitchModifiers to switch fullscreen mode

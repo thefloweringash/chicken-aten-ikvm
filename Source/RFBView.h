@@ -24,12 +24,6 @@
     id cursor;
     id fbuf;
     unsigned buttonMask;
-
-    NSSize	messagePosition;
-    NSRect	messageBG;
-    float	fontHeight;
-    id		messageFont;
-    NSArray*	messages;
 }
 
 - (void)setFrameBuffer:(id)aBuffer;
@@ -38,7 +32,6 @@
 - (void)displayFromBuffer:(NSRect)aRect;
 - (void)drawRectList:(id)aList;
 
-- (void)setMessage:(NSString*)aMessage;
 - (void)setCursorTo:(NSString*)icon hotSpot:(int)hs;
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender;
@@ -47,8 +40,5 @@
 - (unsigned int)draggingUpdated:(id <NSDraggingInfo>)sender;
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender;
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender;
-
-// jason added the -isDisplayingMessage method
-- (BOOL)isDisplayingMessage;
 
 @end

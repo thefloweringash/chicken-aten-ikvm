@@ -30,6 +30,8 @@ typedef union _FrameBufferColor {
     unsigned int	_u32;
 } FrameBufferColor;
 
+typedef unsigned char	FrameBufferPaletteIndex;
+
 @interface FrameBuffer : NSObject
 {
     BOOL		isBig;
@@ -75,11 +77,16 @@ typedef union _FrameBufferColor {
 - (void)putRect:(NSRect)aRect fromData:(unsigned char*)data;
 - (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint;
 
+- (void)fillColor:(FrameBufferColor*)fbc fromTightPixel:(unsigned char*)pixValue;
 - (void)fillRect:(NSRect)aRect tightPixel:(unsigned char*)pixValue;
 - (void)putRect:(NSRect)aRect fromTightData:(unsigned char*)data;
 - (void)getMaxValues:(int*)m;
 - (void)splitRGB:(unsigned char*)pixValue pixels:(unsigned)length into:(int*)rgb;
 - (void)combineRGB:(int*)rgb pixels:(unsigned)length into:(unsigned char*)pixValue;
+
+- (void)putRect:(NSRect)aRect withColors:(FrameBufferPaletteIndex*)data fromPalette:(FrameBufferColor*)palette;
+- (void)putRun:(FrameBufferColor*)fbc ofLength:(int)length at:(NSRect)aRect pixelOffset:(int)offset;
+- (void)putRect:(NSRect)aRect fromRGBBytes:(unsigned char*)rgb;
 
 @end
 

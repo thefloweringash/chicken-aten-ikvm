@@ -40,11 +40,6 @@
 - (bool)rememberPassword;
 - (int)display;
 
-- (void)setName: (NSString*)name;
-- (void)setHost: (NSString*)host;
-- (void)setRememberPassword: (bool)rememberPassword;
-- (void)setDisplay: (int)display;
-
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 
 - (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict;

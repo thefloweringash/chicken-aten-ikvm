@@ -30,15 +30,17 @@
 {
 	if( self = [super init] )
 	{
-		_name =             [[NSString alloc] initWithString:@"new server"];
-		_host =             [[NSString alloc] initWithString:@"localhost"];
-		_password =         [[NSString alloc] init];
-		_rememberPassword = NO;
-		_display =          0;
-		_lastProfile =      nil;
-		_shared =           NO;
-		_fullscreen =       NO;
-		
+		// The order of remember password setting and password is critical, or we risk loosing
+		// saved passwords.
+		[self setName:            [NSString stringWithString:@"new server"]];
+		[self setHost:            [NSString stringWithString:@"localhost"]];
+		[self setRememberPassword:NO];
+		[self setPassword:        [NSString stringWithString:@""]];
+		[self setDisplay:         0];
+		[self setLastProfile:     [NSString stringWithString:[[ProfileDataManager sharedInstance] defaultProfileName]]];
+		[self setShared:          NO];
+		[self setFullscreen:      NO];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(profileListUpdate:)
 													 name:ProfileListChangeMsg
@@ -58,6 +60,7 @@
 	[_host release];
 	[_password release];
 	[_lastProfile release];
+	[(id)_delegate release];
 	[super dealloc];
 }
 
@@ -181,11 +184,19 @@
 
 - (void)setLastProfile: (NSString*)lastProfile
 {
-	[_lastProfile autorelease];
-	_lastProfile = nil;
+	ProfileDataManager* profileManager = [ProfileDataManager sharedInstance];
 	
-	if( nil != [[ProfileDataManager sharedInstance] profileForKey: lastProfile] )
+	if( nil != [profileManager profileForKey: lastProfile] )
+	{
+		[_lastProfile autorelease];
 		_lastProfile = [lastProfile retain];
+	}
+	else if( nil == [profileManager profileForKey: _lastProfile] )
+	{
+		// This can actually happen at load, and this is a good place to catch it
+		[_lastProfile autorelease];
+		[self setLastProfile:[NSString stringWithString:[profileManager defaultProfileName]]];
+	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -193,15 +204,18 @@
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate
 {
+	[(id)delegate retain];
 	_delegate = delegate;
 }
 
 - (void)profileListUpdate:(id)notification
 {
+	ProfileDataManager* profileManager = [ProfileDataManager sharedInstance];
+	
 	NSString *lastProfile = [self lastProfile];
-	if( !lastProfile || (nil == [[ProfileDataManager sharedInstance] profileForKey: lastProfile]) )
+	if( !lastProfile || (nil == [profileManager profileForKey: lastProfile]) )
 	{
-		[self setLastProfile:nil];
+		[self setLastProfile:[NSString stringWithString:[profileManager defaultProfileName]]];
 	}
 }
 

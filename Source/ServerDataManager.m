@@ -162,8 +162,8 @@ static ServerDataManager* gInstance = nil;
 		[mServers release];
 		mServers = [[coder decodeObjectForKey:RFB_SERVER_LIST] retain];
 		
-		//[mGroups release];
-		//mGroups = [[coder decodeObjectForKey:RFB_GROUP_LIST] retain];
+		[mGroups release];
+		mGroups = [[coder decodeObjectForKey:RFB_GROUP_LIST] retain];
 		
 		// This next bit will fix issues where the key and the name
 		// didn't always match due to a bug in the name change code.

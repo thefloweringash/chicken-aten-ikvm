@@ -115,26 +115,6 @@
 	}
 }
 
-- (void)setName: (NSString*)name
-{
-	assert(0);
-}
-
-- (void)setHost: (NSString*)host
-{
-	assert(0);
-}
-
-- (void)setRememberPassword: (bool)rememberPassword
-{
-	assert(0);
-}
-
-- (void)setDisplay: (int)display
-{
-	assert(0);
-}
-
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 {
 	[super setDelegate:delegate];

@@ -23,11 +23,18 @@
 #import "ServerFromPrefs.h"
 #import <AppKit/AppKit.h>
 
+#define RFB_PREFS_LOCATION  @"Library/Preferences/cotvnc.prefs"
 #define RFB_HOST_INFO		@"HostPreferences"
+#define RFB_SERVER_LIST     @"ServerList"
 
 @implementation ServerDataManager
 
 static ServerDataManager* instance = nil;
+
++ (void)initialize
+{
+	[ServerDataManager setVersion:1];
+}
 
 - (id)init
 {
@@ -36,7 +43,15 @@ static ServerDataManager* instance = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(applicationWillTerminate:)
 													 name:@"NSApplicationWillTerminateNotification" object:NSApp];
-		
+	}
+	
+	return self;
+}
+
+- (id)initWithOriginalPrefs
+{
+	if( self = [self init] )
+	{
 		servers = [[NSMutableDictionary alloc] init];
 		NSEnumerator* hostEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:RFB_HOST_INFO] keyEnumerator];
 		NSEnumerator* objEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:RFB_HOST_INFO] objectEnumerator];
@@ -60,19 +75,69 @@ static ServerDataManager* instance = nil;
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
+	[self save];
+		
     [servers release];
     [super dealloc];
+}
+
+- (void)save
+{
+	NSString *storePath = [NSHomeDirectory() stringByAppendingPathComponent:RFB_PREFS_LOCATION];
+	
+	[NSKeyedArchiver archiveRootObject:instance toFile:storePath];	
 }
 
 + (ServerDataManager*) sharedInstance
 {
 	if( nil == instance )
 	{
-		instance = [[ServerDataManager alloc] init];
+		NSString *storePath = [NSHomeDirectory() stringByAppendingPathComponent:RFB_PREFS_LOCATION];
+		
+		instance = [NSKeyedUnarchiver unarchiveObjectWithFile:storePath];
+		if( nil == instance )
+		{
+			// Didn't find any preferences under the new serialization system,
+			// load based on the old system
+			instance = [[ServerDataManager alloc] initWithOriginalPrefs];
+			
+			[instance save];
+			
+			// Now that we've saved to the new format, remove from the old one
+			[[NSUserDefaults standardUserDefaults] removeObjectForKey:RFB_HOST_INFO];
+		}
+		else
+		{
+			[instance retain];
+		}
 	}
 	
 	return instance;
 }
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    assert( [coder allowsKeyedCoding] );
+
+	[coder encodeObject:servers forKey:RFB_SERVER_LIST];
+    
+	return;
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [self init];
+		
+	if( nil != self )
+	{
+		assert( [coder allowsKeyedCoding] );
+		
+		servers = [[coder decodeObjectForKey:RFB_SERVER_LIST] retain];
+	}
+	
+    return self;
+}
+
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {

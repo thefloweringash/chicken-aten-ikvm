@@ -34,7 +34,7 @@
  *  This is a singleton class. Always access the class through the sharedInstance
  *  function. Do not create an instance yourself.
  */
-@interface ServerDataManager : NSObject {
+@interface ServerDataManager : NSObject <NSCoding> {
 	NSMutableDictionary* servers;
 }
 
@@ -45,6 +45,11 @@
  *  instead of creating an instance of your own.
  *  @return Shared singleton instance of the ServerDataManager class. */
 + (ServerDataManager*) sharedInstance;
+
+/**
+ *  Saves the current server settings.
+ */
+- (void)save;
 
 /*
  *  Allows access to all servers managed by ServerDataManager.
@@ -82,5 +87,13 @@
  *  @return The created server.
  */
 - (id<IServerData>)createServerByName:(NSString*)name;
+
+/* @name Archiving and Unarchiving
+ * Implements the NSCoding protocol for serialization
+ */
+//@{
+- (void)encodeWithCoder:(NSCoder*)coder;
+- (id)initWithCoder:(NSCoder*)coder;
+//@}
 
 @end

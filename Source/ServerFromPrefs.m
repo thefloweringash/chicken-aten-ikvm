@@ -23,7 +23,6 @@
 #import "KeyChain.h"
 
 #define RFB_NAME          @"Name"
-#define RFB_GUID          @"Host_ID"
 #define RFB_HOST		  @"Host"
 #define RFB_PASSWORD	  @"Password"
 #define RFB_REMEMBER	  @"RememberPassword"
@@ -38,17 +37,17 @@
 
 @implementation ServerFromPrefs
 
++ (void)initialize
+{
+	[ServerFromPrefs setVersion:1];
+}
+
 - (id)initWithHost:(NSString*)host preferenceDictionary:(NSDictionary*)prefDict
 {
     if( self = [super init] )
 	{
-		//_prefDict = [[NSMutableDictionary dictionaryWithDictionary:prefDict] retain];
-		
-		if( nil == _name )
-		{
-			_name = [[NSString stringWithString:host] retain];
-		}
-		_host = host;
+		_name =             [[NSString stringWithString:host] retain];
+		_host =             [host retain];
 		_password =         [[NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]] retain];
 		_rememberPassword = [prefDict objectForKey:RFB_REMEMBER];
 		_display =          [prefDict objectForKey:RFB_DISPLAY];
@@ -97,6 +96,45 @@
 	[newServer setName:name];
 	
 	return newServer;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    assert( [coder allowsKeyedCoding] );
+
+	[coder encodeObject:_name             forKey:RFB_NAME];
+	[coder encodeObject:_host             forKey:RFB_HOST];
+	[coder encodeObject:_rememberPassword forKey:RFB_REMEMBER];
+	[coder encodeObject:_display          forKey:RFB_DISPLAY];
+	[coder encodeObject:_lastDisplay      forKey:RFB_LAST_DISPLAY];
+	[coder encodeObject:_lastProfile      forKey:RFB_LAST_PROFILE];
+	[coder encodeObject:_shared           forKey:RFB_SHARED];
+	[coder encodeObject:_fullscreen       forKey:RFB_FULLSCREEN];
+   	
+    return;
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super init];
+	if( nil != self )
+	{
+		assert( [coder allowsKeyedCoding] );
+
+		// Can decode keys in any order
+		_name =             [[coder decodeObjectForKey:RFB_NAME] retain];
+		_host =             [[coder decodeObjectForKey:RFB_HOST] retain];
+		_rememberPassword = [[coder decodeObjectForKey:RFB_REMEMBER] retain];
+		_display =          [[coder decodeObjectForKey:RFB_DISPLAY] retain];
+		_lastDisplay =      [[coder decodeObjectForKey:RFB_LAST_DISPLAY] retain];
+		_lastProfile =      [[coder decodeObjectForKey:RFB_LAST_PROFILE] retain];
+		_shared =           [[coder decodeObjectForKey:RFB_SHARED] retain];
+		_fullscreen =       [[coder decodeObjectForKey:RFB_FULLSCREEN] retain];
+			
+		_password = [[NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]] retain];
+	}
+	
+    return self;
 }
 
 - (NSString*)name

@@ -47,7 +47,9 @@
 
 - (void)dealloc
 {
-    free(buffer);
+    if(buffer) {
+        free(buffer);
+    }
     [super dealloc];
 }
 

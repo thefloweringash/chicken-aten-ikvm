@@ -127,7 +127,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		int sock, port;
 		int display;
 
-		[self setFrameBufferUpdateSeconds: [[NSUserDefaults standardUserDefaults] floatForKey: @"FrameBufferUpdateSeconds"]];
 		profile = [p retain];
 		_owner = owner; // jason added for fullscreen display
 		_isFullscreen = NO; // jason added for fullscreen display
@@ -620,7 +619,7 @@ static void print_data(unsigned char* data, int length)
     [self queueUpdateRequest];
 }
 
-- (void)queueUpdateRequest {
+- (void)_queueUpdateRequest {
     if (!updateRequested) {
         updateRequested = TRUE;
 		[self cancelFrameBufferUpdateRequest];
@@ -631,6 +630,11 @@ static void print_data(unsigned char* data, int length)
 			[self requestFrameBufferUpdate: nil];
 		}
     }
+}
+
+- (void)queueUpdateRequest {
+	if (! _hasManualFrameBufferUpdates)
+		[self _queueUpdateRequest];
 }
 
 - (void)requestFrameBufferUpdate:(id)sender {
@@ -885,6 +889,11 @@ static void print_data(unsigned char* data, int length)
     return frameBuffer;
 }
 
+- (NSWindow *)window;
+{
+	return window;
+}
+
 - (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length
 {
     int result;
@@ -964,11 +973,13 @@ static void print_data(unsigned char* data, int length)
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
 	[self installMouseMovedTrackingRect];
+	[self setFrameBufferUpdateSeconds: [[NSUserDefaults standardUserDefaults] floatForKey: @"FrontFrameBufferUpdateSeconds"]];
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification
 {
 	[self removeMouseMovedTrackingRect];
+	[self setFrameBufferUpdateSeconds: [[NSUserDefaults standardUserDefaults] floatForKey: @"OtherFrameBufferUpdateSeconds"]];
 }
 
 - (void)viewFrameDidChange:(NSNotification *)aNotification
@@ -1195,6 +1206,13 @@ static NSString* byteString(double d)
 
 - (void)setFrameBufferUpdateSeconds: (float)seconds {
 	_frameBufferUpdateSeconds = seconds;
+	_hasManualFrameBufferUpdates = _frameBufferUpdateSeconds >= [manager maxPossibleFrameBufferUpdateSeconds];
+		
+}
+
+- (void)manuallyUpdateFrameBuffer: (id)sender
+{
+	[self _queueUpdateRequest];
 }
 
 @end

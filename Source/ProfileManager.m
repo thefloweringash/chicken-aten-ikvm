@@ -22,25 +22,25 @@
 #define NUMENCODINGS			8
 
 static const NSString* encodingNames[NUMENCODINGS] = {
-    @"Hextile",
-    @"RRE",
-    @"CoRRE",
-    @"Raw",
     @"Tight",
 	@"Zlib",
 	@"ZRLE",
-	@"ZlibHex"
+	@"ZlibHex",
+    @"Hextile",
+    @"RRE",
+    @"CoRRE",
+    @"Raw"
 };
 
 static const unsigned int encodingValues[NUMENCODINGS] = {
-    rfbEncodingHextile,
-    rfbEncodingRRE,
-    rfbEncodingCoRRE,
-    rfbEncodingRaw,
-    rfbEncodingTight,
+	rfbEncodingTight,
 	rfbEncodingZlib,
 	rfbEncodingZRLE,
-	rfbEncodingZlibHex
+	rfbEncodingZlibHex,
+	rfbEncodingHextile,
+    rfbEncodingRRE,
+    rfbEncodingCoRRE,
+    rfbEncodingRaw
 };
 
 @implementation ProfileManager

@@ -43,7 +43,7 @@ static RFBConnectionManager*	sharedManager = nil;
 // Jason added the +initialize method
 + (void)initialize {
     id ud = [NSUserDefaults standardUserDefaults];
-	id dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects: @"128", @"10000", [NSNumber numberWithFloat: 26.0], [NSNumber numberWithFloat: 0.0], nil] forKeys: [NSArray arrayWithObjects: @"PS_MAXRECTS", @"PS_THRESHOLD", @"FullscreenAutoscrollIncrement", @"FullscreenScrollbars", nil]];
+	id dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects: @"128", @"10000", [NSNumber numberWithFloat: 26.0], [NSNumber numberWithFloat: 0.0], [NSNumber numberWithFloat: 0.0], [NSNumber numberWithFloat: 0.9], nil] forKeys: [NSArray arrayWithObjects: @"PS_MAXRECTS", @"PS_THRESHOLD", @"FullscreenAutoscrollIncrement", @"FullscreenScrollbars", @"FrontFrameBufferUpdateSeconds", @"OtherFrameBufferUpdateSeconds", nil]];
 	[ud registerDefaults: dict];
 }
 
@@ -52,6 +52,7 @@ static RFBConnectionManager*	sharedManager = nil;
     int i;
     NSString* s;
     id ud = [NSUserDefaults standardUserDefaults];
+	float updateDelay;
 
 	sigblock(sigmask(SIGPIPE));
 	connections = [[NSMutableArray alloc] init];
@@ -77,11 +78,16 @@ static RFBConnectionManager*	sharedManager = nil;
     }
     [gamma setFloatingPointFormat:NO left:1 right:2];
     [gamma setFloatValue:[s floatValue]];
-	// jason added the following because, well, it was missing
 	[psThreshold setStringValue: [ud stringForKey: @"PS_THRESHOLD"]];
 	[psMaxRects setStringValue: [ud stringForKey: @"PS_MAXRECTS"]];
     [autoscrollIncrement setFloatValue: [ud floatForKey:@"FullscreenAutoscrollIncrement"]];
     [fullscreenScrollbars setFloatValue: [ud boolForKey:@"FullscreenScrollbars"]];
+	updateDelay = [ud floatForKey: @"FrontFrameBufferUpdateSeconds"];
+	updateDelay = (float)[frontInverseCPUSlider maxValue] - updateDelay;
+	[frontInverseCPUSlider setFloatValue: updateDelay];
+	updateDelay = [ud floatForKey: @"OtherFrameBufferUpdateSeconds"];
+	updateDelay = (float)[otherInverseCPUSlider maxValue] - updateDelay;
+	[otherInverseCPUSlider setFloatValue: updateDelay];
 	// end jason
     [self updateProfileList:nil];
     if((s = [ud objectForKey:RFBLastHost]) != nil) {
@@ -185,7 +191,7 @@ static RFBConnectionManager*	sharedManager = nil;
     [aConnection autorelease];
 }
 
-- (void)connect:(id)sender
+- (IBAction)connect:(id)sender
 {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     NSDictionary* d;
@@ -234,7 +240,7 @@ static RFBConnectionManager*	sharedManager = nil;
     }
 }
 
-- (void)preferencesChanged:(id)sender
+- (IBAction)preferencesChanged:(id)sender
 {
     [self savePrefs];
 }
@@ -309,6 +315,44 @@ static RFBConnectionManager*	sharedManager = nil;
 
 - (BOOL)haveAnyConnections {
     return [connections count] > 0;
+}
+
+- (IBAction)frontInverseCPUSliderChanged: (NSSlider *)sender
+{
+	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
+	RFBConnection *thisConnection;
+	NSWindow *keyWindow = [NSApp keyWindow];
+	float updateDelay = [sender floatValue];
+	
+	updateDelay = (float)[sender maxValue] - updateDelay;
+	[[NSUserDefaults standardUserDefaults] setFloat: updateDelay forKey: @"FrontFrameBufferUpdateSeconds"];
+	while (thisConnection = [connectionEnumerator nextObject]) {
+		if ([thisConnection window] == keyWindow) {
+			[thisConnection setFrameBufferUpdateSeconds: updateDelay];
+			break;
+		}
+	}
+}
+
+- (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender
+{
+	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
+	RFBConnection *thisConnection;
+	NSWindow *keyWindow = [NSApp keyWindow];
+	float updateDelay = [sender floatValue];
+
+	updateDelay = (float)[sender maxValue] - updateDelay;
+	[[NSUserDefaults standardUserDefaults] setFloat: updateDelay forKey: @"OtherFrameBufferUpdateSeconds"];
+	while (thisConnection = [connectionEnumerator nextObject]) {
+		if ([thisConnection window] != keyWindow) {
+			[thisConnection setFrameBufferUpdateSeconds: updateDelay];
+		}
+	}
+}
+
+- (float)maxPossibleFrameBufferUpdateSeconds;
+{
+	return [frontInverseCPUSlider maxValue];
 }
 
 @end

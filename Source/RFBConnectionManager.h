@@ -19,25 +19,27 @@
 #import <AppKit/AppKit.h>
 #import "rfbproto.h"
 #import "Profile.h"
+@class ProfileManager;
 
 @interface RFBConnectionManager : NSObject
 {
-    id display;
-    id hostName;
-    id passWord;
-    id shared;
-    NSPanel *loginPanel;
+    IBOutlet NSTextField *display;
+    IBOutlet NSComboBox *hostName;
+    IBOutlet NSSecureTextField *passWord;
+    IBOutlet NSButton *shared;
+    IBOutlet NSPanel *loginPanel;
+    IBOutlet NSMatrix *colorModelMatrix;
+    IBOutlet NSTextField *psThreshold;
+    IBOutlet NSTextField *psMaxRects;
+    IBOutlet NSTextField *gamma;
+    IBOutlet NSPopUpButton *profilePopup;
+    IBOutlet ProfileManager *profileManager;
+    IBOutlet NSButton *rememberPwd;
+	IBOutlet NSSlider *autoscrollIncrement;
+	IBOutlet NSButton *fullscreenScrollbars;
+	IBOutlet NSSlider *frontInverseCPUSlider;
+	IBOutlet NSSlider *otherInverseCPUSlider;
     NSMutableArray*	connections;
-        
-    id colorModelMatrix;
-    id psThreshold;
-    id psMaxRects;
-    id gamma;
-    id profilePopup;
-    id profileManager;
-    id rememberPwd;
-	id autoscrollIncrement; // jason added
-	id fullscreenScrollbars; // jason added
 }
 
 + (float)gammaCorrection;
@@ -46,23 +48,25 @@
 - (void)updateProfileList:(id)notification;
 - (void)updateLoginPanel;
 - (void)removeConnection:(id)aConnection;
-- (void)connect:(id)sender;
+- (IBAction)connect:(id)sender;
 
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
 - (void)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner;
 
-- (void)preferencesChanged:(id)sender;
+- (IBAction)preferencesChanged:(id)sender;
 - (id)defaultFrameBufferClass;
-//- (void)applicationWillTerminate:(NSNotification *)aNotification;
 
 - (void)controlTextDidChange:(NSNotification *)aNotification;
 
-// Jason added the following for full-screen windows
 - (void)makeAllConnectionsWindowed;
 
 - (BOOL)haveMultipleConnections; // True if there is more than one connection open.
 - (BOOL)haveAnyConnections;      // True if there are any connections open.
+
+- (IBAction)frontInverseCPUSliderChanged: (NSSlider *)sender;
+- (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender;
+- (float)maxPossibleFrameBufferUpdateSeconds;
 
 @end

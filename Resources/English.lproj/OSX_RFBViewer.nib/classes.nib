@@ -4,6 +4,7 @@
             ACTIONS = {
                 makeConnectionFullscreen = id; 
                 makeConnectionWindowed = id; 
+                manuallyUpdateFrameBuffer = id; 
                 openNewTitlePanel = id; 
                 openOptions = id; 
                 pasteViaKeypress = id; 
@@ -44,24 +45,31 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {connect = id; preferencesChanged = id; }; 
+            ACTIONS = {
+                connect = id; 
+                frontInverseCPUSliderChanged = id; 
+                otherInverseCPUSliderChanged = id; 
+                preferencesChanged = id; 
+            }; 
             CLASS = RFBConnectionManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                autoscrollIncrement = id; 
-                colorModelMatrix = id; 
-                display = id; 
-                fullscreenScrollbars = id; 
-                gamma = id; 
-                hostName = id; 
-                loginPanel = id; 
-                passWord = id; 
-                profileManager = id; 
-                profilePopup = id; 
-                psMaxRects = id; 
-                psThreshold = id; 
-                rememberPwd = id; 
-                shared = id; 
+                autoscrollIncrement = NSSlider; 
+                colorModelMatrix = NSMatrix; 
+                display = NSTextField; 
+                frontInverseCPUSlider = NSSlider; 
+                fullscreenScrollbars = NSButton; 
+                gamma = NSTextField; 
+                hostName = NSComboBox; 
+                loginPanel = NSPanel; 
+                otherInverseCPUSlider = NSSlider; 
+                passWord = NSSecureTextField; 
+                profileManager = ProfileManager; 
+                profilePopup = NSPopUpButton; 
+                psMaxRects = NSTextField; 
+                psThreshold = NSTextField; 
+                rememberPwd = NSButton; 
+                shared = NSButton; 
             }; 
             SUPERCLASS = NSObject; 
         }

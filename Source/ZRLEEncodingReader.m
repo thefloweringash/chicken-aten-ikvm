@@ -18,7 +18,7 @@
 {
 	int i, y, samples, samplesPerByte, shift;
 	unsigned cPixelSize = [frameBuffer tightBytesPerPixel];
-	unsigned char subEncoding, index, b;
+	unsigned char subEncoding, b;
 	FrameBufferPaletteIndex tileBuffer[TILE_HEIGHT * TILE_WIDTH];
 	FrameBufferPaletteIndex* current, *eol;
 
@@ -40,6 +40,7 @@
 				continue;
 			}
 			if(subEncoding <= 16) {
+				unsigned char index = 0;
 				for(i=0; i<subEncoding; i++) {
 					[frameBuffer fillColor:palette + i fromTightPixel:data];
 					data += cPixelSize;
@@ -91,7 +92,7 @@
 				}
 				y = 0;
 				while(y < (tile.size.width * tile.size.height)) {
-					index = *data++;
+					unsigned char index = *data++;
 					if(index < 128) {
 						[frameBuffer putRun:palette + index ofLength:1 at:tile pixelOffset:y];
 						y++;

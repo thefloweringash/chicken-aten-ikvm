@@ -8,43 +8,25 @@
 			29B97326FDCFA39411CA2CEA,
 		);
 		breakpoints = (
-			F5BB547003D3C34F01000105,
-			F5BB547203D3C35401000105,
-			F5BB547603D3C3EA01000105,
-			F5BB547C03D3C4CF01000105,
-			F5BB547E03D3C4E401000105,
-			F5BB549503D3D0AF01000105,
-			F541E3EF03D7B30E01000122,
-			F541E3F103D7B31901000122,
-			F541E41203D7BCAC01000122,
-			F541E41703D7BF4301000122,
-			F541E42403D7E50601000122,
-			F541E46503D808FC01000122,
-			F541E46B03D8157C01000122,
-			F541E46F03D815C801000122,
-			F541E47903D8194301000122,
-			F541E47B03D81B2601000122,
-			F541E47D03D81B2A01000122,
 		);
 		executables = (
 			F5DA76F7033DB38701A8010C,
 		);
 		perUserDictionary = {
-			PBXPerProjectTemplateStateSaveDate = 64443305;
+			PBXPerProjectTemplateStateSaveDate = 64541349;
 			PBXWorkspaceContents = (
 				{
 					LeftSlideOut = {
 						Split0 = {
 							Split0 = {
 								NavContent0 = {
-									bookmark = F541EB0603D8251B01000122;
+									bookmark = F541EB3E03D8D25201000122;
 									history = (
 										F50A1DB00340E73601DE7258,
 										F5E4C9B203416E7001A8010C,
 										F575E42F035D53A80126EF48,
 										F52128D40368A70701F702E0,
 										F5BB54A603D3DDA601000105,
-										F541E32E03D6B4BA01000122,
 										F541E33003D6B4BA01000122,
 										F541E33203D6B4BA01000122,
 										F541E33503D6B4BA01000122,
@@ -64,7 +46,6 @@
 										F541E84003D8251B01000122,
 										F541E84103D8251B01000122,
 										F541E84203D8251B01000122,
-										F541E84303D8251B01000122,
 										F541E84403D8251B01000122,
 										F541E84503D8251B01000122,
 										F541E84603D8251B01000122,
@@ -79,23 +60,19 @@
 										F541E84F03D8251B01000122,
 										F541E85003D8251B01000122,
 										F541E85103D8251B01000122,
-										F541E85203D8251B01000122,
 										F541E85303D8251B01000122,
 										F541E85403D8251B01000122,
 										F541E85503D8251B01000122,
 										F541E85603D8251B01000122,
 										F541E85703D8251B01000122,
 										F541E85803D8251B01000122,
-										F541E85903D8251B01000122,
 										F541E85A03D8251B01000122,
 										F541E85B03D8251B01000122,
 										F541E85C03D8251B01000122,
 										F541E85D03D8251B01000122,
-										F541E85E03D8251B01000122,
 										F541E85F03D8251B01000122,
 										F541E86003D8251B01000122,
 										F541E86103D8251B01000122,
-										F541E86203D8251B01000122,
 										F541E86303D8251B01000122,
 										F541E86403D8251B01000122,
 										F541E86503D8251B01000122,
@@ -118,7 +95,12 @@
 										F541E87603D8251B01000122,
 										F541E87703D8251B01000122,
 										F541E87803D8251B01000122,
-										F541E87903D8251B01000122,
+										F541EB3203D8D25201000122,
+										F541EB3303D8D25201000122,
+										F541EB3403D8D25201000122,
+										F541EB3503D8D25201000122,
+										F541EB3603D8D25201000122,
+										F541EB3703D8D25201000122,
 									);
 									prevStack = (
 										F5CF5910033EB2F301959CE6,
@@ -345,7 +327,6 @@
 										F5BB552303D3E84D01000105,
 										F5BB552403D3E84D01000105,
 										F55785E303D3FB8401000105,
-										F541E33703D6B4BA01000122,
 										F541E33803D6B4BA01000122,
 										F541E33903D6B4BA01000122,
 										F541E33A03D6B4BA01000122,
@@ -1013,6 +994,12 @@
 										F541EB0303D8251B01000122,
 										F541EB0403D8251B01000122,
 										F541EB0503D8251B01000122,
+										F541EB3803D8D25201000122,
+										F541EB3903D8D25201000122,
+										F541EB3A03D8D25201000122,
+										F541EB3B03D8D25201000122,
+										F541EB3C03D8D25201000122,
+										F541EB3D03D8D25201000122,
 									);
 								};
 								NavCount = 1;
@@ -1148,7 +1135,7 @@
 							Frame = "{{0, 0}, {226, 549}}";
 						};
 						Tab3 = {
-							Frame = "{{0, 0}, {191, 640}}";
+							Frame = "{{0, 0}, {191, 654}}";
 							TargetTableConfiguration = (
 								ActiveObject,
 								16,
@@ -1174,7 +1161,7 @@
 					WindowLocation = "{1, 6}";
 				},
 			);
-			PBXWorkspaceStateSaveDate = 64443305;
+			PBXWorkspaceStateSaveDate = 64541349;
 		};
 		perUserProjectItems = {
 			F50A1D54033FD5DE01DE7258 = F50A1D54033FD5DE01DE7258;
@@ -1222,11 +1209,9 @@
 			F52128DB0368A70701F702E0 = F52128DB0368A70701F702E0;
 			F52128DC0368A70701F702E0 = F52128DC0368A70701F702E0;
 			F52128DD0368A70701F702E0 = F52128DD0368A70701F702E0;
-			F541E32E03D6B4BA01000122 = F541E32E03D6B4BA01000122;
 			F541E33003D6B4BA01000122 = F541E33003D6B4BA01000122;
 			F541E33203D6B4BA01000122 = F541E33203D6B4BA01000122;
 			F541E33503D6B4BA01000122 = F541E33503D6B4BA01000122;
-			F541E33703D6B4BA01000122 = F541E33703D6B4BA01000122;
 			F541E33803D6B4BA01000122 = F541E33803D6B4BA01000122;
 			F541E33903D6B4BA01000122 = F541E33903D6B4BA01000122;
 			F541E33A03D6B4BA01000122 = F541E33A03D6B4BA01000122;
@@ -1258,7 +1243,6 @@
 			F541E84003D8251B01000122 = F541E84003D8251B01000122;
 			F541E84103D8251B01000122 = F541E84103D8251B01000122;
 			F541E84203D8251B01000122 = F541E84203D8251B01000122;
-			F541E84303D8251B01000122 = F541E84303D8251B01000122;
 			F541E84403D8251B01000122 = F541E84403D8251B01000122;
 			F541E84503D8251B01000122 = F541E84503D8251B01000122;
 			F541E84603D8251B01000122 = F541E84603D8251B01000122;
@@ -1273,23 +1257,19 @@
 			F541E84F03D8251B01000122 = F541E84F03D8251B01000122;
 			F541E85003D8251B01000122 = F541E85003D8251B01000122;
 			F541E85103D8251B01000122 = F541E85103D8251B01000122;
-			F541E85203D8251B01000122 = F541E85203D8251B01000122;
 			F541E85303D8251B01000122 = F541E85303D8251B01000122;
 			F541E85403D8251B01000122 = F541E85403D8251B01000122;
 			F541E85503D8251B01000122 = F541E85503D8251B01000122;
 			F541E85603D8251B01000122 = F541E85603D8251B01000122;
 			F541E85703D8251B01000122 = F541E85703D8251B01000122;
 			F541E85803D8251B01000122 = F541E85803D8251B01000122;
-			F541E85903D8251B01000122 = F541E85903D8251B01000122;
 			F541E85A03D8251B01000122 = F541E85A03D8251B01000122;
 			F541E85B03D8251B01000122 = F541E85B03D8251B01000122;
 			F541E85C03D8251B01000122 = F541E85C03D8251B01000122;
 			F541E85D03D8251B01000122 = F541E85D03D8251B01000122;
-			F541E85E03D8251B01000122 = F541E85E03D8251B01000122;
 			F541E85F03D8251B01000122 = F541E85F03D8251B01000122;
 			F541E86003D8251B01000122 = F541E86003D8251B01000122;
 			F541E86103D8251B01000122 = F541E86103D8251B01000122;
-			F541E86203D8251B01000122 = F541E86203D8251B01000122;
 			F541E86303D8251B01000122 = F541E86303D8251B01000122;
 			F541E86403D8251B01000122 = F541E86403D8251B01000122;
 			F541E86503D8251B01000122 = F541E86503D8251B01000122;
@@ -1312,7 +1292,6 @@
 			F541E87603D8251B01000122 = F541E87603D8251B01000122;
 			F541E87703D8251B01000122 = F541E87703D8251B01000122;
 			F541E87803D8251B01000122 = F541E87803D8251B01000122;
-			F541E87903D8251B01000122 = F541E87903D8251B01000122;
 			F541E87A03D8251B01000122 = F541E87A03D8251B01000122;
 			F541E87B03D8251B01000122 = F541E87B03D8251B01000122;
 			F541E87C03D8251B01000122 = F541E87C03D8251B01000122;
@@ -1965,7 +1944,19 @@
 			F541EB0303D8251B01000122 = F541EB0303D8251B01000122;
 			F541EB0403D8251B01000122 = F541EB0403D8251B01000122;
 			F541EB0503D8251B01000122 = F541EB0503D8251B01000122;
-			F541EB0603D8251B01000122 = F541EB0603D8251B01000122;
+			F541EB3203D8D25201000122 = F541EB3203D8D25201000122;
+			F541EB3303D8D25201000122 = F541EB3303D8D25201000122;
+			F541EB3403D8D25201000122 = F541EB3403D8D25201000122;
+			F541EB3503D8D25201000122 = F541EB3503D8D25201000122;
+			F541EB3603D8D25201000122 = F541EB3603D8D25201000122;
+			F541EB3703D8D25201000122 = F541EB3703D8D25201000122;
+			F541EB3803D8D25201000122 = F541EB3803D8D25201000122;
+			F541EB3903D8D25201000122 = F541EB3903D8D25201000122;
+			F541EB3A03D8D25201000122 = F541EB3A03D8D25201000122;
+			F541EB3B03D8D25201000122 = F541EB3B03D8D25201000122;
+			F541EB3C03D8D25201000122 = F541EB3C03D8D25201000122;
+			F541EB3D03D8D25201000122 = F541EB3D03D8D25201000122;
+			F541EB3E03D8D25201000122 = F541EB3E03D8D25201000122;
 			F54382580360EA6601000105 = F54382580360EA6601000105;
 			F55038D703B12AB201423251 = F55038D703B12AB201423251;
 			F55785E303D3FB8401000105 = F55785E303D3FB8401000105;
@@ -2167,7 +2158,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: updateStatistics:";
 		rLen = 0;
-		rLoc = 33135;
+		rLoc = 33158;
 		rType = 0;
 		vrLen = 425;
 		vrLoc = 32144;
@@ -2187,7 +2178,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 28801;
+		rLoc = 28781;
 		rType = 0;
 		vrLen = 1043;
 		vrLoc = 24940;
@@ -2197,7 +2188,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 28801;
+		rLoc = 28781;
 		rType = 0;
 		vrLen = 862;
 		vrLoc = 25635;
@@ -2207,7 +2198,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 28801;
+		rLoc = 28781;
 		rType = 0;
 		vrLen = 902;
 		vrLoc = 25522;
@@ -2217,7 +2208,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 28801;
+		rLoc = 28781;
 		rType = 0;
 		vrLen = 838;
 		vrLoc = 25635;
@@ -2227,7 +2218,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendKey:pressed:";
 		rLen = 0;
-		rLoc = 24308;
+		rLoc = 24288;
 		rType = 0;
 		vrLen = 731;
 		vrLoc = 21604;
@@ -2287,7 +2278,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: 683";
 		rLen = 0;
-		rLoc = 27682;
+		rLoc = 27662;
 		rType = 0;
 		vrLen = 1741;
 		vrLoc = 23700;
@@ -2307,7 +2298,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 14;
-		rLoc = 23508;
+		rLoc = 23488;
 		rType = 0;
 		vrLen = 2117;
 		vrLoc = 3765;
@@ -2377,7 +2368,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setDisplaySize:andPixelFormat:";
 		rLen = 14;
-		rLoc = 11766;
+		rLoc = 11646;
 		rType = 0;
 		vrLen = 1886;
 		vrLoc = 10227;
@@ -2407,7 +2398,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: 1034";
 		rLen = 18;
-		rLoc = 38954;
+		rLoc = 39225;
 		rType = 0;
 		vrLen = 1530;
 		vrLoc = 35220;
@@ -2427,7 +2418,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: 1044";
 		rLen = 0;
-		rLoc = 39193;
+		rLoc = 39464;
 		rType = 0;
 		vrLen = 1301;
 		vrLoc = 36229;
@@ -2447,7 +2438,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: mouseEntered:";
 		rLen = 50;
-		rLoc = 38104;
+		rLoc = 38375;
 		rType = 0;
 		vrLen = 1165;
 		vrLoc = 35420;
@@ -2467,7 +2458,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: installTrackingRects";
 		rLen = 0;
-		rLoc = 36901;
+		rLoc = 37172;
 		rType = 0;
 		vrLen = 1649;
 		vrLoc = 34610;
@@ -2487,7 +2478,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: scrollFullscreenView:";
 		rLen = 0;
-		rLoc = 39607;
+		rLoc = 39878;
 		rType = 0;
 		vrLen = 1498;
 		vrLoc = 36053;
@@ -2527,7 +2518,7 @@
 		isa = PBXTextBookmark;
 		name = "ProfileManager.m: getEncodings";
 		rLen = 6;
-		rLoc = 1543;
+		rLoc = 1537;
 		rType = 0;
 		vrLen = 2080;
 		vrLoc = 1436;
@@ -2537,7 +2528,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 28937;
+		rLoc = 28917;
 		rType = 0;
 		vrLen = 1109;
 		vrLoc = 27828;
@@ -2567,7 +2558,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: awakeFromNib";
 		rLen = 0;
-		rLoc = 6270;
+		rLoc = 6744;
 		rType = 0;
 		vrLen = 897;
 		vrLoc = 4125;
@@ -2587,7 +2578,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 0;
-		rLoc = 21189;
+		rLoc = 21069;
 		rType = 0;
 		vrLen = 1143;
 		vrLoc = 20774;
@@ -2607,20 +2598,10 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: mouseAt:buttons:";
 		rLen = 15;
-		rLoc = 20723;
+		rLoc = 20603;
 		rType = 0;
 		vrLen = 1706;
 		vrLoc = 20236;
-	};
-	F541E32E03D6B4BA01000122 = {
-		fRef = F5DC7173033DB3DC01A8010C;
-		isa = PBXTextBookmark;
-		name = "English: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 290;
-		vrLoc = 0;
 	};
 	F541E33003D6B4BA01000122 = {
 		fRef = F5DC71D7033DB4A801A8010C;
@@ -2652,16 +2633,6 @@
 		vrLen = 255;
 		vrLoc = 0;
 	};
-	F541E33703D6B4BA01000122 = {
-		fRef = F5DC7173033DB3DC01A8010C;
-		isa = PBXTextBookmark;
-		name = "English: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 290;
-		vrLoc = 0;
-	};
 	F541E33803D6B4BA01000122 = {
 		fRef = F5DC71F9033DB4A801A8010C;
 		isa = PBXTextBookmark;
@@ -2687,7 +2658,7 @@
 		isa = PBXTextBookmark;
 		name = "ProfileManager.m: selectProfileNamed:";
 		rLen = 214;
-		rLoc = 5835;
+		rLoc = 5829;
 		rType = 0;
 		vrLen = 1563;
 		vrLoc = 5079;
@@ -2707,7 +2678,7 @@
 		isa = PBXTextBookmark;
 		name = "ProfileManager.m: selectProfileNamed:";
 		rLen = 0;
-		rLoc = 5952;
+		rLoc = 5946;
 		rType = 0;
 		vrLen = 1545;
 		vrLoc = 5079;
@@ -2759,7 +2730,7 @@
 		rLen = 0;
 		rLoc = 75;
 		rType = 0;
-		vrLen = 336;
+		vrLen = 334;
 		vrLoc = 0;
 	};
 	F541E34403D6B4BA01000122 = {
@@ -2819,76 +2790,10 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: mouseAt:buttons:";
 		rLen = 0;
-		rLoc = 21527;
+		rLoc = 21407;
 		rType = 0;
 		vrLen = 1485;
 		vrLoc = 20833;
-	};
-	F541E3EF03D7B30E01000122 = {
-		fileReference = F5DC71E5033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 178;
-		state = 1;
-	};
-	F541E3F103D7B31901000122 = {
-		fileReference = F5DC71E5033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 183;
-		state = 1;
-	};
-	F541E41203D7BCAC01000122 = {
-		fileReference = F5DC719E033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 59;
-		state = 1;
-	};
-	F541E41703D7BF4301000122 = {
-		fileReference = F5DC71B8033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 134;
-		state = 2;
-	};
-	F541E42403D7E50601000122 = {
-		fileReference = F5DC71E5033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 163;
-		state = 2;
-	};
-	F541E46503D808FC01000122 = {
-		fileReference = F5DC71A0033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 28;
-		state = 1;
-	};
-	F541E46B03D8157C01000122 = {
-		fileReference = F5DC71F3033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 330;
-		state = 2;
-	};
-	F541E46F03D815C801000122 = {
-		fileReference = F5DC71F3033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 262;
-		state = 2;
-	};
-	F541E47903D8194301000122 = {
-		fileReference = F5DC71F3033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 270;
-		state = 2;
-	};
-	F541E47B03D81B2601000122 = {
-		fileReference = F5DC71F3033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 350;
-		state = 2;
-	};
-	F541E47D03D81B2A01000122 = {
-		fileReference = F5DC71F3033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 328;
-		state = 2;
 	};
 	F541E83303D8251B01000122 = {
 		fRef = F5DC71E1033DB4A801A8010C;
@@ -3050,16 +2955,6 @@
 		vrLen = 971;
 		vrLoc = 1031;
 	};
-	F541E84303D8251B01000122 = {
-		fRef = F5DC71BC033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "GrayScaleFrameBuffer.m: sps";
-		rLen = 0;
-		rLoc = 1129;
-		rType = 0;
-		vrLen = 651;
-		vrLoc = 901;
-	};
 	F541E84403D8251B01000122 = {
 		fRef = F5DC71BB033DB4A801A8010C;
 		isa = PBXTextBookmark;
@@ -3085,7 +2980,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.h: 41";
 		rLen = 0;
-		rLoc = 1269;
+		rLoc = 1590;
 		rType = 0;
 		vrLen = 880;
 		vrLoc = 913;
@@ -3200,16 +3095,6 @@
 		vrLen = 1041;
 		vrLoc = 0;
 	};
-	F541E85203D8251B01000122 = {
-		fRef = F5F2D5A603B3C93B01150DB1;
-		isa = PBXTextBookmark;
-		name = "debug.h: FULLDebug";
-		rLen = 0;
-		rLoc = 281;
-		rType = 0;
-		vrLen = 334;
-		vrLoc = 0;
-	};
 	F541E85303D8251B01000122 = {
 		fRef = F5DC71D2033DB4A801A8010C;
 		isa = PBXTextBookmark;
@@ -3265,20 +3150,10 @@
 		isa = PBXTextBookmark;
 		name = "ProfileManager.m: changeEncodingState:";
 		rLen = 13;
-		rLoc = 7061;
+		rLoc = 7055;
 		rType = 0;
 		vrLen = 974;
 		vrLoc = 6200;
-	};
-	F541E85903D8251B01000122 = {
-		fRef = F5DC71E0033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "RFBConnectionManager.m: ud";
-		rLen = 381;
-		rLoc = 1499;
-		rType = 0;
-		vrLen = 1509;
-		vrLoc = 1315;
 	};
 	F541E85A03D8251B01000122 = {
 		fRef = F5DC71E4033DB4A801A8010C;
@@ -3320,16 +3195,6 @@
 		vrLen = 2027;
 		vrLoc = 2026;
 	};
-	F541E85E03D8251B01000122 = {
-		fRef = F5DC71F9033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "VNCViewer_main.m: main";
-		rLen = 0;
-		rLoc = 377;
-		rType = 0;
-		vrLen = 421;
-		vrLoc = 0;
-	};
 	F541E85F03D8251B01000122 = {
 		fRef = F564F4B60392E07E01303550;
 		isa = PBXTextBookmark;
@@ -3359,16 +3224,6 @@
 		rType = 0;
 		vrLen = 1203;
 		vrLoc = 392;
-	};
-	F541E86203D8251B01000122 = {
-		fRef = F536C26903937E5301178D82;
-		isa = PBXTextBookmark;
-		name = "ZRLEEncodingReader.m: setUncompressedData:length:";
-		rLen = 0;
-		rLoc = 1126;
-		rType = 0;
-		vrLen = 1620;
-		vrLoc = 174;
 	};
 	F541E86303D8251B01000122 = {
 		fRef = F536C26703937E5301178D82;
@@ -3535,7 +3390,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.h: frameBuffer";
 		rLen = 0;
-		rLoc = 4796;
+		rLoc = 4854;
 		rType = 0;
 		vrLen = 1624;
 		vrLoc = 4137;
@@ -3545,7 +3400,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: pool";
 		rLen = 0;
-		rLoc = 16637;
+		rLoc = 16517;
 		rType = 0;
 		vrLen = 1291;
 		vrLoc = 16104;
@@ -3590,16 +3445,6 @@
 		vrLen = 902;
 		vrLoc = 857;
 	};
-	F541E87903D8251B01000122 = {
-		fRef = F5DC71F3033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "TightEncodingReader.m: filterInitDone:";
-		rLen = 0;
-		rLoc = 5957;
-		rType = 0;
-		vrLen = 1351;
-		vrLoc = 5413;
-	};
 	F541E87A03D8251B01000122 = {
 		fRef = F5DC71F9033DB4A801A8010C;
 		isa = PBXTextBookmark;
@@ -3635,7 +3480,7 @@
 		isa = PBXTextBookmark;
 		name = "debug.h: FULL_DEBUG";
 		rLen = 0;
-		rLoc = 191;
+		rLoc = 193;
 		rType = 0;
 		vrLen = 334;
 		vrLoc = 0;
@@ -3675,7 +3520,7 @@
 		isa = PBXTextBookmark;
 		name = "debug.h: 17";
 		rLen = 9;
-		rLoc = 267;
+		rLoc = 269;
 		rType = 0;
 		vrLen = 334;
 		vrLoc = 0;
@@ -3715,7 +3560,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: mouseAt:buttons:";
 		rLen = 0;
-		rLoc = 21715;
+		rLoc = 21595;
 		rType = 0;
 		vrLen = 1179;
 		vrLoc = 20835;
@@ -3885,7 +3730,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 854;
 		vrLoc = 15903;
@@ -4575,7 +4420,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16832;
+		rLoc = 16712;
 		rType = 0;
 		vrLen = 1348;
 		vrLoc = 0;
@@ -4905,7 +4750,7 @@
 		isa = PBXTextBookmark;
 		name = "ProfileManager.m: selectProfileNamed:";
 		rLen = 0;
-		rLoc = 5952;
+		rLoc = 5946;
 		rType = 0;
 		vrLen = 1545;
 		vrLoc = 5079;
@@ -4925,7 +4770,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: initWithDictionary:profile:owner:";
 		rLen = 7;
-		rLoc = 7117;
+		rLoc = 6997;
 		rType = 0;
 		vrLen = 1291;
 		vrLoc = 6158;
@@ -4935,7 +4780,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: removeConnection:";
 		rLen = 6;
-		rLoc = 6454;
+		rLoc = 6928;
 		rType = 0;
 		vrLen = 1437;
 		vrLoc = 5691;
@@ -4944,8 +4789,8 @@
 		fRef = F5DC71DF033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.h: 40";
-		rLen = 20;
-		rLoc = 1241;
+		rLen = 11;
+		rLoc = 1458;
 		rType = 0;
 		vrLen = 1187;
 		vrLoc = 0;
@@ -4955,7 +4800,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: initialize";
 		rLen = 0;
-		rLoc = 3496;
+		rLoc = 3970;
 		rType = 0;
 		vrLen = 977;
 		vrLoc = 1239;
@@ -5305,7 +5150,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: init";
 		rLen = 0;
-		rLoc = 3496;
+		rLoc = 3970;
 		rType = 0;
 		vrLen = 901;
 		vrLoc = 1315;
@@ -5405,7 +5250,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: applicationDidBecomeActive:";
 		rLen = 0;
-		rLoc = 9364;
+		rLoc = 9846;
 		rType = 0;
 		vrLen = 1478;
 		vrLoc = 9140;
@@ -5435,7 +5280,7 @@
 		isa = PBXTextBookmark;
 		name = "ZRLEEncodingReader.m: setUncompressedData:length:";
 		rLen = 0;
-		rLoc = 662;
+		rLoc = 655;
 		rType = 0;
 		vrLen = 1626;
 		vrLoc = 174;
@@ -5445,7 +5290,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 7;
-		rLoc = 23198;
+		rLoc = 23178;
 		rType = 0;
 		vrLen = 1208;
 		vrLoc = 21030;
@@ -5467,7 +5312,7 @@
 		rLen = 9;
 		rLoc = 1199;
 		rType = 0;
-		vrLen = 404;
+		vrLen = 162;
 		vrLoc = 1301;
 	};
 	F541E93503D8251B01000122 = {
@@ -5515,7 +5360,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 7;
-		rLoc = 23198;
+		rLoc = 23178;
 		rType = 0;
 		vrLen = 765;
 		vrLoc = 22535;
@@ -5557,7 +5402,7 @@
 		rLen = 39;
 		rLoc = 1291;
 		rType = 0;
-		vrLen = 413;
+		vrLen = 165;
 		vrLoc = 1298;
 	};
 	F541E93E03D8251B01000122 = {
@@ -5605,7 +5450,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 13;
-		rLoc = 9175;
+		rLoc = 9055;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8694;
@@ -5705,7 +5550,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 0;
-		rLoc = 23252;
+		rLoc = 23232;
 		rType = 0;
 		vrLen = 676;
 		vrLoc = 22280;
@@ -5725,7 +5570,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: initialize";
 		rLen = 43;
-		rLoc = 4140;
+		rLoc = 4614;
 		rType = 0;
 		vrLen = 1305;
 		vrLoc = 3514;
@@ -5734,8 +5579,8 @@
 		fRef = F5DC71DF033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.h: 40";
-		rLen = 20;
-		rLoc = 1241;
+		rLen = 11;
+		rLoc = 1458;
 		rType = 0;
 		vrLen = 1110;
 		vrLoc = 1123;
@@ -5745,7 +5590,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: initialize";
 		rLen = 43;
-		rLoc = 4140;
+		rLoc = 4614;
 		rType = 0;
 		vrLen = 1305;
 		vrLoc = 3514;
@@ -5755,7 +5600,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.h: init";
 		rLen = 0;
-		rLoc = 1347;
+		rLoc = 1668;
 		rType = 0;
 		vrLen = 1109;
 		vrLoc = 1090;
@@ -5765,7 +5610,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: initialize";
 		rLen = 43;
-		rLoc = 4140;
+		rLoc = 4614;
 		rType = 0;
 		vrLen = 1305;
 		vrLoc = 3514;
@@ -5775,7 +5620,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.h: init";
 		rLen = 0;
-		rLoc = 1416;
+		rLoc = 1737;
 		rType = 0;
 		vrLen = 1156;
 		vrLoc = 1070;
@@ -5785,7 +5630,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: initialize";
 		rLen = 25;
-		rLoc = 4562;
+		rLoc = 5036;
 		rType = 0;
 		vrLen = 1305;
 		vrLoc = 3514;
@@ -5795,7 +5640,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.h: 41";
 		rLen = 0;
-		rLoc = 1269;
+		rLoc = 1590;
 		rType = 0;
 		vrLen = 880;
 		vrLoc = 913;
@@ -5815,7 +5660,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 17;
-		rLoc = 23216;
+		rLoc = 23196;
 		rType = 0;
 		vrLen = 711;
 		vrLoc = 22044;
@@ -5865,7 +5710,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 0;
-		rLoc = 23252;
+		rLoc = 23232;
 		rType = 0;
 		vrLen = 681;
 		vrLoc = 22280;
@@ -5905,7 +5750,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: queueUpdateRequest";
 		rLen = 0;
-		rLoc = 23100;
+		rLoc = 23086;
 		rType = 0;
 		vrLen = 687;
 		vrLoc = 22169;
@@ -6105,9 +5950,9 @@
 		isa = PBXTextBookmark;
 		name = "debug.h: FULL_DEBUG";
 		rLen = 0;
-		rLoc = 191;
+		rLoc = 193;
 		rType = 0;
-		vrLen = 336;
+		vrLen = 334;
 		vrLoc = 0;
 	};
 	F541E97503D8251B01000122 = {
@@ -6115,7 +5960,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: mouseAt:buttons:";
 		rLen = 0;
-		rLoc = 22005;
+		rLoc = 21885;
 		rType = 0;
 		vrLen = 1312;
 		vrLoc = 21015;
@@ -6145,7 +5990,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: initialize";
 		rLen = 39;
-		rLoc = 15080;
+		rLoc = 14960;
 		rType = 0;
 		vrLen = 742;
 		vrLoc = 14274;
@@ -6165,7 +6010,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: initialize";
 		rLen = 45;
-		rLoc = 9315;
+		rLoc = 9195;
 		rType = 0;
 		vrLen = 696;
 		vrLoc = 8722;
@@ -6185,7 +6030,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9171;
+		rLoc = 9051;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6205,7 +6050,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6225,7 +6070,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6265,7 +6110,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9227;
+		rLoc = 9107;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6295,7 +6140,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 594;
 		vrLoc = 8656;
@@ -6315,7 +6160,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6345,7 +6190,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6375,7 +6220,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6395,7 +6240,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6435,7 +6280,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReaderWithoutReset:";
 		rLen = 0;
-		rLoc = 9312;
+		rLoc = 9192;
 		rType = 0;
 		vrLen = 633;
 		vrLoc = 8692;
@@ -6475,7 +6320,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6515,7 +6360,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: start:";
 		rLen = 0;
-		rLoc = 15149;
+		rLoc = 15029;
 		rType = 0;
 		vrLen = 703;
 		vrLoc = 14316;
@@ -6555,7 +6400,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6575,7 +6420,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6595,7 +6440,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6625,7 +6470,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6655,7 +6500,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6675,7 +6520,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6705,7 +6550,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: pauseDrawing";
 		rLen = 0;
-		rLoc = 15828;
+		rLoc = 15708;
 		rType = 0;
 		vrLen = 615;
 		vrLoc = 15141;
@@ -6735,7 +6580,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6755,7 +6600,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6775,7 +6620,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -6835,7 +6680,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6895,7 +6740,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -6915,7 +6760,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 594;
 		vrLoc = 8656;
@@ -6945,7 +6790,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 594;
 		vrLoc = 8656;
@@ -6985,7 +6830,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -7005,7 +6850,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 823;
 		vrLoc = 15803;
@@ -7025,7 +6870,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -7045,7 +6890,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 788;
 		vrLoc = 15798;
@@ -7135,7 +6980,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: drawRectFromBuffer:";
 		rLen = 0;
-		rLoc = 15634;
+		rLoc = 15514;
 		rType = 0;
 		vrLen = 538;
 		vrLoc = 14965;
@@ -7155,7 +7000,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: drawRectFromBuffer:";
 		rLen = 0;
-		rLoc = 15634;
+		rLoc = 15514;
 		rType = 0;
 		vrLen = 538;
 		vrLoc = 14965;
@@ -7205,7 +7050,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -7225,7 +7070,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -7245,7 +7090,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 594;
 		vrLoc = 8656;
@@ -7265,7 +7110,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 594;
 		vrLoc = 8656;
@@ -7285,7 +7130,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: visibleRect";
 		rLen = 0;
-		rLoc = 15588;
+		rLoc = 15468;
 		rType = 0;
 		vrLen = 498;
 		vrLoc = 14912;
@@ -7305,7 +7150,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: writeBytes:length:";
 		rLen = 0;
-		rLoc = 32217;
+		rLoc = 32240;
 		rType = 0;
 		vrLen = 849;
 		vrLoc = 30527;
@@ -7335,7 +7180,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: flushDrawing";
 		rLen = 0;
-		rLoc = 15947;
+		rLoc = 15827;
 		rType = 0;
 		vrLen = 595;
 		vrLoc = 15257;
@@ -7375,7 +7220,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 823;
 		vrLoc = 15803;
@@ -7405,7 +7250,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -7435,7 +7280,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -7455,7 +7300,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -7495,7 +7340,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -7515,7 +7360,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 823;
 		vrLoc = 15803;
@@ -7545,7 +7390,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9227;
+		rLoc = 9107;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -7575,7 +7420,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 594;
 		vrLoc = 8656;
@@ -7615,7 +7460,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 823;
 		vrLoc = 15803;
@@ -7635,7 +7480,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 788;
 		vrLoc = 15798;
@@ -7665,7 +7510,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: drawRectFromBuffer:";
 		rLen = 0;
-		rLoc = 15634;
+		rLoc = 15514;
 		rType = 0;
 		vrLen = 538;
 		vrLoc = 14965;
@@ -7705,7 +7550,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -7725,7 +7570,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 594;
 		vrLoc = 8656;
@@ -7775,7 +7620,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 823;
 		vrLoc = 15803;
@@ -7815,7 +7660,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9171;
+		rLoc = 9051;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -7835,7 +7680,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 823;
 		vrLoc = 15803;
@@ -7855,7 +7700,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -7945,7 +7790,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9171;
+		rLoc = 9051;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -8025,7 +7870,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: drawRectFromBuffer:";
 		rLen = 0;
-		rLoc = 15634;
+		rLoc = 15514;
 		rType = 0;
 		vrLen = 538;
 		vrLoc = 14965;
@@ -8075,7 +7920,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -8095,7 +7940,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -8115,7 +7960,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 594;
 		vrLoc = 8656;
@@ -8195,7 +8040,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -8245,7 +8090,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 786;
 		vrLoc = 15800;
@@ -8265,7 +8110,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9171;
+		rLoc = 9051;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 8636;
@@ -8325,7 +8170,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setServerVersion:";
 		rLen = 0;
-		rLoc = 9362;
+		rLoc = 9242;
 		rType = 0;
 		vrLen = 813;
 		vrLoc = 8750;
@@ -8365,7 +8210,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReaderWithoutReset:";
 		rLen = 0;
-		rLoc = 9283;
+		rLoc = 9163;
 		rType = 0;
 		vrLen = 633;
 		vrLoc = 8692;
@@ -8385,7 +8230,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: start:";
 		rLen = 0;
-		rLoc = 15121;
+		rLoc = 15001;
 		rType = 0;
 		vrLen = 703;
 		vrLoc = 14316;
@@ -8415,7 +8260,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: drawRectList:";
 		rLen = 0;
-		rLoc = 15708;
+		rLoc = 15588;
 		rType = 0;
 		vrLen = 438;
 		vrLoc = 14941;
@@ -8435,7 +8280,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: writeBytes:length:";
 		rLen = 5;
-		rLoc = 31595;
+		rLoc = 31618;
 		rType = 0;
 		vrLen = 737;
 		vrLoc = 30428;
@@ -8465,7 +8310,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: writeBytes:length:";
 		rLen = 5;
-		rLoc = 31595;
+		rLoc = 31618;
 		rType = 0;
 		vrLen = 1231;
 		vrLoc = 30428;
@@ -8495,7 +8340,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: flushDrawing";
 		rLen = 0;
-		rLoc = 15977;
+		rLoc = 15857;
 		rType = 0;
 		vrLen = 455;
 		vrLoc = 15018;
@@ -8535,7 +8380,7 @@
 		isa = PBXTextBookmark;
 		name = "ProfileManager.m: changeEncodingState:";
 		rLen = 13;
-		rLoc = 7061;
+		rLoc = 7055;
 		rType = 0;
 		vrLen = 974;
 		vrLoc = 6200;
@@ -8544,7 +8389,7 @@
 		fRef = F5DC71E0033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: ud";
-		rLen = 381;
+		rLen = 515;
 		rLoc = 1499;
 		rType = 0;
 		vrLen = 1509;
@@ -8597,7 +8442,7 @@
 		rLen = 0;
 		rLoc = 6487;
 		rType = 0;
-		vrLen = 970;
+		vrLen = 317;
 		vrLoc = 6176;
 	};
 	F541EA6E03D8251B01000122 = {
@@ -8637,7 +8482,7 @@
 		rLen = 0;
 		rLoc = 6487;
 		rType = 0;
-		vrLen = 898;
+		vrLen = 124;
 		vrLoc = 6369;
 	};
 	F541EA7203D8251B01000122 = {
@@ -8677,7 +8522,7 @@
 		rLen = 0;
 		rLoc = 5618;
 		rType = 0;
-		vrLen = 1008;
+		vrLen = 967;
 		vrLoc = 5526;
 	};
 	F541EA7603D8251B01000122 = {
@@ -8705,7 +8550,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: initWithDictionary:profile:owner:";
 		rLen = 0;
-		rLoc = 6861;
+		rLoc = 6741;
 		rType = 0;
 		vrLen = 1759;
 		vrLoc = 6647;
@@ -8715,7 +8560,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.h: frameBuffer";
 		rLen = 0;
-		rLoc = 4777;
+		rLoc = 4813;
 		rType = 0;
 		vrLen = 1981;
 		vrLoc = 2224;
@@ -8725,7 +8570,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: queueUpdateRequest";
 		rLen = 0;
-		rLoc = 23100;
+		rLoc = 23086;
 		rType = 0;
 		vrLen = 1691;
 		vrLoc = 21242;
@@ -8755,7 +8600,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: queueUpdateRequest";
 		rLen = 0;
-		rLoc = 23100;
+		rLoc = 23086;
 		rType = 0;
 		vrLen = 1173;
 		vrLoc = 21795;
@@ -8785,7 +8630,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReaderWithoutReset:";
 		rLen = 0;
-		rLoc = 9283;
+		rLoc = 9163;
 		rType = 0;
 		vrLen = 633;
 		vrLoc = 9072;
@@ -8805,7 +8650,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReaderWithoutReset:";
 		rLen = 0;
-		rLoc = 9283;
+		rLoc = 9163;
 		rType = 0;
 		vrLen = 633;
 		vrLoc = 9072;
@@ -8845,7 +8690,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReaderWithoutReset:";
 		rLen = 0;
-		rLoc = 9283;
+		rLoc = 9163;
 		rType = 0;
 		vrLen = 633;
 		vrLoc = 9072;
@@ -8895,7 +8740,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9227;
+		rLoc = 9107;
 		rType = 0;
 		vrLen = 581;
 		vrLoc = 9016;
@@ -8915,7 +8760,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: queueUpdateRequest";
 		rLen = 0;
-		rLoc = 22721;
+		rLoc = 23086;
 		rType = 0;
 		vrLen = 1000;
 		vrLoc = 21861;
@@ -8945,7 +8790,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: queueUpdateRequest";
 		rLen = 0;
-		rLoc = 22835;
+		rLoc = 23086;
 		rType = 0;
 		vrLen = 1771;
 		vrLoc = 21242;
@@ -8955,7 +8800,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.h: 99";
 		rLen = 0;
-		rLoc = 3460;
+		rLoc = 3496;
 		rType = 0;
 		vrLen = 1987;
 		vrLoc = 2224;
@@ -8965,7 +8810,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: mouseMovedTo:";
 		rLen = 39;
-		rLoc = 23258;
+		rLoc = 23238;
 		rType = 0;
 		vrLen = 1787;
 		vrLoc = 21203;
@@ -8975,7 +8820,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.h: mouseMovedTo:";
 		rLen = 30;
-		rLoc = 4338;
+		rLoc = 4374;
 		rType = 0;
 		vrLen = 1632;
 		vrLoc = 4137;
@@ -8985,7 +8830,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: initialize";
 		rLen = 48;
-		rLoc = 16222;
+		rLoc = 16102;
 		rType = 0;
 		vrLen = 1167;
 		vrLoc = 15772;
@@ -9005,7 +8850,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: length";
 		rLen = 0;
-		rLoc = 16401;
+		rLoc = 16281;
 		rType = 0;
 		vrLen = 1213;
 		vrLoc = 15854;
@@ -9125,7 +8970,7 @@
 		isa = PBXTextBookmark;
 		name = "ZRLEEncodingReader.m: setUncompressedData:length:";
 		rLen = 0;
-		rLoc = 1126;
+		rLoc = 1119;
 		rType = 0;
 		vrLen = 1620;
 		vrLoc = 174;
@@ -9145,7 +8990,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: queueUpdateRequest";
 		rLen = 0;
-		rLoc = 23099;
+		rLoc = 23086;
 		rType = 0;
 		vrLen = 1599;
 		vrLoc = 21281;
@@ -9875,7 +9720,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 17127;
+		rLoc = 17007;
 		rType = 0;
 		vrLen = 1210;
 		vrLoc = 16046;
@@ -9895,7 +9740,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: requestFrameBufferUpdate:";
 		rLen = 46;
-		rLoc = 23109;
+		rLoc = 23089;
 		rType = 0;
 		vrLen = 1156;
 		vrLoc = 22391;
@@ -9905,7 +9750,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.h: frameBuffer";
 		rLen = 0;
-		rLoc = 4796;
+		rLoc = 4854;
 		rType = 0;
 		vrLen = 1624;
 		vrLoc = 4137;
@@ -9915,7 +9760,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: pool";
 		rLen = 0;
-		rLoc = 16637;
+		rLoc = 16517;
 		rType = 0;
 		vrLen = 1291;
 		vrLoc = 16104;
@@ -10120,16 +9965,6 @@
 		vrLen = 902;
 		vrLoc = 857;
 	};
-	F541EB0603D8251B01000122 = {
-		fRef = F5DC71F3033DB4A801A8010C;
-		isa = PBXTextBookmark;
-		name = "TightEncodingReader.m: filterInitDone:";
-		rLen = 0;
-		rLoc = 5726;
-		rType = 0;
-		vrLen = 1332;
-		vrLoc = 5413;
-	};
 	F541EB0703D8251C01000122 = {
 		isa = PBXFileReference;
 		name = NSDebug.h;
@@ -10142,12 +9977,142 @@
 		path = /System/Library/Frameworks/Foundation.framework/Versions/C/Headers/NSDebug.h;
 		refType = 0;
 	};
+	F541EB3203D8D25201000122 = {
+		fRef = F5DC71F3033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "TightEncodingReader.m: setFilterId:";
+		rLen = 0;
+		rLoc = 5251;
+		rType = 0;
+		vrLen = 1296;
+		vrLoc = 4656;
+	};
+	F541EB3303D8D25201000122 = {
+		fRef = F5F2D5A603B3C93B01150DB1;
+		isa = PBXTextBookmark;
+		name = "debug.h: FULL_DEBUG";
+		rLen = 0;
+		rLoc = 193;
+		rType = 0;
+		vrLen = 336;
+		vrLoc = 0;
+	};
+	F541EB3403D8D25201000122 = {
+		fRef = F5DC71F9033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "VNCViewer_main.m: main";
+		rLen = 0;
+		rLoc = 377;
+		rType = 0;
+		vrLen = 421;
+		vrLoc = 0;
+	};
+	F541EB3503D8D25201000122 = {
+		fRef = F536C26903937E5301178D82;
+		isa = PBXTextBookmark;
+		name = "ZRLEEncodingReader.m: setUncompressedData:length:";
+		rLen = 0;
+		rLoc = 2669;
+		rType = 0;
+		vrLen = 1180;
+		vrLoc = 2232;
+	};
+	F541EB3603D8D25201000122 = {
+		fRef = F5DC71BC033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "GrayScaleFrameBuffer.m: 15";
+		rLen = 0;
+		rLoc = 678;
+		rType = 0;
+		vrLen = 1509;
+		vrLoc = 0;
+	};
+	F541EB3703D8D25201000122 = {
+		fRef = F5DC71E0033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnectionManager.m: defaultFrameBufferClass";
+		rLen = 16;
+		rLoc = 9040;
+		rType = 0;
+		vrLen = 1239;
+		vrLoc = 8327;
+	};
+	F541EB3803D8D25201000122 = {
+		fRef = F5DC71F3033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "TightEncodingReader.m: setFilterId:";
+		rLen = 0;
+		rLoc = 5251;
+		rType = 0;
+		vrLen = 1296;
+		vrLoc = 4656;
+	};
+	F541EB3903D8D25201000122 = {
+		fRef = F5F2D5A603B3C93B01150DB1;
+		isa = PBXTextBookmark;
+		name = "debug.h: FULL_DEBUG";
+		rLen = 0;
+		rLoc = 193;
+		rType = 0;
+		vrLen = 336;
+		vrLoc = 0;
+	};
+	F541EB3A03D8D25201000122 = {
+		fRef = F5DC71F9033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "VNCViewer_main.m: main";
+		rLen = 0;
+		rLoc = 377;
+		rType = 0;
+		vrLen = 421;
+		vrLoc = 0;
+	};
+	F541EB3B03D8D25201000122 = {
+		fRef = F536C26903937E5301178D82;
+		isa = PBXTextBookmark;
+		name = "ZRLEEncodingReader.m: setUncompressedData:length:";
+		rLen = 0;
+		rLoc = 2669;
+		rType = 0;
+		vrLen = 1180;
+		vrLoc = 2232;
+	};
+	F541EB3C03D8D25201000122 = {
+		fRef = F5DC71E0033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnectionManager.m: defaultFrameBufferClass";
+		rLen = 16;
+		rLoc = 9040;
+		rType = 0;
+		vrLen = 1239;
+		vrLoc = 8327;
+	};
+	F541EB3D03D8D25201000122 = {
+		fRef = F5DC71BC033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "GrayScaleFrameBuffer.m: 15";
+		rLen = 0;
+		rLoc = 678;
+		rType = 0;
+		vrLen = 1509;
+		vrLoc = 0;
+	};
+	F541EB3E03D8D25201000122 = {
+		fRef = F5DC71E0033DB4A801A8010C;
+		isa = PBXTextBookmark;
+		name = "RFBConnectionManager.m: initialize";
+		rLen = 21;
+		rLoc = 2017;
+		rType = 0;
+		vrLen = 1570;
+		vrLoc = 2015;
+	};
 	F54382580360EA6601000105 = {
 		fRef = F5DC71DE033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: initWithDictionary:profile:owner:";
 		rLen = 0;
-		rLoc = 6861;
+		rLoc = 6741;
 		rType = 0;
 		vrLen = 1347;
 		vrLoc = 6493;
@@ -10157,7 +10122,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: windowWillClose:";
 		rLen = 0;
-		rLoc = 31284;
+		rLoc = 31307;
 		rType = 0;
 		vrLen = 1412;
 		vrLoc = 30334;
@@ -10187,7 +10152,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: performButtonEmulation:at:";
 		rLen = 0;
-		rLoc = 17057;
+		rLoc = 16937;
 		rType = 0;
 		vrLen = 1839;
 		vrLoc = 15894;
@@ -10277,7 +10242,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 28801;
+		rLoc = 28781;
 		rType = 0;
 		vrLen = 1082;
 		vrLoc = 28615;
@@ -10297,7 +10262,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: minY";
 		rLen = 0;
-		rLoc = 36512;
+		rLoc = 36783;
 		rType = 0;
 		vrLen = 1879;
 		vrLoc = 36273;
@@ -10307,7 +10272,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: connect:";
 		rLen = 11;
-		rLoc = 7285;
+		rLoc = 7763;
 		rType = 0;
 		vrLen = 574;
 		vrLoc = 8782;
@@ -10327,7 +10292,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: connectionWillGoFullscreen:returnCode:contextInfo:";
 		rLen = 0;
-		rLoc = 35897;
+		rLoc = 36168;
 		rType = 0;
 		vrLen = 1967;
 		vrLoc = 35650;
@@ -10347,46 +10312,10 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: maxY";
 		rLen = 0;
-		rLoc = 36695;
+		rLoc = 36966;
 		rType = 0;
 		vrLen = 1996;
 		vrLoc = 35621;
-	};
-	F5BB547003D3C34F01000105 = {
-		fileReference = F5DC71E5033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 207;
-		state = 2;
-	};
-	F5BB547203D3C35401000105 = {
-		fileReference = F5DC71E5033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 218;
-		state = 2;
-	};
-	F5BB547603D3C3EA01000105 = {
-		fileReference = F5DC71DE033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 638;
-		state = 2;
-	};
-	F5BB547C03D3C4CF01000105 = {
-		fileReference = F5DC71DE033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 430;
-		state = 2;
-	};
-	F5BB547E03D3C4E401000105 = {
-		fileReference = F5DC71DE033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 620;
-		state = 2;
-	};
-	F5BB549503D3D0AF01000105 = {
-		fileReference = F5DC71DE033DB4A801A8010C;
-		isa = PBXFileBreakpoint;
-		lineNumber = 624;
-		state = 2;
 	};
 	F5BB54A603D3DDA601000105 = {
 		fRef = F5DC71EC033DB4A801A8010C;
@@ -10413,7 +10342,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: beginFullscreenScrolling";
 		rLen = 0;
-		rLoc = 41400;
+		rLoc = 41671;
 		rType = 0;
 		vrLen = 1536;
 		vrLoc = 40452;
@@ -10442,8 +10371,8 @@
 		fRef = F5DC71DE033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: queueUpdateRequest";
-		rLen = 15;
-		rLoc = 22702;
+		rLen = 0;
+		rLoc = 23086;
 		rType = 0;
 		vrLen = 821;
 		vrLoc = 21975;
@@ -10463,7 +10392,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 0;
-		rLoc = 23184;
+		rLoc = 23164;
 		rType = 0;
 		vrLen = 821;
 		vrLoc = 21975;
@@ -10513,7 +10442,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 850;
 		vrLoc = 15869;
@@ -10533,7 +10462,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: mouseAt:buttons:";
 		rLen = 18;
-		rLoc = 22640;
+		rLoc = 22520;
 		rType = 0;
 		vrLen = 1103;
 		vrLoc = 21523;
@@ -10563,7 +10492,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: flushDrawing";
 		rLen = 0;
-		rLoc = 15891;
+		rLoc = 15771;
 		rType = 0;
 		vrLen = 549;
 		vrLoc = 15316;
@@ -10583,7 +10512,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 0;
-		rLoc = 23184;
+		rLoc = 23164;
 		rType = 0;
 		vrLen = 821;
 		vrLoc = 21975;
@@ -10623,7 +10552,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: visibleRect";
 		rLen = 0;
-		rLoc = 15588;
+		rLoc = 15468;
 		rType = 0;
 		vrLen = 439;
 		vrLoc = 15038;
@@ -10653,7 +10582,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: flushDrawing";
 		rLen = 0;
-		rLoc = 15947;
+		rLoc = 15827;
 		rType = 0;
 		vrLen = 512;
 		vrLoc = 15357;
@@ -10683,7 +10612,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 0;
-		rLoc = 23184;
+		rLoc = 23164;
 		rType = 0;
 		vrLen = 751;
 		vrLoc = 22241;
@@ -10703,7 +10632,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 0;
-		rLoc = 23184;
+		rLoc = 23164;
 		rType = 0;
 		vrLen = 751;
 		vrLoc = 22241;
@@ -10733,7 +10662,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: queueUpdateRequest";
 		rLen = 0;
-		rLoc = 22693;
+		rLoc = 23086;
 		rType = 0;
 		vrLen = 821;
 		vrLoc = 21975;
@@ -10773,7 +10702,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: flushDrawing";
 		rLen = 0;
-		rLoc = 15947;
+		rLoc = 15827;
 		rType = 0;
 		vrLen = 512;
 		vrLoc = 15357;
@@ -10813,7 +10742,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: getUpdate:";
 		rLen = 0;
-		rLoc = 23184;
+		rLoc = 23164;
 		rType = 0;
 		vrLen = 821;
 		vrLoc = 21975;
@@ -10833,7 +10762,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: debugThang";
 		rLen = 7;
-		rLoc = 23198;
+		rLoc = 23178;
 		rType = 0;
 		vrLen = 873;
 		vrLoc = 22544;
@@ -10853,7 +10782,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: windowDidDeminiaturize:";
 		rLen = 10;
-		rLoc = 32441;
+		rLoc = 32464;
 		rType = 0;
 		vrLen = 761;
 		vrLoc = 31431;
@@ -10923,7 +10852,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 852;
 		vrLoc = 15868;
@@ -10983,7 +10912,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 559;
 		vrLoc = 8881;
@@ -11003,7 +10932,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: setReader:";
 		rLen = 0;
-		rLoc = 9200;
+		rLoc = 9080;
 		rType = 0;
 		vrLen = 540;
 		vrLoc = 8901;
@@ -11123,7 +11052,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16861;
+		rLoc = 16741;
 		rType = 0;
 		vrLen = 852;
 		vrLoc = 15868;
@@ -11213,7 +11142,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: flushDrawing";
 		rLen = 0;
-		rLoc = 15947;
+		rLoc = 15827;
 		rType = 0;
 		vrLen = 562;
 		vrLoc = 15355;
@@ -11253,7 +11182,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: flushDrawing";
 		rLen = 12;
-		rLoc = 15839;
+		rLoc = 15719;
 		rType = 0;
 		vrLen = 508;
 		vrLoc = 15355;
@@ -11273,7 +11202,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: flushDrawing";
 		rLen = 0;
-		rLoc = 15893;
+		rLoc = 15773;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 15316;
@@ -11283,7 +11212,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: initialize";
 		rLen = 16;
-		rLoc = 4570;
+		rLoc = 5044;
 		rType = 0;
 		vrLen = 1575;
 		vrLoc = 2512;
@@ -11293,7 +11222,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 25;
-		rLoc = 30989;
+		rLoc = 30969;
 		rType = 0;
 		vrLen = 1436;
 		vrLoc = 29248;
@@ -11313,7 +11242,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 31158;
+		rLoc = 31138;
 		rType = 0;
 		vrLen = 1085;
 		vrLoc = 29263;
@@ -11373,7 +11302,7 @@
 		isa = PBXTextBookmark;
 		name = "ProfileManager.m: 108";
 		rLen = 0;
-		rLoc = 3750;
+		rLoc = 3744;
 		rType = 0;
 		vrLen = 1333;
 		vrLoc = 3395;
@@ -11393,7 +11322,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: makeConnectionWindowed:";
 		rLen = 0;
-		rLoc = 33819;
+		rLoc = 34090;
 		rType = 0;
 		vrLen = 1436;
 		vrLoc = 34350;
@@ -11403,7 +11332,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 28801;
+		rLoc = 28781;
 		rType = 0;
 		vrLen = 1728;
 		vrLoc = 24285;
@@ -11423,7 +11352,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: _maxSizeForWindowSize:";
 		rLen = 10;
-		rLoc = 10767;
+		rLoc = 10647;
 		rType = 0;
 		vrLen = 1674;
 		vrLoc = 9049;
@@ -11433,7 +11362,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: performButtonEmulation:at:";
 		rLen = 0;
-		rLoc = 16639;
+		rLoc = 16519;
 		rType = 0;
 		vrLen = 1699;
 		vrLoc = 15136;
@@ -11463,7 +11392,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 14;
-		rLoc = 21571;
+		rLoc = 21451;
 		rType = 0;
 		vrLen = 1335;
 		vrLoc = 19922;
@@ -11482,8 +11411,8 @@
 		fRef = F5DC71DF033DB4A801A8010C;
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.h: 34";
-		rLen = 11;
-		rLoc = 1087;
+		rLen = 30;
+		rLoc = 1190;
 		rType = 0;
 		vrLen = 945;
 		vrLoc = 0;
@@ -11493,7 +11422,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: 135";
 		rLen = 11;
-		rLoc = 3843;
+		rLoc = 4317;
 		rType = 0;
 		vrLen = 918;
 		vrLoc = 3908;
@@ -11513,7 +11442,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: 135";
 		rLen = 12;
-		rLoc = 3877;
+		rLoc = 4351;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 3379;
@@ -11533,7 +11462,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: awakeFromNib";
 		rLen = 0;
-		rLoc = 6394;
+		rLoc = 6868;
 		rType = 0;
 		vrLen = 1375;
 		vrLoc = 6563;
@@ -11543,7 +11472,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: beginFullscreenScrolling";
 		rLen = 19;
-		rLoc = 38673;
+		rLoc = 38944;
 		rType = 0;
 		vrLen = 1492;
 		vrLoc = 36323;
@@ -11563,7 +11492,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: autoscrollIncrement";
 		rLen = 29;
-		rLoc = 39158;
+		rLoc = 39429;
 		rType = 0;
 		vrLen = 1206;
 		vrLoc = 36724;
@@ -11583,7 +11512,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: scrollFullscreenView:";
 		rLen = 0;
-		rLoc = 39584;
+		rLoc = 39855;
 		rType = 0;
 		vrLen = 1159;
 		vrLoc = 37387;
@@ -11593,7 +11522,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: savePrefs";
 		rLen = 0;
-		rLoc = 4049;
+		rLoc = 4523;
 		rType = 0;
 		vrLen = 1605;
 		vrLoc = 4372;
@@ -11629,7 +11558,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: processKey:pressed:";
 		rLen = 0;
-		rLoc = 28398;
+		rLoc = 28378;
 		rType = 0;
 		vrLen = 1787;
 		vrLoc = 24748;
@@ -11649,7 +11578,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 0;
-		rLoc = 23146;
+		rLoc = 23126;
 		rType = 0;
 		vrLen = 1485;
 		vrLoc = 20564;
@@ -11669,7 +11598,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 0;
-		rLoc = 23146;
+		rLoc = 23126;
 		rType = 0;
 		vrLen = 1703;
 		vrLoc = 20702;
@@ -11689,7 +11618,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: 703";
 		rLen = 58;
-		rLoc = 27682;
+		rLoc = 27662;
 		rType = 0;
 		vrLen = 1057;
 		vrLoc = 25336;
@@ -11709,7 +11638,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: makeConnectionFullscreen:";
 		rLen = 0;
-		rLoc = 34873;
+		rLoc = 35144;
 		rType = 0;
 		vrLen = 1333;
 		vrLoc = 32322;
@@ -11719,7 +11648,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: makeConnectionFullscreen:";
 		rLen = 0;
-		rLoc = 34871;
+		rLoc = 35142;
 		rType = 0;
 		vrLen = 1495;
 		vrLoc = 0;
@@ -11789,7 +11718,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: getLocalPixelFormat:";
 		rLen = 0;
-		rLoc = 8783;
+		rLoc = 9265;
 		rType = 0;
 		vrLen = 1136;
 		vrLoc = 8592;
@@ -11829,7 +11758,7 @@
 		isa = PBXTextBookmark;
 		name = "ZRLEEncodingReader.m: setUncompressedData:length:";
 		rLen = 0;
-		rLoc = 1386;
+		rLoc = 1379;
 		rType = 0;
 		vrLen = 1114;
 		vrLoc = 587;
@@ -11839,7 +11768,7 @@
 		isa = PBXTextBookmark;
 		name = "ProfileManager.m: ud";
 		rLen = 0;
-		rLoc = 1646;
+		rLoc = 1640;
 		rType = 0;
 		vrLen = 1329;
 		vrLoc = 1381;
@@ -11849,7 +11778,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: readData:";
 		rLen = 0;
-		rLoc = 16422;
+		rLoc = 16302;
 		rType = 0;
 		vrLen = 787;
 		vrLoc = 15631;
@@ -11999,7 +11928,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnection.m: sendModifier:";
 		rLen = 0;
-		rLoc = 24952;
+		rLoc = 24932;
 		rType = 0;
 		vrLen = 961;
 		vrLoc = 23561;
@@ -12019,7 +11948,7 @@
 		isa = PBXTextBookmark;
 		name = "RFBConnectionManager.m: removeConnection:";
 		rLen = 0;
-		rLoc = 6394;
+		rLoc = 6868;
 		rType = 0;
 		vrLen = 1003;
 		vrLoc = 6257;

@@ -97,6 +97,7 @@
 	NSTrackingRectTag _mouseMovedTrackingTag;
 	float _frameBufferUpdateSeconds;
 	NSTimer *_frameUpdateTimer;
+	BOOL _hasManualFrameBufferUpdates;
 }
 
 // jason added 'owner' for fullscreen display
@@ -138,6 +139,7 @@
 - (BOOL)connectShared;
 - (NSRect)visibleRect;
 - (id)frameBuffer;
+- (NSWindow *)window;
 
 - (void)windowDidDeminiaturize:(NSNotification *)aNotification;
 - (void)windowDidMiniaturize:(NSNotification *)aNotification;
@@ -164,5 +166,6 @@
 
 - (float)frameBufferUpdateSeconds;
 - (void)setFrameBufferUpdateSeconds: (float)seconds;
+- (void)manuallyUpdateFrameBuffer: (id)sender;
 
 @end

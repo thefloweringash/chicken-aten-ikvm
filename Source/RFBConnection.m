@@ -25,7 +25,6 @@
 #import "RFBConnectionManager.h"
 #import "FrameBuffer.h"
 #import "RectangleList.h"
-#import "KeyCodeConverter.h"
 #import "FrameBufferUpdateReader.h"
 #import "EncodingReader.h"
 #include <unistd.h>
@@ -773,53 +772,6 @@ static void print_data(unsigned char* data, int length)
 		}
 		[self sendKey:c pressed:aFlag];
 	}
-/*
-    unichar c;
-    unsigned short code;
-
-    if(aFlag) {
-        [rfbView setMessage:nil];
-    }
-    code = [theEvent keyCode];
-    c = [[theEvent characters] characterAtIndex:0];
-    [KeyCodeConverter registerUnichar:c forCode:code modifiers:lastModifier];
-    if([KeyCodeConverter keyCodeIsKnown:code]) {
-        c = [KeyCodeConverter uniFromKeyCode:code modifiers:lastModifier];
-#ifdef UMLAUTE
-        if((lastModifier & NSAlternateKeyMask) && (c == UMLAUTE) && aFlag) {
-            umlautSwitching = YES;
-           	return;
-        }
-        if(umlautSwitching && !aFlag) {
-            umlautSwitching = NO;
-            umlautEscape = !umlautEscape;
-            return;
-        }
-        if(umlautEscape) {
-            if(!aFlag) {
-                umlautEscape = NO;
-            }
-            switch(c) {
-                case 'a': c = 0xe4; break;
-                case 'o': c = 0xf6; break;
-                case 'u': c = 0xfc; break;
-                case 'A': c = 0xc4; break;
-                case 'O': c = 0xd6; break;
-                case 'U': c = 0xdc; break;
-                case 's': c = 0xdf; break;
-            }
-        }
-#endif
-    } else {
-        if(aFlag) {
-            [self showWarningForKey:code character:c];
-        }
-        if(lastModifier & NSControlKeyMask) {
-            c = (c + 'a') - 1;
-        }
-    }
-    [self sendKey:c pressed:aFlag];
-*/
 }
 
 - (id)frameBuffer

@@ -50,6 +50,7 @@
             ACTIONS = {
                 connect = id; 
                 frontInverseCPUSliderChanged = id; 
+                hostSelectionDidChange = id; 
                 otherInverseCPUSliderChanged = id; 
                 preferencesChanged = id; 
             }; 

@@ -853,7 +853,9 @@ static void print_data(unsigned char* data, int length)
 			if (aFlag)
 				_isFullscreen ? [self makeConnectionWindowed: self] : [self makeConnectionFullscreen: self];
 			buttonEmulationActiveMask = 0;
-                        [self sendModifier:0]; // Clear the modifier mask
+			buttonEmulationKeyDownMask = 0;
+			[self sendModifier:kFullscreenSwitchModifiers]; // Clear the modifier mask
+			[self sendModifier:0];
 			continue;
 		}
 		[self sendKey:c pressed:aFlag];

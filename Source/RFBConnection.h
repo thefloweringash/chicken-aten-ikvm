@@ -58,7 +58,7 @@
     id newTitleField;
     NSPanel *newTitlePanel;
     NSString *titleString;
-    id emulate3ButtonTimer;
+    NSTimer *emulate3ButtonTimer;
     NSTimer *buttonEmulationKeyDownTimer;			// Timer for Button Emulation Keydown Timer
     NSTimer *buttonEmulationKeyboardTimer;          // Timer for Button Emulation Timeout
     id statisticField;
@@ -78,9 +78,6 @@
     id infoField;
     id profile;
 
-    BOOL	umlautEscape;					// next keydown/up is "umlauted"
-    BOOL	umlautSwitching;				// umlaute-escape is being toggled (key not up yet)
-
     BOOL	updateRequested;				// Has someone already requested an update?
     
     NSString*		realDisplayName;
@@ -97,7 +94,7 @@
 	NSTrackingRectTag _rightTrackingTag; // jason added for fullscreen display
 	NSTrackingRectTag _bottomTrackingTag; // jason added for fullscreen display
 	NSTrackingRectTag _currentTrackingTag; // jason added for fullscreen display
-	NSTimer *_timer; // jason added for fullscreen display
+	NSTimer *_autoscrollTimer; // jason added for fullscreen display
 	NSTrackingRectTag _mouseMovedTrackingTag;
 	float _frameBufferUpdateSeconds;
 	NSTimer *_frameUpdateTimer;
@@ -134,6 +131,7 @@
 - (void)mouseMovedTo:(NSPoint)thePoint;
 - (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag;
 - (void)clearEmulationActiveMask;
+- (void)clearAllEmulationStates;
 - (void)sendModifier:(unsigned int)m;
 - (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length;
 

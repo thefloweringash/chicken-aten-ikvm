@@ -233,6 +233,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
         NSString *terminateString = NULL;
 		
         terminating = YES;
+		[self clearAllEmulationStates];
 		[self cancelFrameBufferUpdateRequest];
 		[[NSNotificationCenter defaultCenter] removeObserver:self
 														name:NSFileHandleReadCompletionNotification object:socketHandler];
@@ -311,8 +312,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
     id frameBufferClass;
     NSRect wf;
-	NSRect screenRect; // jason added
-	NSClipView *contentView; // jason added
+	NSRect screenRect;
+	NSClipView *contentView;
 
     frameBufferClass = [manager defaultFrameBufferClass];
 	[frameBuffer autorelease];
@@ -321,7 +322,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [rfbView setFrameBuffer:frameBuffer];
     [rfbView setDelegate:self];
 
-	// jason rewrote the resizing portion of this method
 	screenRect = [[NSScreen mainScreen] visibleFrame];
     wf.origin.x = wf.origin.y = 0;
     wf.size = [NSScrollView frameSizeForContentSize:[rfbView frame].size hasHorizontalScroller:NO hasVerticalScroller:NO borderType:NSNoBorder];
@@ -340,17 +340,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	contentView = [scrollView contentView];
     [contentView scrollToPoint: [contentView constrainScrollPoint: NSMakePoint(0.0, aSize.height - [scrollView contentSize].height)]];
     [scrollView reflectScrolledClipView: contentView];
-	// end jason
-/*
-    wf.origin.x = wf.origin.y = 0;
-    wf.size = [NSScrollView frameSizeForContentSize:[rfbView frame].size hasHorizontalScroller:NO hasVerticalScroller:NO borderType:NSNoBorder];
-    wf = [NSWindow frameRectForContentRect:wf styleMask:[window styleMask]];
 
-    wf.origin.x = 30;
-    wf.origin.y = 30;
-    [window setFrame:wf display:NO];
-    maxSize = wf.size;
-*/
     [window makeFirstResponder:rfbView];
 	[self windowDidResize: nil];
     [window makeKeyAndOrderFront:self];
@@ -432,18 +422,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [self queueUpdateRequest];
 }
 
-// Jason - print_data is never used, so I'm commenting it out
-/*
-static void print_data(unsigned char* data, int length)
-{
-    while(length--) {
-        fprintf(stderr, "%02X,", *data & 0xff);
-        data++;
-    }
-    fflush(stderr);
-}
-*/
-
 - (void)readData:(NSNotification*)aNotification
 {
     NSData* data = [[aNotification userInfo] objectForKey:NSFileHandleNotificationDataItem];
@@ -456,7 +434,6 @@ static void print_data(unsigned char* data, int length)
 		[pool release];
         return;
     }
-//    print_data(bytes, length);
     
     while(length) {
         consumed = [currentReader readBytes:bytes length:length];
@@ -480,11 +457,10 @@ static void print_data(unsigned char* data, int length)
 // reset means "unset", not "restart"
 - (void)resetButtonEmulationKeyDownTimer
 {
-    if (buttonEmulationKeyDownTimer) {
-        [buttonEmulationKeyDownTimer invalidate];
-        buttonEmulationKeyDownTimer = nil;
-        // NSLog(@"Key-Down Timer Reset!\n");
-    }
+	[buttonEmulationKeyDownTimer invalidate];
+	[buttonEmulationKeyDownTimer release];
+	buttonEmulationKeyDownTimer = nil;
+	// NSLog(@"Key-Down Timer Reset!\n");
 }
 
 - (int)checkButtonEmulationKeyDownTimer
@@ -513,7 +489,7 @@ static void print_data(unsigned char* data, int length)
         return;
     }
     [self resetButtonEmulationKeyDownTimer];
-    buttonEmulationKeyDownTimer = [NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(buttonEmulationKeyDownTimeout:) userInfo:nil repeats:NO];
+    buttonEmulationKeyDownTimer = [[NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(buttonEmulationKeyDownTimeout:) userInfo:nil repeats:NO] retain];
 }
 - (void)buttonEmulationKeyDownTimeout:(id)sender
 {
@@ -525,11 +501,10 @@ static void print_data(unsigned char* data, int length)
 // Timer for KeyboardEmulationTimeout.
 - (void)resetButtonEmulationKeyboardTimer
 {
-    if (buttonEmulationKeyboardTimer) {
-        [buttonEmulationKeyboardTimer invalidate];
-        buttonEmulationKeyboardTimer = nil;
-        // NSLog(@"Keyboard Timer Reset!\n");
-    }
+	[buttonEmulationKeyboardTimer invalidate];
+	[buttonEmulationKeyboardTimer release];
+	buttonEmulationKeyboardTimer = nil;
+	// NSLog(@"Keyboard Timer Reset!\n");
 }
 
 - (void)buttonEmulationKeyboardTimeout:(id)sender
@@ -547,14 +522,22 @@ static void print_data(unsigned char* data, int length)
     }
     // NSLog(@"Here's where I'd set the timer for %f\n",to);
     [self resetButtonEmulationKeyboardTimer];
-    buttonEmulationKeyboardTimer = [NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(buttonEmulationKeyboardTimeout:) userInfo:nil repeats:NO];
+    buttonEmulationKeyboardTimer = [[NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(buttonEmulationKeyboardTimeout:) userInfo:nil repeats:NO] retain];
     
 }
+
+- (void)resetButtonEmulationTimer
+{
+	[emulate3ButtonTimer invalidate];
+	[emulate3ButtonTimer release];
+	emulate3ButtonTimer = nil;
+	// NSLog(@"Key-Down Timer Reset!\n");
+}
+
 - (void)emulateButtonTimeout:(id)sender
 {
 	NSPoint p = [window mouseLocationOutsideOfEventStream];
-    [emulate3ButtonTimer invalidate];
-    emulate3ButtonTimer = nil;
+	[self resetButtonEmulationTimer];
     lastComputedMask = lastButtonMask;
 	p = [rfbView convertPoint:p fromView:nil];
 	[self mouseMovedTo: p];
@@ -574,8 +557,7 @@ static void print_data(unsigned char* data, int length)
             // both buttons pressed
             if( emulate3ButtonTimer) {
 				// timer is running, so the second button has been pressed.
-                [emulate3ButtonTimer invalidate];
-				emulate3ButtonTimer = nil;
+				[self resetButtonEmulationTimer];
 				// emulate button 2 in lastComputedMask
                 lastComputedMask = rfbButton2Mask;
             } else {
@@ -597,7 +579,7 @@ static void print_data(unsigned char* data, int length)
                     float to = [profile emulate3ButtonTimeout];
 
                     mouseButtonPressedLocation = thePoint;
-                    emulate3ButtonTimer = [NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(emulateButtonTimeout:) userInfo:nil repeats:NO];
+                    emulate3ButtonTimer = [[NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(emulateButtonTimeout:) userInfo:nil repeats:NO] retain];
 				}
             }
         }
@@ -607,8 +589,7 @@ static void print_data(unsigned char* data, int length)
         if(emulate3ButtonTimer) {
 			// timer running, so this was a short press of either button 1 or button 3
    // we must generate a button down/up in quick succession.
-            [emulate3ButtonTimer invalidate];
-            emulate3ButtonTimer = nil;
+			[self resetButtonEmulationTimer];
 			// in order to generate the down/up sequence we set lastComputed to
    // lastButtonMask which contains the released button in down-state.
    // next time we get here the button is reported up again.
@@ -642,8 +623,7 @@ static void print_data(unsigned char* data, int length)
         if((dx > 5) || (dy > 5)) {
 			// If the mouse moved too far, terminate emulation-timer
    // and return the physical state
-            [emulate3ButtonTimer invalidate];
-            emulate3ButtonTimer = nil;
+			[self resetButtonEmulationTimer];
             lastComputedMask = lastButtonMask;
         }
     }
@@ -697,8 +677,7 @@ static void print_data(unsigned char* data, int length)
         updateRequested = TRUE;
 		[self cancelFrameBufferUpdateRequest];
 		if (_frameBufferUpdateSeconds > 0.0) {
-			_frameUpdateTimer = [NSTimer scheduledTimerWithTimeInterval: _frameBufferUpdateSeconds target: self selector: @selector(requestFrameBufferUpdate:) userInfo: nil repeats: NO];
-			[_frameUpdateTimer retain];
+			_frameUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval: _frameBufferUpdateSeconds target: self selector: @selector(requestFrameBufferUpdate:) userInfo: nil repeats: NO] retain];
 		} else {
 			[self requestFrameBufferUpdate: nil];
 		}
@@ -752,6 +731,14 @@ static void print_data(unsigned char* data, int length)
     // Reset the timer (turn it off)
     [self resetButtonEmulationKeyDownTimer];
     [self resetButtonEmulationKeyboardTimer];
+}
+
+- (void)clearAllEmulationStates
+{
+	[self resetButtonEmulationTimer];
+	[self clearEmulationActiveMask];
+	lastButtonMask = lastComputedMask = lastMask = 0;
+	buttonEmulationActiveMask = buttonEmulationKeyDownMask = 0;
 }
 
 - (void)sendModifier:(unsigned int)m
@@ -1154,6 +1141,9 @@ static NSString* byteString(double d)
 	[scrollView removeFromSuperview];
 	[window setDelegate: nil];
 	[window close];
+	if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
+		NSLog( @"Couldn't release the main display!" );
+	}
 	window = [[NSWindow alloc] initWithContentRect:[NSWindow contentRectForFrameRect: _windowedFrame styleMask: _styleMask]
 										styleMask:_styleMask
 										backing:NSBackingStoreBuffered
@@ -1164,14 +1154,11 @@ static NSString* byteString(double d)
 	[scrollView release];
 	_isFullscreen = NO;
 	[self _maxSizeForWindowSize: [[window contentView] frame].size];
-	[scrollView setHasHorizontalScroller:horizontalScroll];
-	[scrollView setHasVerticalScroller:verticalScroll];
+	[window setTitle:titleString];
 	[window makeFirstResponder: rfbView];
+	[self windowDidResize: nil];
 	[window makeKeyAndOrderFront:nil];
-        [window setTitle:titleString];
-	if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
-		NSLog( @"Couldn't release the main display!" );
-	}
+	[self viewFrameDidChange: nil];
 }
 
 - (void)connectionWillGoFullscreen:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo {
@@ -1292,17 +1279,16 @@ static NSString* byteString(double d)
 
 - (void)beginFullscreenScrolling {
 	[self endFullscreenScrolling];
-	_timer = [NSTimer scheduledTimerWithTimeInterval: kAutoscrollInterval
+	_autoscrollTimer = [[NSTimer scheduledTimerWithTimeInterval: kAutoscrollInterval
 											target: self
 										  selector: @selector(scrollFullscreenView:)
-										  userInfo: nil repeats: YES];
-	[_timer retain];
+										  userInfo: nil repeats: YES] retain];
 }
 
 - (void)endFullscreenScrolling {
-	[_timer invalidate];
-	[_timer release];
-	_timer = nil;
+	[_autoscrollTimer invalidate];
+	[_autoscrollTimer release];
+	_autoscrollTimer = nil;
 }
 
 - (void)scrollFullscreenView: (NSTimer *)timer {

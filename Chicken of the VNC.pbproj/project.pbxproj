@@ -249,6 +249,8 @@
 				F5DC7267033DB9A301A8010C,
 				F5E4C9AC03416C2701A8010C,
 				F564F4B90392E07E01303550,
+				F536C26A03937E5301178D82,
+				F536C26C03937E5301178D82,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -315,6 +317,8 @@
 				F5DC7268033DB9A401A8010C,
 				F5E4C9AD03416C2701A8010C,
 				F564F4B80392E07E01303550,
+				F536C26B03937E5301178D82,
+				F536C26D03937E5301178D82,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -379,6 +383,50 @@
 			isa = PBXFileReference;
 			path = "GNU Public License.txt";
 			refType = 4;
+		};
+		F536C26603937E5301178D82 = {
+			isa = PBXFileReference;
+			path = ZlibHexEncodingReader.h;
+			refType = 4;
+		};
+		F536C26703937E5301178D82 = {
+			isa = PBXFileReference;
+			path = ZlibHexEncodingReader.m;
+			refType = 4;
+		};
+		F536C26803937E5301178D82 = {
+			isa = PBXFileReference;
+			path = ZRLEEncodingReader.h;
+			refType = 4;
+		};
+		F536C26903937E5301178D82 = {
+			isa = PBXFileReference;
+			path = ZRLEEncodingReader.m;
+			refType = 4;
+		};
+		F536C26A03937E5301178D82 = {
+			fileRef = F536C26603937E5301178D82;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F536C26B03937E5301178D82 = {
+			fileRef = F536C26703937E5301178D82;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F536C26C03937E5301178D82 = {
+			fileRef = F536C26803937E5301178D82;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F536C26D03937E5301178D82 = {
+			fileRef = F536C26903937E5301178D82;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F564F4B60392E07E01303550 = {
 			isa = PBXFileReference;
@@ -674,6 +722,10 @@
 				F5DC71FC033DB4A801A8010C,
 				F564F4B70392E07E01303550,
 				F564F4B60392E07E01303550,
+				F536C26603937E5301178D82,
+				F536C26703937E5301178D82,
+				F536C26803937E5301178D82,
+				F536C26903937E5301178D82,
 			);
 			isa = PBXGroup;
 			path = Source;

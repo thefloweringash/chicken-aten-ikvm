@@ -23,25 +23,23 @@
 
 #undef PINFO
 
-#warning ALL THIS CODE HERE IS CRAZY - IT BELONGS IN THE CLASSFILE
-#warning SUBCLASSES CAN DEAL WITH DIFFERENCES
-
 static inline unsigned int cvt_pixel24(unsigned char* v, FrameBuffer* this)
 {
-    unsigned int pix = 0, col;
-
+	unsigned char r, g, b;
+    unsigned int col;
+	
     if(this->pixelFormat.bigEndian) {
-        pix += *v++; pix <<= 8;
-        pix += *v++; pix <<= 8;
-        pix += *v;
+        r = *v++;
+        g = *v++;
+        b = *v;
     } else {
-        pix = *v++;
-        pix += (((unsigned int)*v++) << 8);
-        pix += (((unsigned int)*v++) << 16);
+        b = *v++;
+        g = *v++;
+        r = *v;
     }
-    col = this->redClut[(pix >> this->pixelFormat.redShift) & this->pixelFormat.redMax];
-    col += this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
-    col += this->blueClut[(pix >> this->pixelFormat.blueShift) & this->pixelFormat.blueMax];
+    col = this->redClut[r & this->pixelFormat.redMax];
+    col += this->greenClut[g & this->pixelFormat.greenMax];
+    col += this->blueClut[b & this->pixelFormat.blueMax];
     return col;
 }
 
@@ -73,6 +71,8 @@ static inline unsigned int cvt_pixel(unsigned char* v, FrameBuffer *this)
                 pix += (((unsigned int)*v) << 24);
             }
             break;
+		default:
+			[NSException raise: NSGenericException format: @"Unsupported bytesPerPixel"];
     }
     col = this->redClut[(pix >> this->pixelFormat.redShift) & this->pixelFormat.redMax];
     col += this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
@@ -270,13 +270,13 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
         start = pixels + (int)(aRect.origin.y * size.width) + (int)aRect.origin.x;
         lines = aRect.size.height;
         stride = size.width - aRect.size.width;
-        while(lines--) {
+		while(lines--) {
 			for(i=aRect.size.width; i; i--) {
-                *start++ = cvt_pixel24(data, self);
-                data += 3;
-            }
-            start += stride;
-        }
+				*start++ = cvt_pixel24(data, self);
+				data += 3;
+			}
+			start += stride;
+		}
     } else {
         [self putRect:aRect fromData:data];
     }

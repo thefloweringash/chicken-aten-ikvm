@@ -147,44 +147,47 @@ static RFBConnectionManager*	sharedManager = nil;
     NSString *arg;
     NSString *passwordFile;
     char *decrypted_password;
- 
+
+	// Check our arguments.  Args start at 0, which is the application name
+	// so we start at 1.  arg count is the number of arguments, including
+	// the 0th argument.
     for (i = 1; i < [args count]; i++) {
-	arg = [args objectAtIndex:i];
-
-	if ([arg hasPrefix:@"-psn"]) {
-	    if (i + 1 >= [args count]) [self cmdlineUsage];
-	    i++;
-	} else if ([arg hasPrefix:@"--PasswordFile"]) {
-	    if (i + 1 >= [args count]) [self cmdlineUsage];
-	    passwordFile = [args objectAtIndex:++i];
-	    decrypted_password = vncDecryptPasswdFromFile((char*)[passwordFile cString]);
-	    if (decrypted_password == NULL) {
-		fprintf(stderr, "Cannot read password from file.\n");
-	    } else {
-		cmdlinePassword = [[NSString alloc] initWithCString:decrypted_password];
-		free(decrypted_password);
-	    }
-
-	} else if ([arg hasPrefix:@"--FullScreen"]) {
-	    cmdlineFullscreen = @"1";
-	    // FIXME: Support -FullScreen=0 etc
-	    //if (i + 1 >= [args count]) [self cmdlineUsage];
-	    //cmdlinePasswordFile = [args objectAtIndex:i+1];
-	} else if ([arg hasPrefix:@"-"]) {
-	    [self cmdlineUsage];
-	} else {
-	    /* No dash, host:display */
-	    NSArray *listItems = [arg componentsSeparatedByString:@":"];
-	    cmdlineHost = [listItems objectAtIndex:0];
-
-	    if (![cmdlineHost isEqualToString:arg]) {
-		/* Found : */
-		cmdlineDisplay = [listItems objectAtIndex:1];
-	    } else {
-		/* No colon, assume :0 as default */
-		cmdlineDisplay = @"0";
-	    }
-	} 
+		arg = [args objectAtIndex:i];
+		
+		if ([arg hasPrefix:@"-psn"]) {
+			// Called from the finder.  Do nothing.
+			//if (i + 1 >= [args count]) [self cmdlineUsage];
+			//i++;
+		} else if ([arg hasPrefix:@"--PasswordFile"]) {
+			if (i + 1 >= [args count]) [self cmdlineUsage];
+			passwordFile = [args objectAtIndex:++i];
+			decrypted_password = vncDecryptPasswdFromFile((char*)[passwordFile cString]);
+			if (decrypted_password == NULL) {
+				fprintf(stderr, "Cannot read password from file.\n");
+			} else {
+				cmdlinePassword = [[NSString alloc] initWithCString:decrypted_password];
+				free(decrypted_password);
+			}
+		} else if ([arg hasPrefix:@"--FullScreen"]) {
+			cmdlineFullscreen = @"1";
+			// FIXME: Support -FullScreen=0 etc
+			//if (i + 1 >= [args count]) [self cmdlineUsage];
+			//cmdlinePasswordFile = [args objectAtIndex:i+1];
+		} else if ([arg hasPrefix:@"-"]) {
+			[self cmdlineUsage];
+		} else {
+			/* No dash, host:display */
+			NSArray *listItems = [arg componentsSeparatedByString:@":"];
+			cmdlineHost = [listItems objectAtIndex:0];
+			
+			if (![cmdlineHost isEqualToString:arg]) {
+				/* Found : */
+				cmdlineDisplay = [listItems objectAtIndex:1];
+			} else {
+				/* No colon, assume :0 as default */
+				cmdlineDisplay = @"0";
+			}
+		} 
     }
 }
 

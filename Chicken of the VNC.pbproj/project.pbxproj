@@ -259,11 +259,11 @@
 				F536C26C03937E5301178D82,
 				F5F2D5A803B3C93B01150DB1,
 				E2F48D76040EDD2200BD55BA,
-				7FC6DF2005C315510028A970,
 				7FC6DF2905C315C20028A970,
 				7FC6DF6905C31AF50028A970,
 				7FC6DF6F05C31B0D0028A970,
 				7FF0C9AD05CDCA89008E39DD,
+				7F088F2605E1D81200336456,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -336,10 +336,10 @@
 				F536C26D03937E5301178D82,
 				F5F2D5A903B3C93B01150DB1,
 				E2F48D77040EDD2200BD55BA,
-				7FC6DF2105C315510028A970,
 				7FC6DF6A05C31AF50028A970,
 				7FC6DF7005C31B0D0028A970,
 				7FF0C9AE05CDCA89008E39DD,
+				7F088F2705E1D81200336456,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -428,30 +428,30 @@
 			settings = {
 			};
 		};
-		7FC6DF1E05C315510028A970 = {
-			fileEncoding = 4;
+		7F088F2405E1D81100336456 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = ServerDataManager.h;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
+			refType = 4;
+			sourceTree = "<group>";
 		};
-		7FC6DF1F05C315510028A970 = {
-			fileEncoding = 4;
+		7F088F2505E1D81100336456 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			path = ServerDataManager.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
+			refType = 4;
+			sourceTree = "<group>";
 		};
-		7FC6DF2005C315510028A970 = {
-			fileRef = 7FC6DF1E05C315510028A970;
+		7F088F2605E1D81200336456 = {
+			fileRef = 7F088F2405E1D81100336456;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		7FC6DF2105C315510028A970 = {
-			fileRef = 7FC6DF1F05C315510028A970;
+		7F088F2705E1D81200336456 = {
+			fileRef = 7F088F2505E1D81100336456;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -460,8 +460,8 @@
 			children = (
 				F5DC71DF033DB4A801A8010C,
 				F5DC71E0033DB4A801A8010C,
-				7FC6DF1E05C315510028A970,
-				7FC6DF1F05C315510028A970,
+				7F088F2405E1D81100336456,
+				7F088F2505E1D81100336456,
 				7FC6DF2705C315C20028A970,
 				7FC6DF6705C31AF50028A970,
 				7FC6DF6805C31AF50028A970,

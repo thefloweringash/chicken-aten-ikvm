@@ -1007,7 +1007,9 @@ static NSString* byteString(double d)
 		[window close];
 		window = [[FullscreenWindow alloc] initWithContentRect:screenRect
 											styleMask:NSBorderlessWindowMask
-											backing:NSBackingStoreBuffered
+											//backing:NSBackingStoreNonretained
+											backing:NSBackingStoreRetained
+											//backing:NSBackingStoreBuffered
 												defer:NO screen:[NSScreen mainScreen]];
 		[window setDelegate: self];
 		[(NSWindow *)window setContentView: scrollView];

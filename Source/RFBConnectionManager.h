@@ -69,7 +69,7 @@
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
-- (void)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner;
+- (BOOL)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner;
 
 - (IBAction)preferencesChanged:(id)sender;
 - (id)defaultFrameBufferClass;
@@ -84,5 +84,7 @@
 - (IBAction)frontInverseCPUSliderChanged: (NSSlider *)sender;
 - (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender;
 - (float)maxPossibleFrameBufferUpdateSeconds;
+
+- (IBAction)hostSelectionDidChange:(id)sender;
 
 @end

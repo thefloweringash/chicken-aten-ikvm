@@ -24,8 +24,10 @@
 #define PixelFormat			@"PixelFormat"
 #define CopyRectEnabled			@"EnableCopyRect"
 #define Encodings			@"Encodings"
-#define EnabledEncodings			@"EnabledEncodings"
+#define EnabledEncodings                @"EnabledEncodings"
 #define EmulateThreeButtonTimeout	@"E3BTimeout"
+#define EmulateKeyDownTimeout           @"MKDTimeout"
+#define EmulateKeyboardTimeout          @"EKBTimeout"
 #define CommandKeyMap			@"CommandKey"
 #define ShiftKeyMap			@"ShiftKey"
 #define AltKeyMap			@"AltKey"
@@ -45,6 +47,8 @@
     id enableCopyRect;
     id encodingTableView;
     id m3bTimeout;
+    id mkdTimeout;
+    id mkbTimeout;
     id newProfileButton;
     id pixelFormatMatrix;
     id profileBrowser;

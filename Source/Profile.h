@@ -42,6 +42,8 @@ typedef enum {
 {
     NSMutableDictionary* info;
     float e3btimeout;
+    float ekdtimeout;
+    float ekbtimeout;
     CARD32 commandKeyCode, altKeyCode, shiftKeyCode, controlKeyCode;
     CARD16 numberOfEnabledEncodings;
     CARD32 enabledEncodings[20];
@@ -49,6 +51,8 @@ typedef enum {
 
 - (id)initWithDictionary:(NSDictionary*)d;
 - (float)emulate3ButtonTimeout;
+- (float)emulateKeyDownTimeout;
+- (float)emulateKeyboardTimeout;
 - (CARD32)commandKeyCode;
 - (CARD32)altKeyCode;
 - (CARD32)shiftKeyCode;

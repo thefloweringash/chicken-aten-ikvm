@@ -125,7 +125,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     if (self = [super init]) {
 		struct sockaddr_in	remote;
 		int sock, port;
-		int display;
 
 		profile = [p retain];
 		_owner = owner; // jason added for fullscreen display
@@ -140,14 +139,11 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		} else {
 			[host retain];
 		}
-		// jason added for direct port specification
-		display = [[aDictionary objectForKey:RFB_DISPLAY] intValue];
-		if (display > 10)
-			port = display;
-		else
-			port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
-		// end jason
-	//	port = RFB_PORT + [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+		port = [[aDictionary objectForKey:RFB_DISPLAY] intValue];
+		// displays >= 100 are treated as port numbers, in the
+		// same way as RealVNC and others does. 
+		if (port < 100)
+		    port += RFB_PORT;
 		socket_address(&remote, host, port);
 		if(connect(sock, (struct sockaddr *)&remote, sizeof(remote)) < 0) {
 			[self perror:@"Open Connection" call:@"connect()"];
@@ -476,6 +472,79 @@ static void print_data(unsigned char* data, int length)
     manager = [aManager retain];
 }
 
+// reset means "unset", not "restart"
+- (void)resetButtonEmulationKeyDownTimer
+{
+    if (buttonEmulationKeyDownTimer) {
+        [buttonEmulationKeyDownTimer invalidate];
+        buttonEmulationKeyDownTimer = nil;
+        // NSLog(@"Key-Down Timer Reset!\n");
+    }
+}
+
+- (int)checkButtonEmulationKeyDownTimer
+{
+    float to;
+    // if the timer is running, well, just return;
+    if (buttonEmulationKeyDownTimer) {
+        return 1;
+    }
+    // otherwise we must check if there *is* a timer
+    to = [profile emulateKeyDownTimeout];
+    // Nope, just say yes
+    if (to < 0) {
+        return 1;
+    }
+    // So, there is a valid timeout, so it must have expired.
+    return 0;
+}
+
+- (void)setButtonEmulationKeyDownTimer
+{
+    float to = [profile emulateKeyDownTimeout];
+    // NSLog(@"Button Emulation Timer is %f\n", to);
+    // If the timeout value is 0 or negative, just return
+    if (to <= 0) {
+        return;
+    }
+    [self resetButtonEmulationKeyDownTimer];
+    buttonEmulationKeyDownTimer = [NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(buttonEmulationKeyDownTimeout:) userInfo:nil repeats:NO];
+}
+- (void)buttonEmulationKeyDownTimeout:(id)sender
+{
+    // Timeout the keydown emulation
+    [self resetButtonEmulationKeyDownTimer];
+    // NSLog(@"Button Emulation Keydown Timer Timeout!\n");
+}
+
+// Timer for KeyboardEmulationTimeout.
+- (void)resetButtonEmulationKeyboardTimer
+{
+    if (buttonEmulationKeyboardTimer) {
+        [buttonEmulationKeyboardTimer invalidate];
+        buttonEmulationKeyboardTimer = nil;
+        // NSLog(@"Keyboard Timer Reset!\n");
+    }
+}
+
+- (void)buttonEmulationKeyboardTimeout:(id)sender
+{
+    // NSLog(@"Button Emulation Keyboard Timer Timeout\n");
+    [self resetButtonEmulationKeyboardTimer];
+    [self clearEmulationActiveMask];
+}
+
+- (void)setButtonEmulationKeyboardTimer
+{
+    float to = [profile emulateKeyboardTimeout];
+    if (to <= 0) {
+        return;
+    }
+    // NSLog(@"Here's where I'd set the timer for %f\n",to);
+    [self resetButtonEmulationKeyboardTimer];
+    buttonEmulationKeyboardTimer = [NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(buttonEmulationKeyboardTimeout:) userInfo:nil repeats:NO];
+    
+}
 - (void)emulateButtonTimeout:(id)sender
 {
 	NSPoint p = [window mouseLocationOutsideOfEventStream];
@@ -497,8 +566,8 @@ static void print_data(unsigned char* data, int length)
     if(pressed) {
 		// button 1 or 3 pressed
         if((mask & (rfbButton1Mask | rfbButton3Mask)) == (rfbButton1Mask | rfbButton3Mask)) {
-			// both buttons pressed
-            if(emulate3ButtonTimer) {
+            // both buttons pressed
+            if( emulate3ButtonTimer) {
 				// timer is running, so the second button has been pressed.
                 [emulate3ButtonTimer invalidate];
 				emulate3ButtonTimer = nil;
@@ -553,9 +622,8 @@ static void print_data(unsigned char* data, int length)
             }
         }
 		if(!(mask & rfbButton1Mask)) {
-			buttonEmulationActiveMask = 0;
+			[self clearEmulationActiveMask];
 			buttonEmulationKeyDownMask = 0;
-			[rfbView setCursorTo:@"rfbCursor" hotSpot:7];
 		}
     }
 
@@ -655,6 +723,32 @@ static void print_data(unsigned char* data, int length)
 	[self mouseAt: thePoint buttons: lastButtonMask];
 }
 
+- (void)setEmulationActiveMask:(unsigned int)k
+{
+    switch (k) {
+        case 2:
+            buttonEmulationActiveMask = rfbButton2Mask;
+            [rfbView setCursorTo:@"rfbCursor2" hotSpot:13];
+            break;
+        case 3:
+            buttonEmulationActiveMask = rfbButton3Mask;
+            [rfbView setCursorTo:@"rfbCursor3" hotSpot:13];
+            break;
+    }
+    [self setButtonEmulationKeyboardTimer];
+}
+
+- (void)clearEmulationActiveMask
+{
+    // Undo the Active Mask
+    buttonEmulationActiveMask = 0;
+    // Reset the cursor
+    [rfbView setCursorTo:@"rfbCursor" hotSpot:7];
+    // Reset the timer (turn it off)
+    [self resetButtonEmulationKeyDownTimer];
+    [self resetButtonEmulationKeyboardTimer];
+}
+
 - (void)sendModifier:(unsigned int)m
 {
     rfbKeyEventMsg msg;
@@ -678,39 +772,46 @@ static void print_data(unsigned char* data, int length)
         if(msg.down) {
             if(!(lastButtonMask & rfbButton1Mask)) {
                 buttonEmulationKeyDownMask = rfbButton3Mask;
+				[self setButtonEmulationKeyDownTimer];
             }
         } else {
             if(buttonEmulationKeyDownMask & rfbButton3Mask) {
                 if(buttonEmulationActiveMask) {
-                    buttonEmulationActiveMask = 0;
-                    [rfbView setCursorTo:@"rfbCursor" hotSpot:7];
+                    [self clearEmulationActiveMask];
                 } else {
-                    buttonEmulationActiveMask = rfbButton3Mask;
-                    [rfbView setCursorTo:@"rfbCursor3" hotSpot:13];
+                    // We only go into emulation mode if the timer hasn't expired
+                    if ([self checkButtonEmulationKeyDownTimer]) {
+                        [self setEmulationActiveMask:3];
+                    }
                 }
-			}
+            }
+            // regardless of the state of the timer, turn it off now.
+            [self resetButtonEmulationKeyDownTimer];
         }
     }
     if(diff & NSControlKeyMask) {
         msg.down = (m & NSControlKeyMask) ? YES : NO;
         msg.key = htonl([profile controlKeyCode]);
-		//        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
+        //        fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
         [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-		if(msg.down) {
+        if(msg.down) {
             if(!(lastButtonMask & rfbButton1Mask)) {
                 buttonEmulationKeyDownMask = rfbButton2Mask;
+                [self setButtonEmulationKeyDownTimer];
             }
-		} else {
+        } else {
             if(buttonEmulationKeyDownMask & rfbButton2Mask) {
                 if(buttonEmulationActiveMask) {
-                    buttonEmulationActiveMask = 0;
-                    [rfbView setCursorTo:@"rfbCursor" hotSpot:7];
+                    [self clearEmulationActiveMask];
                 } else {
-                    buttonEmulationActiveMask = rfbButton2Mask;
-                    [rfbView setCursorTo:@"rfbCursor2" hotSpot:13];
+                    if ([self checkButtonEmulationKeyDownTimer]) {
+                        [self setEmulationActiveMask:2];
+                    }
                 }
             }
-		}
+            // regardless of the state of the timer, turn it off now.
+            [self resetButtonEmulationKeyDownTimer];
+        }
     }
     if(diff & NSAlternateKeyMask) {
         msg.down = (m & NSAlternateKeyMask) ? YES : NO;
@@ -758,6 +859,7 @@ static void print_data(unsigned char* data, int length)
     msg.key = htonl(kc);
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     buttonEmulationKeyDownMask = 0;
+    [self resetButtonEmulationKeyDownTimer];
 }
 
 - (void)sendCtrlAltDel: (id)sender
@@ -882,7 +984,7 @@ static void print_data(unsigned char* data, int length)
 		if ( (c == kFullscreenSwitchKey) && (lastModifier == kFullscreenSwitchModifiers) ){
 			if (aFlag)
 				_isFullscreen ? [self makeConnectionWindowed: self] : [self makeConnectionFullscreen: self];
-			buttonEmulationActiveMask = 0;
+			[self clearEmulationActiveMask];
 			buttonEmulationKeyDownMask = 0;
 			[self sendModifier:kFullscreenSwitchModifiers]; // Clear the modifier mask
 			[self sendModifier:0];

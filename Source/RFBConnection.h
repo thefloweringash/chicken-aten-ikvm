@@ -58,6 +58,8 @@
     NSPanel *newTitlePanel;
     NSString *titleString;
     id emulate3ButtonTimer;
+    NSTimer *buttonEmulationKeyDownTimer;			// Timer for Button Emulation Keydown Timer
+    NSTimer *buttonEmulationKeyboardTimer;          // Timer for Button Emulation Timeout
     id statisticField;
     unsigned lastButtonMask;				// no emulation
     unsigned lastComputedMask;				// emulated
@@ -130,6 +132,7 @@
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned)mask;
 - (void)mouseMovedTo:(NSPoint)thePoint;
 - (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag;
+- (void)clearEmulationActiveMask;
 - (void)sendModifier:(unsigned int)m;
 - (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length;
 

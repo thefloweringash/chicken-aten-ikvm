@@ -161,7 +161,7 @@ static RFBConnectionManager*	sharedManager = nil;
     }
 }
 
-- (void)comboBoxSelectionDidChange:(NSNotification *)notification
+- (IBAction)hostSelectionDidChange:(id)sender
 {
     NSString *newSelection = [hostName objectValueOfSelectedItem];
     
@@ -181,7 +181,6 @@ static RFBConnectionManager*	sharedManager = nil;
     if (selectedHostDict != nil) {
         [rememberPwd setIntValue:[[selectedHostDict objectForKey:RFB_REMEMBER] intValue]];
         [display setStringValue:[selectedHostDict objectForKey:RFB_DISPLAY]];
-        [shared setIntValue:[[selectedHostDict objectForKey:RFB_SHARED] intValue]];
         [shared setIntValue:[[selectedHostDict objectForKey:RFB_SHARED] intValue]];
         if ([rememberPwd intValue]) {
             [passWord setStringValue:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]]];
@@ -278,15 +277,20 @@ static RFBConnectionManager*	sharedManager = nil;
         [[KeyChain defaultKeyChain] setGenericPassword:[passWord stringValue] forService:KEYCHAIN_SERVICE_NAME account:[hostName stringValue]]; // How do I find my freakin' app name?
     }
     profile = [profileManager profileNamed:[profilePopup titleOfSelectedItem]];
-    [self createConnectionWithDictionary:connectionDictionary profile:profile owner:self];
-    [loginPanel orderOut:self];
-	[self updateLoginPanel];
+    
+    // Only close the open dialog of the connection was successful
+    if( YES == [self createConnectionWithDictionary:connectionDictionary profile:profile owner:self] ) {
+        [loginPanel orderOut:self];
+    }
+
+    [self updateLoginPanel];
 }
 
 /* Do the work of creating a new connection and add it to the list of connections. */
-- (void)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner
+- (BOOL)createConnectionWithDictionary:(NSDictionary *) someDict profile:(Profile *) someProfile owner:(id) someOwner
 {
     RFBConnection* theConnection;
+    bool returnVal = YES;
 
     theConnection = [[[RFBConnection alloc] initWithDictionary:someDict profile:someProfile owner:someOwner] autorelease];
     //    theConnection = [[[RFBConnection alloc] initWithDictionary:connectionDictionary andProfile:profile] autorelease];
@@ -294,6 +298,11 @@ static RFBConnectionManager*	sharedManager = nil;
         [theConnection setManager:self];
         [connections addObject:theConnection];
     }
+    else {
+        returnVal = NO;
+    }
+    
+    return returnVal;
 }
 
 - (IBAction)preferencesChanged:(id)sender

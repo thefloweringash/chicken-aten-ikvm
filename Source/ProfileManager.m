@@ -73,16 +73,12 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
             [ProfileManager getEncodings], Encodings,
             [NSString stringWithFormat:@"%d", (1 << NUMENCODINGS) - 1], EnabledEncodings,
             [m3bTimeout stringValue], EmulateThreeButtonTimeout,
-
-			// Jason replaced the following so we can use indices instead of titles
+            [mkdTimeout stringValue], EmulateKeyDownTimeout,
+            [mkbTimeout stringValue], EmulateKeyboardTimeout,
             [NSNumber numberWithShort: [commandKey indexOfSelectedItem]], NewCommandKeyMap,
             [NSNumber numberWithShort: [controlKey indexOfSelectedItem]], NewControlKeyMap,
             [NSNumber numberWithShort: [altKey indexOfSelectedItem]], NewAltKeyMap,
             [NSNumber numberWithShort: [shiftKey indexOfSelectedItem]], NewShiftKeyMap,
-/*            [commandKey titleOfSelectedItem], CommandKeyMap,
-            [controlKey titleOfSelectedItem], ControlKeyMap,
-            [altKey titleOfSelectedItem], AltKeyMap,
-            [shiftKey titleOfSelectedItem], ShiftKeyMap, */
             nil];
 	profiles = [[NSMutableDictionary alloc] initWithObjectsAndKeys:def, DefaultProfile, nil];
     } else {
@@ -150,7 +146,9 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
     [pixelFormatMatrix selectCellWithTag:[[spd objectForKey:PixelFormat] intValue]];
     [enableCopyRect setState:[[spd objectForKey:CopyRectEnabled] intValue]];
     [m3bTimeout setIntValue:[[spd objectForKey:EmulateThreeButtonTimeout] intValue]];
-
+    [mkdTimeout setIntValue:[[spd objectForKey:EmulateKeyDownTimeout] intValue]];
+    [mkbTimeout setIntValue:[[spd objectForKey:EmulateKeyboardTimeout] intValue]];
+    
 	// jason - changed following to use indices instead of names
     [commandKey selectItemAtIndex:[[spd objectForKey:NewCommandKeyMap] shortValue]];
     [controlKey selectItemAtIndex:[[spd objectForKey:NewControlKeyMap] shortValue]];
@@ -224,6 +222,9 @@ static const unsigned int encodingValues[NUMENCODINGS] = {
     [profile setObject:[NSString stringWithFormat:@"%d", [enableCopyRect state]]
                 forKey:CopyRectEnabled];
     [profile setObject:[m3bTimeout stringValue] forKey:EmulateThreeButtonTimeout];
+    [profile setObject:[mkdTimeout stringValue] forKey:EmulateKeyDownTimeout];
+    [profile setObject:[mkbTimeout stringValue] forKey:EmulateKeyboardTimeout];
+    
 	// Jason - changed from using titleOfSelectedItem to an NSNumber indicating the selected item
     [profile setObject:[NSNumber numberWithShort: [commandKey indexOfSelectedItem]] forKey:NewCommandKeyMap];
     [profile setObject:[NSNumber numberWithShort: [controlKey indexOfSelectedItem]] forKey:NewControlKeyMap];

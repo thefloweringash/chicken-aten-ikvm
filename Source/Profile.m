@@ -61,19 +61,28 @@ static CARD32 getcode(NSString* s)
 		NSArray* enc;
 		int i, mask;
 		BOOL copyrect;
+		id check;
 
 		info = [d copy];
 		e3btimeout = [[info objectForKey:EmulateThreeButtonTimeout] intValue];
 		e3btimeout /= 1000.0;
-		// Jason replaced the following so we can use indices instead of titles
+                
+		// If the EmulateKeyDownTimeout is nil, it means it's not in the profile.
+		check = [info objectForKey:EmulateKeyDownTimeout];
+		if (check == nil) {
+			ekdtimeout = -1;
+		}
+		else {
+			ekdtimeout = [[info objectForKey:EmulateKeyDownTimeout] intValue];
+			ekdtimeout /= 1000.0;
+		}
+
+		ekbtimeout = [[info objectForKey:EmulateKeyboardTimeout] intValue];
+                
 		commandKeyCode = getcode([info objectForKey:NewCommandKeyMap]);
 		altKeyCode = getcode([info objectForKey:NewAltKeyMap]);
 		shiftKeyCode = getcode([info objectForKey:NewShiftKeyMap]);
 		controlKeyCode = getcode([info objectForKey:NewControlKeyMap]);
-	/*    commandKeyCode = getcode([info objectForKey:CommandKeyMap]);
-		altKeyCode = getcode([info objectForKey:AltKeyMap]);
-		shiftKeyCode = getcode([info objectForKey:ShiftKeyMap]);
-		controlKeyCode = getcode([info objectForKey:ControlKeyMap]); */
 		enc = [info objectForKey:Encodings];
 		mask = [[info objectForKey:EnabledEncodings] intValue];
 		if((copyrect = [[info objectForKey:CopyRectEnabled] intValue]) != 0) {
@@ -106,6 +115,16 @@ static CARD32 getcode(NSString* s)
 - (float)emulate3ButtonTimeout
 {
     return e3btimeout;
+}
+
+- (float)emulateKeyDownTimeout
+{
+    return ekdtimeout;
+}
+
+- (float)emulateKeyboardTimeout
+{
+    return ekbtimeout;
 }
 
 - (CARD32)commandKeyCode

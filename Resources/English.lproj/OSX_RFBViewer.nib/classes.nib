@@ -34,6 +34,8 @@
                 enableCopyRect = id; 
                 encodingTableView = id; 
                 m3bTimeout = id; 
+                mkbTimeout = id; 
+                mkdTimeout = id; 
                 newProfileButton = id; 
                 pixelFormatMatrix = id; 
                 profileBrowser = id; 

@@ -226,7 +226,7 @@ static ServerDataManager* gInstance = nil;
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-	[gInstance release];
+	[self save];
 }
 
 - (unsigned) serverCount

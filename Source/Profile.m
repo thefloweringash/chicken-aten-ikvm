@@ -170,9 +170,9 @@
             format->depth = 24;
             format->redMax = format->greenMax = format->blueMax = 255;
             if(format->bigEndian) {
-                format->redShift = 24;
-                format->greenShift = 16;
-                format->blueShift = 8;
+                format->redShift = 16;
+                format->greenShift = 8;
+                format->blueShift = 0;
             } else {
                 format->redShift = 0;
                 format->greenShift = 8;

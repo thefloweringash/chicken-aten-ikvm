@@ -25,21 +25,20 @@
 
 static inline unsigned int cvt_pixel24(unsigned char* v, FrameBuffer* this)
 {
-	unsigned char r, g, b;
-    unsigned int col;
+    unsigned int pix = 0, col;
 	
     if(this->pixelFormat.bigEndian) {
-        r = *v++;
-        g = *v++;
-        b = *v;
+        pix += *v++; pix <<= 8;
+        pix += *v++; pix <<= 8;
+        pix += *v;
     } else {
-        b = *v++;
-        g = *v++;
-        r = *v;
+        pix = *v++;
+        pix += (((unsigned int)*v++) << 8);
+        pix += (((unsigned int)*v++) << 16);
     }
-    col = this->redClut[r & this->pixelFormat.redMax];
-    col += this->greenClut[g & this->pixelFormat.greenMax];
-    col += this->blueClut[b & this->pixelFormat.blueMax];
+    col = this->redClut[(pix >> this->pixelFormat.redShift) & this->pixelFormat.redMax];
+    col += this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
+    col += this->blueClut[(pix >> this->pixelFormat.blueShift) & this->pixelFormat.blueMax];
     return col;
 }
 

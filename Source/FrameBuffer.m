@@ -342,7 +342,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 - (unsigned int)tightBytesPerPixel
 {
     if((pixelFormat.bitsPerPixel == 32) &&
-		(pixelFormat.depth >= 24) &&
+		(pixelFormat.depth == 24) &&
         (pixelFormat.redMax == 0xff) &&
         (pixelFormat.greenMax == 0xff) &&
         (pixelFormat.blueMax == 0xff)) {

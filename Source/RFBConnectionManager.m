@@ -46,6 +46,7 @@
 {
 	// make sure our window is loaded
 	[self window];
+	[self setWindowFrameAutosaveName: @"login"];
 	
 	mDisplayGroups = false;
 	

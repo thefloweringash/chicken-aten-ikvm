@@ -35,8 +35,8 @@
 	</array> -->
 	<key>CFBundleVersion</key>
 	<string>__VERSION__</string>
-	<key>NSAppleScriptEnabled</key>
-	<string>YES</string>
+<!--	<key>NSAppleScriptEnabled</key>
+	<string>YES</string> -->
 	<key>NSMainNibFile</key>
 	<string>OSX_RFBViewer</string>
 	<key>NSPrincipalClass</key>

@@ -87,6 +87,8 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 {
 	// make sure our window is loaded
 	[self window];
+	[self setWindowFrameAutosaveName: @"profile_manager"];
+
 	
 	[mEncodingTableView setTarget:self];
     [mEncodingTableView setDoubleAction:@selector(toggleSelectedEncodingEnabled:)];

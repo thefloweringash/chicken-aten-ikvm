@@ -123,6 +123,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	int display; // jason added to handle a direct port specification
 
     [super init];
+    titleString = NULL;
     profile = [p retain];
 	_owner = owner; // jason added for fullscreen display
 	_isFullscreen = NO; // jason added for fullscreen display
@@ -169,6 +170,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 //    [window release]; // jason set the NIB to release on close - this is for fullscreen
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [titleString release];
     [manager release];
     [versionReader release];
     [handshaker release];
@@ -349,17 +351,20 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (void)setNewTitle:(id)sender
 {
-    NSString* nt = [newTitleField stringValue];
+    [titleString autorelease];
+    titleString = [[newTitleField stringValue] retain];
 
-    [manager setDisplayNameTranslation:nt forName:realDisplayName forHost:host];
-    [window setTitle:nt];
+    [manager setDisplayNameTranslation:titleString forName:realDisplayName forHost:host];
+    [window setTitle:titleString];
     [newTitlePanel orderOut:self];
 }
 
 - (void)setDisplayName:(NSString*)aName
 {
     realDisplayName = [aName retain];
-    [window setTitle:[manager translateDisplayName:realDisplayName forHost:host]];
+    [titleString autorelease];
+    titleString = [[manager translateDisplayName:realDisplayName forHost:host] retain];
+    [window setTitle:titleString];
     [window setMiniwindowImage:[NSImage imageNamed:@"vnc"]];
 }
 
@@ -753,7 +758,7 @@ static void print_data(unsigned char* data, int length)
 /* --------------------------------------------------------------------------------- */
 - (void)openNewTitlePanel:(id)sender
 {
-    [newTitleField setStringValue:[window title]];
+    [newTitleField setStringValue:titleString];
     [newTitlePanel makeKeyAndOrderFront:self];
     [self sendModifier:lastModifier & ~NSCommandKeyMask];
 }
@@ -916,7 +921,7 @@ static void print_data(unsigned char* data, int length)
         [NSString stringWithFormat: @"VNC Protocol Version: %@\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %s\n\tTruecolor: %s\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d", serverVersion, (int)[frameBuffer size].width, (int)[frameBuffer size].height, frameBuffer->pixelFormat.bitsPerPixel, frameBuffer->pixelFormat.depth, frameBuffer->pixelFormat.bigEndian ? "big-endian" : "little-endian", frameBuffer->pixelFormat.trueColour ? "yes" : "no", frameBuffer->pixelFormat.redMax, frameBuffer->pixelFormat.greenMax, frameBuffer->pixelFormat.blueMax, frameBuffer->pixelFormat.redShift, frameBuffer->pixelFormat.greenShift, frameBuffer->pixelFormat.blueShift]
         ];
     [self updateStatistics:self];
-    [optionPanel setTitle:[window title]];
+    [optionPanel setTitle:titleString];
     [optionPanel makeKeyAndOrderFront:self];
 }
 
@@ -974,6 +979,7 @@ static NSString* byteString(double d)
 	[scrollView setHasVerticalScroller:verticalScroll];
 	[window makeFirstResponder: rfbView];
 	[window makeKeyAndOrderFront:nil];
+        [window setTitle:titleString];
 	if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
 		NSLog( @"Couldn't release the main display!" );
 	}

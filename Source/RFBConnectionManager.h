@@ -57,7 +57,7 @@
 
 - (void)preferencesChanged:(id)sender;
 - (id)defaultFrameBufferClass;
-- (void)applicationWillTerminate:(NSNotification *)aNotification;
+//- (void)applicationWillTerminate:(NSNotification *)aNotification;
 
 - (void)controlTextDidChange:(NSNotification *)aNotification;
 

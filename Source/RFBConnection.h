@@ -53,7 +53,8 @@
     id rfbProtocol;
     id scrollView;
     id newTitleField;
-    id newTitlePanel;
+    NSPanel *newTitlePanel;
+    NSString *titleString;
     id emulate3ButtonTimer;
     id statisticField;
     unsigned lastButtonMask;				// no emulation

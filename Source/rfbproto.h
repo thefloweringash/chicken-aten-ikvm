@@ -44,6 +44,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <netinet/in.h>  // This line clears all in_addr warnings on OSX 10.1
 #include <arpa/inet.h>
 
 /*

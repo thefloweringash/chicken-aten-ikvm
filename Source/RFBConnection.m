@@ -418,7 +418,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 }
 
 - (void)flushDrawing {
-    [window enableFlushWindow];
+	if ([window isFlushWindowDisabled])
+		[window enableFlushWindow];
     [window flushWindow];
     [self queueUpdateRequest];
 }
@@ -623,7 +624,7 @@ static void print_data(unsigned char* data, int length)
 }
 
 - (void)getUpdate:(id)sender {
-    [rfbProtocol requestUpdate:[window frame] incremental:TRUE];
+	[rfbProtocol requestUpdate:[window frame] incremental:TRUE];
     updateRequested = FALSE;
 }
 

@@ -1,7 +1,0 @@
-Known Bugs (Version 1.24):
-==========================
-- When a connected server crashes, it sometimes takes the viewer with it.
-- Statistic info does not agree with info of server because copyrect
-  updates are not calculated in the same way (don't know how the server
-  calculates it right now).
-- Thight encoding is not 100% stable but usable.

@@ -148,7 +148,7 @@ static ServerDataManager* gInstance = nil;
 			}
 		}
 		
-		if( nil == [gInstance getServerAtIndex:0] )
+		if( 0 == [gInstance serverCount] )
 		{
 			[gInstance createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
 		}
@@ -307,16 +307,6 @@ static ServerDataManager* gInstance = nil;
 - (id<IServerData>)getServerWithName:(NSString*)name
 {
 	return [mServers objectForKey:name];
-}
-
-- (id<IServerData>)getServerAtIndex:(int)index
-{
-	if( 0 > index || 0 == [mServers count] )
-	{
-		return nil;
-	}
-	
-	return [[mServers allValues] objectAtIndex:index];
 }
 
 - (void)removeServer:(id<IServerData>)server

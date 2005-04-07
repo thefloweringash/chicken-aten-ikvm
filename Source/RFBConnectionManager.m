@@ -50,6 +50,20 @@
 	[self release];
 }
 
+- (void)reloadServerArray
+{
+    NSEnumerator *serverEnumerator = [[ServerDataManager sharedInstance] getServerEnumerator];
+	id<IServerData> server;
+	
+	[mOrderedServerNames removeAllObjects];
+	while ( server = [serverEnumerator nextObject] )
+	{
+		[mOrderedServerNames addObject:[server name]];
+	}
+	
+	[mOrderedServerNames sortUsingSelector:@selector(caseInsensitiveCompare:)];
+}
+
 - (void)wakeup
 {
 	// make sure our window is loaded
@@ -57,6 +71,9 @@
 	[self setWindowFrameAutosaveName: @"login"];
 	
 	mDisplayGroups = false;
+	
+	mOrderedServerNames = [[NSMutableArray alloc] init];
+	[self reloadServerArray];
 	
 	mServerCtrler = [[ServerDataViewController alloc] init];
 	[mServerCtrler setConnectionDelegate:self];
@@ -229,6 +246,7 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
     [connections release];
 	[mServerCtrler release];
+	[mOrderedServerNames release];
 	[serverListBox release];
 	[serverGroupBox release];
     [super dealloc];
@@ -236,16 +254,7 @@
 
 - (id<IServerData>)selectedServer
 {
-	return [[ServerDataManager sharedInstance] getServerAtIndex:[serverList selectedRow]];
-	
-	/*NSTextFieldCell* textField = [serverList  selectedCell];
-	if( nil != textField )
-	{
-		NSString* serverName = [textField stringValue];
-		return [[ServerDataManager sharedInstance] getServerWithName:serverName];
-	}*/
-	
-	return nil;
+	return [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:[serverList selectedRow]]];
 }
 
 - (void)selectedHostChanged
@@ -361,13 +370,13 @@
 	NSString *newName = [newServer name];
 	NSParameterAssert( newName != nil );
 	
-	int index = 0;
-	NSEnumerator *serverEnumerator = [serverDataManager getServerEnumerator];
-	id<IServerData> server;
+	NSEnumerator *serverEnumerator = [mOrderedServerNames objectEnumerator];
+	[self reloadServerArray];
 	
-	while ( server = [serverEnumerator nextObject] )
+	int index = 0;
+	NSString *name;
+	while ( name = [serverEnumerator nextObject] )
 	{
-		NSString *name = [server name];
 		if ( name && [name isEqualToString: newName] )
 		{
 			[serverList selectRow: index byExtendingSelection: NO];
@@ -381,6 +390,8 @@
 - (IBAction)deleteSelectedServer:(id)sender
 {
 	[[ServerDataManager sharedInstance] removeServer:[self selectedServer]];
+	
+	[self reloadServerArray];
 }
 
 - (void)windowWillClose:(NSNotification *)aNotification
@@ -432,15 +443,7 @@
 {
 	if( serverList == aTableView )
 	{
-		if( mDisplayGroups )
-		{
-			NSString* groupName = [(NSTextFieldCell*)[groupList selectedCell] stringValue];
-			[[[[ServerDataManager sharedInstance] getServerEnumeratorForGroupName:groupName] allObjects] count];
-		}
-		else
-		{
-			return [[ServerDataManager sharedInstance] serverCount];
-		}
+		return [mOrderedServerNames count];
 	}
 	else if( groupList == aTableView )
 	{
@@ -454,7 +457,7 @@
 {
 	if( serverList == aTableView )
 	{
-		return [[[ServerDataManager sharedInstance] getServerAtIndex:rowIndex] name];
+		return [mOrderedServerNames objectAtIndex:rowIndex];
 	}
 	else if( groupList == aTableView )
 	{
@@ -469,7 +472,7 @@
 {
 	if( serverList == aTableView )
 	{
-		id<IServerData> server = [[ServerDataManager sharedInstance] getServerAtIndex:row];
+		id<IServerData> server = [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:row]];
 		
 		return [server doYouSupport:EDIT_NAME];
 	}
@@ -481,13 +484,41 @@
 	return NO;	
 }
 
+- (void)afterSort:(id<IServerData>)server
+{
+	[[self window] makeFirstResponder:[self window]];
+	
+	[self reloadServerArray];
+	NSEnumerator *serverEnumerator = [mOrderedServerNames objectEnumerator];
+	
+	int index = 0;
+	NSString *name;
+	while ( name = [serverEnumerator nextObject] )
+	{
+		if ( name && [name isEqualToString: [server name]] )
+		{
+			[serverList selectRow: index byExtendingSelection: NO];
+			break;
+		}
+		index++;
+	}
+}
+
 - (void)tableView:(NSTableView *)aTableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	if( serverList == aTableView )
 	{
 		NSString* serverName = object;
-		id<IServerData> server = [[ServerDataManager sharedInstance] getServerAtIndex:row];
-		[server setName:serverName];
+		id<IServerData> server = [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:row]];
+		
+		if( NO == [serverName isEqualToString:[server name]] )
+		{
+			[[self window] makeFirstResponder:[self window]];
+			[server setName:serverName];
+			
+			// This insanity overrides the default select next behavior in the table
+			[self performSelector:@selector(afterSort:) withObject:server afterDelay:0.0];
+		}
 	}
 }
 
@@ -511,6 +542,7 @@
 
 - (void)serverListDidChange:(NSNotification*)notification
 {
+	[self reloadServerArray];
 	[serverList reloadData];
 	[self selectedHostChanged];
 }
@@ -541,7 +573,6 @@
 	}
 }
 
-
 - (void)setFrontWindowUpdateInterval: (NSTimeInterval)interval
 {
 	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
@@ -555,7 +586,6 @@
 		}
 	}
 }
-
 
 - (void)setOtherWindowUpdateInterval: (NSTimeInterval)interval
 {

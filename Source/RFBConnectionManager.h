@@ -35,6 +35,7 @@
 	ServerDataViewController* mServerCtrler;
 	BOOL mDisplayGroups;
 	BOOL mRunningFromCommandLine;
+	NSMutableArray* mOrderedServerNames;
 }
 
 + (id)sharedManager;

@@ -111,14 +111,6 @@
 - (id<IServerData>)getServerWithName:(NSString*)name;
 
 /*
- *  Retrieves a server by its index value.
- *  @param index The index of the server you want to retrieve.
- *  @return The server at the requested index or nil if the server
- *  was not found.
- */
-- (id<IServerData>)getServerAtIndex:(int)index;
-
-/*
  *  Deletes the specified server
  *  @param server The server to be deleted.
  */

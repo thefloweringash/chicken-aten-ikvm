@@ -414,7 +414,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [titleString autorelease];
     titleString = [[manager translateDisplayName:realDisplayName forHost:host] retain];
     [window setTitle:titleString];
-    [window setMiniwindowImage:[NSImage imageNamed:@"vnc"]];
 }
 
 - (NSSize)displaySize

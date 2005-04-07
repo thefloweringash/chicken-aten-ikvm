@@ -38,10 +38,12 @@
 #define F2_KEYCODE		0xffbf
 #define	F3_KEYCODE		0xffc0
 #define CAPSLOCK		0xffe5
-#define kPauseKeyCode	0xff13
-#define kBreakKeyCode	0xff6b
 #define kPrintKeyCode	0xff61
 #define kExecuteKeyCode	0xff62
+#define kPauseKeyCode	0xff13
+#define kBreakKeyCode	0xff6b
+#define kInsertKeyCode	0xff63
+#define kDeleteKeyCode	0xffff
 #define kEscapeKeyCode	0xff1b
 
 
@@ -982,13 +984,13 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     msg.type = rfbKeyEvent;
     msg.down = YES;
-	msg.key = htonl(0xffff);
+	msg.key = htonl(kDeleteKeyCode);
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
 	
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
     msg.down = NO;
-	msg.key = htonl(0xffff);
+	msg.key = htonl(kDeleteKeyCode);
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
@@ -1063,6 +1065,38 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     msg.type = rfbKeyEvent;
     msg.down = NO;
 	msg.key = htonl(kExecuteKeyCode);
+}
+
+- (void)sendInsertKeyCode: (id)sender
+{
+    rfbKeyEventMsg msg;
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kInsertKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kInsertKeyCode);
+}
+
+- (void)sendDeleteKeyCode: (id)sender
+{
+    rfbKeyEventMsg msg;
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = YES;
+	msg.key = htonl(kDeleteKeyCode);
+    [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+	
+    memset(&msg, 0, sizeof(msg));
+    msg.type = rfbKeyEvent;
+    msg.down = NO;
+	msg.key = htonl(kDeleteKeyCode);
 }
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb

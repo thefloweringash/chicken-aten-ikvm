@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "KeyEquivalentManager.h"
 #import "PrefController.h"
+#import "ProfileManager.h"
 #import "RFBConnectionManager.h"
 #import "ListenerController.h"
 

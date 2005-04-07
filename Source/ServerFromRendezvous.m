@@ -71,6 +71,7 @@
 {
 	[self save];
 	[service_ release];
+	[super dealloc];
 }
 
 - (void)save

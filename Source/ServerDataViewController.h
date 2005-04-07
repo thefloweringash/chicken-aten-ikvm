@@ -42,7 +42,11 @@
 	
 	id<IServerData> mServer;
 	id<ConnectionDelegate> mDelegate;
+	
+	bool selfTerminate;
 }
+
+- (id)initWithReleaseOnCloseOrConnect;
 
 - (void)setServer:(id<IServerData>)server;
 - (id<IServerData>)server;
@@ -67,6 +71,6 @@
 
 @protocol ConnectionDelegate
 
-- (void)connect:(id<IServerData>)server;
+- (bool)connect:(id<IServerData>)server;
 
 @end

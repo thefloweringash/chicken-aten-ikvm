@@ -2,7 +2,7 @@
 
 {
     Name = "CotVNC";
-    AppleEventCode = "cVnC";
+    AppleEventCode = "CVnC";
 
     Commands = {
         "GetURL" = {

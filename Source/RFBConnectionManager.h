@@ -47,7 +47,7 @@
 - (void)showConnectionDialog: (id)sender;
 
 - (void)removeConnection:(id)aConnection;
-- (void)connect:(id<IServerData>)server;
+- (bool)connect:(id<IServerData>)server;
 - (void)cmdlineUsage;
 
 - (void)selectedHostChanged;

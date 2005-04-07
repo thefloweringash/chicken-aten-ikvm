@@ -114,7 +114,14 @@
 - (void)setName: (NSString*)name
 {
 	[_name autorelease];
-	_name = [name retain];
+	if( nil != name )
+	{
+		_name = [name retain];
+	}
+	else
+	{
+		_name = [[NSString stringWithString:@"localhost"] retain];
+	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -123,7 +130,14 @@
 - (void)setHost: (NSString*)host
 {
 	[_host autorelease];
-	_host = [host retain];
+	if( nil != host )
+	{
+		_host = [host retain];
+	}
+	else
+	{
+		_host = [[NSString stringWithString:@"new server"] retain];
+	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -132,7 +146,15 @@
 - (void)setPassword: (NSString*)password
 {
 	[_password autorelease];
-	_password = [password retain];
+	
+	if( nil != password )
+	{
+		_password = [password retain];
+	}
+	else
+	{
+		_password = [[NSString stringWithString:@""] retain];
+	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];

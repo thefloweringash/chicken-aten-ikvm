@@ -21,8 +21,8 @@
 	<key>CFBundleShortVersionString</key>
 	<string>Chicken of the VNC version __VERSION__</string>
 	<key>CFBundleSignature</key>
-	<string>ÇVnç</string>
-	<!-- <key>CFBundleURLTypes</key>
+	<string>CVnc</string>
+	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
@@ -30,13 +30,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>vnc</string>
+				<string>rfb</string>
 			</array>
 		</dict>
-	</array> -->
+	</array>
 	<key>CFBundleVersion</key>
 	<string>__VERSION__</string>
-<!--	<key>NSAppleScriptEnabled</key>
-	<string>YES</string> -->
+    <key>NSAppleScriptEnabled</key>
+	<string>YES</string>
 	<key>NSMainNibFile</key>
 	<string>OSX_RFBViewer</string>
 	<key>NSPrincipalClass</key>

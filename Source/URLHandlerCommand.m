@@ -9,6 +9,8 @@
 #import "URLHandlerCommand.h"
 #import "ServerDataViewController.h"
 #import "ServerBase.h"
+#import "RFBConnectionManager.h"
+#import "ServerFromURL.h"
 
 #define HLSAssert(condition, errno, desc) \
 if (!(condition)) return [self scriptError: (errno) description: (desc)];
@@ -31,7 +33,7 @@ if (!(condition)) return [self scriptError: (errno) description: \
 
 - (id)performDefaultImplementation
 {
-    /*NSString *command = [[self commandDescription] commandName];
+    NSString *command = [[self commandDescription] commandName];
     NSString *verb;
     NSString *urlString = [self directParameter];
     NSURL *url;
@@ -52,9 +54,10 @@ if (!(condition)) return [self scriptError: (errno) description: \
     
 	url = [NSURL URLWithString: urlString];
     
-	ServerDataViewController* viewCtrlr = [[ServerDataViewController alloc] init];
+	ServerDataViewController* viewCtrlr = [[ServerDataViewController alloc] initWithReleaseOnCloseOrConnect];
+	[viewCtrlr setConnectionDelegate:[RFBConnectionManager sharedManager]];
 	
-	ServerBase* server = [[ServerBase alloc]init];
+	ServerFromURL* server = [[[ServerFromURL alloc] init] autorelease];
 	[server setHost:[url host]];
 	[server setDisplay:[[url port] intValue]];
 	[server setPassword:[url password]];
@@ -66,7 +69,7 @@ if (!(condition)) return [self scriptError: (errno) description: \
     // wrt URL formats; may want to use it instead (see release notes)
     HLSAssert(url != nil, kURLInvalidURLError,
               @"URL format is invalid; must be fully qualified (scheme://host...).");
-	*/
+	
     return nil;
 }
 

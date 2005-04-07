@@ -111,8 +111,6 @@
 				F5DC7187033DB44301A8010C,
 				F5DC7185033DB44301A8010C,
 				7FFA903B062BA74F0008D381,
-				7FF0C9A305CDBDCE008E39DD,
-				7FF0C9A705CDC9A0008E39DD,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -317,6 +315,8 @@
 				E2B083E30763AA7D00CE24C1,
 				E2B083EF0763AA9A00CE24C1,
 				E2929DD507675DE800190669,
+				7FB3EA1B0804E758003757C9,
+				7FB3EAC70804EFB5003757C9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -636,6 +636,8 @@
 				E2CA651806DA451600B70BDF,
 				E2B0839D0763A51700CE24C1,
 				E2B083F90763AAC200CE24C1,
+				7FB3EA8D0804ECDB003757C9,
+				7FB3EA8E0804ECE0003757C9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -768,6 +770,8 @@
 				E2B083E20763AA7D00CE24C1,
 				E2B083F00763AA9A00CE24C1,
 				E2929DD607675DE800190669,
+				7FB3EA1C0804E75E003757C9,
+				7FB3EAC80804EFB5003757C9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1082,6 +1086,70 @@
 			settings = {
 			};
 		};
+		7FB3EA1B0804E758003757C9 = {
+			fileRef = 7F088F2805E1DA4800336456;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7FB3EA1C0804E75E003757C9 = {
+			fileRef = 7F088F2905E1DA4800336456;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7FB3EA1D0804E77F003757C9 = {
+			children = (
+				7FF0C9A305CDBDCE008E39DD,
+				7FF0C9A705CDC9A0008E39DD,
+				7F088F2805E1DA4800336456,
+				7F088F2905E1DA4800336456,
+			);
+			isa = PBXGroup;
+			name = "AppleScript Processing";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7FB3EA8D0804ECDB003757C9 = {
+			fileRef = 7FF0C9A705CDC9A0008E39DD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7FB3EA8E0804ECE0003757C9 = {
+			fileRef = 7FF0C9A305CDBDCE008E39DD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7FB3EAC50804EFB5003757C9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ServerFromURL.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7FB3EAC60804EFB5003757C9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ServerFromURL.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7FB3EAC70804EFB5003757C9 = {
+			fileRef = 7FB3EAC50804EFB5003757C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7FB3EAC80804EFB5003757C9 = {
+			fileRef = 7FB3EAC60804EFB5003757C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		7FB6A8D1068AB5E3005E5E49 = {
 			fileRef = 7FC6DF6D05C31B0D0028A970;
 			isa = PBXBuildFile;
@@ -1271,6 +1339,8 @@
 				7FC6DF6805C31AF50028A970,
 				7FC6DF6D05C31B0D0028A970,
 				7FC6DF6E05C31B0D0028A970,
+				7FB3EAC50804EFB5003757C9,
+				7FB3EAC60804EFB5003757C9,
 			);
 			isa = PBXGroup;
 			name = "Server Models";
@@ -1283,8 +1353,8 @@
 			lastKnownFileType = text.plist.scriptSuite;
 			name = CotVNC.scriptSuite;
 			path = Resources/CotVNC.scriptSuite;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		7FF0C9A705CDC9A0008E39DD = {
 			fileEncoding = 4;
@@ -1292,8 +1362,8 @@
 			lastKnownFileType = text.plist.scriptTerminology;
 			name = CotVNC.scriptTerminology;
 			path = Resources/CotVNC.scriptTerminology;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		7FFA8FE9062BA6330008D381 = {
 			fileEncoding = 30;
@@ -2403,6 +2473,7 @@
 				E21FE439062B79940059585C,
 				7FD35C1706CC57FB00648090,
 				7FC6DF2405C315680028A970,
+				7FB3EA1D0804E77F003757C9,
 				E2F3A2E306D4483D005EB917,
 				E2F3A2E406D4483D005EB917,
 				F5DC719B033DB4A801A8010C,
@@ -2494,8 +2565,6 @@
 				F536C26703937E5301178D82,
 				F536C26803937E5301178D82,
 				F536C26903937E5301178D82,
-				7F088F2805E1DA4800336456,
-				7F088F2905E1DA4800336456,
 			);
 			isa = PBXGroup;
 			path = Source;

@@ -314,15 +314,18 @@
 		[NSApp terminate:self];
 }
 
-- (void)connect:(id<IServerData>)server;
+- (bool)connect:(id<IServerData>)server;
 {
     Profile* profile = [[ProfileManager sharedManager] profileNamed:[server lastProfile]];
     
     // Only close the open dialog of the connection was successful
-    if( YES == [self createConnectionWithServer:server profile:profile owner:self] )
+	bool bRetVal = [self createConnectionWithServer:server profile:profile owner:self];
+    if( YES == bRetVal && server == [self selectedServer])
 	{
         [[self window] orderOut:self];
     }
+	
+	return bRetVal;
 }
 
 /* Do the work of creating a new connection and add it to the list of connections. */

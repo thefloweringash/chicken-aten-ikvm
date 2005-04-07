@@ -34,6 +34,8 @@
 	{
 		[NSBundle loadNibNamed:@"ServerDisplay.nib" owner:self];
 		
+		selfTerminate = NO;
+		
 		[connectIndicatorText setStringValue:@""];
 		[box setBorderType:NSNoBorder];
 		
@@ -53,6 +55,21 @@
 	if (self = [self init])
 	{
 		[self setServer:server];
+	}
+	
+	return self;
+}
+
+- (id)initWithReleaseOnCloseOrConnect
+{
+	if (self = [self init])
+	{
+		selfTerminate = YES;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(windowClose:)
+                                                     name:NSWindowWillCloseNotification
+                                                   object:(id)[self window]];
 	}
 	
 	return self;
@@ -239,11 +256,28 @@
 	[connectIndicatorText setStringValue:NSLocalizedString(@"Connecting...", @"Connect in process notification string")];
 	[connectIndicatorText display];
 	
-	[mDelegate connect:mServer];
+	bool bConnectSuccess = [mDelegate connect:mServer];
 	
 	[connectIndicator stopAnimation:self];
 	[connectIndicatorText setStringValue:@""];
 	[connectIndicatorText display];
+	
+	if( YES == bConnectSuccess && YES == selfTerminate )
+	{
+		// shouldCloseDocument will trigger the autorelease
+		[[self window] performClose:self];
+	}
+}
+
+- (void)windowClose:(id)notification
+{	
+	if([notification object] == [self window])
+	{
+		if( YES == selfTerminate )
+		{
+			[self autorelease];
+		}
+	}
 }
 
 @end

@@ -54,6 +54,7 @@
 		case CONNECT:
 		case DELETE:
 		case SERVER_SAVE:
+		case ADD_SERVER_ON_CONNECT:
 			return NO;
 		default:
 			// handle all cases

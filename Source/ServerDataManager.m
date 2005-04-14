@@ -361,6 +361,18 @@ static ServerDataManager* gInstance = nil;
 	return newServer;
 }
 
+- (id<IServerData>)addServer:(id<IServerData>)server
+{
+	id<IServerData> newServer = [self createServerByName:[server name]];
+	NSString* nameHolder = [newServer name];
+	
+	[newServer copyServer: server];
+	
+	[newServer setName:nameHolder];
+	
+	return newServer;
+}
+
 - (void)validateNameChange:(NSMutableString *)name forServer:(id<IServerData>)server;
 {
 	[(NSObject *)server retain];

@@ -126,6 +126,8 @@
 		case DELETE:
 		case SERVER_SAVE:
 			return YES;
+		case ADD_SERVER_ON_CONNECT:
+			return NO;
 		default:
 			// handle all cases
 			assert(0);

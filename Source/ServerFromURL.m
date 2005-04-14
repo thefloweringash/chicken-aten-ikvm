@@ -23,6 +23,16 @@
 
 @implementation ServerFromURL
 
+- (id)init
+{
+	if (self = [super init])
+	{
+		mAddToServerListOnConnect = NO;
+	}
+	
+	return self;
+}
+
 - (bool)doYouSupport: (SUPPORT_TYPE)type
 {
 	switch( type )
@@ -34,15 +44,34 @@
 		case SERVER_SAVE:
 		case EDIT_PASSWORD:
 		case CONNECT:
+		case ADD_SERVER_ON_CONNECT:
 			return YES;
 		case SAVE_PASSWORD:
-			return NO;
+			return mAddToServerListOnConnect;
 		default:
 			// handle all cases
 			assert(0);
 	}
 	
 	return NO;
+}
+
+- (bool)addToServerListOnConnect
+{
+	return mAddToServerListOnConnect;
+}
+
+- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect
+{
+	mAddToServerListOnConnect = addToServerListOnConnect;
+	
+	if( NO == addToServerListOnConnect )
+	{
+		[self setRememberPassword:NO];
+	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
+														object:self];
 }
 
 @end

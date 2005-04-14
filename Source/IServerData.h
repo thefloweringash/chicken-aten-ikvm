@@ -34,6 +34,7 @@ typedef enum
 	CONNECT,
 	DELETE,
 	SERVER_SAVE,
+	ADD_SERVER_ON_CONNECT
 } SUPPORT_TYPE;
 
 @protocol IServerDataDelegate;
@@ -50,6 +51,7 @@ typedef enum
 - (bool)shared;
 - (bool)fullscreen;
 - (NSString*)lastProfile;
+- (bool)addToServerListOnConnect;
 
 - (void)setName: (NSString*)name;
 - (void)setHost: (NSString*)host;
@@ -59,6 +61,9 @@ typedef enum
 - (void)setShared: (bool)shared;
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setLastProfile: (NSString*)lastProfile;
+- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
+
+- (void)copyServer: (id<IServerData>)server;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 

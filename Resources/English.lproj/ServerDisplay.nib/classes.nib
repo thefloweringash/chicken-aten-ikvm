@@ -18,6 +18,7 @@
         }, 
         {
             ACTIONS = {
+                addServerChanged = id; 
                 connectToServer = id; 
                 fullscreenChanged = id; 
                 profileSelectionChanged = id; 
@@ -39,6 +40,7 @@
                 password = NSTextField; 
                 profilePopup = NSPopUpButton; 
                 rememberPwd = NSButton; 
+                save = NSButton; 
                 shared = NSButton; 
             }; 
             SUPERCLASS = NSWindowController; 

@@ -58,6 +58,7 @@ if (!(condition)) return [self scriptError: (errno) description: \
 	[viewCtrlr setConnectionDelegate:[RFBConnectionManager sharedManager]];
 	
 	ServerFromURL* server = [[[ServerFromURL alloc] init] autorelease];
+	[server setName:[url host]];
 	[server setHost:[url host]];
 	[server setDisplay:[[url port] intValue]];
 	[server setPassword:[url password]];

@@ -35,6 +35,7 @@
 		[NSBundle loadNibNamed:@"ServerDisplay.nib" owner:self];
 		
 		selfTerminate = NO;
+		removedSaveCheckbox = NO;
 		
 		[connectIndicatorText setStringValue:@""];
 		[box setBorderType:NSNoBorder];
@@ -78,6 +79,10 @@
 - (void)dealloc
 {
 	[(id)mServer release];
+	if( YES == removedSaveCheckbox )
+	{
+		[save release];
+	}
 	
 	[super dealloc];
 		
@@ -110,6 +115,13 @@
 	// Set properties in dialog box
     if (mServer != nil)
 	{
+		if( NO == removedSaveCheckbox && NO == [mServer doYouSupport:ADD_SERVER_ON_CONNECT] )
+		{
+			removedSaveCheckbox = YES;
+			[save retain];
+			[save removeFromSuperview];
+		}
+		
 		[hostName setEnabled: YES];
 		[password setEnabled: YES];
 		[display setEnabled: YES];
@@ -245,6 +257,14 @@
 	}
 }
 
+- (IBAction)addServerChanged:(id)sender
+{
+	if( nil != mServer )
+	{
+		[mServer setAddToServerListOnConnect:![mServer addToServerListOnConnect]];
+	}
+}
+
 - (NSBox*)box
 {
 	return box;
@@ -262,10 +282,18 @@
 	[connectIndicatorText setStringValue:@""];
 	[connectIndicatorText display];
 	
-	if( YES == bConnectSuccess && YES == selfTerminate )
+	if( YES == bConnectSuccess )
 	{
-		// shouldCloseDocument will trigger the autorelease
-		[[self window] performClose:self];
+		if( YES == [mServer doYouSupport:ADD_SERVER_ON_CONNECT] && [mServer addToServerListOnConnect] )
+		{
+			[[ServerDataManager sharedInstance] addServer:mServer];
+		}
+		
+		if( YES == selfTerminate )
+		{
+			// shouldCloseDocument will trigger the autorelease
+			[[self window] performClose:self];
+		}
 	}
 }
 

@@ -51,6 +51,7 @@
 - (bool)shared;
 - (bool)fullscreen;
 - (NSString*)lastProfile;
+- (bool)addToServerListOnConnect;
 
 - (void)setName: (NSString*)name;
 - (void)setHost: (NSString*)host;
@@ -60,6 +61,7 @@
 - (void)setShared: (bool)shared;
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setLastProfile: (NSString*)lastProfile;
+- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 

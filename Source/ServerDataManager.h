@@ -117,13 +117,22 @@
 - (void)removeServer:(id<IServerData>)server;
 
 /*
- *  Adds a new server to the server list. The namepassed in becomes the name of the
- *  server unless that name is already in use. If the the name is in use, an underscore
+ *  Adds a new server to the server list. The name passed in becomes the name of the
+ *  server unless that name is already in use. If the name is in use, an underscore
  *  followed by a number will be added to the name so that it is unique.
  *  @param name The name to create the server as.
  *  @return The created server.
  */
 - (id<IServerData>)createServerByName:(NSString*)name;
+
+/*
+ *  Adds an existing server to the server list. A new server will be created in the
+ *  ServerDataManager. If the server's name is in use, an underscore followed by a number
+ *  will be added to the name in the new instance of the server so that it is unique.
+ *  @param server The server to add.
+ *  @return The new server (the one that is stored).
+ */
+- (id<IServerData>)addServer:(id<IServerData>)server;
 
 /* @name Archiving and Unarchiving
  * Implements the NSCoding protocol for serialization

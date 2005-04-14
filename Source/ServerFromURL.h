@@ -24,8 +24,11 @@
 #import "IServerData.h"
 
 @interface ServerFromURL : ServerBase {
-	bool temp;
+	bool mAddToServerListOnConnect;
 }
+
+- (bool)addToServerListOnConnect;
+- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type;
 

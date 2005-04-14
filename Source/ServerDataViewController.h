@@ -34,6 +34,7 @@
     IBOutlet NSButton *rememberPwd;
 	IBOutlet NSButton *fullscreen;
     IBOutlet NSButton *shared;
+	IBOutlet NSButton *save;
 	IBOutlet NSBox *box;
 	IBOutlet NSButton *connectBtn;
 	
@@ -44,6 +45,7 @@
 	id<ConnectionDelegate> mDelegate;
 	
 	bool selfTerminate;
+	bool removedSaveCheckbox;
 }
 
 - (id)initWithReleaseOnCloseOrConnect;
@@ -58,6 +60,7 @@
 - (IBAction)fullscreenChanged:(id)sender;
 - (IBAction)sharedChanged:(id)sender;
 - (IBAction)connectToServer:(id)sender;
+- (IBAction)addServerChanged:(id)sender;
 
 - (NSBox*)box;
 

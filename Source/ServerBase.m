@@ -228,4 +228,30 @@
 	}
 }
 
+- (void)copyServer: (id<IServerData>)server
+{
+	
+	[self setHost:[server name]];
+	[self setHost:[server host]];
+	// remember password must come before setting the password (in case a root class
+	// needs to do appropriate save logic
+	[self setRememberPassword:[server rememberPassword]];
+	[self setPassword:[server password]];
+	[self setDisplay:[server display]];
+	[self setShared:[server shared]];
+	[self setFullscreen:[server fullscreen]];
+	[self setLastProfile:[server lastProfile]];
+}
+
+- (bool)addToServerListOnConnect
+{
+	return NO;
+}
+
+- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect
+{
+	// Do nothing
+	assert(0);
+}
+
 @end

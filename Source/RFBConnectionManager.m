@@ -26,6 +26,7 @@
 #import "vncauth.h"
 #import "ServerDataViewController.h"
 #import "ServerFromPrefs.h"
+#import "ServerStandAlone.h"
 #import "ServerDataManager.h"
 
 @implementation RFBConnectionManager
@@ -37,6 +38,8 @@
 	{
 		sInstance = [[self alloc] initWithWindowNibName: @"ConnectionDialog"];
 		NSParameterAssert( sInstance != nil );
+		
+		[sInstance wakeup];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:sInstance
 												 selector:@selector(applicationWillTerminate:)
@@ -70,7 +73,8 @@
 	[self window];
 	[self setWindowFrameAutosaveName: @"login"];
 	
-	mDisplayGroups = false;
+	mDisplayGroups = NO;
+	mLaunchedByURL = NO;
 	
 	mOrderedServerNames = [[NSMutableArray alloc] init];
 	[self reloadServerArray];
@@ -233,6 +237,17 @@
     fprintf(stderr, "--Profile <profile-name>\n");
     fprintf(stderr, "--FullScreen\n");
     exit(1);
+}
+
+- (void)showNewConnectionDialog:(id)sender
+{
+	ServerDataViewController* viewCtrlr = [[ServerDataViewController alloc] initWithReleaseOnCloseOrConnect];
+	[viewCtrlr setConnectionDelegate:[RFBConnectionManager sharedManager]];
+	
+	ServerStandAlone* server = [[[ServerStandAlone alloc] init] autorelease];
+	
+	[viewCtrlr setServer:server];
+	[[viewCtrlr window] makeKeyAndOrderFront:self];
 }
 
 - (void)showConnectionDialog: (id)sender
@@ -601,6 +616,16 @@
 			[thisConnection setFrameBufferUpdateSeconds: interval];
 		}
 	}
+}
+
+- (BOOL)launchedByURL
+{
+	return mLaunchedByURL;
+}
+
+- (void)setLaunchedByURL:(bool)launchedByURL
+{
+	mLaunchedByURL = launchedByURL;
 }
 
 @end

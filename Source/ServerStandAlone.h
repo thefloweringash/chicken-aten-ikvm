@@ -1,5 +1,5 @@
 //
-//  ServerFromURL.h
+//  ServerStandAlone.h
 //  Chicken of the VNC
 //
 //  Created by Jared McIntyre on Sat Jan 24 2004.
@@ -23,7 +23,7 @@
 #import "ServerBase.h"
 #import "IServerData.h"
 
-@interface ServerFromURL : ServerBase {
+@interface ServerStandAlone : ServerBase {
 	bool mAddToServerListOnConnect;
 }
 

@@ -1,5 +1,5 @@
 //
-//  ServerFromURL.m
+//  ServerStandAlone.m
 //  Chicken of the VNC
 //
 //  Created by Jared McIntyre on Sat Jan 24 2004.
@@ -19,9 +19,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-#import "ServerFromURL.h"
+#import "ServerStandAlone.h"
 
-@implementation ServerFromURL
+@implementation ServerStandAlone
 
 - (id)init
 {

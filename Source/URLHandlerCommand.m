@@ -10,7 +10,7 @@
 #import "ServerDataViewController.h"
 #import "ServerBase.h"
 #import "RFBConnectionManager.h"
-#import "ServerFromURL.h"
+#import "ServerStandAlone.h"
 
 #define HLSAssert(condition, errno, desc) \
 if (!(condition)) return [self scriptError: (errno) description: (desc)];
@@ -33,6 +33,8 @@ if (!(condition)) return [self scriptError: (errno) description: \
 
 - (id)performDefaultImplementation
 {
+	[[RFBConnectionManager sharedManager] setLaunchedByURL:YES];
+	
     NSString *command = [[self commandDescription] commandName];
     NSString *verb;
     NSString *urlString = [self directParameter];
@@ -57,7 +59,9 @@ if (!(condition)) return [self scriptError: (errno) description: \
 	ServerDataViewController* viewCtrlr = [[ServerDataViewController alloc] initWithReleaseOnCloseOrConnect];
 	[viewCtrlr setConnectionDelegate:[RFBConnectionManager sharedManager]];
 	
-	ServerFromURL* server = [[[ServerFromURL alloc] init] autorelease];
+	[[RFBConnectionManager sharedManager] setLaunchedByURL:YES];
+	
+	ServerStandAlone* server = [[[ServerStandAlone alloc] init] autorelease];
 	[server setName:[url host]];
 	[server setHost:[url host]];
 	[server setDisplay:[[url port] intValue]];

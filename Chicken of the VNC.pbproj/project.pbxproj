@@ -316,7 +316,7 @@
 				E2B083EF0763AA9A00CE24C1,
 				E2929DD507675DE800190669,
 				7FB3EA1B0804E758003757C9,
-				7FB3EAC70804EFB5003757C9,
+				7F7DE7D6080F39DF006BF1DF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -771,7 +771,7 @@
 				E2B083F00763AA9A00CE24C1,
 				E2929DD607675DE800190669,
 				7FB3EA1C0804E75E003757C9,
-				7FB3EAC80804EFB5003757C9,
+				7F7DE7D7080F39DF006BF1DF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1086,6 +1086,34 @@
 			settings = {
 			};
 		};
+		7F7DE7D4080F39DF006BF1DF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ServerStandAlone.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7F7DE7D5080F39DF006BF1DF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ServerStandAlone.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7F7DE7D6080F39DF006BF1DF = {
+			fileRef = 7F7DE7D4080F39DF006BF1DF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7F7DE7D7080F39DF006BF1DF = {
+			fileRef = 7F7DE7D5080F39DF006BF1DF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		7FB3EA1B0804E758003757C9 = {
 			fileRef = 7F088F2805E1DA4800336456;
 			isa = PBXBuildFile;
@@ -1118,34 +1146,6 @@
 		};
 		7FB3EA8E0804ECE0003757C9 = {
 			fileRef = 7FF0C9A305CDBDCE008E39DD;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7FB3EAC50804EFB5003757C9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = ServerFromURL.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7FB3EAC60804EFB5003757C9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = ServerFromURL.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7FB3EAC70804EFB5003757C9 = {
-			fileRef = 7FB3EAC50804EFB5003757C9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7FB3EAC80804EFB5003757C9 = {
-			fileRef = 7FB3EAC60804EFB5003757C9;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1339,8 +1339,8 @@
 				7FC6DF6805C31AF50028A970,
 				7FC6DF6D05C31B0D0028A970,
 				7FC6DF6E05C31B0D0028A970,
-				7FB3EAC50804EFB5003757C9,
-				7FB3EAC60804EFB5003757C9,
+				7F7DE7D4080F39DF006BF1DF,
+				7F7DE7D5080F39DF006BF1DF,
 			);
 			isa = PBXGroup;
 			name = "Server Models";

@@ -35,6 +35,7 @@
 	ServerDataViewController* mServerCtrler;
 	BOOL mDisplayGroups;
 	BOOL mRunningFromCommandLine;
+	BOOL mLaunchedByURL;
 	NSMutableArray* mOrderedServerNames;
 }
 
@@ -44,6 +45,7 @@
 - (BOOL)runFromCommandLine;
 - (void)runNormally;
 
+- (void)showNewConnectionDialog: (id)sender;
 - (void)showConnectionDialog: (id)sender;
 
 - (void)removeConnection:(id)aConnection;
@@ -77,5 +79,8 @@
 
 - (void)setFrontWindowUpdateInterval: (NSTimeInterval)interval;
 - (void)setOtherWindowUpdateInterval: (NSTimeInterval)interval;
+
+- (BOOL)launchedByURL;
+- (void)setLaunchedByURL:(bool)launchedByURL;
 
 @end

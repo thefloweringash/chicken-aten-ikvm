@@ -26,8 +26,8 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	RFBConnectionManager *cm = [RFBConnectionManager sharedManager];
-	[cm wakeup];
-	if ( ! [cm runFromCommandLine] )
+
+	if ( ! [cm runFromCommandLine] && ! [cm launchedByURL] )
 		[cm runNormally];
 	
 	[mRendezvousMenuItem setState: [[PrefController sharedController] usesRendezvous] ? NSOnState : NSOffState];
@@ -53,6 +53,8 @@
 - (IBAction)showConnectionDialog: (id)sender
 {  [[RFBConnectionManager sharedManager] showConnectionDialog: nil];  }
 
+- (IBAction)showNewConnectionDialog:(id)sender
+{  [[RFBConnectionManager sharedManager] showNewConnectionDialog: nil];  }
 
 - (IBAction)showListenerDialog: (id)sender
 {  [[ListenerController sharedController] showWindow: nil];  }

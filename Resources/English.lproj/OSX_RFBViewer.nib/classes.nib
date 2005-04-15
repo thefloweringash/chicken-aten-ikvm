@@ -6,6 +6,7 @@
                 showConnectionDialog = id; 
                 showHelp = id; 
                 showListenerDialog = id; 
+                showNewConnectionDialog = id; 
                 showPreferences = id; 
                 showProfileManager = id; 
             }; 
@@ -76,13 +77,16 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {addServer = id; deleteSelectedServer = id; preferencesChanged = id; }; 
+            ACTIONS = {
+                addServer = id; 
+                deleteSelectedServer = id; 
+                showConnectionDialog = id; 
+                showNewConnectionDialog = id; 
+            }; 
             CLASS = RFBConnectionManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 groupList = NSTableView; 
-                loginPanel = NSPanel; 
-                mInfoVersionNumber = NSTextField; 
                 serverDataBoxLocal = NSBox; 
                 serverDeleteBtn = NSButton; 
                 serverGroupBox = NSBox; 
@@ -90,7 +94,7 @@
                 serverListBox = NSBox; 
                 splitView = NSSplitView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = ServerDataManager; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {

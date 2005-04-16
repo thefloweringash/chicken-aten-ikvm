@@ -6,6 +6,7 @@
                 showConnectionDialog = id; 
                 showHelp = id; 
                 showListenerDialog = id; 
+                showNewConnectionDialog = id; 
                 showPreferences = id; 
                 showProfileManager = id; 
             }; 

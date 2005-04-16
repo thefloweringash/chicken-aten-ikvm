@@ -60,6 +60,14 @@
 		</dict>
 		<dict>
 			<key>Characters</key>
+			<string>n</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>New Connection…</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
 			<string>o</string>
 			<key>Modifiers</key>
 			<integer>1048576</integer>

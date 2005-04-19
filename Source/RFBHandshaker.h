@@ -25,6 +25,8 @@
 
 @interface RFBHandshaker : ByteReader
 {
+	id  authCountReader;
+	id  authTypeArrayReader;
     id	authTypeReader;
     id	connFailedReader;
     id	challengeReader;

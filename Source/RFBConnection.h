@@ -100,6 +100,9 @@
 	NSTimer *_frameUpdateTimer;
 	BOOL _hasManualFrameBufferUpdates;
 	BOOL mCapsLock;
+	
+	int serverMajorVersion;
+	int serverMinorVersion;
 }
 
 // jason added 'owner' for fullscreen display
@@ -135,10 +138,13 @@
 - (void)clearAllEmulationStates;
 - (void)sendModifier:(unsigned int)m;
 - (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length;
+- (void)writeRFBString:(NSString *)aString;
 
 - (id)connectionHandle;
 - (Profile*)profile;
 - (NSString*)serverVersion;
+- (int) serverMajorVersion;
+- (int) serverMinorVersion;
 - (NSString*)password;
 - (BOOL)connectShared;
 - (NSRect)visibleRect;

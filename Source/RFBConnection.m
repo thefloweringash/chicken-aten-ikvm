@@ -239,6 +239,14 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     return serverVersion;
 }
 
+- (int) serverMajorVersion {
+	return serverMajorVersion;
+}
+
+- (int) serverMinorVersion {
+	return serverMinorVersion;
+}
+
 - (void)setReader:(ByteReader*)aReader
 {
     currentReader = aReader;
@@ -254,6 +262,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
 	[serverVersion autorelease];
     serverVersion = [aVersion retain];
+	sscanf([serverVersion cString], rfbProtocolVersionFormat, &serverMajorVersion, &serverMinorVersion);
+	
     NSLog(@"Server reports Version %@\n", aVersion);
 	[handshaker autorelease];
     handshaker = [[RFBHandshaker alloc] initTarget:self action:@selector(start:)];
@@ -1203,6 +1213,12 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
             return;
         }
     } while(length > 0);
+}
+
+- (void)writeRFBString:(NSString *)aString {
+	unsigned int stringLength=htonl([aString cStringLength]);
+	[self writeBytes:(unsigned char *)&stringLength length:4];
+	[self writeBytes:(unsigned char *)[aString cString] length:[aString cStringLength]];
 }
 
 - (void)windowDidDeminiaturize:(NSNotification *)aNotification

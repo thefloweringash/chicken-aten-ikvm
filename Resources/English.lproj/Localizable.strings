@@ -15,6 +15,7 @@
 "AuthenticationFailed" = "Authentication Failed";
 "AuthenticationFailedTooMany" = "Authentication Failed (too many failures)";
 "UnknownMessageType" = "Unknown message type %@\n";
+"ServerReports" = "Server Reports";
 
 // Profiles
 "defaultProfileName" = "Default Profile";

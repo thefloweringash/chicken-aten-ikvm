@@ -31,6 +31,7 @@
 #import "RFBProtocol.h"
 #import "RFBServerInitReader.h"
 #import "RFBView.h"
+#import "TightEncodingReader.h"
 #include <unistd.h>
 #include <libc.h>
 
@@ -250,6 +251,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 - (void)setReader:(ByteReader*)aReader
 {
     currentReader = aReader;
+	[frameBuffer setCurrentReaderIsTight: currentReader && [currentReader isKindOfClass: [TightEncodingReader class]]];
     [aReader resetReader];
 }
 
@@ -380,7 +382,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     frameBufferClass = [[PrefController sharedController] defaultFrameBufferClass];
 	[frameBuffer autorelease];
     frameBuffer = [[frameBufferClass alloc] initWithSize:aSize andFormat:pixf];
-
+	[frameBuffer setServerMajorVersion: serverMajorVersion minorVersion: serverMinorVersion];
+	
     [rfbView setFrameBuffer:frameBuffer];
     [rfbView setDelegate:self];
 
@@ -1292,7 +1295,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 - (void)openOptions:(id)sender
 {
     [infoField setStringValue:
-        [NSString stringWithFormat: @"VNC Protocol Version: %@\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %s\n\tTruecolor: %s\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d", serverVersion, (int)[frameBuffer size].width, (int)[frameBuffer size].height, frameBuffer->pixelFormat.bitsPerPixel, frameBuffer->pixelFormat.depth, frameBuffer->pixelFormat.bigEndian ? "big-endian" : "little-endian", frameBuffer->pixelFormat.trueColour ? "yes" : "no", frameBuffer->pixelFormat.redMax, frameBuffer->pixelFormat.greenMax, frameBuffer->pixelFormat.blueMax, frameBuffer->pixelFormat.redShift, frameBuffer->pixelFormat.greenShift, frameBuffer->pixelFormat.blueShift]
+        [NSString stringWithFormat: @"VNC Protocol Version: %@\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %s\n\tTruecolor: %s\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d", serverVersion, (int)[frameBuffer size].width, (int)[frameBuffer size].height, frameBuffer->pixelFormat.bitsPerPixel, frameBuffer->pixelFormat.depth, [frameBuffer serverIsBigEndian] ? "big-endian" : "little-endian", frameBuffer->pixelFormat.trueColour ? "yes" : "no", frameBuffer->pixelFormat.redMax, frameBuffer->pixelFormat.greenMax, frameBuffer->pixelFormat.blueMax, frameBuffer->pixelFormat.redShift, frameBuffer->pixelFormat.greenShift, frameBuffer->pixelFormat.blueShift]
         ];
     [self updateStatistics:self];
     [optionPanel setTitle:titleString];

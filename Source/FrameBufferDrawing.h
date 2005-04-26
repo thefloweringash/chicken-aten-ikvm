@@ -27,15 +27,15 @@ static inline unsigned int cvt_pixel24(unsigned char* v, FrameBuffer* this)
 {
     unsigned int pix = 0, col;
 	
-//    if(this->pixelFormat.bigEndian) {
+    if([this serverIsBigEndian]) {
         pix += *v++; pix <<= 8;
         pix += *v++; pix <<= 8;
         pix += *v;
-//    } else {
-//        pix = *v++;
-//        pix += (((unsigned int)*v++) << 8);
-//        pix += (((unsigned int)*v++) << 16);
-//    }
+    } else {
+        pix = *v++;
+        pix += (((unsigned int)*v++) << 8);
+        pix += (((unsigned int)*v++) << 16);
+    }
     col = this->redClut[(pix >> this->pixelFormat.redShift) & this->pixelFormat.redMax];
     col += this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
     col += this->blueClut[(pix >> this->pixelFormat.blueShift) & this->pixelFormat.blueMax];
@@ -51,14 +51,14 @@ static inline unsigned int cvt_pixel(unsigned char* v, FrameBuffer *this)
             pix = *v;
             break;
         case 2:
-            if(this->pixelFormat.bigEndian) {
+            if([this serverIsBigEndian]) {
                 pix = *v++; pix <<= 8; pix += *v;
             } else {
                 pix = *v++; pix += (((unsigned int)*v) << 8);
             }
             break;
         case 4:
-            if(this->pixelFormat.bigEndian) {
+            if([this serverIsBigEndian]) {
                 pix = *v++; pix <<= 8;
                 pix += *v++; pix <<= 8;
                 pix += *v++; pix <<= 8;
@@ -342,7 +342,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 			}
 			break;
 		case 2:
-			if(pixelFormat.bigEndian) {
+			if([self serverIsBigEndian]) {
 				while(lines--) {
 					for(i=aRect.size.width; i; i--) {
 						pix = *data++; pix <<= 8; pix += *data++;
@@ -363,7 +363,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 			}
 			break;
 		case 4:
-			if(pixelFormat.bigEndian) {
+			if([self serverIsBigEndian]) {
 				while(lines--) {
 					for(i=aRect.size.width; i; i--) {
 						pix = *data++; pix <<= 8;

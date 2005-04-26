@@ -55,7 +55,10 @@ typedef unsigned char	FrameBufferPaletteIndex;
     unsigned	drawPixelCount;
     unsigned	copyPixelCount;
     unsigned	putPixelCount;
-    
+    BOOL		*forceServerBigEndian;
+	BOOL		currentReaderIsTight;
+	int			serverMajorVersion;
+	int			serverMinorVersion;
 }
 
 + (BOOL)bigEndian;
@@ -65,6 +68,9 @@ typedef unsigned char	FrameBufferPaletteIndex;
 - (unsigned int)bytesPerPixel;
 - (unsigned int)tightBytesPerPixel;
 - (BOOL)bigEndian;
+- (BOOL)serverIsBigEndian;
+- (void)setCurrentReaderIsTight: (BOOL)flag;
+- (void)setServerMajorVersion: (int)major minorVersion: (int)minor;
 - (NSColor*)nsColorFromPixel:(unsigned char*)pixValue;
 - (void)getRGB:(float*)rgb fromPixel:(unsigned char*)pixValue;
 - (NSSize)size;

@@ -33,14 +33,14 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
             pix = *v;
             break;
         case 2:
-            if(this->pixelFormat.bigEndian) {
+            if([this serverIsBigEndian]) {
                 pix = *v++; pix <<= 8; pix += *v;
             } else {
                 pix = *v++; pix += (((unsigned int)*v) << 8);
             }
             break;
         case 4:
-            if(this->pixelFormat.bigEndian) {
+            if([this serverIsBigEndian]) {
                 pix = *v++; pix <<= 8;
                 pix += *v++; pix <<= 8;
                 pix += *v++; pix <<= 8;
@@ -82,7 +82,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 			}
 			break;
 		case 2:
-			if(pixelFormat.bigEndian) {
+			if([self serverIsBigEndian]) {
 				while(length--) {
 					TO_PIX(pix, rgb);
                     *v++ = (pix >> 8) & 0xff;
@@ -97,7 +97,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 			}
 			break;
 		case 3:
-			if(pixelFormat.bigEndian) {
+			if([self serverIsBigEndian]) {
 				while(length--) {
 					TO_PIX(pix, rgb);
                     *v++ = (pix >> 16) & 0xff;
@@ -114,7 +114,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 			}
 			break;
 		case 4:
-			if(pixelFormat.bigEndian) {
+			if([self serverIsBigEndian]) {
 				while(length--) {
 					TO_PIX(pix, rgb);
                     *v++ = (pix >> 24) & 0xff;
@@ -154,7 +154,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
             }
             break;
         case 2:
-			if(pixelFormat.bigEndian) {
+			if([self serverIsBigEndian]) {
 				while(length--) {
                     pix = *v++; pix <<= 8; pix += *v++;
 					TO_RGB(rgb, pix);
@@ -167,7 +167,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 			}
             break;
         case 3:
-			if(pixelFormat.bigEndian) {
+			if([self serverIsBigEndian]) {
 				while(length--) {
 					pix = *v++; pix <<= 8;
 					pix += *v++; pix <<= 8;
@@ -184,7 +184,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 			}
             break;
         case 4:
-			if(pixelFormat.bigEndian) {
+			if([self serverIsBigEndian]) {
 				while(length--) {
                     pix = *v++; pix <<= 8;
                     pix += *v++; pix <<= 8;
@@ -274,6 +274,50 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 }
 
 /* --------------------------------------------------------------------------------- */
+- (BOOL)serverIsBigEndian
+{
+	// tightvnc on Intel Linux isn't conforming to the spec.  The spec says that if 
+	// we're using 24 bit Tight encoding with 8-bit color channels, the byte order
+	// should always be RGB.  They're sending BGR.  So this is a nasty hack to make 
+	// it display correctly.
+	//
+	// The intent is to force bigEndianness only for that particular server.
+	//
+	// Caveat. I'm only forcing if the server version is reported as 3.3 or 3.7.  I don't know
+	// whether they've fixed it in a later build.  If they haven't, this will break.
+	if ( ! forceServerBigEndian )
+	{
+		forceServerBigEndian = malloc( sizeof(*forceServerBigEndian) );
+		*forceServerBigEndian = (32 == pixelFormat.bitsPerPixel
+								 && 24 == pixelFormat.depth
+								 && 0 == pixelFormat.bigEndian
+								 && 0 != pixelFormat.trueColour
+								 && 16 == pixelFormat.redShift
+								 && 8 == pixelFormat.greenShift
+								 && 0 == pixelFormat.blueShift
+								 && 3 == serverMajorVersion 
+								 && (3 == serverMinorVersion || 7 == serverMinorVersion) );
+		if ( *forceServerBigEndian )
+			NSLog(@"stupid compatibility hack - forcing server to be bigEndian if Tight Encoding is used");
+	}
+	return *forceServerBigEndian ? currentReaderIsTight : pixelFormat.bigEndian;
+}
+
+/* --------------------------------------------------------------------------------- */
+- (void)setServerMajorVersion: (int)major minorVersion: (int)minor
+{
+	serverMajorVersion = major;
+	serverMinorVersion = minor;
+}
+
+/* --------------------------------------------------------------------------------- */
+- (void)setCurrentReaderIsTight: (BOOL)flag
+{
+//	NSLog(@"current reader is tight: %@", flag ? @"YES" : @"NO");
+	currentReaderIsTight = currentReaderIsTight || flag;
+}
+
+/* --------------------------------------------------------------------------------- */
 - (id)initWithSize:(NSSize)aSize andFormat:(rfbPixelFormat*)theFormat
 {
     union {
@@ -291,6 +335,14 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 */
 	}
     return self;
+}
+
+/* --------------------------------------------------------------------------------- */
+- (void)dealloc
+{
+	if ( forceServerBigEndian )
+		free( forceServerBigEndian );
+	[super dealloc];
 }
 
 /* --------------------------------------------------------------------------------- */

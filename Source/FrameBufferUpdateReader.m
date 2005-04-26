@@ -132,30 +132,39 @@
     e = ntohl(msg->encoding);
     switch(e) {
         case rfbEncodingRaw:
+//			NSLog(@"Raw Encoding");
             theReader = rawEncodingReader;
             break;
         case rfbEncodingCopyRect:
+//			NSLog(@"CopyRect Encoding");
             theReader = copyRectangleEncodingReader;
             break;
         case rfbEncodingRRE:
+//			NSLog(@"RRE Encoding");
             theReader = rreEncodingReader;
             break;
         case rfbEncodingCoRRE:
+//			NSLog(@"CoRRE Encoding");
             theReader = coRreEncodingReader;
             break;
         case rfbEncodingHextile:
+//			NSLog(@"Hextile Encoding");
             theReader = hextileEncodingReader;
             break;
 		case rfbEncodingZlib:
+//			NSLog(@"Zlib Encoding");
 			theReader = zlibEncodingReader;
 			break;
         case rfbEncodingTight:
+//			NSLog(@"Tight Encoding");
             theReader = tightEncodingReader;
             break;
 		case rfbEncodingZlibHex:
+//			NSLog(@"ZlibHex Encoding");
 			theReader = zlibHexEncodingReader;
 			break;
 		case rfbEncodingZRLE:
+//			NSLog(@"ZRLE Encoding");
 			theReader = zrleEncodingReader;
 			break;
     }

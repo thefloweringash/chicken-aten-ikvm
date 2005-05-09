@@ -400,7 +400,18 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		wf.size.height = NSHeight(screenRect);
 	}
 	maxSize = wf.size;
-	wf.origin.y = NSMaxY(screenRect) - NSHeight(wf);
+	
+	// According to the Human Interace Guidelines, new windows should be "visually centered"
+	// If screenRect is X1,Y1-X2,Y2, and wf is x1,y1 -x2,y2, then
+	// the origin (bottom left point of the rect) for wf should be
+	// Ox = ((X2-X1)-(x2-x1)) * (1/2)    [I.e., one half screen width less window width]
+	// Oy = ((Y2-Y1)-(y2-y1)) * (2/3)    [I.e., two thirds screen height less window height]
+	// Then the origin must be offset by the "origin" of the screen rect.
+	// Note that while Rects are floats, we seem to have an issue if the origin is
+	// not an integer, so we use the floor() function.
+	wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf))/2 + NSMinX(screenRect));
+	wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf))*2/3 + NSMinY(screenRect));
+
     [window setFrame:wf display:NO];
 	contentView = [scrollView contentView];
     [contentView scrollToPoint: [contentView constrainScrollPoint: NSMakePoint(0.0, aSize.height - [scrollView contentSize].height)]];

@@ -56,9 +56,10 @@
 {
     char clientData[sz_rfbProtocolVersionMsg + 1];
 	int protocolMinorVersion = MIN(rfbProtocolMinorVersion, [target serverMinorVersion]);
-	
-    sprintf(clientData, rfbProtocolVersionFormat, rfbProtocolMajorVersion, protocolMinorVersion);
+
+	sprintf(clientData, rfbProtocolVersionFormat, rfbProtocolMajorVersion, protocolMinorVersion);
     [target writeBytes:(unsigned char*)clientData length:sz_rfbProtocolVersionMsg];
+		
 	if (protocolMinorVersion >= 7)
 		[target setReader:authCountReader];
 	else
@@ -90,7 +91,8 @@
 	int index=0;
 	const char *bytes=[authTypeArray bytes];
 	char availableAuthType=0;
-				
+	NSString *errorStr = nil;
+	
 	while (index < [authTypeArray length]) {
 		char availableAuthType = (char) bytes[index++];
 		
@@ -111,18 +113,22 @@
 				return;
 			}
 			default: {
-				NSString *errorStr = NSLocalizedString( @"UnknownAuthType", nil );
-				NSLog(errorStr, [NSNumber numberWithChar:availableAuthType]);
-				break;
+				if (!errorStr)
+					errorStr = [NSString stringWithFormat:NSLocalizedString( @"UnknownAuthType", nil ),
+						[NSNumber numberWithChar:availableAuthType]]; 
+				else
+					errorStr = [errorStr stringByAppendingFormat:@",%@", [NSNumber numberWithChar:availableAuthType]];
+				if (availableAuthType == 30)
+					errorStr = [NSLocalizedString( @"ARDAuthWarning", nil ) stringByAppendingFormat:errorStr];
 			}
 		}
 	}
-	
+
+
 	// No valid auth type found
+	NSLog(errorStr);
 	availableAuthType= 0;
 	[target writeBytes:&availableAuthType length:1];
-	NSString *errorStr = NSLocalizedString( @"UnknownAuthType", nil );
-	errorStr = [NSString stringWithFormat:errorStr, [NSNumber numberWithChar:availableAuthType]]; 
 	[target terminateConnection:errorStr];
 }
 

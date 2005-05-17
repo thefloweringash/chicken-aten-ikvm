@@ -267,6 +267,12 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	sscanf([serverVersion cString], rfbProtocolVersionFormat, &serverMajorVersion, &serverMinorVersion);
 	
     NSLog(@"Server reports Version %@\n", aVersion);
+	// ARD sends this bogus 889 version#, at least for ARD 2.2 they actually comply with version 003.007 so we'll force that
+	if (serverMinorVersion == 889) {
+		NSLog(@"\tBogus RFB Protocol Version Number from AppleRemoteDesktop, switching to protocol 003.007\n");
+		serverMinorVersion = 7;
+	}
+	
 	[handshaker autorelease];
     handshaker = [[RFBHandshaker alloc] initTarget:self action:@selector(start:)];
     [self setReader:handshaker];

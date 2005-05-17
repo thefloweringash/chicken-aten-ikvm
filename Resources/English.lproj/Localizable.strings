@@ -16,6 +16,7 @@
 "AuthenticationFailedTooMany" = "Authentication Failed (too many failures)";
 "UnknownMessageType" = "Unknown message type %@\n";
 "ServerReports" = "Server Reports";
+"ARDAuthWarning" = "\nPlease configure Apple Remote Desktop to allow VNC Viewers to control the screen.\n";
 
 // Profiles
 "defaultProfileName" = "Default Profile";

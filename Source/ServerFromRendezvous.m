@@ -130,10 +130,14 @@
 {
 	if( bHasResolved && bResloveSucceeded )
 	{
-		assert( [[service_ addresses] count] > 0 );
+		int i;
 		
-		NSData* data = [[service_ addresses] objectAtIndex:0];
-		return [NSString stringWithCString:inet_ntoa(((struct sockaddr_in*)[data bytes])->sin_addr)];
+		for (i=0;i<[[service_ addresses] count];i++) {
+			struct in_addr sinAddr = ((struct sockaddr_in*)[[[service_ addresses] objectAtIndex:i] bytes])->sin_addr;
+			if (sinAddr.s_addr != 0)
+				return [NSString stringWithCString:inet_ntoa(sinAddr)];
+		}
+		return NSLocalizedString( @"AddressResolveFailed", nil );
 	}
 	else if( bHasResolved && !bResloveSucceeded )
 	{

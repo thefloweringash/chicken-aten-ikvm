@@ -72,7 +72,7 @@ static void _free(void* p) {
     int est[3];
     int col[3];
     int max[3];
-    char* dst;
+    unsigned char* dst;
     unsigned char* bytes = (unsigned char*)[data bytes];
     
     [filterData setLength:numRows * rowBytes];

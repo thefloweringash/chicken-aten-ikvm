@@ -193,7 +193,7 @@
 	return mServer;
 }
 
-- (void)setConnectionDelegate:(id)delegate
+- (void)setConnectionDelegate:(id<ConnectionDelegate>)delegate
 {
 	mDelegate = delegate;
 }

@@ -90,11 +90,11 @@
 	// The server is giving us a choice of auth types, we'll take the first one that we can handle
 	int index=0;
 	const char *bytes=[authTypeArray bytes];
-	char availableAuthType=0;
+	unsigned char availableAuthType=0;
 	NSString *errorStr = nil;
 	
 	while (index < [authTypeArray length]) {
-		char availableAuthType = (char) bytes[index++];
+		unsigned char availableAuthType = bytes[index++];
 		
 		switch (availableAuthType) {
 			case rfbNoAuth: {

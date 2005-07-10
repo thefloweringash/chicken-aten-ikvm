@@ -90,7 +90,7 @@
 - (NSData*)filter:(NSData*)data rows:(unsigned)numRows
 {
     int b, w, x, y, rowBytes, val;
-    char* fd;
+    unsigned char* fd;
     int* dst;
     unsigned char* bytes = (unsigned char*)[data bytes];
 

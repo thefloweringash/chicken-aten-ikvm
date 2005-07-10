@@ -46,7 +46,10 @@
 		[service retain];
 		service_ = service;
 		[service_ setDelegate:self];
-		[service_ resolve];
+		if ( [service respondsToSelector: @selector(resolveWithTimeout:)] )
+			[service_ resolveWithTimeout: 5.0]; // Tiger only API
+		else
+			[service_ resolve];
 		
 		// Set the initial name. It will have to be validated with the
 		// delegate if one is set

@@ -318,7 +318,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 	}
 #endif
     stream = zStream + (cntl & 0x03);
-    stream->next_in = (char*)[data bytes];
+    stream->next_in = (unsigned char*)[data bytes];
     stream->avail_in = [data length];
     do {
         stream->next_out = [zBuffer mutableBytes] + zBufPos;

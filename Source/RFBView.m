@@ -111,57 +111,24 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	int i, clickCount;
-	
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	clickCount = [theEvent clickCount];
-	for ( i = 0; i < clickCount; ++i )
-	{
-		buttonMask |= rfbButton1Mask;
-		[delegate mouseAt:p buttons:buttonMask];
-		if ( i != clickCount -1 )
-		{
-			buttonMask &= ~rfbButton1Mask;
-			[delegate mouseAt:p buttons:buttonMask];
-		}
-	}
+	buttonMask |= rfbButton1Mask;
+	[delegate mouseAt:p buttons:buttonMask];
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
-	int i, clickCount;
-
     NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	clickCount = [theEvent clickCount];
-	for ( i = 0; i < clickCount; ++i )
-	{
-		buttonMask |= rfbButton3Mask;
-		[delegate mouseAt:p buttons:buttonMask];
-		if ( i != clickCount -1 )
-		{
-			buttonMask &= ~rfbButton3Mask;
-			[delegate mouseAt:p buttons:buttonMask];
-		}
-	}
+	buttonMask |= rfbButton3Mask;
+	[delegate mouseAt:p buttons:buttonMask];
 }
 
 - (void)otherMouseDown:(NSEvent *)theEvent
 {
-	int i, clickCount;
-
 	if ( [theEvent buttonNumber] == 2 ) {
 		NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-		clickCount = [theEvent clickCount];
-		for ( i = 0; i < clickCount; ++i )
-		{
-			buttonMask |= rfbButton2Mask;
-			[delegate mouseAt:p buttons:buttonMask];
-			if ( i != clickCount -1 )
-			{
-				buttonMask &= ~rfbButton2Mask;
-				[delegate mouseAt:p buttons:buttonMask];
-			}
-		}
+		buttonMask |= rfbButton2Mask;
+		[delegate mouseAt:p buttons:buttonMask];
 	}
 }
 

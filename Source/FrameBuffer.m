@@ -65,10 +65,10 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 }
 
 /* --------------------------------------------------------------------------------- */
-#define TO_PIX(p,s)																\
-	p = (*s++ & pixelFormat.redMax) << pixelFormat.redShift;					\
-	p |= (*s++ & pixelFormat.greenMax) << pixelFormat.greenShift;				\
-	p |= (*s++ & pixelFormat.blueMax) << pixelFormat.blueShift	
+#define TO_PIX(pix,rgb)																\
+	pix = (*rgb++ & pixelFormat.redMax) << pixelFormat.redShift;					\
+	pix |= (*rgb++ & pixelFormat.greenMax) << pixelFormat.greenShift;				\
+	pix |= (*rgb++ & pixelFormat.blueMax) << pixelFormat.blueShift	
 
 - (void)combineRGB:(int*)rgb pixels:(unsigned)length into:(unsigned char*)v
 {
@@ -107,9 +107,9 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 			} else {
 				while(length--) {
 					TO_PIX(pix, rgb);
-                    *v++ = pix & 0xff;
-                    *v++ = (pix >> 8) & 0xff;
                     *v++ = (pix >> 16) & 0xff;
+                    *v++ = (pix >> 8) & 0xff;
+                    *v++ = pix & 0xff;
 				}
 			}
 			break;

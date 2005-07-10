@@ -65,7 +65,7 @@
 		NSParameterAssert( pixels != NULL );
 		capacity = s;
 	}
-	stream.next_in   = (char*)[data bytes];
+	stream.next_in   = (unsigned char*)[data bytes];
 	stream.avail_in  = [data length];
 	stream.next_out  = pixels;
 	stream.avail_out = capacity;

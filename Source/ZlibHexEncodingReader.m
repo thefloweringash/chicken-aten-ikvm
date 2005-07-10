@@ -71,7 +71,7 @@
 	unsigned char* ptr;
 	
 	if(subEncodingMask & rfbHextileZlibRaw) {
-		rawStream.next_in = (char*)[data bytes];
+		rawStream.next_in = (unsigned char*)[data bytes];
 		rawStream.avail_in = [data length];
 		rawStream.next_out = buffer;
 		rawStream.avail_out = ZLIBHEX_MAX_RAW_TILE_SIZE;
@@ -89,7 +89,7 @@
 		return;
 	}
 	if(subEncodingMask & rfbHextileZlibHex) {
-		encodedStream.next_in = (char*)[data bytes];
+		encodedStream.next_in = (unsigned char*)[data bytes];
 		encodedStream.avail_in = [data length];
 		encodedStream.next_out = buffer;
 		encodedStream.avail_out = ZLIBHEX_MAX_RAW_TILE_SIZE;

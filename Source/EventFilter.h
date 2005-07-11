@@ -105,6 +105,7 @@ typedef enum {
 	
 	NSMutableArray *_pendingEvents;
 	unsigned int _queuedModifiers;
+	BOOL _watchEventForCapsLock;
 	
 	NSMutableSet *_pressedKeys;
 	unsigned int _pressedButtons;

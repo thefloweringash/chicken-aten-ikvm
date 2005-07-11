@@ -55,6 +55,19 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 }
 
 
+- (void)_updateCapsLockStateIfNecessary
+{
+	if ( _watchEventForCapsLock )
+	{
+		_watchEventForCapsLock = NO;
+		NSEvent *currentEvent = [NSApp currentEvent];
+		unsigned int modifierFlags = [currentEvent modifierFlags];
+		if ( (NSAlphaShiftKeyMask & modifierFlags) != (NSAlphaShiftKeyMask & _pressedModifiers) )
+			[self flagsChanged: currentEvent];
+	}
+}
+
+
 - (id)init
 {
 	if ( self = [super init] )
@@ -62,6 +75,8 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		_pendingEvents = [[NSMutableArray alloc] init];
 		_pressedKeys = [[NSMutableSet alloc] init];
 		_emulationButton = 1;
+		
+		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(applicationDidBecomeActive:) name: NSApplicationDidBecomeActiveNotification object: nil];
 	}
 	return self;
 }
@@ -76,6 +91,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	[self sendAllPendingQueueEntriesNow];
 	[_pendingEvents release];
 	[_pressedKeys release];
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	[super dealloc];
 }
 
@@ -194,6 +210,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)keyDown: (NSEvent *)theEvent
 {
+	[self _updateCapsLockStateIfNecessary];
 	NSString *characters = [theEvent characters];
 	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
 	
@@ -236,6 +253,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)keyUp: (NSEvent *)theEvent
 {
+	[self _updateCapsLockStateIfNecessary];
 	NSString *characters = [theEvent characters];
 	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
 	
@@ -418,6 +436,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)pasteString: (NSString *)string
 {
+	[self _updateCapsLockStateIfNecessary];
 	int index, strLength = [string length];
 	NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
 	
@@ -442,6 +461,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	if ( capsLockWasPressed )
 		_pressedModifiers |= NSAlphaShiftKeyMask;
 }
+
+
+- (void)applicationDidBecomeActive: (NSNotification *)notification
+{  _watchEventForCapsLock = YES;  }
 
 
 #pragma mark -

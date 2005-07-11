@@ -17,11 +17,44 @@
  */
 
 #import "RFBView.h"
+#import "EventFilter.h"
 #import "RFBConnection.h"
 #import "FrameBuffer.h"
 #import "RectangleList.h"
 
 @implementation RFBView
+
++ (NSCursor *)_cursorForName: (NSString *)name
+{
+	static NSDictionary *sMapping = nil;
+	if ( ! sMapping )
+	{
+		NSBundle *mainBundle = [NSBundle mainBundle];
+		NSDictionary *entries = [NSDictionary dictionaryWithContentsOfFile: [mainBundle pathForResource: @"cursors" ofType: @"plist"]];
+		NSParameterAssert( entries != nil );
+		sMapping = [[NSMutableDictionary alloc] init];
+		NSEnumerator *cursorNameEnumerator = [entries keyEnumerator];
+		NSDictionary *cursorName;
+		
+		while ( cursorName = [cursorNameEnumerator nextObject] )
+		{
+			NSDictionary *cursorEntry = [entries objectForKey: cursorName];
+			NSString *localPath = [cursorEntry objectForKey: @"localPath"];
+			NSString *path = [mainBundle pathForResource: localPath ofType: nil];
+			NSImage *image = [[[NSImage alloc] initWithContentsOfFile: path] autorelease];
+			
+			int hotspotX = [[cursorEntry objectForKey: @"hotspotX"] intValue];
+			int hotspotY = [[cursorEntry objectForKey: @"hotspotY"] intValue];
+			NSPoint hotspot = {hotspotX, hotspotY};
+			
+			NSCursor *cursor = [[[NSCursor alloc] initWithImage: image hotSpot: hotspot] autorelease];
+			[(NSMutableDictionary *)sMapping setObject: cursor forKey: cursorName];
+		}
+	}
+	
+	return [sMapping objectForKey: name];
+}
+
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
@@ -46,33 +79,29 @@
 - (void)dealloc
 {
     [fbuf release];
-	[cursor release];
     [super dealloc];
 }
 
-- (void)setCursorTo:(NSString*)icon hotSpot:(int)hs
+- (void)setCursorTo: (NSString *)name
 {
-	NSPoint p;
-	id cursorImage = [NSImage imageNamed:icon];
-	p.x = p.y = hs;
-	[cursor autorelease];
-	cursor = [[NSCursor alloc] initWithImage:cursorImage hotSpot:p];
-    [[self window] invalidateCursorRectsForView:self];
+	if ( ! name )
+		name = @"rfbCursor";
+	_cursor = [[self class] _cursorForName: name];
+    [[self window] invalidateCursorRectsForView: self];
 }
 
-- (void)setDelegate:(id)aDelegate
+- (void)setDelegate:(RFBConnection *)delegate
 {
-    delegate = aDelegate;
-    if(!cursor) {
-		[self setCursorTo: @"rfbCursor" hotSpot: 7];
-    }
+    _delegate = delegate;
+	_eventFilter = [_delegate eventFilter];
+	[self setCursorTo: nil];
 	[self setPostsFrameChangedNotifications: YES];
-	[[NSNotificationCenter defaultCenter] addObserver: delegate selector: @selector(viewFrameDidChange:) name: NSViewFrameDidChangeNotification object: self];
+	[[NSNotificationCenter defaultCenter] addObserver: _delegate selector: @selector(viewFrameDidChange:) name: NSViewFrameDidChangeNotification object: self];
 }
 
-- (id)delegate
+- (RFBConnection *)delegate
 {
-	return delegate;
+	return _delegate;
 }
 
 - (void)drawRect:(NSRect)destRect
@@ -103,122 +132,65 @@
 
 - (void)resetCursorRects
 {
-    NSRect crect;
-
-    crect = [self visibleRect];
-    [self addCursorRect:crect cursor:cursor];
+    NSRect cursorRect;
+    cursorRect = [self visibleRect];
+    [self addCursorRect: cursorRect cursor: _cursor];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
-{
-    NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	buttonMask |= rfbButton1Mask;
-	[delegate mouseAt:p buttons:buttonMask];
-}
+{  [_eventFilter mouseDown: theEvent];  }
 
 - (void)rightMouseDown:(NSEvent *)theEvent
-{
-    NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	buttonMask |= rfbButton3Mask;
-	[delegate mouseAt:p buttons:buttonMask];
-}
+{  [_eventFilter rightMouseDown: theEvent];  }
 
 - (void)otherMouseDown:(NSEvent *)theEvent
-{
-	if ( [theEvent buttonNumber] == 2 ) {
-		NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-		buttonMask |= rfbButton2Mask;
-		[delegate mouseAt:p buttons:buttonMask];
-	}
-}
+{  [_eventFilter otherMouseDown: theEvent];  }
 
 - (void)mouseUp:(NSEvent *)theEvent
-{
-    NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    buttonMask &= ~rfbButton1Mask;
-    [delegate mouseAt:p buttons:buttonMask];
-}
+{  [_eventFilter mouseUp: theEvent];  }
 
 - (void)rightMouseUp:(NSEvent *)theEvent
-{
-    NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    buttonMask &= ~rfbButton3Mask;
-    [delegate mouseAt:p buttons:buttonMask];
-}
+{  [_eventFilter rightMouseUp: theEvent];  }
 
 - (void)otherMouseUp:(NSEvent *)theEvent
-{
-	if ([theEvent buttonNumber] == 2) {
-		NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-		buttonMask &= ~rfbButton2Mask;
-		[delegate mouseAt:p buttons:buttonMask];
-	}
-}
+{  [_eventFilter otherMouseUp: theEvent];  }
 
-- (void)mouseEntered:(NSEvent *)theEvent {
-	[[self window] setAcceptsMouseMovedEvents: YES];
-}
+- (void)mouseEntered:(NSEvent *)theEvent
+{  [[self window] setAcceptsMouseMovedEvents: YES];  }
 
-- (void)mouseExited:(NSEvent *)theEvent {
-	[[self window] setAcceptsMouseMovedEvents: NO];
-}
+- (void)mouseExited:(NSEvent *)theEvent
+{  [[self window] setAcceptsMouseMovedEvents: NO];  }
 
 - (void)mouseMoved:(NSEvent *)theEvent
-{
-    NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    [delegate mouseMovedTo:p];
-}
+{  [_eventFilter mouseMoved: theEvent];  }
 
 - (void)mouseDragged:(NSEvent *)theEvent
-{
-    NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    [delegate mouseAt:p buttons:buttonMask];
-}
+{  [_eventFilter mouseDragged: theEvent];  }
 
 - (void)rightMouseDragged:(NSEvent *)theEvent
-{
-    NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    [delegate mouseAt:p buttons:buttonMask];
-}
+{  [_eventFilter rightMouseDragged: theEvent];  }
 
 - (void)otherMouseDragged:(NSEvent *)theEvent
-{
-	if ([theEvent buttonNumber] == 2) {
-		NSPoint	p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-		[delegate mouseAt:p buttons:buttonMask];
-	}
-}
+{  [_eventFilter otherMouseDragged: theEvent];  }
 
 // jason - this doesn't work, I think because the server I'm testing against doesn't support
 // rfbButton4Mask and rfbButton5Mask (8 & 16).  They're not a part of rfbProto, so that ain't
 // too surprising.
-
-- (void)scrollWheel:(NSEvent *)theEvent {
-  int  addMask;
-    NSPoint	p = [self convertPoint:[[self window] convertScreenToBase: [NSEvent mouseLocation]] fromView:nil];
-    if ([theEvent deltaY] > 0.0)
-      addMask = rfbButton4Mask;
-	else
-      addMask = rfbButton5Mask;
-    [delegate mouseAt:p buttons:(buttonMask | addMask)];	// 'Mouse button down'
-    [delegate mouseAt:p buttons:0];				// 'Mouse button up'
-}
-
+// 
+// Later note - works fine now, maybe more servers have added support since I wrote the original
+// comment
+- (void)scrollWheel:(NSEvent *)theEvent
+{  [_eventFilter scrollWheel: theEvent];  }
 
 - (void)keyDown:(NSEvent *)theEvent
-{
-    [delegate processKey:theEvent pressed:YES];
-}
+{  [_eventFilter keyDown: theEvent];  }
 
 - (void)keyUp:(NSEvent *)theEvent
-{
-    [delegate processKey:theEvent pressed:NO];
-}
+{  [_eventFilter keyUp: theEvent];  }
 
 - (void)flagsChanged:(NSEvent *)theEvent
-{
-    [delegate sendModifier:[theEvent modifierFlags]];
-}
+{  [_eventFilter flagsChanged: theEvent];  }
+
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender {}
 
@@ -236,7 +208,7 @@
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-    return [delegate pasteFromPasteboard:[sender draggingPasteboard]];
+    return [_delegate pasteFromPasteboard:[sender draggingPasteboard]];
 }
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender

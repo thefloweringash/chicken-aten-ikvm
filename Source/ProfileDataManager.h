@@ -31,4 +31,6 @@
 - (int)count;
 - (void)save;
 - (NSArray*)sortedKeyArray;
+- (void)updateAllProfiles;
+
 @end

@@ -22,6 +22,24 @@
 #import "NSObject_Chicken.h"
 #import "ProfileManager.h"
 #import "FrameBuffer.h"
+#import <Carbon/Carbon.h>
+
+
+static NSTimeInterval
+DoubleClickInterval()
+{
+	SInt16 ticks = LMGetKeyThresh();
+	return (NSTimeInterval)ticks * 1.0/60.0;
+}
+
+
+static inline unsigned int
+ButtonNumberToArrayIndex( unsigned int buttonNumber )
+{
+	NSCParameterAssert( buttonNumber == 2 || buttonNumber == 3 );
+	return buttonNumber - 2;
+}
+
 
 @implementation Profile
 
@@ -35,14 +53,6 @@
 		[info setObject: name forKey: @"ProfileName"];
 		
 		// we're guaranteed that all keys are present
-		e3btimeout = [[info objectForKey:kProfile_E3BTimeout_Key] intValue];
-		e3btimeout /= 1000.0;
-
-		ekdtimeout = [[info objectForKey:kProfile_EmulateKeyDown_Key] intValue];
-		ekdtimeout /= 1000.0;
-
-		ekbtimeout = [[info objectForKey:kProfile_EmulateKeyboard_Key] intValue];
-                
 		commandKeyCode = [ProfileManager modifierCodeForPreference: 
 			[info objectForKey: kProfile_LocalCommandModifier_Key]];
 		
@@ -67,6 +77,47 @@
 			if ( [[e objectForKey: kProfile_EncodingEnabled_Key] boolValue] )
 				enabledEncodings[numberOfEnabledEncodings++] = [[e objectForKey: kProfile_EncodingValue_Key] intValue];
 		}
+		
+		_button2EmulationScenario = (EventFilterEmulationScenario)[[info objectForKey: kProfile_Button2EmulationScenario_Key] intValue];
+		
+		_button3EmulationScenario = (EventFilterEmulationScenario)[[info objectForKey: kProfile_Button3EmulationScenario_Key] intValue];
+		
+		_clickWhileHoldingModifier[0] = [[info objectForKey: kProfile_ClickWhileHoldingModifierForButton2_Key] unsignedIntValue];
+		
+		_clickWhileHoldingModifier[1] = [[info objectForKey: kProfile_ClickWhileHoldingModifierForButton3_Key] unsignedIntValue];
+		
+		_multiTapModifier[0] = [[info objectForKey: kProfile_MultiTapModifierForButton2_Key] unsignedIntValue];
+		
+		_multiTapModifier[1] = [[info objectForKey: kProfile_MultiTapModifierForButton3_Key] unsignedIntValue];
+		
+		_multiTapDelay[0] = (NSTimeInterval)[[info objectForKey: kProfile_MultiTapDelayForButton2_Key] doubleValue];
+		if ( 0.0 == _multiTapDelay[0] )
+			_multiTapDelay[0] = DoubleClickInterval();
+		
+		_multiTapDelay[1] = (NSTimeInterval)[[info objectForKey: kProfile_MultiTapDelayForButton3_Key] doubleValue];
+		if ( 0.0 == _multiTapDelay[1] )
+			_multiTapDelay[1] = DoubleClickInterval();
+		
+		_multiTapCount[0] = [[info objectForKey: kProfile_MultiTapCountForButton2_Key] unsignedIntValue];
+		
+		_multiTapCount[1] = [[info objectForKey: kProfile_MultiTapCountForButton3_Key] unsignedIntValue];
+		
+		_tapAndClickModifier[0] = [[info objectForKey: kProfile_TapAndClickModifierForButton2_Key] unsignedIntValue];
+		
+		_tapAndClickModifier[1] = [[info objectForKey: kProfile_TapAndClickModifierForButton3_Key] unsignedIntValue];
+		
+		_tapAndClickButtonSpeed[0] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickButtonSpeedForButton2_Key] doubleValue];
+		if ( 0.0 == _tapAndClickButtonSpeed[0] )
+			_tapAndClickButtonSpeed[0] = DoubleClickInterval();
+		
+		_tapAndClickButtonSpeed[1] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickButtonSpeedForButton3_Key] doubleValue];
+		if ( 0.0 == _tapAndClickButtonSpeed[1] )
+			_tapAndClickButtonSpeed[1] = DoubleClickInterval();
+		
+		_tapAndClickTimeout[0] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickTimeoutForButton2_Key] doubleValue];
+		
+		_tapAndClickTimeout[1] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickTimeoutForButton3_Key] doubleValue];
+		
 	}
     return self;
 }
@@ -80,21 +131,6 @@
 - (NSString*)profileName
 {
     return [info objectForKey:@"ProfileName"];
-}
-
-- (float)emulate3ButtonTimeout
-{
-    return e3btimeout;
-}
-
-- (float)emulateKeyDownTimeout
-{
-    return ekdtimeout;
-}
-
-- (float)emulateKeyboardTimeout
-{
-    return ekbtimeout;
 }
 
 - (CARD32)commandKeyCode
@@ -180,6 +216,54 @@
             }
             break;
     }
+}
+
+- (EventFilterEmulationScenario)button2EmulationScenario
+{  return _button2EmulationScenario;  }
+
+- (EventFilterEmulationScenario)button3EmulationScenario
+{  return _button3EmulationScenario;  }
+
+- (unsigned int)clickWhileHoldingModifierForButton: (unsigned int)button
+{
+	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
+	return _clickWhileHoldingModifier[buttonIndex];
+}
+
+- (unsigned int)multiTapModifierForButton: (unsigned int)button
+{
+	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
+	return _multiTapModifier[buttonIndex];
+}
+
+- (NSTimeInterval)multiTapDelayForButton: (unsigned int)button
+{
+	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
+	return _multiTapDelay[buttonIndex];
+}
+
+- (unsigned int)multiTapCountForButton: (unsigned int)button
+{
+	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
+	return _multiTapCount[buttonIndex];
+}
+
+- (unsigned int)tapAndClickModifierForButton: (unsigned int)button
+{
+	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
+	return _tapAndClickModifier[buttonIndex];
+}
+
+- (NSTimeInterval)tapAndClickButtonSpeedForButton: (unsigned int)button
+{
+	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
+	return _tapAndClickButtonSpeed[buttonIndex];
+}
+
+- (NSTimeInterval)tapAndClickTimeoutForButton: (unsigned int)button
+{
+	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
+	return _tapAndClickTimeout[buttonIndex];
 }
 
 @end

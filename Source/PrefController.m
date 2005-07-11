@@ -2,7 +2,7 @@
 //  PrefController.m
 //  Chicken of the VNC
 //
-//  Created by Bob Newhart on 8/18/04.
+//  Created by Jason Harris on 8/18/04.
 //  Copyright 2004 Geekspiff. All rights reserved.
 //
 
@@ -58,19 +58,32 @@ static int const kPrefsVersion = 0x00000001;
 	}
 		
 	// create the default profile
-	NSString *profileName = NSLocalizedString(@"defaultProfileName", nil);;
+	NSString *profileName = NSLocalizedString(@"defaultProfileName", nil);
 	NSDictionary *profile = [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithInt: 0],						kProfile_PixelFormat_Key,
-		[NSNumber numberWithInt: 50],						kProfile_E3BTimeout_Key,
-		[NSNumber numberWithInt: 250],						kProfile_EmulateKeyDown_Key,
-		[NSNumber numberWithInt: 5],						kProfile_EmulateKeyboard_Key,
-		[NSNumber numberWithBool: YES],						kProfile_EnableCopyrect_Key,
-		encodings,											kProfile_Encodings_Key,
-		[NSNumber numberWithShort: kRemoteMetaModifier],	kProfile_LocalAltModifier_Key,
-		[NSNumber numberWithShort: kRemoteAltModifier],		kProfile_LocalCommandModifier_Key,
-		[NSNumber numberWithShort: kRemoteControlModifier],	kProfile_LocalControlModifier_Key,
-		[NSNumber numberWithShort: kRemoteShiftModifier],	kProfile_LocalShiftModifier_Key,
-		[NSNumber numberWithBool: YES],						kProfile_IsDefault_Key,
+		[NSNumber numberWithInt: 0],										kProfile_PixelFormat_Key,
+		[NSNumber numberWithBool: YES],										kProfile_EnableCopyrect_Key,
+		encodings,															kProfile_Encodings_Key,
+		[NSNumber numberWithShort: kRemoteMetaModifier],					kProfile_LocalAltModifier_Key,
+		[NSNumber numberWithShort: kRemoteAltModifier],						kProfile_LocalCommandModifier_Key,
+		[NSNumber numberWithShort: kRemoteControlModifier],					kProfile_LocalControlModifier_Key,
+		[NSNumber numberWithShort: kRemoteShiftModifier],					kProfile_LocalShiftModifier_Key,
+		[NSNumber numberWithInt: (int)kNoMouseButtonEmulation],				kProfile_Button2EmulationScenario_Key, 
+		[NSNumber numberWithInt: (int)kClickWhileHoldingModifierEmulation],	kProfile_Button3EmulationScenario_Key, 
+		[NSNumber numberWithUnsignedInt: NSControlKeyMask],		kProfile_ClickWhileHoldingModifierForButton2_Key, 
+		[NSNumber numberWithUnsignedInt: NSControlKeyMask],		kProfile_ClickWhileHoldingModifierForButton3_Key, 
+		[NSNumber numberWithUnsignedInt: NSCommandKeyMask],		kProfile_MultiTapModifierForButton2_Key, 
+		[NSNumber numberWithUnsignedInt: NSCommandKeyMask],		kProfile_MultiTapModifierForButton3_Key, 
+		[NSNumber numberWithDouble: 0],							kProfile_MultiTapDelayForButton2_Key, 
+		[NSNumber numberWithDouble: 0],							kProfile_MultiTapDelayForButton3_Key, 
+		[NSNumber numberWithUnsignedInt: 2],					kProfile_MultiTapCountForButton2_Key, 
+		[NSNumber numberWithUnsignedInt: 2],					kProfile_MultiTapCountForButton3_Key, 
+		[NSNumber numberWithUnsignedInt: NSAlternateKeyMask],	kProfile_TapAndClickModifierForButton2_Key, 
+		[NSNumber numberWithUnsignedInt: NSShiftKeyMask],		kProfile_TapAndClickModifierForButton3_Key, 
+		[NSNumber numberWithDouble: 0],							kProfile_TapAndClickButtonSpeedForButton2_Key, 
+		[NSNumber numberWithDouble: 0],							kProfile_TapAndClickButtonSpeedForButton3_Key, 
+		[NSNumber numberWithDouble: 5],							kProfile_TapAndClickTimeoutForButton2_Key, 
+		[NSNumber numberWithDouble: 5],							kProfile_TapAndClickTimeoutForButton3_Key, 
+		[NSNumber numberWithBool: YES],							kProfile_IsDefault_Key,
 		nil,												nil];
 	profiles = [NSDictionary dictionaryWithObject: profile forKey: profileName];
 	[defaultDict setObject: profiles forKey: kPrefs_ConnectionProfiles_Key];
@@ -203,6 +216,12 @@ static int const kPrefsVersion = 0x00000001;
 
 - (NSDictionary *)profileDict
 {  return [[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_ConnectionProfiles_Key];  }
+
+
+- (NSDictionary *)defaultProfileDict
+{
+	return [[[[[NSUserDefaults standardUserDefaults] volatileDomainForName: NSRegistrationDomain] objectForKey: kPrefs_ConnectionProfiles_Key] allValues] lastObject];
+}
 
 
 - (void)setProfileDict: (NSDictionary *)dict

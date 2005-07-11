@@ -2,7 +2,7 @@
 //  PrefController_private.m
 //  Chicken of the VNC
 //
-//  Created by Bob Newhart on 8/18/04.
+//  Created by Jason Harris on 8/18/04.
 //  Copyright 2004 Geekspiff. All rights reserved.
 //
 
@@ -88,15 +88,6 @@ NSString *kPrefs_Version_Key = @"Version";
 			value = [profile objectForKey: kProfile_PixelFormat_Key];
 			if ( ! value )
 				[profile setObject: [NSNumber numberWithInt: 0] forKey: kProfile_PixelFormat_Key];
-			value = [profile objectForKey: kProfile_E3BTimeout_Key];
-			if ( ! value )
-				[profile setObject: [NSNumber numberWithInt: 50] forKey: kProfile_E3BTimeout_Key];
-			value = [profile objectForKey: kProfile_EmulateKeyDown_Key];
-			if ( ! value )
-				[profile setObject: [NSNumber numberWithInt: 250] forKey: kProfile_EmulateKeyDown_Key];
-			value = [profile objectForKey: kProfile_EmulateKeyboard_Key];
-			if ( ! value )
-				[profile setObject: [NSNumber numberWithInt: 5] forKey: kProfile_EmulateKeyboard_Key];
 			value = [profile objectForKey: kProfile_EnableCopyrect_Key];
 			if ( ! value || ! [value isKindOfClass: [NSNumber class]] )
 				[profile setObject: [NSNumber numberWithBool: YES] forKey: kProfile_EnableCopyrect_Key];

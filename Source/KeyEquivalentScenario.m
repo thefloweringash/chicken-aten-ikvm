@@ -2,7 +2,7 @@
 //  KeyEquivalentScenario.m
 //  Chicken of the VNC
 //
-//  Created by Bob Newhart on Sun Mar 21 2004.
+//  Created by Jason Harris on Sun Mar 21 2004.
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 

@@ -19,6 +19,7 @@
  */
 
 #import <AppKit/AppKit.h>
+#import "EventFilter.h"
 #import "rfbproto.h"
 
 // Jason added the following constants that represent the different possible modifier key popup choices
@@ -41,18 +42,22 @@ typedef enum {
 @interface Profile : NSObject
 {
     NSMutableDictionary* info;
-    float e3btimeout;
-    float ekdtimeout;
-    float ekbtimeout;
     CARD32 commandKeyCode, altKeyCode, shiftKeyCode, controlKeyCode;
     CARD16 numberOfEnabledEncodings;
     CARD32 enabledEncodings[20];
+	EventFilterEmulationScenario _button2EmulationScenario;
+	EventFilterEmulationScenario _button3EmulationScenario;
+	unsigned int _clickWhileHoldingModifier[2];
+	unsigned int _multiTapModifier[2];
+	NSTimeInterval _multiTapDelay[2];
+	unsigned int _multiTapCount[2];
+	unsigned int _tapAndClickModifier[2];
+	NSTimeInterval _tapAndClickButtonSpeed[2];
+	NSTimeInterval _tapAndClickTimeout[2];
 }
 
 - (id)initWithDictionary:(NSDictionary*)d name: (NSString *)name;
-- (float)emulate3ButtonTimeout;
-- (float)emulateKeyDownTimeout;
-- (float)emulateKeyboardTimeout;
+- (NSString*)profileName;
 - (CARD32)commandKeyCode;
 - (CARD32)altKeyCode;
 - (CARD32)shiftKeyCode;
@@ -61,6 +66,14 @@ typedef enum {
 - (CARD32)encodingAtIndex:(unsigned)index;
 - (BOOL)useServerNativeFormat;
 - (void)getPixelFormat:(rfbPixelFormat*)format;
-- (NSString*)profileName;
+- (EventFilterEmulationScenario)button2EmulationScenario;
+- (EventFilterEmulationScenario)button3EmulationScenario;
+- (unsigned int)clickWhileHoldingModifierForButton: (unsigned int)button;
+- (unsigned int)multiTapModifierForButton: (unsigned int)button;
+- (NSTimeInterval)multiTapDelayForButton: (unsigned int)button;
+- (unsigned int)multiTapCountForButton: (unsigned int)button;
+- (unsigned int)tapAndClickModifierForButton: (unsigned int)button;
+- (NSTimeInterval)tapAndClickButtonSpeedForButton: (unsigned int)button;
+- (NSTimeInterval)tapAndClickTimeoutForButton: (unsigned int)button;
 
 @end

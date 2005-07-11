@@ -2,7 +2,7 @@
 //  ProfileManager_private.h
 //  Chicken of the VNC
 //
-//  Created by Bob Newhart on 8/19/04.
+//  Created by Jason Harris on 8/19/04.
 //  Copyright 2004 Geekspiff. All rights reserved.
 //
 

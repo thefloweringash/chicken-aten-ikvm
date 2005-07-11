@@ -23,6 +23,7 @@
 #import "rfbproto.h"
 #import "RFBProtocol.h"
 
+@class EventFilter;
 @protocol IServerData;
 
 #define RFB_HOST		@"Host"
@@ -48,6 +49,7 @@
     FrameBuffer* frameBuffer;
     id manager;
     id socketHandler;
+	EventFilter *_eventFilter;
     id currentReader;
     id versionReader;
     id handshaker;
@@ -58,33 +60,24 @@
     id newTitleField;
     NSPanel *newTitlePanel;
     NSString *titleString;
-    NSTimer *emulate3ButtonTimer;
-    NSTimer *buttonEmulationKeyDownTimer;			// Timer for Button Emulation Keydown Timer
-    NSTimer *buttonEmulationKeyboardTimer;          // Timer for Button Emulation Timeout
     id statisticField;
-    unsigned lastButtonMask;				// no emulation
-    unsigned lastComputedMask;				// emulated
-    unsigned int lastModifier;
-    unsigned lastMask;					// emulation
     BOOL terminating;
-    NSPoint	mouseButtonPressedLocation;		// store buttonpress for emulation
-    NSPoint	mouseLocation;
-    NSSize maxSize;
+    NSPoint	_mouseLocation;
+	unsigned int _lastMask;
+    NSSize _maxSize;
 
     BOOL	horizontalScroll;
     BOOL	verticalScroll;
 
     id optionPanel;
     id infoField;
-    id profile;
+    Profile *_profile;
 
-    BOOL	updateRequested;				// Has someone already requested an update?
+    BOOL updateRequested;				// Has someone already requested an update?
     
-    NSString*		realDisplayName;
-    NSString*		host;
+    NSString *realDisplayName;
+    NSString *host;
 	
-	unsigned char	buttonEmulationActiveMask;			// emulation is active
-        unsigned char	buttonEmulationKeyDownMask;			// emulation key is still down
 	id _owner; // jason added for fullscreen display
 	BOOL _isFullscreen; // jason added for fullscreen display
 	NSRect _windowedFrame; // jason added for fullscreen display
@@ -99,7 +92,6 @@
 	float _frameBufferUpdateSeconds;
 	NSTimer *_frameUpdateTimer;
 	BOOL _hasManualFrameBufferUpdates;
-	BOOL mCapsLock;
 	
 	int serverMajorVersion;
 	int serverMinorVersion;
@@ -124,19 +116,16 @@
 
 - (void)drawRectFromBuffer:(NSRect)aRect;
 - (void)drawRectList:(id)aList;
-
 - (void)pauseDrawing;
 - (void)flushDrawing;
-
 - (void)queueUpdateRequest;
 - (void)requestFrameBufferUpdate:(id)sender;
 - (void)cancelFrameBufferUpdateRequest;
-- (void)mouseAt:(NSPoint)thePoint buttons:(unsigned)mask;
-- (void)mouseMovedTo:(NSPoint)thePoint;
-- (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag;
-- (void)clearEmulationActiveMask;
+
 - (void)clearAllEmulationStates;
-- (void)sendModifier:(unsigned int)m;
+- (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask;
+- (void)sendKey:(unichar)key pressed:(BOOL)pressed;
+- (void)sendModifier:(unsigned int)m pressed:(BOOL)pressed;
 - (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length;
 - (void)writeRFBString:(NSString *)aString;
 
@@ -150,6 +139,7 @@
 - (NSRect)visibleRect;
 - (id)frameBuffer;
 - (NSWindow *)window;
+- (EventFilter *)eventFilter;
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification;
 - (void)windowDidResignKey:(NSNotification *)aNotification;

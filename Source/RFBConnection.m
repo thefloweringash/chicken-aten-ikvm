@@ -18,6 +18,7 @@
 
 #import "RFBConnection.h"
 #import "EncodingReader.h"
+#import "EventFilter.h"
 #import "FrameBuffer.h"
 #import "FrameBufferUpdateReader.h"
 #import "FullscreenWindow.h"
@@ -134,7 +135,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 // mark refactored init methods
 - (void)_prepareWithServer:(id<IServerData>)server profile:(Profile*)p owner:(id)owner
 {
-    profile = [p retain];
+    _profile = [p retain];
     _owner = owner; // jason added for fullscreen display
     _isFullscreen = NO; // jason added for fullscreen display
 
@@ -149,6 +150,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
     [NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
     server_ = [(id)server retain];
+	
+	_eventFilter = [[EventFilter alloc] init];
+	[_eventFilter setConnection: self];
 
     versionReader = [[NLTStringReader alloc] initTarget:self action:@selector(setServerVersion:)];
     [self setReader:versionReader];
@@ -227,7 +231,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (Profile*)profile
 {
-    return profile;
+    return _profile;
 }
 
 - (void)ringBell
@@ -283,6 +287,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	[manager removeConnection:self];
 
 	[socketHandler release];	socketHandler = nil;
+	[_eventFilter release];		_eventFilter = nil;
 	[titleString release];		titleString = nil;
 	[manager release];			manager = nil;
 	[versionReader release];	versionReader = nil;
@@ -291,7 +296,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	[serverVersion release];	serverVersion = nil;
 	[rfbProtocol release];		rfbProtocol = nil;
 	[frameBuffer release];		frameBuffer = nil;
-	[profile release];			profile = nil;
+	[_profile release];			_profile = nil;
 	[host release];				host = nil;
 	[realDisplayName release];	realDisplayName = nil;
 }
@@ -303,7 +308,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		case NSAlertDefaultReturn:
 			break;
 		case NSAlertAlternateReturn:
-			[_owner createConnectionWithServer:server_ profile:profile owner:_owner];
+			[_owner createConnectionWithServer:server_ profile:_profile owner:_owner];
 			break;
 		default:
 			NSLog(@"Unknown alert returnvalue: %d", returnCode);
@@ -323,6 +328,8 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		[self cancelFrameBufferUpdateRequest];
 		[self endFullscreenScrolling];
 		[self clearAllEmulationStates];
+		[_eventFilter synthesizeRemainingEvents];
+		[_eventFilter sendAllPendingQueueEntriesNow];
 
         if(aReason) {
 			NSString *header = NSLocalizedString( @"ConnectionTerminated", nil );
@@ -344,10 +351,10 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	
     horizontalScroll = verticalScroll = NO;
     winframe = [window frame];
-    if(aSize.width < maxSize.width) {
+    if(aSize.width < _maxSize.width) {
         horizontalScroll = YES;
     }
-    if(aSize.height < maxSize.height) {
+    if(aSize.height < _maxSize.height) {
         verticalScroll = YES;
     }
 	// jason added
@@ -392,6 +399,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	
     [rfbView setFrameBuffer:frameBuffer];
     [rfbView setDelegate:self];
+	[_eventFilter setView: rfbView];
 
 	screenRect = [[NSScreen mainScreen] visibleFrame];
     wf.origin.x = wf.origin.y = 0;
@@ -405,7 +413,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		verticalScroll = YES;
 		wf.size.height = NSHeight(screenRect);
 	}
-	maxSize = wf.size;
+	_maxSize = wf.size;
 	
 	// According to the Human Interace Guidelines, new windows should be "visually centered"
 	// If screenRect is X1,Y1-X2,Y2, and wf is x1,y1 -x2,y2, then
@@ -536,239 +544,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     manager = [aManager retain];
 }
 
-// reset means "unset", not "restart"
-- (void)resetButtonEmulationKeyDownTimer
-{
-	[buttonEmulationKeyDownTimer invalidate];
-	[buttonEmulationKeyDownTimer release];
-	buttonEmulationKeyDownTimer = nil;
-	// NSLog(@"Key-Down Timer Reset!\n");
-}
-
-- (int)checkButtonEmulationKeyDownTimer
-{
-    float to;
-    // if the timer is running, well, just return;
-    if (buttonEmulationKeyDownTimer) {
-        return 1;
-    }
-    // otherwise we must check if there *is* a timer
-    to = [profile emulateKeyDownTimeout];
-    // Nope, just say yes
-    if (to < 0) {
-        return 1;
-    }
-    // So, there is a valid timeout, so it must have expired.
-    return 0;
-}
-
-- (void)setButtonEmulationKeyDownTimer
-{
-    float to = [profile emulateKeyDownTimeout];
-    // NSLog(@"Button Emulation Timer is %f\n", to);
-    // If the timeout value is 0 or negative, just return
-    if (to <= 0) {
-        return;
-    }
-    [self resetButtonEmulationKeyDownTimer];
-    buttonEmulationKeyDownTimer = [[NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(buttonEmulationKeyDownTimeout:) userInfo:nil repeats:NO] retain];
-}
-- (void)buttonEmulationKeyDownTimeout:(id)sender
-{
-    // Timeout the keydown emulation
-    [self resetButtonEmulationKeyDownTimer];
-    // NSLog(@"Button Emulation Keydown Timer Timeout!\n");
-}
-
-// Timer for KeyboardEmulationTimeout.
-- (void)resetButtonEmulationKeyboardTimer
-{
-	[buttonEmulationKeyboardTimer invalidate];
-	[buttonEmulationKeyboardTimer release];
-	buttonEmulationKeyboardTimer = nil;
-	// NSLog(@"Keyboard Timer Reset!\n");
-}
-
-- (void)buttonEmulationKeyboardTimeout:(id)sender
-{
-    // NSLog(@"Button Emulation Keyboard Timer Timeout\n");
-    [self resetButtonEmulationKeyboardTimer];
-    [self clearEmulationActiveMask];
-}
-
-- (void)setButtonEmulationKeyboardTimer
-{
-    float to = [profile emulateKeyboardTimeout];
-    if (to <= 0) {
-        return;
-    }
-    // NSLog(@"Here's where I'd set the timer for %f\n",to);
-    [self resetButtonEmulationKeyboardTimer];
-    buttonEmulationKeyboardTimer = [[NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(buttonEmulationKeyboardTimeout:) userInfo:nil repeats:NO] retain];
-    
-}
-
-- (void)resetButtonEmulationTimer
-{
-	[emulate3ButtonTimer invalidate];
-	[emulate3ButtonTimer release];
-	emulate3ButtonTimer = nil;
-	//NSLog(@"Key-Down Timer Reset!\n");
-}
-
-- (void)emulateButtonTimeout:(id)sender
-{
-	//NSLog(@"Timed out\n");
-	[self resetButtonEmulationTimer];
-	if ( window ) // possible that this could be called between NULLing window and self being dealloc'ed
-	{
-		NSPoint p = [window mouseLocationOutsideOfEventStream];
-		lastComputedMask = lastButtonMask;
-		p = [rfbView convertPoint:p fromView:nil];
-		[self mouseMovedTo: p];
-	}
-}
-
-#define _ABS(x)	(((x)<0.0)?(-(x)):(x))
-
-- (unsigned)performButtonEmulation:(unsigned)mask at:(NSPoint)thePoint
-{
-	// This does two things:
-	// 1. If you press buttons 1 and 3 together, sends a button 2 event
-	// 2. If you do the shift- or control tap thingie, it sends the button that corresponds to that.
-	// To do 1, it has a timer, emulate3buttontimer. Press 1 and 3 within the timer of each other and they press 2.
-	//    Note that this means that not always a button event is passed on.
-	// To do 2, it uses a mask that is set up in the modifier code.
-    unsigned diff = mask ^ lastButtonMask;
-    unsigned pressed = diff & mask;
-    unsigned released = diff & lastButtonMask;
-
-    if(pressed) {
-		// button 1 or 3 pressed
-        if((mask & (rfbButton1Mask | rfbButton3Mask)) == (rfbButton1Mask | rfbButton3Mask)) {
-            // both 1 and 3 buttons pressed
-            if( emulate3ButtonTimer) {
-				// timer is running, so we generate a button 2 press
-				[self resetButtonEmulationTimer];
-				// emulate button 2 in lastComputedMask
-                lastComputedMask = rfbButton2Mask;
-            } else {
-				// Timer is not running, so the second button press was too late.
-				// don't emulate button 2 but set mask to 1 and 3.
-                lastComputedMask = mask;
-            }
-        } else {
-			// only one button is pressed
-            if(emulate3ButtonTimer) {
-				// only one but the timer is running -> bug
-                NSLog(@"emulate3ButtonTimer running when no button was pressed ???\n");
-            } else {
-				if(buttonEmulationActiveMask && mask == rfbButton1Mask) {
-					// Button emulation and mouse button 1 pressed, we should emulate buttons
-                    lastComputedMask = buttonEmulationActiveMask;
-				} else {
-                    float to = [profile emulate3ButtonTimeout];
-
-					// first button is pressed, start emulation-timer if button 1 or 3
-					if(to && (mask == rfbButton1Mask || mask == rfbButton3Mask)) {
-						mouseButtonPressedLocation = thePoint;
-						emulate3ButtonTimer = [[NSTimer scheduledTimerWithTimeInterval:to target:self selector:@selector(emulateButtonTimeout:) userInfo:nil repeats:NO] retain];
-					} else {
-						// Any other button pressed or no emulation -> send
-						lastComputedMask = mask;
-					}
-				}
-            }
-        }
-    }
-    if(released) {
-		// button 1 or 3 released
-        if(emulate3ButtonTimer) {
-			// timer running, so this was a short press of either button 1 or button 3
-   // we must generate a button down/up in quick succession.
-			[self resetButtonEmulationTimer];
-			// in order to generate the down/up sequence we set lastComputed to
-   // lastButtonMask which contains the released button in down-state.
-   // next time we get here the button is reported up again.
-            lastComputedMask = lastButtonMask;
-        } else {
-            if(lastComputedMask == rfbButton2Mask) {
-				// button up during emulation
-               	if(mask & (rfbButton1Mask | rfbButton3Mask)) {
-                    lastComputedMask = rfbButton2Mask;
-                } else {
-                    lastComputedMask = mask;
-                }
-            } else {
-				// normal button up event.
-				lastComputedMask = mask;
-            }
-        }
-		if(!(mask & rfbButton1Mask)) {
-			[self clearEmulationActiveMask];
-			buttonEmulationKeyDownMask = 0;
-		}
-    }
-
-    if(emulate3ButtonTimer) {
-		// Timer is running, check if the mouse has moved too much and abort
-  // emulation mode if so
-        float dx = thePoint.x - mouseButtonPressedLocation.x;
-        float dy = thePoint.y - mouseButtonPressedLocation.y;
-
-        dx = _ABS(dx); dy = _ABS(dy);
-        if((dx > 5) || (dy > 5)) {
-			// If the mouse moved too far, terminate emulation-timer
-   // and return the physical state
-			[self resetButtonEmulationTimer];
-            lastComputedMask = lastButtonMask;
-        }
-    }
-
-   	// If nothing changed and we are not in emulation-mode or waiting for the
-	// second press, we return the last physical state.
- // This the default case.
-    if(!diff && (lastComputedMask != rfbButton2Mask) && !emulate3ButtonTimer && !buttonEmulationActiveMask) {
-        lastComputedMask = lastButtonMask;
-    }
-	// update last physical state and
-    lastButtonMask = mask;
-	// return the modified state
-    return lastComputedMask;
-}
-
-- (void)mouseAt:(NSPoint)thePoint buttons:(unsigned)mask
-{
-    rfbPointerEventMsg msg;
-    NSRect b = [rfbView bounds];
-    NSSize s = [frameBuffer size];
-
-    if(thePoint.x < 0) thePoint.x = 0;
-    if(thePoint.y < 0) thePoint.y = 0;
-    if(thePoint.x >= s.width) thePoint.x = s.width - 1;
-    if(thePoint.y >= s.height) thePoint.y = s.height - 1;
-    mask = [self performButtonEmulation:mask at:thePoint];
-    if((mouseLocation.x != thePoint.x) || (mouseLocation.y != thePoint.y) || 
-       ((mask != lastMask) || (mask & (rfbButton4Mask | rfbButton5Mask)))) {
-        //NSLog(@"here %d", mask);
-        mouseLocation = thePoint;
-        msg.type = rfbPointerEvent;
-        msg.buttonMask = mask;
-        msg.x = thePoint.x; msg.x = htons(msg.x);
-        msg.y = b.size.height - thePoint.y; msg.y = htons(msg.y);
-        [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-        /* HACK this code should really go in the view code. */
-        /* I think that ALL events should probably be caught using NSWindow's nextEventMatchingMask:NSAnyEventMask */
-        if (mask & (rfbButton4Mask | rfbButton5Mask)) {
-            msg.buttonMask = mask & !(rfbButton4Mask | rfbButton5Mask);
-            [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-        }
-        /* Sigh */
-        lastMask = mask;
-    }
-    [self queueUpdateRequest];
-}
-
 - (void)_queueUpdateRequest {
     if (!updateRequested) {
         updateRequested = TRUE;
@@ -800,153 +575,86 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     updateRequested = FALSE;
 }
 
-- (void)mouseMovedTo:(NSPoint)thePoint
-{
-	[self mouseAt: thePoint buttons: lastButtonMask];
-}
-
-- (void)setEmulationActiveMask:(unsigned int)k
-{
-    switch (k) {
-        case 2:
-            buttonEmulationActiveMask = rfbButton2Mask;
-            [rfbView setCursorTo:@"rfbCursor2" hotSpot:13];
-            break;
-        case 3:
-            buttonEmulationActiveMask = rfbButton3Mask;
-            [rfbView setCursorTo:@"rfbCursor3" hotSpot:13];
-            break;
-    }
-    [self setButtonEmulationKeyboardTimer];
-}
-
-- (void)clearEmulationActiveMask
-{
-    // Undo the Active Mask
-    buttonEmulationActiveMask = 0;
-    // Reset the cursor
-    [rfbView setCursorTo:@"rfbCursor" hotSpot:7];
-    // Reset the timer (turn it off)
-    [self resetButtonEmulationKeyDownTimer];
-    [self resetButtonEmulationKeyboardTimer];
-}
-
 - (void)clearAllEmulationStates
 {
-	[self resetButtonEmulationTimer];
-	[self clearEmulationActiveMask];
-	lastButtonMask = lastComputedMask = lastMask = 0;
-	buttonEmulationActiveMask = buttonEmulationKeyDownMask = 0;
+	[_eventFilter clearAllEmulationStates];
+	_lastMask = 0;
 }
 
-- (void)sendModifier:(unsigned int)m
+- (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
+    rfbPointerEventMsg msg;
+    NSRect b = [rfbView bounds];
+    NSSize s = [frameBuffer size];
+	
+    if(thePoint.x < 0) thePoint.x = 0;
+    if(thePoint.y < 0) thePoint.y = 0;
+    if(thePoint.x >= s.width) thePoint.x = s.width - 1;
+    if(thePoint.y >= s.height) thePoint.y = s.height - 1;
+    if((_mouseLocation.x != thePoint.x) || (_mouseLocation.y != thePoint.y) || (_lastMask != mask)) {
+        //NSLog(@"here %d", mask);
+        _mouseLocation = thePoint;
+		_lastMask = mask;
+        msg.type = rfbPointerEvent;
+        msg.buttonMask = mask;
+        msg.x = thePoint.x; msg.x = htons(msg.x);
+        msg.y = b.size.height - thePoint.y; msg.y = htons(msg.y);
+        [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    }
+    [self queueUpdateRequest];
+}
+
+- (void)sendModifier:(unsigned int)m pressed: (BOOL)pressed
+{
+/*	NSString *modifierStr =nil;
+	switch (m)
+	{
+		case NSShiftKeyMask:
+			modifierStr = @"NSShiftKeyMask";		break;
+		case NSControlKeyMask:
+			modifierStr = @"NSControlKeyMask";		break;
+		case NSAlternateKeyMask:
+			modifierStr = @"NSAlternateKeyMask";	break;
+		case NSCommandKeyMask:
+			modifierStr = @"NSCommandKeyMask";		break;
+		case NSAlphaShiftKeyMask:
+			modifierStr = @"NSAlphaShiftKeyMask";	break;
+	}
+	NSLog(@"modifier %@ %s", modifierStr, pressed ? "pressed" : "released"); */
+
     rfbKeyEventMsg msg;
-    unsigned int diff;
-    
-    // The API says the lower 16 bits of the modifier are reserved for device-dependent
-    // modifiers.  Since INTs used to be 16 bits, and may someday be 128 bits, rather
-    // than AND with 0xFFFF0000, I choose to flip the bits, set the lower 16, and then
-    // flip them back, thus setting the lower 16 bits to 0.
-    m = ~(~m | 0xFFFF);
-    
-    diff = m ^ lastModifier;
-    
+	
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
-    if(diff & NSShiftKeyMask) {
-        msg.down = (m & NSShiftKeyMask) ? YES : NO;
-        msg.key = htonl([profile shiftKeyCode]);
-//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
-        [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-        if(msg.down) {
-            if(!(lastButtonMask & rfbButton1Mask)) {
-                buttonEmulationKeyDownMask = rfbButton3Mask;
-				[self setButtonEmulationKeyDownTimer];
-            }
-        } else {
-            if(buttonEmulationKeyDownMask & rfbButton3Mask) {
-                if(buttonEmulationActiveMask) {
-                    [self clearEmulationActiveMask];
-                } else {
-                    // We only go into emulation mode if the timer hasn't expired
-                    if ([self checkButtonEmulationKeyDownTimer]) {
-                        [self setEmulationActiveMask:3];
-                    }
-                }
-            }
-            // regardless of the state of the timer, turn it off now.
-            [self resetButtonEmulationKeyDownTimer];
-        }
-    }
-    if(diff & NSControlKeyMask) {
-        msg.down = (m & NSControlKeyMask) ? YES : NO;
-        msg.key = htonl([profile controlKeyCode]);
-//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
-        [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-        if(msg.down) {
-            if(!(lastButtonMask & rfbButton1Mask)) {
-                buttonEmulationKeyDownMask = rfbButton2Mask;
-                [self setButtonEmulationKeyDownTimer];
-            }
-        } else {
-            if(buttonEmulationKeyDownMask & rfbButton2Mask) {
-                if(buttonEmulationActiveMask & rfbButton2Mask) {
-					// Allow cancelling emulation by pressing button again
-                    [self clearEmulationActiveMask];
-                } else {
-                    if ([self checkButtonEmulationKeyDownTimer]) {
-                        [self setEmulationActiveMask:2];
-                    }
-                }
-            }
-            // regardless of the state of the timer, turn it off now.
-            [self resetButtonEmulationKeyDownTimer];
-        }
-    }
-    if(diff & NSAlternateKeyMask) {
-        msg.down = (m & NSAlternateKeyMask) ? YES : NO;
-        msg.key = htonl([profile altKeyCode]);
-//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
-        [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-    }
-    if(diff & NSCommandKeyMask) {
-        msg.down = (m & NSCommandKeyMask) ? YES : NO;
-        msg.key = htonl([profile commandKeyCode]);
-//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
-        [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-    }
-    if(diff & NSHelpKeyMask) {		// this is F1
-        msg.down = (m & NSHelpKeyMask) ? YES : NO;
-        msg.key = htonl(F1_KEYCODE);
-//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
-        [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-    }
-
-	// jason added a check for capslock
-    if(diff & NSAlphaShiftKeyMask) {
-		/* This mCapsLock crap is a horrible hack.  I was completely unable to figure out why
-		 * sending the CAPSLOCK modifier to RealVNC wouldn't work, so my work around is to keep 
-		 * track of whether or not we're supposed to be sending a capslocked string.  If we are, 
-		 * we'll ask the OS to convert our string to uppercase for us before we send it.  Yuckage.
-		 */
-        mCapsLock = msg.down = (m & NSAlphaShiftKeyMask) ? YES : NO;
+	msg.down = pressed;
+	
+    if( NSShiftKeyMask == m )
+        msg.key = htonl([_profile shiftKeyCode]);
+	else if( NSControlKeyMask == m )
+        msg.key = htonl([_profile controlKeyCode]);
+	else if( NSAlternateKeyMask == m )
+        msg.key = htonl([_profile altKeyCode]);
+	else if( NSCommandKeyMask == m )
+        msg.key = htonl([_profile commandKeyCode]);
+    else if(NSAlphaShiftKeyMask == m)
         msg.key = htonl(CAPSLOCK);
-//		fprintf(stderr, "%04X / %d\n", msg.key, msg.down);
-        [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-   }
-    lastModifier = m;
+    else if(NSHelpKeyMask == m)		// this is F1
+        msg.key = htonl(F1_KEYCODE);
+	else if (NSNumericPadKeyMask == m) // don't know how to handle, eat it
+		return;
+	
+	[self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
 }
 
 /* --------------------------------------------------------------------------------- */
-- (void)sendKey:(unichar)c pressed:(BOOL)aFlag
+- (void)sendKey:(unichar)c pressed:(BOOL)pressed
 {
     rfbKeyEventMsg msg;
     int kc;
 
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
-    msg.down = aFlag;
+    msg.down = pressed;
 	if(c < 256) {
         kc = page0[c & 0xff];
     } else if((c & 0xff00) == 0xf700) {
@@ -954,13 +662,13 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     } else {
 		kc = c;
     }
-    msg.key = htonl(kc);
+
+/*	unichar _kc = (unichar)kc;
+	NSString *keyStr = [NSString stringWithCharacters: &_kc length: 1];
+	NSLog(@"key '%@' %s", keyStr, pressed ? "pressed" : "released"); */
+
+	msg.key = htonl(kc);
     [self writeBytes:(unsigned char*)&msg length:sizeof(msg)];
-    buttonEmulationKeyDownMask = 0;
-    [self resetButtonEmulationKeyDownTimer];
-	if(buttonEmulationActiveMask) {
-		[self clearEmulationActiveMask];
-	}
 }
 
 - (void)sendCmdOptEsc: (id)sender
@@ -1131,7 +839,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb
 {
-    int i, strLength;
     id types, theType;
 	NSString *str;
 	
@@ -1145,13 +852,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
         str = [(id)str objectAtIndex:0];
     }
     
-	strLength = [str length];
-    for(i=0; i<strLength; i++) {
-        unichar c = [str characterAtIndex:i];
-        [self sendKey:c pressed:YES];
-        [self sendKey:c pressed:NO];
-    }
-    [self sendModifier:lastModifier & ~NSCommandKeyMask];
+	[_eventFilter pasteString: str];
     return YES;
 }
 
@@ -1165,28 +866,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
     [newTitleField setStringValue:titleString];
     [newTitlePanel makeKeyAndOrderFront:self];
-    [self sendModifier:lastModifier & ~NSCommandKeyMask];
 }
 
 /* --------------------------------------------------------------------------------- */
-- (void)processKey:(NSEvent*)theEvent pressed:(BOOL)aFlag
-{
-	NSString *characters;
-	int i, length;
-	
-	characters = [theEvent charactersIgnoringModifiers];
-	if ( mCapsLock )
-		characters = [characters uppercaseString];
-	
-	length = [characters length];
-	for (i = 0; i < length; ++i) {
-		unichar c;
-		
-		c = [characters characterAtIndex: i];
-		[self sendKey:c pressed:aFlag];
-	}
-}
-
 - (id)frameBuffer
 {
     return frameBuffer;
@@ -1196,6 +878,11 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 {
 	return window;
 }
+
+
+- (EventFilter *)eventFilter
+{  return _eventFilter;  }
+
 
 - (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length
 {
@@ -1286,9 +973,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	//NSLog(@"Key\n");
 	[self installMouseMovedTrackingRect];
 	[self setFrameBufferUpdateSeconds: [[PrefController sharedController] frontFrameBufferUpdateSeconds]];
-	
-	//Reset keyboard state on remote end
-	[self sendModifier:0];
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification
@@ -1298,7 +982,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	[self setFrameBufferUpdateSeconds: [[PrefController sharedController] otherFrameBufferUpdateSeconds]];
 	
 	//Reset keyboard state on remote end
-	[self sendModifier:0];
 	[self clearAllEmulationStates];
 }
 

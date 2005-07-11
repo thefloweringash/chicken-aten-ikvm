@@ -2,7 +2,7 @@
 //  KeyEquivalentPrefsController.m
 //  Chicken of the VNC
 //
-//  Created by Bob Newhart on Tue Apr 06 2004.
+//  Created by Jason Harris on Tue Apr 06 2004.
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 

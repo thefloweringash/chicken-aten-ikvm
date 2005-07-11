@@ -48,9 +48,6 @@ const unsigned int gEncodingValues[NUMENCODINGS] = {
 
 // --- Dictionary Keys --- //
 NSString *kProfile_PixelFormat_Key = @"PixelFormat";
-NSString *kProfile_E3BTimeout_Key = @"E3BTimeout";
-NSString *kProfile_EmulateKeyDown_Key = @"MKDTimeout";
-NSString *kProfile_EmulateKeyboard_Key = @"EKBTimeout";
 NSString *kProfile_EnableCopyrect_Key = @"EnableCopyRect";
 NSString *kProfile_Encodings_Key = @"Encodings";
 NSString *kProfile_EncodingValue_Key = @"ID";
@@ -59,6 +56,22 @@ NSString *kProfile_LocalAltModifier_Key = @"NewAltKey";
 NSString *kProfile_LocalCommandModifier_Key = @"NewCommandKey";
 NSString *kProfile_LocalControlModifier_Key = @"NewControlKey";
 NSString *kProfile_LocalShiftModifier_Key = @"NewShiftKey";
+NSString *kProfile_Button2EmulationScenario_Key = @"Button2EmulationScenario";
+NSString *kProfile_Button3EmulationScenario_Key = @"Button3EmulationScenario";
+NSString *kProfile_ClickWhileHoldingModifierForButton2_Key = @"ClickWhileHoldingModifierForButton2";
+NSString *kProfile_ClickWhileHoldingModifierForButton3_Key = @"ClickWhileHoldingModifierForButton3";
+NSString *kProfile_MultiTapModifierForButton2_Key = @"MultiTapModifierForButton2";
+NSString *kProfile_MultiTapModifierForButton3_Key = @"MultiTapModifierForButton3";
+NSString *kProfile_MultiTapDelayForButton2_Key = @"MultiTapDelayForButton2";
+NSString *kProfile_MultiTapDelayForButton3_Key = @"MultiTapDelayForButton3";
+NSString *kProfile_MultiTapCountForButton2_Key = @"MultiTapCountForButton2";
+NSString *kProfile_MultiTapCountForButton3_Key = @"MultiTapCountForButton3";
+NSString *kProfile_TapAndClickModifierForButton2_Key = @"TapAndClickModifierForButton2";
+NSString *kProfile_TapAndClickModifierForButton3_Key = @"TapAndClickModifierForButton3";
+NSString *kProfile_TapAndClickButtonSpeedForButton2_Key = @"TapAndClickButtonSpeedForButton2";
+NSString *kProfile_TapAndClickButtonSpeedForButton3_Key = @"TapAndClickButtonSpeedForButton3";
+NSString *kProfile_TapAndClickTimeoutForButton2_Key = @"TapAndClickTimeoutForButton2";
+NSString *kProfile_TapAndClickTimeoutForButton3_Key = @"TapAndClickTimeoutForButton3";
 NSString *kProfile_IsDefault_Key = @"IsDefault";
 
 // --- Notifications --- //
@@ -214,19 +227,55 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 
 - (void)formDidChange:(id)sender
 {
+	int tag, value;
+	
     NSMutableDictionary* profile = [self _currentProfileDictionary];
 	
     [profile setObject: [NSNumber numberWithInt: [[mPixelFormatMatrix selectedCell] tag]]
                 forKey: kProfile_PixelFormat_Key];
-    [profile setObject: [NSNumber numberWithInt: [m3bTimeout floatValue]]
-				forKey: kProfile_E3BTimeout_Key];
-    [profile setObject: [NSNumber numberWithInt: [mkdTimeout floatValue]] 
-				forKey: kProfile_EmulateKeyDown_Key];
-    [profile setObject: [NSNumber numberWithInt: [mkbTimeout floatValue]]
-				forKey: kProfile_EmulateKeyboard_Key];
 	[profile setObject: [NSNumber numberWithBool: ([mEnableCopyRect state] == NSOnState) ? YES : NO]
 				forKey: kProfile_EnableCopyrect_Key];
     
+	tag = [[mEmulationPopup2 selectedItem] tag];
+	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
+				forKey: kProfile_Button2EmulationScenario_Key];
+	[mEmulationTabView2 selectTabViewItemAtIndex: tag];
+	tag = [[mClickWhileHoldingEmulationModifier2 selectedItem] tag];
+	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
+				forKey: kProfile_ClickWhileHoldingModifierForButton2_Key];
+	tag = [[mMultiTapEmulationModifier2 selectedItem] tag];
+	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
+				forKey: kProfile_MultiTapModifierForButton2_Key];
+	value = [mMultiTapEmulationCountStepper2 intValue];
+	[profile setObject:[NSNumber numberWithUnsignedInt: value]
+				forKey: kProfile_MultiTapCountForButton2_Key];
+	[mMultiTapEmulationCountText2 setIntValue: value];
+	tag = [[mTapAndClickEmulationModifier2 selectedItem] tag];
+	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
+				forKey: kProfile_TapAndClickModifierForButton2_Key];
+	[profile setObject: [NSNumber numberWithDouble: [mTapAndClickEmulationTimeout2 doubleValue]]
+				forKey: kProfile_TapAndClickTimeoutForButton2_Key];
+	
+	tag = [[mEmulationPopup3 selectedItem] tag];
+	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
+				forKey: kProfile_Button3EmulationScenario_Key];
+	[mEmulationTabView3 selectTabViewItemAtIndex: tag];
+	tag = [[mClickWhileHoldingEmulationModifier3 selectedItem] tag];
+	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
+				forKey: kProfile_ClickWhileHoldingModifierForButton3_Key];
+	tag = [[mMultiTapEmulationModifier3 selectedItem] tag];
+	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
+				forKey: kProfile_MultiTapModifierForButton3_Key];
+	value = [mMultiTapEmulationCountStepper3 intValue];
+	[profile setObject:[NSNumber numberWithUnsignedInt: value]
+				forKey: kProfile_MultiTapCountForButton3_Key];
+	[mMultiTapEmulationCountText3 setIntValue: value];
+	tag = [[mTapAndClickEmulationModifier3 selectedItem] tag];
+	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
+				forKey: kProfile_TapAndClickModifierForButton3_Key];
+	[profile setObject: [NSNumber numberWithDouble: [mTapAndClickEmulationTimeout3 doubleValue]]
+				forKey: kProfile_TapAndClickTimeoutForButton3_Key];
+	
     [profile setObject: [[self class] _tagForModifierIndex: [mCommandKey indexOfSelectedItem]] 
 				forKey: kProfile_LocalCommandModifier_Key];
     [profile setObject: [[self class] _tagForModifierIndex: [mControlKey indexOfSelectedItem]] 
@@ -258,6 +307,14 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
 	[self _updateBrowserButtons];
+}
+
+
+- (BOOL)windowShouldClose:(id)sender
+{
+	if ( ! [sender makeFirstResponder:sender] )
+		return NO;
+	return YES;
 }
 
 

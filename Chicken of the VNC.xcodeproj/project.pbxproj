@@ -144,6 +144,11 @@
 		E21FE452062B79AB0059585C /* KeyEquivalentScenario.h in Headers */ = {isa = PBXBuildFile; fileRef = E21FE446062B79AB0059585C /* KeyEquivalentScenario.h */; };
 		E21FE453062B79AB0059585C /* KeyEquivalentPrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = E21FE447062B79AB0059585C /* KeyEquivalentPrefsController.m */; };
 		E21FE454062B79AB0059585C /* KeyEquivalentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = E21FE448062B79AB0059585C /* KeyEquivalentManager.h */; };
+		E291FA1508815A950061216E /* EventFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = E291FA1308815A950061216E /* EventFilter.h */; };
+		E291FAD5088161DA0061216E /* cursors.plist in Resources */ = {isa = PBXBuildFile; fileRef = E291FAD4088161DA0061216E /* cursors.plist */; };
+		E291FB1B088168BB0061216E /* EventFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = E291FA1408815A950061216E /* EventFilter.m */; };
+		E291FB23088168E20061216E /* QueuedEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = E291FB21088168E20061216E /* QueuedEvent.h */; };
+		E291FB24088168E20061216E /* QueuedEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E291FB22088168E20061216E /* QueuedEvent.m */; };
 		E2929DD507675DE800190669 /* MyApp.h in Headers */ = {isa = PBXBuildFile; fileRef = E2929DD307675DE800190669 /* MyApp.h */; };
 		E2929DD607675DE800190669 /* MyApp.m in Sources */ = {isa = PBXBuildFile; fileRef = E2929DD407675DE800190669 /* MyApp.m */; };
 		E2B0839D0763A51700CE24C1 /* KeyEquivalentScenarios.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2B0839B0763A51700CE24C1 /* KeyEquivalentScenarios.plist */; };
@@ -238,6 +243,11 @@
 		E21FE448062B79AB0059585C /* KeyEquivalentManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = KeyEquivalentManager.h; sourceTree = "<group>"; };
 		E228FA2704439B7D00F873F6 /* Bugs.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Bugs.rtf; sourceTree = "<group>"; };
 		E228FA2804439B7D00F873F6 /* Version History.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "Version History.rtf"; sourceTree = "<group>"; };
+		E291FA1308815A950061216E /* EventFilter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EventFilter.h; sourceTree = "<group>"; };
+		E291FA1408815A950061216E /* EventFilter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = EventFilter.m; sourceTree = "<group>"; };
+		E291FAD4088161DA0061216E /* cursors.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = cursors.plist; path = Resources/cursors.plist; sourceTree = "<group>"; };
+		E291FB21088168E20061216E /* QueuedEvent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = QueuedEvent.h; sourceTree = "<group>"; };
+		E291FB22088168E20061216E /* QueuedEvent.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QueuedEvent.m; sourceTree = "<group>"; };
 		E2929DD307675DE800190669 /* MyApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyApp.h; sourceTree = "<group>"; };
 		E2929DD407675DE800190669 /* MyApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyApp.m; sourceTree = "<group>"; };
 		E2B0839C0763A51700CE24C1 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = English; path = Resources/English.lproj/KeyEquivalentScenarios.plist; sourceTree = "<group>"; };
@@ -435,6 +445,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E291FAD4088161DA0061216E /* cursors.plist */,
 				E2F546570768C7C500AB2600 /* Chicken of the VNC.nibTranslate */,
 				F5DC7175033DB40D01A8010C /* down.tiff */,
 				E2CA650906DA451500B70BDF /* help */,
@@ -616,6 +627,8 @@
 				F5F2D5A703B3C93B01150DB1 /* debug.m */,
 				F5DC71B0033DB4A801A8010C /* EncodingReader.h */,
 				F5DC71B1033DB4A801A8010C /* EncodingReader.m */,
+				E291FA1308815A950061216E /* EventFilter.h */,
+				E291FA1408815A950061216E /* EventFilter.m */,
 				F5DC71B2033DB4A801A8010C /* FilterReader.h */,
 				F5DC71B3033DB4A801A8010C /* FilterReader.m */,
 				F5DC71B4033DB4A801A8010C /* FrameBuffer.h */,
@@ -645,6 +658,8 @@
 				E2F3AD7006D5E11D005EB917 /* NSObject_Chicken.m */,
 				F5DC71D3033DB4A801A8010C /* PaletteFilter.h */,
 				F5DC71D4033DB4A801A8010C /* PaletteFilter.m */,
+				E291FB21088168E20061216E /* QueuedEvent.h */,
+				E291FB22088168E20061216E /* QueuedEvent.m */,
 				F5DC71D9033DB4A801A8010C /* RawEncodingReader.h */,
 				F5DC71DA033DB4A801A8010C /* RawEncodingReader.m */,
 				F5DC71DB033DB4A801A8010C /* RectangleList.h */,
@@ -763,6 +778,8 @@
 				E2929DD507675DE800190669 /* MyApp.h in Headers */,
 				7FB3EA1B0804E758003757C9 /* URLHandlerCommand.h in Headers */,
 				7F7DE7D6080F39DF006BF1DF /* ServerStandAlone.h in Headers */,
+				E291FA1508815A950061216E /* EventFilter.h in Headers */,
+				E291FB23088168E20061216E /* QueuedEvent.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -864,6 +881,7 @@
 				E2B083F90763AAC200CE24C1 /* ListenDialog.nib in Resources */,
 				7FB3EA8D0804ECDB003757C9 /* CotVNC.scriptTerminology in Resources */,
 				7FB3EA8E0804ECE0003757C9 /* CotVNC.scriptSuite in Resources */,
+				E291FAD5088161DA0061216E /* cursors.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -970,6 +988,8 @@
 				E2929DD607675DE800190669 /* MyApp.m in Sources */,
 				7FB3EA1C0804E75E003757C9 /* URLHandlerCommand.m in Sources */,
 				7F7DE7D7080F39DF006BF1DF /* ServerStandAlone.m in Sources */,
+				E291FB1B088168BB0061216E /* EventFilter.m in Sources */,
+				E291FB24088168E20061216E /* QueuedEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1106,7 +1126,6 @@
 				);
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.0b2;
 			};
 			name = Development;
 		};
@@ -1174,6 +1193,7 @@
 			buildSettings = {
 				GCC_VERSION = 3.3;
 				ZERO_LINK = NO;
+				_CHICKEN_VERSION_ = 2.0b2;
 			};
 			name = Development;
 		};

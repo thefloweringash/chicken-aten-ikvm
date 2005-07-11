@@ -16,26 +16,26 @@
  *
  */
 
-#import <AppKit/AppKit.h>
-
 #import "FrameBuffer.h"
+@class EventFilter, RFBConnection;
+
 
 @interface RFBView : NSView
 {
-    id delegate;
-    id cursor;
+    RFBConnection *_delegate;
+	EventFilter *_eventFilter;
+    NSCursor *_cursor;
     FrameBuffer *fbuf;
-    unsigned buttonMask;
 }
 
 - (void)setFrameBuffer:(id)aBuffer;
-- (void)setDelegate:(id)aDelegate;
-- (id)delegate;
+- (void)setDelegate:(RFBConnection *)delegate;
+- (RFBConnection *)delegate;
 - (void)drawRect:(NSRect)aRect;
 - (void)displayFromBuffer:(NSRect)aRect;
 - (void)drawRectList:(id)aList;
 
-- (void)setCursorTo:(NSString*)icon hotSpot:(int)hs;
+- (void)setCursorTo: (NSString *)name;
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender;
 - (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender;

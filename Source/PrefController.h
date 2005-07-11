@@ -2,7 +2,7 @@
 //  PrefController.h
 //  Chicken of the VNC
 //
-//  Created by Bob Newhart on 8/18/04.
+//  Created by Jason Harris on 8/18/04.
 //  Copyright 2004 Geekspiff. All rights reserved.
 //
 
@@ -39,6 +39,7 @@
 - (void)setHostInfo: (NSDictionary *)hostInfo;
 - (NSString *)lastHostName;
 - (NSDictionary *)profileDict;
+- (NSDictionary *)defaultProfileDict;
 - (void)setProfileDict: (NSDictionary *)dict;
 
 	// Preferences Window

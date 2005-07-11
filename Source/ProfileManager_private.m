@@ -2,7 +2,7 @@
 //  ProfileManager_private.m
 //  Chicken of the VNC
 //
-//  Created by Bob Newhart on 8/19/04.
+//  Created by Jason Harris on 8/19/04.
 //  Copyright 2004 Geekspiff. All rights reserved.
 //
 
@@ -115,16 +115,43 @@
 
 - (void)_updateForm
 {
+	int tag, value;
+	
     NSDictionary* spd = [self _currentProfileDictionary];
 	NSParameterAssert( spd != nil );
 
     [mPixelFormatMatrix selectCellWithTag: [[spd objectForKey: kProfile_PixelFormat_Key] intValue]];
-    [m3bTimeout setIntValue: [[spd objectForKey: kProfile_E3BTimeout_Key] intValue]];
-    [mkdTimeout setIntValue: [[spd objectForKey: kProfile_EmulateKeyDown_Key] intValue]];
-    [mkbTimeout setIntValue: [[spd objectForKey: kProfile_EmulateKeyboard_Key] intValue]];
     [mEnableCopyRect setState: [[spd objectForKey: kProfile_EnableCopyrect_Key] boolValue] ? NSOnState : NSOffState];
 	
-    [mCommandKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalCommandModifier_Key] shortValue]];
+	tag = [[spd objectForKey: kProfile_Button2EmulationScenario_Key] unsignedIntValue];
+	[mEmulationPopup2 selectItemWithTag: tag];
+	[mEmulationTabView2 selectTabViewItemAtIndex: tag];
+	tag = [[spd objectForKey: kProfile_ClickWhileHoldingModifierForButton2_Key] unsignedIntValue];
+	[mClickWhileHoldingEmulationModifier2 selectItemWithTag: tag];
+	tag = [[spd objectForKey: kProfile_MultiTapModifierForButton2_Key] unsignedIntValue];
+	[mMultiTapEmulationModifier2 selectItemWithTag: tag];
+	value = [[spd objectForKey: kProfile_MultiTapCountForButton2_Key] unsignedIntValue];
+	[mMultiTapEmulationCountStepper2 setIntValue: value];
+	[mMultiTapEmulationCountText2 setIntValue: value];
+	tag = [[spd objectForKey: kProfile_TapAndClickModifierForButton2_Key] unsignedIntValue];
+	[mTapAndClickEmulationModifier2 selectItemWithTag: tag];
+	[mTapAndClickEmulationTimeout2 setDoubleValue: [[spd objectForKey: kProfile_TapAndClickTimeoutForButton2_Key] doubleValue]];
+	
+	tag = [[spd objectForKey: kProfile_Button3EmulationScenario_Key] unsignedIntValue];
+	[mEmulationPopup3 selectItemWithTag: tag];
+	[mEmulationTabView3 selectTabViewItemAtIndex: tag];
+	tag = [[spd objectForKey: kProfile_ClickWhileHoldingModifierForButton3_Key] unsignedIntValue];
+	[mClickWhileHoldingEmulationModifier3 selectItemWithTag: tag];
+	tag = [[spd objectForKey: kProfile_MultiTapModifierForButton3_Key] unsignedIntValue];
+	[mMultiTapEmulationModifier3 selectItemWithTag: tag];
+	value = [[spd objectForKey: kProfile_MultiTapCountForButton3_Key] unsignedIntValue];
+	[mMultiTapEmulationCountStepper3 setIntValue: value];
+	[mMultiTapEmulationCountText3 setIntValue: value];
+	tag = [[spd objectForKey: kProfile_TapAndClickModifierForButton3_Key] unsignedIntValue];
+	[mTapAndClickEmulationModifier3 selectItemWithTag: tag];
+	[mTapAndClickEmulationTimeout3 setDoubleValue: [[spd objectForKey: kProfile_TapAndClickTimeoutForButton3_Key] doubleValue]];
+	
+	[mCommandKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalCommandModifier_Key] shortValue]];
     [mControlKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalControlModifier_Key] shortValue]];
     [mAltKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalAltModifier_Key] shortValue]];
     [mShiftKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalShiftModifier_Key] shortValue]];

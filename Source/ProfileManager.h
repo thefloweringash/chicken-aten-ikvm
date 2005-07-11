@@ -21,9 +21,6 @@
 
 // Dictionary Keys
 extern NSString *kProfile_PixelFormat_Key;
-extern NSString *kProfile_E3BTimeout_Key;
-extern NSString *kProfile_EmulateKeyDown_Key;
-extern NSString *kProfile_EmulateKeyboard_Key;
 extern NSString *kProfile_EnableCopyrect_Key;
 extern NSString *kProfile_Encodings_Key;
 extern NSString *kProfile_EncodingValue_Key;
@@ -32,6 +29,22 @@ extern NSString *kProfile_LocalAltModifier_Key;
 extern NSString *kProfile_LocalCommandModifier_Key;
 extern NSString *kProfile_LocalControlModifier_Key;
 extern NSString *kProfile_LocalShiftModifier_Key;
+extern NSString *kProfile_Button2EmulationScenario_Key;
+extern NSString *kProfile_Button3EmulationScenario_Key;
+extern NSString *kProfile_ClickWhileHoldingModifierForButton2_Key;
+extern NSString *kProfile_ClickWhileHoldingModifierForButton3_Key;
+extern NSString *kProfile_MultiTapModifierForButton2_Key;
+extern NSString *kProfile_MultiTapModifierForButton3_Key;
+extern NSString *kProfile_MultiTapDelayForButton2_Key;
+extern NSString *kProfile_MultiTapDelayForButton3_Key;
+extern NSString *kProfile_MultiTapCountForButton2_Key;
+extern NSString *kProfile_MultiTapCountForButton3_Key;
+extern NSString *kProfile_TapAndClickModifierForButton2_Key;
+extern NSString *kProfile_TapAndClickModifierForButton3_Key;
+extern NSString *kProfile_TapAndClickButtonSpeedForButton2_Key;
+extern NSString *kProfile_TapAndClickButtonSpeedForButton3_Key;
+extern NSString *kProfile_TapAndClickTimeoutForButton2_Key;
+extern NSString *kProfile_TapAndClickTimeoutForButton3_Key;
 extern NSString *kProfile_IsDefault_Key;
 
 // Notifications
@@ -57,15 +70,28 @@ extern const unsigned int gEncodingValues[];
     IBOutlet NSTextField *mProfileNameField;
     IBOutlet NSButton *mNewProfileButton;
     IBOutlet NSButton *mDeleteProfileButton;
+	IBOutlet NSPopUpButton *mEmulationPopup2;
+	IBOutlet NSPopUpButton *mEmulationPopup3;
+	IBOutlet NSTabView *mEmulationTabView2;
+	IBOutlet NSTabView *mEmulationTabView3;
+	IBOutlet NSPopUpButton *mClickWhileHoldingEmulationModifier2;
+	IBOutlet NSPopUpButton *mClickWhileHoldingEmulationModifier3;
+	IBOutlet NSPopUpButton *mMultiTapEmulationModifier2;
+	IBOutlet NSPopUpButton *mMultiTapEmulationModifier3;
+	IBOutlet NSStepper *mMultiTapEmulationCountStepper2;
+	IBOutlet NSStepper *mMultiTapEmulationCountStepper3;
+	IBOutlet NSTextField *mMultiTapEmulationCountText2;
+	IBOutlet NSTextField *mMultiTapEmulationCountText3;
+	IBOutlet NSPopUpButton *mTapAndClickEmulationModifier2;
+	IBOutlet NSPopUpButton *mTapAndClickEmulationModifier3;
+	IBOutlet NSTextField *mTapAndClickEmulationTimeout2;
+	IBOutlet NSTextField *mTapAndClickEmulationTimeout3;
     IBOutlet NSPopUpButton *mAltKey;
     IBOutlet NSPopUpButton *mCommandKey;
     IBOutlet NSPopUpButton *mControlKey;
     IBOutlet NSPopUpButton *mShiftKey;
     IBOutlet NSTableView *mEncodingTableView;
 	IBOutlet NSButton *mEnableCopyRect;
-    IBOutlet NSTextField *m3bTimeout;
-    IBOutlet NSTextField *mkdTimeout;
-    IBOutlet NSTextField *mkbTimeout;
     IBOutlet NSMatrix *mPixelFormatMatrix;
 	int mEncodingDragRow;
 }

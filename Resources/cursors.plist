@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>rfbCursor</key>
+	<dict>
+		<key>hotspotX</key>
+		<integer>7</integer>
+		<key>hotspotY</key>
+		<integer>7</integer>
+		<key>localPath</key>
+		<string>rfbCursor.tiff</string>
+	</dict>
+	<key>rfbCursor2</key>
+	<dict>
+		<key>hotspotX</key>
+		<integer>13</integer>
+		<key>hotspotY</key>
+		<integer>13</integer>
+		<key>localPath</key>
+		<string>rfbCursor2.tiff</string>
+	</dict>
+	<key>rfbCursor3</key>
+	<dict>
+		<key>hotspotX</key>
+		<integer>13</integer>
+		<key>hotspotY</key>
+		<integer>13</integer>
+		<key>localPath</key>
+		<string>rfbCursor3.tiff</string>
+	</dict>
+</dict>
+</plist>

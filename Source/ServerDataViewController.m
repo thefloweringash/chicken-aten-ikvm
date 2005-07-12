@@ -134,6 +134,7 @@
         [display setIntValue:[mServer display]];
         [shared setIntValue:[mServer shared]];
 		[fullscreen setIntValue:[mServer fullscreen]];
+		[listenOnly setIntValue:[mServer listenOnly]];
 		[self setProfilePopupToProfile: [mServer lastProfile]];
 		
 		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
@@ -158,6 +159,7 @@
 		[display setStringValue:@""];
 		[shared setIntValue:0];
 		[fullscreen setIntValue:0];
+		[listenOnly setIntValue:0];
 		[self setProfilePopupToProfile: nil];
 	}
 }
@@ -254,6 +256,14 @@
 	if( nil != mServer )
 	{
 		[mServer setShared:![mServer shared]];
+	}
+}
+
+- (IBAction)listenOnlyChanged:(id)sender
+{
+	if( nil != mServer )
+	{
+		[mServer setListenOnly:![mServer listenOnly]];
 	}
 }
 

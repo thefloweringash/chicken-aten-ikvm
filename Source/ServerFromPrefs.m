@@ -31,6 +31,7 @@
 #define RFB_DISPLAY		  @"Display"
 #define RFB_SHARED		  @"Shared"
 #define RFB_FULLSCREEN    @"Fullscreen"
+#define RFB_LISTENONLY    @"ListenOnly"
 #define RFB_LAST_DISPLAY  @"Display"
 #define RFB_LAST_PROFILE  @"Profile"
 #define RFB_PORT		  5900
@@ -56,6 +57,7 @@
 		[self setLastProfile:      [prefDict objectForKey:RFB_LAST_PROFILE]];
 		[self setShared:          [[prefDict objectForKey:RFB_SHARED] intValue] == 0 ? NO : YES];
 		[self setFullscreen:      [[prefDict objectForKey:RFB_FULLSCREEN] intValue] == 0 ? NO : YES];
+		[self setListenOnly:      [[prefDict objectForKey:RFB_LISTENONLY] intValue] == 0 ? NO : YES];
 	}
 	
 	return self;
@@ -90,6 +92,7 @@
 	[coder encodeObject:_lastProfile	 forKey:RFB_LAST_PROFILE];
 	[coder encodeBool:_shared			 forKey:RFB_SHARED];
 	[coder encodeBool:_fullscreen		 forKey:RFB_FULLSCREEN];
+	[coder encodeBool:_listenOnly        forKey:RFB_LISTENONLY];
 }
 
 - (id)initWithCoder:(NSCoder *)coder
@@ -108,6 +111,7 @@
 		[self setLastProfile:     [coder decodeObjectForKey:RFB_LAST_PROFILE]];
 		[self setShared:          [coder decodeBoolForKey:RFB_SHARED]];
 		[self setFullscreen:      [coder decodeBoolForKey:RFB_FULLSCREEN]];
+		[self setListenOnly:	  [coder decodeBoolForKey:RFB_LISTENONLY]];
 	}
 	
     return self;

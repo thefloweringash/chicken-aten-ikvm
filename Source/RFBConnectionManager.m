@@ -151,6 +151,8 @@
 		}
 		else if ([arg hasPrefix:@"--FullScreen"])
 			[cmdlineServer setFullscreen: YES];
+		else if ([arg hasPrefix:@"--Listen"])
+			[cmdlineServer setListenOnly: YES];
 		else if ([arg hasPrefix:@"--Profile"])
 		{
 			if (i + 1 >= argCount) [self cmdlineUsage];
@@ -236,6 +238,7 @@
     fprintf(stderr, "--PasswordFile <password-file>\n");
     fprintf(stderr, "--Profile <profile-name>\n");
     fprintf(stderr, "--FullScreen\n");
+	fprintf(stderr, "--Listen\n");
     exit(1);
 }
 

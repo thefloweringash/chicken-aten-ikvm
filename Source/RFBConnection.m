@@ -484,6 +484,11 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     return [server_ shared];
 }
 
+- (BOOL)listenOnly
+{
+	return [server_ listenOnly];
+}
+
 - (NSRect)visibleRect
 {
     return [rfbView bounds];

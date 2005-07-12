@@ -1,6 +1,11 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {"" = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
         {
             ACTIONS = {addServer = id; deleteSelectedServer = id; showConnectionDialog = id; }; 
             CLASS = RFBConnectionManager; 
@@ -21,6 +26,7 @@
                 addServerChanged = id; 
                 connectToServer = id; 
                 fullscreenChanged = id; 
+                listenOnlyChanged = id; 
                 profileSelectionChanged = id; 
                 rememberPwdChanged = id; 
                 sharedChanged = id; 
@@ -35,8 +41,7 @@
                 display = NSTextField; 
                 fullscreen = NSButton; 
                 hostName = NSTextField; 
-                mDelegate = id; 
-                mServer = id; 
+                listenOnly = NSButton; 
                 password = NSTextField; 
                 profilePopup = NSPopUpButton; 
                 rememberPwd = NSButton; 

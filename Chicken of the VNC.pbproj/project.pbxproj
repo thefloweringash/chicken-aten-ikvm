@@ -92,6 +92,7 @@
 		29B97317FDCFA39411CA2CEA = {
 			children = (
 				E2F546570768C7C500AB2600,
+				E29C0E0B08843B6400F8721E,
 				F5DC7175033DB40D01A8010C,
 				E2CA650906DA451500B70BDF,
 				F5DC7177033DB40D01A8010C,
@@ -317,6 +318,8 @@
 				E2929DD507675DE800190669,
 				7FB3EA1B0804E758003757C9,
 				7F7DE7D6080F39DF006BF1DF,
+				E29C0E0608843B4800F8721E,
+				E29C0E0908843B5700F8721E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -638,6 +641,7 @@
 				E2B083F90763AAC200CE24C1,
 				7FB3EA8D0804ECDB003757C9,
 				7FB3EA8E0804ECE0003757C9,
+				E29C0E0C08843B6400F8721E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -772,6 +776,8 @@
 				E2929DD607675DE800190669,
 				7FB3EA1C0804E75E003757C9,
 				7F7DE7D7080F39DF006BF1DF,
+				E29C0E0508843B4800F8721E,
+				E29C0E0A08843B5700F8721E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1721,6 +1727,77 @@
 			settings = {
 			};
 		};
+		E29C0E0308843B4800F8721E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = EventFilter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E29C0E0408843B4800F8721E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = EventFilter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E29C0E0508843B4800F8721E = {
+			fileRef = E29C0E0308843B4800F8721E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E29C0E0608843B4800F8721E = {
+			fileRef = E29C0E0408843B4800F8721E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E29C0E0708843B5700F8721E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = QueuedEvent.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E29C0E0808843B5700F8721E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = QueuedEvent.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E29C0E0908843B5700F8721E = {
+			fileRef = E29C0E0708843B5700F8721E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E29C0E0A08843B5700F8721E = {
+			fileRef = E29C0E0808843B5700F8721E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E29C0E0B08843B6400F8721E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = cursors.plist;
+			path = Resources/cursors.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E29C0E0C08843B6400F8721E = {
+			fileRef = E29C0E0B08843B6400F8721E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		E2B0839B0763A51700CE24C1 = {
 			children = (
 				E2B0839C0763A51700CE24C1,
@@ -2498,6 +2575,8 @@
 				F5F2D5A703B3C93B01150DB1,
 				F5DC71B0033DB4A801A8010C,
 				F5DC71B1033DB4A801A8010C,
+				E29C0E0308843B4800F8721E,
+				E29C0E0408843B4800F8721E,
 				F5DC71B2033DB4A801A8010C,
 				F5DC71B3033DB4A801A8010C,
 				F5DC71B4033DB4A801A8010C,
@@ -2527,6 +2606,8 @@
 				E2F3AD7006D5E11D005EB917,
 				F5DC71D3033DB4A801A8010C,
 				F5DC71D4033DB4A801A8010C,
+				E29C0E0708843B5700F8721E,
+				E29C0E0808843B5700F8721E,
 				F5DC71D9033DB4A801A8010C,
 				F5DC71DA033DB4A801A8010C,
 				F5DC71DB033DB4A801A8010C,

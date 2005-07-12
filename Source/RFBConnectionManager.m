@@ -151,7 +151,7 @@
 		}
 		else if ([arg hasPrefix:@"--FullScreen"])
 			[cmdlineServer setFullscreen: YES];
-		else if ([arg hasPrefix:@"--Listen"])
+		else if ([arg hasPrefix:@"--ViewOnly"])
 			[cmdlineServer setViewOnly: YES];
 		else if ([arg hasPrefix:@"--Profile"])
 		{
@@ -165,6 +165,8 @@
 			profile = [profileManager profileNamed: profileName];
 		}
 		else if ([arg hasPrefix:@"-"])
+			[self cmdlineUsage];
+		else if ([arg hasPrefix:@"-?"] || [arg hasPrefix:@"-help"] || [arg hasPrefix:@"--help"])
 			[self cmdlineUsage];
 		else
 		{
@@ -238,7 +240,7 @@
     fprintf(stderr, "--PasswordFile <password-file>\n");
     fprintf(stderr, "--Profile <profile-name>\n");
     fprintf(stderr, "--FullScreen\n");
-	fprintf(stderr, "--Listen\n");
+	fprintf(stderr, "--ViewOnly\n");
     exit(1);
 }
 

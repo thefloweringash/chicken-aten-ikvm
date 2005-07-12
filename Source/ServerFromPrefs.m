@@ -26,6 +26,7 @@
 
 #define RFB_NAME          @"Name"
 #define RFB_HOST		  @"Host"
+#define RFB_HOSTANDPORT   @"HostAndPort"
 #define RFB_PASSWORD	  @"Password"
 #define RFB_REMEMBER	  @"RememberPassword"
 #define RFB_DISPLAY		  @"Display"
@@ -50,7 +51,7 @@
     if( self = [super init] )
 	{
 		[self setName:             [NSString stringWithString:host]];
-		[self setHost:             [NSString stringWithString:host]];
+		[self setHostAndPort:      [NSString stringWithString:host]];
 		[self setPassword:         [NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]]];
 		[self setRememberPassword:[[prefDict objectForKey:RFB_REMEMBER] intValue] == 0 ? NO : YES];
 		[self setDisplay:         [[prefDict objectForKey:RFB_DISPLAY] intValue]];
@@ -87,6 +88,7 @@
 
 	[coder encodeObject:_name			 forKey:RFB_NAME];
 	[coder encodeObject:_host			 forKey:RFB_HOST];
+	[coder encodeObject:_hostAndPort     forKey:RFB_HOSTANDPORT];
 	[coder encodeBool:_rememberPassword  forKey:RFB_REMEMBER];
 	[coder encodeInt:_display			 forKey:RFB_DISPLAY];
 	[coder encodeObject:_lastProfile	 forKey:RFB_LAST_PROFILE];
@@ -112,6 +114,7 @@
 		[self setShared:          [coder decodeBoolForKey:RFB_SHARED]];
 		[self setFullscreen:      [coder decodeBoolForKey:RFB_FULLSCREEN]];
 		[self setViewOnly:  	  [coder decodeBoolForKey:RFB_VIEWONLY]];
+		[self setHostAndPort:     [coder decodeObjectForKey:RFB_HOSTANDPORT]]; // might not be present
 	}
 	
     return self;

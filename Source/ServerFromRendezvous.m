@@ -131,7 +131,12 @@
 	return NO;
 }
 
-- (NSString*)host
+- (NSString *)host
+{
+	return [self hostAndPort];
+}
+
+- (NSString*)hostAndPort
 {
 	if( bHasResolved && bResloveSucceeded )
 	{
@@ -154,7 +159,7 @@
 	}
 }
 
-- (int)display
+- (int)port
 {
 	if( bHasResolved )
 	{

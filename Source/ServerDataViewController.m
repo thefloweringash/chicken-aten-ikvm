@@ -128,7 +128,7 @@
 		[shared setEnabled: YES];
 		[profilePopup setEnabled: YES];
 		
-		[hostName setStringValue:[mServer host]];
+		[hostName setStringValue:[mServer hostAndPort]];
 		[password setStringValue:[mServer password]];
         [rememberPwd setIntValue:[mServer rememberPassword]];
         [display setIntValue:[mServer display]];
@@ -142,6 +142,9 @@
 		[password    setEnabled: [mServer doYouSupport:EDIT_PASSWORD]];
 		[rememberPwd setEnabled: [mServer doYouSupport:SAVE_PASSWORD]];
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];
+		
+		if ( [mServer isPortSpecifiedInHost] )
+			[display setEnabled: NO];
     }
 	else
 	{
@@ -215,7 +218,7 @@
 	{
 		if( nil != mServer && [mServer doYouSupport:EDIT_ADDRESS] )
 		{
-			[mServer setHost:[sender stringValue]];
+			[mServer setHostAndPort:[sender stringValue]];
 		}
 	}
 	else if( password == sender )

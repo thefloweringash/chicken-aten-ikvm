@@ -61,10 +61,15 @@ if (!(condition)) return [self scriptError: (errno) description: \
 	
 	[[RFBConnectionManager sharedManager] setLaunchedByURL:YES];
 	
+	NSNumber *portNumber = [url port];
+	NSString *portString = @"";
+	if ( portNumber )
+		portString = [NSString stringWithFormat: @"%d", [portNumber intValue]];
+	NSString *hostAndPort = [NSString stringWithFormat: @"%@:%@", [url host], portString];
+	
 	ServerStandAlone* server = [[[ServerStandAlone alloc] init] autorelease];
 	[server setName:[url host]];
-	[server setHost:[url host]];
-	[server setDisplay:[[url port] intValue]];
+	[server setHostAndPort:hostAndPort];
 	[server setPassword:[url password]];
 	
 	[viewCtrlr setServer:server];

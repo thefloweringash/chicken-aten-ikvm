@@ -153,6 +153,12 @@
 			[cmdlineServer setFullscreen: YES];
 		else if ([arg hasPrefix:@"--ViewOnly"])
 			[cmdlineServer setViewOnly: YES];
+		else if ([arg hasPrefix:@"--Display"])
+		{
+			if (i + 1 >= argCount) [self cmdlineUsage];
+			int display = [[args objectAtIndex:++i] intValue];
+			[cmdlineServer setDisplay: display];
+		}
 		else if ([arg hasPrefix:@"--Profile"])
 		{
 			if (i + 1 >= argCount) [self cmdlineUsage];
@@ -170,25 +176,9 @@
 			[self cmdlineUsage];
 		else
 		{
-			/* No dash, host:display */
-			NSArray *listItems = [arg componentsSeparatedByString:@":"];
-			NSString *cmdlineHost = [listItems objectAtIndex: 0];
-			[cmdlineServer setHost: cmdlineHost];
+			[cmdlineServer setHostAndPort: arg];
 			
 			mRunningFromCommandLine = YES;
-			
-			int cmdlineDisplay;
-			if ( ! [cmdlineHost isEqualToString: arg] )
-			{
-				/* Found : */
-				cmdlineDisplay = [[listItems objectAtIndex:1] intValue];
-			}
-			else
-			{
-				/* No colon, assume :0 as default */
-				cmdlineDisplay = 0;
-			}
-			[cmdlineServer setDisplay: cmdlineDisplay];
 		} 
     }
 	
@@ -235,10 +225,11 @@
 
 - (void)cmdlineUsage
 {
-    fprintf(stderr, "\nUsage: Chicken of the VNC [options] [host:display]\n\n");
+    fprintf(stderr, "\nUsage: Chicken of the VNC [options] [host:port]\n\n");
     fprintf(stderr, "options:\n\n");
     fprintf(stderr, "--PasswordFile <password-file>\n");
     fprintf(stderr, "--Profile <profile-name>\n");
+    fprintf(stderr, "--Display <display-number>\n");
     fprintf(stderr, "--FullScreen\n");
 	fprintf(stderr, "--ViewOnly\n");
     exit(1);

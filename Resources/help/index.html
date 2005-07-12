@@ -35,24 +35,28 @@
 
 	<p>Use it just like any other VNC client - enter the address of a working VNC server, the display number (or port) and your password and rock'n'roll...</p>
 
-	<div class="ss"><img src="connect.jpg" width="390" height="179" alt="Connection Dialog" /></div>
+	<div class="ss"><img src="connect.jpg" width="356" height="227" alt="Connection Dialog" /></div>
 	
 	<ul class="explanation">
 		<li><span class="item">Servers:</span>  You can store commonly used servers in this section.  Use the + and - buttons to add and remove servers.</li>
 
-		<li><span class="item">Host:</span>  The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You must be able to "ping" the host to connect to it.</li>
+		<li><span class="item">Host:</span>  The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You may optionally specify a port number here by appending it with a colon (like myserver.com:5900).  You must be able to "ping" the host to connect to it.</li>
 
-		<li><span class="item">Display/Port:</span>  The display number or port for the connection.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  Display numbers less than 100 are interpreted as a port number.  If you're having problems connecting, you should make sure that the port is not firewalled on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
-
-		<li><span class="item">Shared Display:</span>  If selected, multiple clients can connect to the same server simultaneously.  Otherwise, only one client can be connected to a given server at at time.</li>
+		<li><span class="item">Display:</span>  The display number for the connection.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
 
 		<li><span class="item">Password:</span>  The password needed to connect to the server running at the specified host and display.  If Remember Password was checked, this will be fetched from your keychain after you've entered it initially.</li>
 
 		<li><span class="item">Remember Password:</span>  If checked, the password will be stored in your Keychain and remembered for later use.</li>
 
 		<li><span class="item">Profile:</span>  The connection profile to use when connecting to this server.  See the section below for more info about connection profiles.</li>
-	</ul>
 	
+		<li><span class="item">View Only:</span>  If selected, your connection will not be interactive.  You will be able to view the server's screen, but mouse movements, key presses and the like will not be transmitted.</li>
+
+		<li><span class="item">Allow Other Clients To Connect:</span>  If selected, multiple clients can connect to the same server simultaneously.  Otherwise, only one client can be connected to a given server at at time.</li>
+
+		<li><span class="item">Fullscreen Display:</span>  If selected, the connection will initially be opened using your entire screen, rather than in a window.</li>
+	</ul>
+
 	<p>You can also check <a href="http://www.realvnc.com/">RealVNC's web page</a> for additional information on connection and configuring a VNC client.</p>
 </div>
 

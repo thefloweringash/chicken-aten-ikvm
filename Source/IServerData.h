@@ -45,9 +45,12 @@ typedef enum
 
 - (NSString*)name;
 - (NSString*)host;
+- (NSString*)hostAndPort;
 - (NSString*)password;
 - (bool)rememberPassword;
 - (int)display;
+- (bool)isPortSpecifiedInHost;
+- (int)port;
 - (bool)shared;
 - (bool)fullscreen;
 - (bool)viewOnly;
@@ -56,9 +59,11 @@ typedef enum
 
 - (void)setName: (NSString*)name;
 - (void)setHost: (NSString*)host;
+- (void)setHostAndPort: (NSString*)host;
 - (void)setPassword: (NSString*)password;
 - (void)setRememberPassword: (bool)rememberPassword;
 - (void)setDisplay: (int)display;
+- (void)setPort: (int)port;
 - (void)setShared: (bool)shared;
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setViewOnly: (bool)viewOnly;

@@ -37,7 +37,8 @@
 - (bool)doYouSupport: (SUPPORT_TYPE)type;
 
 - (NSString*)host;
-- (int)display;
+- (NSString*)hostAndPort;
+- (int)port;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 

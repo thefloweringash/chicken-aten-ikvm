@@ -183,11 +183,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 			[self release];
 			return nil;
 		}
-		port = [server display];
-		// displays >= 100 are treated as port numbers, in the
-		// same way as RealVNC and others does. 
-		if (port < 100)
-		    port += RFB_PORT;
+		port = [server port];
 		socket_address(&remote, host, port);
 		if( INADDR_NONE == remote.sin_addr.s_addr ) {
 			NSString *actionStr = NSLocalizedString( @"NoNamedServer", nil );

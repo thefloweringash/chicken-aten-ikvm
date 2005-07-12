@@ -33,10 +33,11 @@
 		// The order of remember password setting and password is critical, or we risk loosing
 		// saved passwords.
 		[self setName:            [NSString stringWithString:@"new server"]];
-		[self setHost:            [NSString stringWithString:@"localhost"]];
+		[self setHostAndPort:     [NSString stringWithString:@"localhost"]];
 		[self setRememberPassword:NO];
 		[self setPassword:        [NSString stringWithString:@""]];
 		[self setDisplay:         0];
+		[self setPort:            5900];
 		[self setLastProfile:     [NSString stringWithString:[[ProfileDataManager sharedInstance] defaultProfileName]]];
 		[self setShared:          NO];
 		[self setFullscreen:      NO];
@@ -59,6 +60,7 @@
 												  
 	[_name release];
 	[_host release];
+	[_hostAndPort release];
 	[_password release];
 	[_lastProfile release];
 	[super dealloc];
@@ -82,6 +84,11 @@
 	return _host;
 }
 
+- (NSString *)hostAndPort
+{
+	return _hostAndPort;
+}
+
 - (NSString*)password
 {
 	return _password;
@@ -95,6 +102,16 @@
 - (int)display
 {
 	return _display;
+}
+
+- (bool)isPortSpecifiedInHost
+{
+	return ! [_host isEqualToString: _hostAndPort];
+}
+
+- (int)port
+{
+	return _port;
 }
 
 - (bool)shared
@@ -149,6 +166,31 @@
 														object:self];
 }
 
+- (void)setHostAndPort: (NSString*)hostAndPort
+{
+	BOOL portWasSpecifiedInHost = [self isPortSpecifiedInHost];
+	
+	[_hostAndPort autorelease];
+	if( nil != hostAndPort )
+	{
+		_hostAndPort = [hostAndPort retain];
+		
+		NSArray *items = [hostAndPort componentsSeparatedByString:@":"];
+		[self setHost: [items objectAtIndex: 0]];
+		if ( [self isPortSpecifiedInHost] )
+			[self setPort: [[items objectAtIndex: 1] intValue]];
+		else if ( portWasSpecifiedInHost )
+			[self setPort: [self display] + 5900];
+	}
+	else
+	{
+		_hostAndPort = [_host copy];
+	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
+														object:self];
+}
+
 - (void)setPassword: (NSString*)password
 {
 	[_password autorelease];
@@ -177,6 +219,7 @@
 - (void)setDisplay: (int)display
 {
 	_display = display;
+	[self setPort: _display + 5900];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -185,6 +228,14 @@
 - (void)setShared: (bool)shared
 {
 	_shared = shared;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
+														object:self];
+}
+
+- (void)setPort: (int)port
+{
+	_port = port;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -245,13 +296,13 @@
 - (void)copyServer: (id<IServerData>)server
 {
 	
-	[self setHost:[server name]];
-	[self setHost:[server host]];
+	[self setHostAndPort:[server hostAndPort]];
 	// remember password must come before setting the password (in case a root class
 	// needs to do appropriate save logic
 	[self setRememberPassword:[server rememberPassword]];
 	[self setPassword:[server password]];
 	[self setDisplay:[server display]];
+	[self setPort:[server port]];
 	[self setShared:[server shared]];
 	[self setFullscreen:[server fullscreen]];
 	[self setViewOnly:[server viewOnly]];

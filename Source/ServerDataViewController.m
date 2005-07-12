@@ -134,7 +134,7 @@
         [display setIntValue:[mServer display]];
         [shared setIntValue:[mServer shared]];
 		[fullscreen setIntValue:[mServer fullscreen]];
-		[listenOnly setIntValue:[mServer listenOnly]];
+		[viewOnly setIntValue:[mServer viewOnly]];
 		[self setProfilePopupToProfile: [mServer lastProfile]];
 		
 		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
@@ -159,7 +159,7 @@
 		[display setStringValue:@""];
 		[shared setIntValue:0];
 		[fullscreen setIntValue:0];
-		[listenOnly setIntValue:0];
+		[viewOnly setIntValue:0];
 		[self setProfilePopupToProfile: nil];
 	}
 }
@@ -259,11 +259,11 @@
 	}
 }
 
-- (IBAction)listenOnlyChanged:(id)sender
+- (IBAction)viewOnlyChanged:(id)sender
 {
 	if( nil != mServer )
 	{
-		[mServer setListenOnly:![mServer listenOnly]];
+		[mServer setViewOnly:![mServer viewOnly]];
 	}
 }
 

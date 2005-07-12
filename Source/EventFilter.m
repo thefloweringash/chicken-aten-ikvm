@@ -106,7 +106,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)setConnection: (RFBConnection *)connection
 {
 	_connection = connection;
-	_listenOnly = [connection listenOnly];
+	_viewOnly = [connection viewOnly];
 	
 	Profile *profile = [connection profile];
 	if ( profile )
@@ -161,7 +161,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)scrollWheel: (NSEvent *)theEvent
 {
-	if ( _listenOnly )
+	if ( _viewOnly )
 		return;
 
 	[self sendAllPendingQueueEntriesNow];
@@ -178,7 +178,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
-	if ( _listenOnly )
+	if ( _viewOnly )
 		return;
 
 	// send this out of order, in front of anything we've got pending
@@ -188,7 +188,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-	if ( _listenOnly )
+	if ( _viewOnly )
 		return;
 
 	// getting this implies that we've gotten a mouse down, so we can just send it directly
@@ -198,7 +198,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)rightMouseDragged:(NSEvent *)theEvent
 {
-	if ( _listenOnly )
+	if ( _viewOnly )
 		return;
 
 	// getting this implies that we've gotten a mouse down, so we can just send it directly
@@ -208,7 +208,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)otherMouseDragged:(NSEvent *)theEvent
 {
-	if ( _listenOnly )
+	if ( _viewOnly )
 		return;
 
 	// getting this implies that we've gotten a mouse down, so we can just send it directly
@@ -622,7 +622,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)_sendEvent: (QueuedEvent *)event
 {
-	if ( _listenOnly )
+	if ( _viewOnly )
 		return;
 	
 	QueuedEventType eventType = [event type];
@@ -961,7 +961,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)setButton2EmulationScenario: (EventFilterEmulationScenario)scenario
 {
 	_buttonEmulationScenario[0] = scenario;
-	if ( _listenOnly )
+	if ( _viewOnly )
 		_buttonEmulationScenario[0] = kNoMouseButtonEmulation;
 	[self _updateConfigurationForButton: 2];
 }
@@ -970,7 +970,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)setButton3EmulationScenario: (EventFilterEmulationScenario)scenario
 {
 	_buttonEmulationScenario[1] = scenario;
-	if ( _listenOnly )
+	if ( _viewOnly )
 		_buttonEmulationScenario[1] = kNoMouseButtonEmulation;
 	[self _updateConfigurationForButton: 3];
 }

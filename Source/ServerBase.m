@@ -40,7 +40,7 @@
 		[self setLastProfile:     [NSString stringWithString:[[ProfileDataManager sharedInstance] defaultProfileName]]];
 		[self setShared:          NO];
 		[self setFullscreen:      NO];
-		[self setListenOnly:      NO];
+		[self setViewOnly:      NO];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(profileListUpdate:)
@@ -107,9 +107,9 @@
 	return _fullscreen;
 }
 
-- (bool)listenOnly
+- (bool)viewOnly
 {
-	return _listenOnly;
+	return _viewOnly;
 }
 
 - (NSString*)lastProfile
@@ -198,9 +198,9 @@
 														object:self];
 }
 
-- (void)setListenOnly: (bool)listenOnly
+- (void)setViewOnly: (bool)viewOnly
 {
-	_listenOnly = listenOnly;
+	_viewOnly = viewOnly;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -254,7 +254,7 @@
 	[self setDisplay:[server display]];
 	[self setShared:[server shared]];
 	[self setFullscreen:[server fullscreen]];
-	[self setListenOnly:[server listenOnly]];
+	[self setViewOnly:[server viewOnly]];
 	[self setLastProfile:[server lastProfile]];
 }
 

@@ -63,7 +63,7 @@
 			[self setDisplay:          [[propertyDict objectForKey:@"display"] intValue]];
 			[self setShared:           [[propertyDict objectForKey:@"shared"] boolValue]];
 			[self setFullscreen:       [[propertyDict objectForKey:@"fullscreen"] boolValue]];
-			[self setListenOnly:       [[propertyDict objectForKey:@"listenOnly"] boolValue]];
+			[self setViewOnly:         [[propertyDict objectForKey:@"viewOnly"] boolValue]];
 			[self setLastProfile:       [propertyDict objectForKey:@"lastProfile"]];
 		}
 	}
@@ -88,7 +88,7 @@
 		[NSNumber numberWithInt:_display],				[NSString stringWithString:@"display"],
 		[NSNumber numberWithBool:_shared],				[NSString stringWithString:@"shared"],
 		[NSNumber numberWithBool:_fullscreen],			[NSString stringWithString:@"fullscreen"],
-		[NSNumber numberWithBool:_listenOnly],          [NSString stringWithString:@"listenOnly"], 
+		[NSNumber numberWithBool:_viewOnly],          [NSString stringWithString:@"viewOnly"], 
 		_lastProfile,									[NSString stringWithString:@"lastProfile"],
 		nil,											nil];
 

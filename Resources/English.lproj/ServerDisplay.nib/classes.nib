@@ -26,10 +26,10 @@
                 addServerChanged = id; 
                 connectToServer = id; 
                 fullscreenChanged = id; 
-                listenOnlyChanged = id; 
                 profileSelectionChanged = id; 
                 rememberPwdChanged = id; 
                 sharedChanged = id; 
+                viewOnlyChanged = id; 
             }; 
             CLASS = ServerDataViewController; 
             LANGUAGE = ObjC; 
@@ -41,12 +41,12 @@
                 display = NSTextField; 
                 fullscreen = NSButton; 
                 hostName = NSTextField; 
-                listenOnly = NSButton; 
                 password = NSTextField; 
                 profilePopup = NSPopUpButton; 
                 rememberPwd = NSButton; 
                 save = NSButton; 
                 shared = NSButton; 
+                viewOnly = NSButton; 
             }; 
             SUPERCLASS = NSWindowController; 
         }

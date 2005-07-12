@@ -50,7 +50,7 @@ typedef enum
 - (int)display;
 - (bool)shared;
 - (bool)fullscreen;
-- (bool)listenOnly;
+- (bool)viewOnly;
 - (NSString*)lastProfile;
 - (bool)addToServerListOnConnect;
 
@@ -61,7 +61,7 @@ typedef enum
 - (void)setDisplay: (int)display;
 - (void)setShared: (bool)shared;
 - (void)setFullscreen: (bool)fullscreen;
-- (void)setListenOnly: (bool)listenOnly;
+- (void)setViewOnly: (bool)viewOnly;
 - (void)setLastProfile: (NSString*)lastProfile;
 - (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
 

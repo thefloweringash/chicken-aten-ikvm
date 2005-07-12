@@ -136,7 +136,7 @@
 - (int) serverMinorVersion;
 - (NSString*)password;
 - (BOOL)connectShared;
-- (BOOL)listenOnly;
+- (BOOL)viewOnly;
 - (NSRect)visibleRect;
 - (id)frameBuffer;
 - (NSWindow *)window;

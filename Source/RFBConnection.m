@@ -484,9 +484,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     return [server_ shared];
 }
 
-- (BOOL)listenOnly
+- (BOOL)viewOnly
 {
-	return [server_ listenOnly];
+	return [server_ viewOnly];
 }
 
 - (NSRect)visibleRect

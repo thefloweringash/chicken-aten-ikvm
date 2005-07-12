@@ -152,7 +152,7 @@
 		else if ([arg hasPrefix:@"--FullScreen"])
 			[cmdlineServer setFullscreen: YES];
 		else if ([arg hasPrefix:@"--Listen"])
-			[cmdlineServer setListenOnly: YES];
+			[cmdlineServer setViewOnly: YES];
 		else if ([arg hasPrefix:@"--Profile"])
 		{
 			if (i + 1 >= argCount) [self cmdlineUsage];

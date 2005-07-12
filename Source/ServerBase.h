@@ -30,7 +30,7 @@
 	int       _display;
 	bool      _shared;
 	bool      _fullscreen;
-	bool      _listenOnly;	
+	bool      _viewOnly;	
 	NSString* _lastProfile;
 	id<IServerDataDelegate> _delegate;
 }
@@ -51,7 +51,7 @@
 - (int)display;
 - (bool)shared;
 - (bool)fullscreen;
-- (bool)listenOnly;
+- (bool)viewOnly;
 - (NSString*)lastProfile;
 - (bool)addToServerListOnConnect;
 
@@ -62,7 +62,7 @@
 - (void)setDisplay: (int)display;
 - (void)setShared: (bool)shared;
 - (void)setFullscreen: (bool)fullscreen;
-- (void)setListenOnly: (bool)listenOnly;
+- (void)setViewOnly: (bool)viewOnly;
 - (void)setLastProfile: (NSString*)lastProfile;
 - (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
 

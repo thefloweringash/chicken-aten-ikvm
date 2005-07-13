@@ -52,10 +52,6 @@
 // jason added a check for Jaguar
 BOOL gIsJaguar;
 
-// autoReconnect
-BOOL	autoReconnect;
-
-#define UMLAUTE			'u'
 
 @implementation RFBConnection
 
@@ -132,9 +128,6 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	
 	[standardUserDefaults registerDefaults: dict];
 	gIsJaguar = [NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)];
-	
-	// Need to make sure these get set somewhere
-	autoReconnect = NO;
 }
 
 
@@ -337,7 +330,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		[_eventFilter sendAllPendingQueueEntriesNow];
 
         if(aReason) {
-			if (autoReconnect) {
+			if ( _autoReconnect ) {
 				// Just auto-reconnect (by reinstantiating ourselves)
 				[_owner createConnectionWithServer:server_ profile:_profile owner:_owner];
 				// And ending (by falling through)
@@ -487,7 +480,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     rfbProtocol = [[RFBProtocol alloc] initTarget:self serverInfo:info];
     [rfbProtocol setFrameBuffer:frameBuffer];
     [self setReader:rfbProtocol];
-	[self setReconnectTimer];
+	[self startReconnectTimer];
 }
 
 - (id)connectionHandle
@@ -1267,30 +1260,31 @@ static NSString* byteString(double d)
 - (void)resetReconnectTimer
 {
 //	NSLog(@"resetReconnectTimer called.\n");
-	[reconnectTimer invalidate];
-	[reconnectTimer release];
-	reconnectTimer = nil;
+	[_reconnectTimer invalidate];
+	[_reconnectTimer release];
+	_reconnectTimer = nil;
 }
 
-- (void)setReconnectTimer
+- (void)startReconnectTimer
 {
 //	NSLog(@"setReconnectTimer called.\n");
-	float timeout = 30; // time for valid connection before reconnect
 	[self resetReconnectTimer];
-	// If there is no reconnect seconds, we do nothing, thus disabling autoreconnect.
-	if (!timeout) {
-		autoReconnect = NO;
+
+	if ( ! [[PrefController sharedController] autoReconnect] )
 		return;
-	}
-	reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:timeout target:self selector:@selector(reconnectTimerTimeout:) userInfo:nil repeats:NO] retain];
+	
+	NSTimeInterval timeout = [[PrefController sharedController] intervalBeforeReconnect];
+	if ( 0.0 == timeout )
+		_autoReconnect = YES;
+	else
+		_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:timeout target:self selector:@selector(reconnectTimerTimeout:) userInfo:nil repeats:NO] retain];
 }
 
 - (void)reconnectTimerTimeout:(id)sender
 {
 //	NSLog(@"reconnectTimerTimeout called.\n");
 	[self resetReconnectTimer];
-	autoReconnect = YES;
+	_autoReconnect = YES;
 }
-
 	
 @end

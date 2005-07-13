@@ -24,6 +24,9 @@ NSString *kPrefs_OtherFrameBufferUpdateSeconds_Key = @"OtherFrameBufferUpdateSec
 NSString *kPrefs_HostInfo_Key = @"HostPreferences";
 NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 NSString *kPrefs_Version_Key = @"Version";
+NSString *kPrefs_AutoReconnect_Key = @"AutoReconnect";
+NSString *kPrefs_IntervalBeforeReconnect_Key = @"IntervalBeforeReconnect";
+
 
 // Note: Preference Keys that start with "Listener"
 // are defined and used in ListenerController

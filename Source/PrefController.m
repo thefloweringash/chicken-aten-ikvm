@@ -45,6 +45,8 @@ static int const kPrefsVersion = 0x00000001;
 		[NSNumber numberWithBool: NO],			kPrefs_UseRendezvous_Key,
 		[NSNumber numberWithFloat: 0],			kPrefs_FrontFrameBufferUpdateSeconds_Key,
 		[NSNumber numberWithFloat: 0.9],		kPrefs_OtherFrameBufferUpdateSeconds_Key, 
+		[NSNumber numberWithBool: YES],			kPrefs_AutoReconnect_Key, 
+		[NSNumber numberWithDouble: 30.0],		kPrefs_IntervalBeforeReconnect_Key, 
 		nil,									nil];
 	
 	// create the encodings for the default profile
@@ -226,6 +228,14 @@ static int const kPrefsVersion = 0x00000001;
 
 - (void)setProfileDict: (NSDictionary *)dict
 {  [[NSUserDefaults standardUserDefaults] setObject: dict forKey: kPrefs_ConnectionProfiles_Key];  }
+
+
+- (BOOL)autoReconnect
+{  return [[NSUserDefaults standardUserDefaults] boolForKey: kPrefs_AutoReconnect_Key];  }
+
+
+- (NSTimeInterval)intervalBeforeReconnect
+{  return [[NSUserDefaults standardUserDefaults] floatForKey: kPrefs_IntervalBeforeReconnect_Key];  }
 
 
 #pragma mark -

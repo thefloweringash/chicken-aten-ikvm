@@ -78,7 +78,8 @@
     NSString *realDisplayName;
     NSString *host;
 	
-    NSTimer *reconnectTimer;
+    NSTimer *_reconnectTimer;
+	BOOL _autoReconnect;
 
 	id _owner; // jason added for fullscreen display
 	BOOL _isFullscreen; // jason added for fullscreen display
@@ -176,7 +177,7 @@
 
 // For autoReconnect
 - (void)resetReconnectTimer;
-- (void)setReconnectTimer;
+- (void)startReconnectTimer;
 - (void)reconnectTimerTimeout:(id)sender;
 
 @end

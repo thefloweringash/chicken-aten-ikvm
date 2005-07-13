@@ -23,6 +23,8 @@ extern NSString *kPrefs_OtherFrameBufferUpdateSeconds_Key;
 extern NSString *kPrefs_HostInfo_Key;
 extern NSString *kPrefs_LastHost_Key;
 extern NSString *kPrefs_Version_Key;
+extern NSString *kPrefs_AutoReconnect_Key;
+extern NSString *kPrefs_IntervalBeforeReconnect_Key;
 
 
 @interface PrefController (Private)

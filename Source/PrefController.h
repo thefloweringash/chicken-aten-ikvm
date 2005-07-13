@@ -41,6 +41,8 @@
 - (NSDictionary *)profileDict;
 - (NSDictionary *)defaultProfileDict;
 - (void)setProfileDict: (NSDictionary *)dict;
+- (BOOL)autoReconnect;
+- (NSTimeInterval)intervalBeforeReconnect;
 
 	// Preferences Window
 - (void)showWindow;

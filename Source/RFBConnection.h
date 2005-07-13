@@ -72,12 +72,14 @@
     id optionPanel;
     id infoField;
     Profile *_profile;
-
-    BOOL updateRequested;				// Has someone already requested an update?
+		
+    BOOL	updateRequested;	// Has someone already requested an update?
     
     NSString *realDisplayName;
     NSString *host;
 	
+    NSTimer *reconnectTimer;
+
 	id _owner; // jason added for fullscreen display
 	BOOL _isFullscreen; // jason added for fullscreen display
 	NSRect _windowedFrame; // jason added for fullscreen display
@@ -171,5 +173,10 @@
 - (float)frameBufferUpdateSeconds;
 - (void)setFrameBufferUpdateSeconds: (float)seconds;
 - (void)manuallyUpdateFrameBuffer: (id)sender;
+
+// For autoReconnect
+- (void)resetReconnectTimer;
+- (void)setReconnectTimer;
+- (void)reconnectTimerTimeout:(id)sender;
 
 @end

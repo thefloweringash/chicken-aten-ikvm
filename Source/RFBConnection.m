@@ -52,6 +52,9 @@
 // jason added a check for Jaguar
 BOOL gIsJaguar;
 
+// autoReconnect
+BOOL	autoReconnect;
+
 #define UMLAUTE			'u'
 
 @implementation RFBConnection
@@ -129,6 +132,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	
 	[standardUserDefaults registerDefaults: dict];
 	gIsJaguar = [NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)];
+	
+	// Need to make sure these get set somewhere
+	autoReconnect = NO;
 }
 
 
@@ -317,6 +323,9 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     if(!terminating) {		
         terminating = YES;
 
+		// Ignore our timer (It's invalid)
+		[self resetReconnectTimer];
+
 		if (_isFullscreen)
 			[self makeConnectionWindowed: self];
 		
@@ -328,11 +337,19 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 		[_eventFilter sendAllPendingQueueEntriesNow];
 
         if(aReason) {
-			NSString *header = NSLocalizedString( @"ConnectionTerminated", nil );
-			NSString *okayButton = NSLocalizedString( @"Okay", nil );
-			NSString *reconnectButton = NSLocalizedString( @"Reconnect", nil );
-			NSBeginAlertSheet(header, okayButton, [server_ doYouSupport:CONNECT] ? reconnectButton : nil, nil, window, self, @selector(connectionTerminatedSheetDidEnd:returnCode:contextInfo:), nil, nil, aReason);
-			return;
+			if (autoReconnect) {
+				// Just auto-reconnect (by reinstantiating ourselves)
+				[_owner createConnectionWithServer:server_ profile:_profile owner:_owner];
+				// And ending (by falling through)
+			}
+			else {
+				// Ask what to do
+				NSString *header = NSLocalizedString( @"ConnectionTerminated", nil );
+				NSString *okayButton = NSLocalizedString( @"Okay", nil );
+				NSString *reconnectButton =  NSLocalizedString( @"Reconnect", nil );
+				NSBeginAlertSheet(header, okayButton, [server_ doYouSupport:CONNECT] ? reconnectButton : nil, nil, window, self, @selector(connectionTerminatedSheetDidEnd:returnCode:contextInfo:), nil, nil, aReason);
+				return;
+			}
         }
 
 		[self connectionHasTerminated];
@@ -387,6 +404,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     NSRect wf;
 	NSRect screenRect;
 	NSClipView *contentView;
+	NSString *serverName;
 
     frameBufferClass = [[PrefController sharedController] defaultFrameBufferClass];
 	[frameBuffer autorelease];
@@ -421,8 +439,14 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 	// not an integer, so we use the floor() function.
 	wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf))/2 + NSMinX(screenRect));
 	wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf))*2/3 + NSMinY(screenRect));
+	
+	serverName = [server_ name];
+	if(![window setFrameUsingName:serverName]) {
+		// NSLog(@"Window did NOT have an entry: %@\n", serverName);
+		[window setFrame:wf display:NO];
+	}
+	[window setFrameAutosaveName:serverName];
 
-    [window setFrame:wf display:NO];
 	contentView = [scrollView contentView];
     [contentView scrollToPoint: [contentView constrainScrollPoint: NSMakePoint(0.0, aSize.height - [scrollView contentSize].height)]];
     [scrollView reflectScrolledClipView: contentView];
@@ -463,6 +487,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
     rfbProtocol = [[RFBProtocol alloc] initTarget:self serverInfo:info];
     [rfbProtocol setFrameBuffer:frameBuffer];
     [self setReader:rfbProtocol];
+	[self setReconnectTimer];
 }
 
 - (id)connectionHandle
@@ -1238,4 +1263,34 @@ static NSString* byteString(double d)
 	[self _queueUpdateRequest];
 }
 
+// Timers for connection
+- (void)resetReconnectTimer
+{
+//	NSLog(@"resetReconnectTimer called.\n");
+	[reconnectTimer invalidate];
+	[reconnectTimer release];
+	reconnectTimer = nil;
+}
+
+- (void)setReconnectTimer
+{
+//	NSLog(@"setReconnectTimer called.\n");
+	float timeout = 30; // time for valid connection before reconnect
+	[self resetReconnectTimer];
+	// If there is no reconnect seconds, we do nothing, thus disabling autoreconnect.
+	if (!timeout) {
+		autoReconnect = NO;
+		return;
+	}
+	reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:timeout target:self selector:@selector(reconnectTimerTimeout:) userInfo:nil repeats:NO] retain];
+}
+
+- (void)reconnectTimerTimeout:(id)sender
+{
+//	NSLog(@"reconnectTimerTimeout called.\n");
+	[self resetReconnectTimer];
+	autoReconnect = YES;
+}
+
+	
 @end

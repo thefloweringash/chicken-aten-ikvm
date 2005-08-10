@@ -331,6 +331,7 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 
         if(aReason) {
 			if ( _autoReconnect ) {
+                NSLog(@"Automatically reconnecting to server.  The connection was closed because: \"%@\".", aReason);
 				// Just auto-reconnect (by reinstantiating ourselves)
 				[_owner createConnectionWithServer:server_ profile:_profile owner:_owner];
 				// And ending (by falling through)
@@ -1267,7 +1268,7 @@ static NSString* byteString(double d)
 
 - (void)startReconnectTimer
 {
-//	NSLog(@"setReconnectTimer called.\n");
+//	NSLog(@"startReconnectTimer called.\n");
 	[self resetReconnectTimer];
 
 	if ( ! [[PrefController sharedController] autoReconnect] )

@@ -56,6 +56,11 @@
 	return NO;
 }
 
+- (NSString *)name
+{
+    return NSLocalizedString(@"RFBUntitledServerName", nil);
+}
+
 - (bool)addToServerListOnConnect
 {
 	return mAddToServerListOnConnect;

@@ -33,7 +33,7 @@
 
 	<p class="smallImportant">Note:  If you have used a version of Chicken of the VNC prior to 1.3, you will need to either delete your preferences (in ~/Library/Preferences/com.geekspiff.chickenofthevnc.plist), or reset the modifier key mappings in all of your stored profiles.  If you wish, you may also delete the "Chicken of the VNC" folder in your preferences, as it is no longer used.</p>
 
-	<p>Use it just like any other VNC client - enter the address of a working VNC server, the display number (or port) and your password and rock'n'roll...</p>
+	<p>Use it just like any other VNC client - enter the address of a working VNC server (you can use <em>host:ip</em> notation if you wish), the display number and your password and rock'n'roll...</p>
 
 	<div class="ss"><img src="connect.jpg" width="356" height="227" alt="Connection Dialog" /></div>
 	
@@ -42,11 +42,11 @@
 
 		<li><span class="item">Host:</span>  The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You may optionally specify a port number here by appending it with a colon (like myserver.com:5900).  You must be able to "ping" the host to connect to it.</li>
 
-		<li><span class="item">Display:</span>  The display number for the connection.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
+		<li><span class="item">Display:</span>  The display number for the connection.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on either your computer or on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
 
-		<li><span class="item">Password:</span>  The password needed to connect to the server running at the specified host and display.  If Remember Password was checked, this will be fetched from your keychain after you've entered it initially.</li>
+		<li><span class="item">Password:</span>  The password needed to connect to the server running at the specified host and display.  If Remember Password was checked, this will be fetched from your Mac OS X Keychain after you've entered it initially.</li>
 
-		<li><span class="item">Remember Password:</span>  If checked, the password will be stored in your Keychain and remembered for later use.</li>
+		<li><span class="item">Remember Password:</span>  If checked, the password will be stored in your Mac OS X Keychain and remembered for later use.</li>
 
 		<li><span class="item">Profile:</span>  The connection profile to use when connecting to this server.  See the section below for more info about connection profiles.</li>
 	
@@ -61,11 +61,24 @@
 </div>
 
 <div class="section">
+	<h1>More About Connections</h1>
+	
+	<p>The Chicken supports server autodiscovery using Bonjour (formerly known as Rendezvous).  To enable it, select the <strong>Use Bonjour</strong> item in Chicken's application menu.  Servers that advertise themselves using Bonjour will automatically show up in your bookmarks window!</p>
+	
+	<p>If you wish to connect to a server without using bookmarks, just choose <strong>New Connection</strong> from the <strong>File</strong> menu.  Of course, if you decide that you want to bookmark the server, you can always check the "Save Server" button before you connect.</p>
+	
+	<p>You can get back to the bookmarks window you saw when you launched Chicken of the VNC by selecting <strong>Open Connection</strong> from the <strong>File</strong> menu.</p>
+	
+	<p>You can connect to a server that is behind a firewall by using a listening connection.  Choose <strong>Listen for Server</strong> from the <strong>File</strong> menu and then set the VNC server up to initiate a listening connection to your client machine.</p>
+	
+</div>
+
+<div class="section">
 	<h1>Using Connection Profiles</h1>
 	
 	<p>You can use profiles to store settings for an individual VNC server or for a class of servers.  For example, you might want to use full-color display for a server that is on your local area network, but drop down to 8-bit display for a remote machine.</p>
 
-	<p>You can also use profiles to specify your default encoding.  VNC operates by transferring an image of the screen from the server to the client.  This obviously requires lots of bandwidth.  The better the encoding that you use to transfer this information, the less "lag" you'll experience while using the Chicken.</p>
+	<p>You can also use profiles to specify your default encoding.  VNC operates by transferring an image of the screen from the server to the client.  This obviously requires lots of bandwidth.  The better the encoding that you use to transfer this information, the less "lag" you'll experience while using the Chicken.  Unfortunately, encodings that require less bandwidth also require more CPU utilization on both the server and client computers, so you may need to experience to find the encoding that's right for your situation.</p>
 
 	<p class="noMargin">The different encodings are (in rough order of efficiency)<br/>
 	<ul id="encodingList">
@@ -82,7 +95,7 @@
 	<div class="ss"><img src="profiles1.jpg" width="386" height="253" alt="Profile Dialog" /></div>
 
 	<ul class="explanation">
-		<li><span class="item">Profiles:</span>  A list of profiles that are available to use for your connections.  Add a new profile by typing its name below the list and pressing <strong>New</strong>.  Remove a profile other than the default by selecting it and pressing the <strong>Delete</strong> button.  The information in the remainder of the window belongs to the selected profile.</li>
+		<li><span class="item">Profiles:</span>  A list of profiles that are available to use for your connections.  Add a new profile by typing its name below the list and pressing <strong>New</strong>.  Remove a profile other than the default one by selecting it and pressing the <strong>Delete</strong> button.  The information in the remainder of the window belongs to the selected profile.</li>
 
 		<li><span class="item">Encodings:</span>  The encoding to use for the connection.  Encodings are described above.  You can <strong>drag encodings</strong> to change your preferred encoding - the top one is tried first, and subsequent ones are tried until one is found that is supported by your server.  To disable an encoding, uncheck it.  <strong>CopyRect Encoding</strong> is an optimization that's useful in some situations.  If you're connecting to a very old server, you may wish to turn it off, but we haven't run across any situations where it isn't supported.</li>
 	</ul>
@@ -135,9 +148,9 @@
 <div class="section">
 	<h1>How 'Bout Command-Option-Escape, Control-Alt-Delete and Other Strange Combos?</h1>
 	
-	<p>You can force-quit applications on a remote Macintosh by sending the CMD-OPT-ESC keystroke from the "Connection" menu's "Special Keys" submenu.</p>
+	<p>You can force-quit applications on a remote Macintosh by sending the CMD-OPT-ESC keystroke from the <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu.</p>
 
-	<p>Likewise, Windows machines commonly use the CTRL-ALT-DEL keystroke.  You can send this keystroke by choosing "Send Ctrl-Alt-Del" from the "Connection" menu's "Special Keys" submenu.  If you'd prefer to type the keystroke, you can do this by simply hitting the keys that map to it.  In the default configuration, this is CTRL-CMD-DEL (the CMD key is also referred to as the Apple key).</p>
+	<p>Likewise, Windows machines commonly use the CTRL-ALT-DEL keystroke.  You can send this keystroke by choosing <strong>Send Ctrl-Alt-Del</strong> from the <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu.  If you'd prefer to type the keystroke, you can do this by simply hitting the keys that map to it.  In the default configuration, this is CTRL-CMD-DEL (the CMD key is also referred to as the Apple key).</p>
 	
 	<p>On machines that don't have a DEL key (such as recent PowerBooks and iBooks), you can use the function key and the ordinary delete key.  In the default configuration, you would use CTRL-CMD-FN-DELETE.</p>
 
@@ -145,7 +158,17 @@
 
 	<p>You can see additional uses for the Function key on <a href="http://developer.apple.com/documentation/Hardware/Developer_Notes/Macintosh_CPUs-G4/17inchPowerBookG4/3Input-Output/chapter_4_section_11.html" target="_blank">Apple's Laptop Technical Pages</a>.</p>
 	
-	<p>The "Connection" menu's "Special Keys" submenu has several other commonly used keystrokes that are not found on Macintosh keyboards.</p>
+	<p>The <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu has several other commonly used keystrokes that are not found on Macintosh keyboards.</p>
+</div>
+
+<div class="section">
+	<h1>Command Line Usage</h1>
+	
+	<p>You can use Chicken by calling it from the command line.  To do this, you should 'cd' to the location of Chicken of the VNC.  Then, do the following:</p>
+	<p style="margin-left: 2em;"><code>cd Chicken\ of\ the\ VNC.app/Contents/MacOS/<br />
+	./Chicken\ of\ the\ VNC</code></p>
+	
+	<p>To get help on command line invocation, add "--help" to the invocation.</p>
 </div>
 
 <div class="section">
@@ -183,7 +206,6 @@
 	
 	<ul>
 		<li>It is not possible to auto-scroll diagonally in full-screen mode, only horizontally or vertically.</li>
-		<li>Modifier keys such as cmd, option, etc. may be in a strange state after switching in or out of full-screen mode.</li>
 		<li>Window size may be incorrect after switching out of fullscreen mode.</li>
 		<li>A server window smaller than the client screen is not centered in fullscreen mode.</li>
 	</ul>
@@ -201,6 +223,45 @@
 	
 	<div id="versionHistory">
 	<dl>
+		<dt>Version 2.0b3 (<span style="color:red">unreleased</span>)</dt>
+		<dd><ul>
+			<li><dl>
+				<dt>New Features</dt>
+				<dd><ul>
+					<li>- Reimplemented mouse button emulation and added new options to either turn off emulation for a particular mouse button, emulate when holding a modifier key and clicking the left button, emulate when tapping a modifier key multiple times, or emulate when tapping a modifier key quickly and then clicking the left button.</li>
+					<li>- Added VNC view-only mode, used for watching a server without interacting with it.</li>
+					<li>- Added VNC listening mode, used for connecting to a server that is behind a firewall.</li>
+					<li>- Added menu commands to send cmd-option-escape, Insert, Delete, Pause, Break, Print and Execute keystrokes.</li>
+					<li>- Added a "New Connection..." menu item allows you to connect to a server without having to use a server in the server list.</li>
+					<li>- It's now possible to set bookmarked connections to always open in fullscreen mode.</li>
+					<li>- Settings for servers discovered via Bonjour are now saved when Chicken closes.</li>
+					<li>- Bonjour server discovery now looks for _rfb._tcp as well as the previous _vnc._tcp.</li>
+					<li>- It's now possible to explicitly specify a port number rather than a display number, either via the user interface or from the command line.</li>
+					<li>- Added French localization courtesy of Pascal Frey.</li>
+					<li>- Added Italian localization courtesy of Claudio Santucci.</li>
+					<li>- The server list in the Open Connection panel is now displayed in alphabetical order.</li>
+					<li>- Chicken now handles urls of type vnc:// and rfb://.</li>
+					<li>- Minimized connection windows no longer show a generic VNC icon.</li>
+					<li>- Connection windows now remember their size and location.</li>
+					<li>- Dropped connections now attempt to auto-reconnect.</li>
+				</ul></dd>
+				<dt>Bug Fixes</dt>
+				<dd><ul>
+					<li>- Resolved compatibility issues with Apple Remote Desktop 2.2.</li>
+					<li>- The 'F1' key is now transmitted to servers correctly.</li>
+					<li>- Improved handling of double and triple clicks.  They now work reliably.</li>
+					<li>- Colors are no longer mapped improperly when using millions of colors mode.</li>
+					<li>- Resolved an issue that caused error messages when connecting to TightVNC.</li>
+					<li>- Resolved issues that caused connections to die with the message "Unknown rectangle encoding" or "Inflate error".</li>
+					<li>- Resolved issues with pasting text to the remote machine.</li>
+					<li>- Window frames are now saved properly between launches.</li>
+					<li>- Resolved an issue that could cause a crash when using a Logitech mouse.</li>
+					<li>- The Set Title and Connection Information windows are now closed properly when a connection is closed.</li>
+					<li>- Rendezvous is now called Bonjour in the UI to fit new Apple naming conventions.</li>
+				</ul></dd>
+			</dl></li>
+		</ul></dd>
+
 		<dt>Version 2.0b2 (August 26, 2004)</dt>
 		<dd><ul>
 			<li>- Resolved a crash on startup that could occur in some situations when upgrading from 1.3.6.</li>
@@ -316,7 +377,7 @@
 </div>
 
 <div class="section">
-	<h1>Main Contributors</h1>
+	<h1>Primary Contributors</h1>
 	
 	<ul>
 		<li><span class="contributor">Jason Harris</span> &mdash; Project manager, port to Mac OS X, various code enhancements, documentation</li>
@@ -347,8 +408,8 @@
 
 <div id="footer">
 <p>VNCViewer Copyright &copy;1998-2000 Helmut Maierhofer<br/>
-Chicken of the VNC Copyright &copy;2002-2004 Geekspiff and Jason Harris<br/>
-This Readme Copyright &copy;2002-2004 Geekspiff and Jason Harris<br/>
+Chicken of the VNC Copyright &copy;2002-2005 Geekspiff and Jason Harris<br/>
+This Readme Copyright &copy;2002-2005 Geekspiff and Jason Harris<br/>
 All Rights Reserved</p>
 </div>
 

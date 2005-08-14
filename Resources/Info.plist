@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Chicken of the VNC</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Chicken of the VNC version __VERSION__, Copyright 2003, 2004 Geekspiff.</string>
+	<string>Chicken of the VNC version __VERSION__, Copyright 2002-2005 Geekspiff.</string>
 	<key>CFBundleIconFile</key>
 	<string>icon.icns</string>
 	<key>CFBundleIdentifier</key>

@@ -1271,6 +1271,8 @@ static NSString* byteString(double d)
 //	NSLog(@"startReconnectTimer called.\n");
 	[self resetReconnectTimer];
 
+    if ( terminating )
+        return;
 	if ( ! [[PrefController sharedController] autoReconnect] )
 		return;
 	

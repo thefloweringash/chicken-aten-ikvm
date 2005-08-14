@@ -27,6 +27,7 @@
 	bool mAddToServerListOnConnect;
 }
 
+- (NSString *)name;
 - (bool)addToServerListOnConnect;
 - (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
 

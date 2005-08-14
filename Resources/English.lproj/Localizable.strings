@@ -4,6 +4,7 @@
 
 // Servers
 "RFBDefaultServerName" = "New Server";
+"RFBUntitledServerName" = "Untitled Server";
 "Connecting..." = "Connecting...";
 
 // Error Actions

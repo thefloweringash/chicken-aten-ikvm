@@ -1,6 +1,11 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {"" = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
         {
             ACTIONS = {addServer = id; deleteSelectedServer = id; showConnectionDialog = id; }; 
             CLASS = RFBConnectionManager; 
@@ -24,6 +29,7 @@
                 profileSelectionChanged = id; 
                 rememberPwdChanged = id; 
                 sharedChanged = id; 
+                viewOnlyChanged = id; 
             }; 
             CLASS = ServerDataViewController; 
             LANGUAGE = ObjC; 
@@ -35,13 +41,12 @@
                 display = NSTextField; 
                 fullscreen = NSButton; 
                 hostName = NSTextField; 
-                mDelegate = id; 
-                mServer = id; 
                 password = NSTextField; 
                 profilePopup = NSPopUpButton; 
                 rememberPwd = NSButton; 
                 save = NSButton; 
                 shared = NSButton; 
+                viewOnly = NSButton; 
             }; 
             SUPERCLASS = NSWindowController; 
         }

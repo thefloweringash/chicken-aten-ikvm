@@ -64,7 +64,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>New Connection…</string>
+			<string>Nouvelle connection…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -80,7 +80,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Ecoute du serveur...</string>
+			<string>Ecoute du serveur…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>

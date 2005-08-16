@@ -250,7 +250,7 @@
 		E291FB22088168E20061216E /* QueuedEvent.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QueuedEvent.m; sourceTree = "<group>"; };
 		E2929DD307675DE800190669 /* MyApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyApp.h; sourceTree = "<group>"; };
 		E2929DD407675DE800190669 /* MyApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyApp.m; sourceTree = "<group>"; };
-		E2B0839C0763A51700CE24C1 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = English; path = Resources/English.lproj/KeyEquivalentScenarios.plist; sourceTree = "<group>"; };
+		E2B0839C0763A51700CE24C1 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = English; path = Resources/English.lproj/KeyEquivalentScenarios.plist; sourceTree = "<group>"; };
 		E2B083A30763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ServerDisplay.nib; sourceTree = "<group>"; };
 		E2B083A40763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
 		E2B083A50763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/RFBConnection.nib; sourceTree = "<group>"; };

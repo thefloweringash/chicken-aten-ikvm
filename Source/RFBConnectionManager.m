@@ -91,21 +91,26 @@
 	[serverCtrlerBox removeFromSuperview];
 	
     // figure out whether the size has changed in order to ease localization
-    NSSize originalSize = [serverDataBoxLocal bounds].size;
-    NSSize newSize = [serverCtrlerBox bounds].size;
+    NSSize originalSize = [serverDataBoxLocal frame].size;
+    NSSize newSize = [serverCtrlerBox frame].size;
     NSSize deltaSize = NSMakeSize( newSize.width - originalSize.width, newSize.height - originalSize.height );
     
 	// I'm hardcoding the border so that I can use a real border at design time so it can be seen easily
 	[serverDataBoxLocal setBorderType:NSNoBorder];
-    [serverDataBoxLocal setBoundsSize: newSize];
+    [serverDataBoxLocal setFrameSize: newSize];
 	[serverDataBoxLocal setContentView:serverCtrlerBox];
 	[serverCtrlerBox release];
 	
     // resize our window if necessary
     NSWindow *window = [serverDataBoxLocal window];
-    NSSize oldContentSize = [NSWindow contentRectForFrameRect: [window frame] styleMask: [window styleMask]].size;
-    NSSize newContentSize = NSMakeSize( oldContentSize.width + deltaSize.width, oldContentSize.height + deltaSize.height );
-    [window setContentSize: newContentSize];
+    NSRect oldFrame = [window frame];
+    NSSize newFrameSize = {oldFrame.size.width + deltaSize.width, oldFrame.size.height + deltaSize.height };
+    NSRect newFrame = { oldFrame.origin, newFrameSize };
+    NSView *contentView = [window contentView];
+    BOOL didAutoresize = [contentView autoresizesSubviews];
+    [contentView setAutoresizesSubviews: NO];
+    [window setFrame: newFrame display: NO];
+    [contentView setAutoresizesSubviews: didAutoresize];
 
     [serverListBox retain];
 	[serverListBox removeFromSuperview];

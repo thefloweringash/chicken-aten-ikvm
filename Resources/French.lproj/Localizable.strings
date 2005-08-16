@@ -1,12 +1,13 @@
-// Common Strings
-"Okay" = "Ok";
+/* Common Strings */
+"Okay" = "OK";
 "Cancel" = "Annuler";
 
-// Servers
+/* Servers */
 "RFBDefaultServerName" = "Nouveau serveur";
-"Connecting..." = "Connexion en cours...";
+"RFBUntitledServerName" = "Serveur sans titre";
+"Connecting..." = "Connexion en cours…";
 
-// Error Actions
+/* Error Actions */
 "OpenConnection" = "Ouvrir une connexion";
 "NoNamedServer" = "Impossible de trouver un serveur avec le nom \"%@\"";
 "NoConnection" = "Impossible de se connecter au serveur %@:%d";
@@ -15,30 +16,31 @@
 "AuthenticationFailed" = "Echec de l'authentification";
 "AuthenticationFailedTooMany" = "Echec de l'authentification (trop d'echecs)";
 "UnknownMessageType" = "Message de type inconnu %@\n";
-"ServerReports" = "Server Reports";
-"ARDAuthWarning" = "\nPlease configure ARD to allow VNC Viewers to control screen\n";
+"ServerReports" = "Le serveur a répondu";
+"ARDAuthWarning" = "\nVeuillez configurer Apple Remote Desktop pour autoriser les clients VNC à contrôler l'écran\n";
 
-// Profiles
+/* Profiles */
 "defaultProfileName" = "Profile par défaut";
 
-// Connection Terminated
+/* Connection Terminated */
 "ConnectionTerminated" = "Connexion interrompue";
 "Reconnect" = "Reconnecter";
 "ServerClosed" = "Le serveur a fermé la connexion";
 "ServerError" = "Ecrire au serveur: %s";
 
-// Fullscreen
+/* Fullscreen */
 "FullscreenHeader" = "Vous allez passer en mode plein écran";
 "Fullscreen" = "Plein écran";
 "FullscreenReason" = "Vous pouvez retourner en mode fenêtre en appellant le raccourci clavier à tout moment.  Vous pouvez changer ce raccourci clavier dans les préférences.";
 
-// Listener
+/* Listener */
 "listenStart" = "Démarrer";
 "listenStop" = "Arrêter";
 "listenRunning" = "En écoute";
 "listenStopped" = "Hors écoute";
 "listenAcceptMessage" = "Connexion depuis %@:%d";
 
-// Rendezvous
+/* Rendezvous */
 "AddressResolveFailed" = "Echec de la résolution d'adresse";
-"Resolving" = "Résolution d'adresse...";
+"Resolving" = "Résolution d'adresse…";
+

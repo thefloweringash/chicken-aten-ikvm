@@ -72,6 +72,8 @@
 
 - (void)loadProfileIntoView;
 
+- (void)setSaveCheckboxIsVisible:(BOOL)visible;
+
 @end
 
 @protocol ConnectionDelegate

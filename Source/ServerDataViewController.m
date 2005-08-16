@@ -117,9 +117,7 @@
 	{
 		if( NO == removedSaveCheckbox && NO == [mServer doYouSupport:ADD_SERVER_ON_CONNECT] )
 		{
-			removedSaveCheckbox = YES;
-			[save retain];
-			[save removeFromSuperview];
+            [self setSaveCheckboxIsVisible: NO];
 		}
 		
 		[hostName setEnabled: YES];
@@ -191,6 +189,23 @@
 	[profilePopup addItemsWithTitles:profileKeys];
 	
 	[self setProfilePopupToProfile: [mServer lastProfile]];
+}
+
+- (void)setSaveCheckboxIsVisible:(BOOL)visible
+{
+    if ( visible && removedSaveCheckbox )
+    {
+        removedSaveCheckbox = NO;
+        [[box contentView] addSubview: save];
+        [save release];
+    }
+    else if ( ! visible && ! removedSaveCheckbox )
+    {
+        removedSaveCheckbox = YES;
+        [save retain];
+        [save removeFromSuperview];
+        [(NSView *)[box contentView] display];
+    }
 }
 
 - (id<IServerData>)server
@@ -285,6 +300,8 @@
 
 - (IBAction)connectToServer:(id)sender
 {
+    BOOL saveCheckboxWasVisible = !removedSaveCheckbox;
+    [self setSaveCheckboxIsVisible: NO];
 	[connectIndicator startAnimation:self];
 	[connectIndicatorText setStringValue:NSLocalizedString(@"Connecting...", @"Connect in process notification string")];
 	[connectIndicatorText display];
@@ -294,6 +311,7 @@
 	[connectIndicator stopAnimation:self];
 	[connectIndicatorText setStringValue:@""];
 	[connectIndicatorText display];
+    [self setSaveCheckboxIsVisible: saveCheckboxWasVisible];
 	
 	if( YES == bConnectSuccess )
 	{

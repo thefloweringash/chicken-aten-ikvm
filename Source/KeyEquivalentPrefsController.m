@@ -27,7 +27,7 @@
 	[notif addObserver: self selector: @selector(textDidEndEditing:) name: NSTextDidEndEditingNotification object: mTextView];
 	[notif addObserver: self selector: @selector(textViewDidChangeSelection:) name: NSTextViewDidChangeSelectionNotification object: mTextView];
 	
-	[[KeyEquivalentManager defaultManager] loadScenarios];
+//	[[KeyEquivalentManager defaultManager] loadScenarios];
 //	[[KeyEquivalentManager defaultManager] loadFromMainMenuIntoScenarioNamed: kNonConnectionWindowFrontmostScenario];
 //	[[KeyEquivalentManager defaultManager] makeScenariosPersistant];
 // end DEBUGGING

@@ -6,7 +6,7 @@
 	<array>
 		<dict>
 			<key>Characters</key>
-			<string>~</string>
+			<string>|</string>
 			<key>Modifiers</key>
 			<integer>1835008</integer>
 			<key>Title</key>
@@ -17,7 +17,7 @@
 	<array>
 		<dict>
 			<key>Characters</key>
-			<string>~</string>
+			<string>|</string>
 			<key>Modifiers</key>
 			<integer>1835008</integer>
 			<key>Title</key>
@@ -164,7 +164,7 @@
 		</dict>
 		<dict>
 			<key>Characters</key>
-			<string>~</string>
+			<string>|</string>
 			<key>Modifiers</key>
 			<integer>1835008</integer>
 			<key>Title</key>

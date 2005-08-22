@@ -6,7 +6,7 @@
 	<array>
 		<dict>
 			<key>Characters</key>
-			<string>`</string>
+			<string>~</string>
 			<key>Modifiers</key>
 			<integer>1835008</integer>
 			<key>Title</key>
@@ -17,7 +17,7 @@
 	<array>
 		<dict>
 			<key>Characters</key>
-			<string>`</string>
+			<string>~</string>
 			<key>Modifiers</key>
 			<integer>1835008</integer>
 			<key>Title</key>
@@ -64,7 +64,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>New Connection…</string>
+			<string>Nuova Connessione…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -80,7 +80,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Open Listener…</string>
+			<string>Attendo il Server…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>

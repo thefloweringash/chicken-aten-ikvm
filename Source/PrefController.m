@@ -18,7 +18,7 @@
 
 
 // --- Preferences Version --- //
-static int const kPrefsVersion = 0x00000001;
+static int const kPrefsVersion = 0x00000002;
 
 
 @implementation PrefController
@@ -120,6 +120,12 @@ static int const kPrefsVersion = 0x00000001;
 			// update for 2.0b2
 			[self _updatePrefs_20b2];
 			prefsVersion = 0x00000001;
+		}
+		if ( 0x00000001 == prefsVersion )
+		{
+			// some menu items have changed
+			[defaults removeObjectForKey: @"KeyEquivalentScenarios"];
+			prefsVersion = 0x00000002;
 		}
 		
 		if ( badPrefsVersion )

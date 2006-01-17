@@ -58,7 +58,7 @@
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
-    return YES;
+    return NO;
 }
 
 - (BOOL)acceptsFirstResponder

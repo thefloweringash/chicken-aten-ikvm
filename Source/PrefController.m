@@ -42,7 +42,7 @@ static int const kPrefsVersion = 0x00000002;
 		[NSNumber numberWithBool: NO],			kPrefs_FullscreenScrollbars_Key,
 		[NSNumber numberWithInt: 128],			kPrefs_PSMaxRect_Key,
 		[NSNumber numberWithInt: 10000],		kPrefs_PSThreshold_Key,
-		[NSNumber numberWithBool: NO],			kPrefs_UseRendezvous_Key,
+		[NSNumber numberWithBool: YES],			kPrefs_UseRendezvous_Key,
 		[NSNumber numberWithFloat: 0],			kPrefs_FrontFrameBufferUpdateSeconds_Key,
 		[NSNumber numberWithFloat: 0.9],		kPrefs_OtherFrameBufferUpdateSeconds_Key, 
 		[NSNumber numberWithBool: YES],			kPrefs_AutoReconnect_Key, 

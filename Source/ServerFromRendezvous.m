@@ -166,7 +166,7 @@
 		assert( [[service_ addresses] count] > 0 );
 		
 		NSData* data = [[service_ addresses] objectAtIndex:0];
-		return ((struct sockaddr_in*)[data bytes])->sin_port;
+		return ntohs(((struct sockaddr_in*)[data bytes])->sin_port);
 	}
 	else
 	{

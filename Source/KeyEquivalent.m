@@ -129,7 +129,7 @@
 		}
 		if (newAttrString == nil)
 		{
-			NSString *newString = [[[NSString alloc] initWithBytes: &c length: sizeof(c) encoding: NSUnicodeStringEncoding] autorelease];
+			NSString *newString = [[[NSString alloc] initWithBytes: &c length: sizeof(c) encoding: [mCharacters fastestEncoding]] autorelease];
 			newAttrString = [[[NSMutableAttributedString alloc] initWithString: newString] autorelease];
 		}
 		[attrString appendAttributedString: newAttrString];

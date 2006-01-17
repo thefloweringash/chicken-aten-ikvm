@@ -39,7 +39,7 @@ typedef enum
 
 @protocol IServerDataDelegate;
 
-@protocol IServerData
+@protocol IServerData <NSObject>
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type;
 

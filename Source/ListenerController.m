@@ -168,7 +168,7 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     memset(&serverAddress, 0, sizeof(serverAddress));
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = htonl(local ? INADDR_LOOPBACK : INADDR_ANY);
-    serverAddress.sin_port = port;
+    serverAddress.sin_port = htons(port);
 
     if (
         setsockopt(fdForListening, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes))

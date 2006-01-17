@@ -471,6 +471,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 										 characterIgnoringModifiers: character
 														  timestamp: now];
 		[_pendingEvents addObject: event];
+		event = [QueuedEvent keyUpEventWithCharacter: character
+						  characterIgnoringModifiers: character
+										   timestamp: now];
+		[_pendingEvents addObject: event];
 	}
 	
 	[self sendAllPendingQueueEntriesNow];

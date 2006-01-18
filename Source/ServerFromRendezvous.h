@@ -38,7 +38,6 @@
 
 - (NSString*)host;
 - (NSString*)hostAndPort;
-- (int)port;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 

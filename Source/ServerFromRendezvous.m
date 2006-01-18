@@ -143,9 +143,17 @@
 		int i;
 		
 		for (i=0;i<[[service_ addresses] count];i++) {
-			struct in_addr sinAddr = ((struct sockaddr_in*)[[[service_ addresses] objectAtIndex:i] bytes])->sin_addr;
+            struct sockaddr_in *sockAddr = (struct sockaddr_in*)[[[service_ addresses] objectAtIndex:i] bytes];
+			struct in_addr sinAddr = sockAddr->sin_addr;
 			if (sinAddr.s_addr != 0)
+            {
+                _port = ntohs(sockAddr->sin_port);
+                if ( _port >= 5900 && _port <= 5909 )
+                    _display = _port - 5900;
+                else
+                    _display = 0;
 				return [NSString stringWithCString:inet_ntoa(sinAddr)];
+            }
 		}
 		return NSLocalizedString( @"AddressResolveFailed", nil );
 	}
@@ -156,21 +164,6 @@
 	else
 	{
 		return NSLocalizedString( @"Resolving", nil );
-	}
-}
-
-- (int)port
-{
-	if( bHasResolved )
-	{
-		assert( [[service_ addresses] count] > 0 );
-		
-		NSData* data = [[service_ addresses] objectAtIndex:0];
-		return ntohs(((struct sockaddr_in*)[data bytes])->sin_port);
-	}
-	else
-	{
-		return 0;
 	}
 }
 

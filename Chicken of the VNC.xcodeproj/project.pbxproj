@@ -228,7 +228,7 @@
 		E21FE262062B6D310059585C /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E21FE43D062B79AB0059585C /* KeyEquivalentScenario.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KeyEquivalentScenario.m; sourceTree = "<group>"; };
 		E21FE43E062B79AB0059585C /* KeyEquivalentEntry.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = KeyEquivalentEntry.h; sourceTree = "<group>"; };
-		E21FE43F062B79AB0059585C /* KeyEquivalent.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KeyEquivalent.m; sourceTree = "<group>"; };
+		E21FE43F062B79AB0059585C /* KeyEquivalent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyEquivalent.m; sourceTree = "<group>"; };
 		E21FE440062B79AB0059585C /* KeyEquivalent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = KeyEquivalent.h; sourceTree = "<group>"; };
 		E21FE441062B79AB0059585C /* KeyEquivalentEntry.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KeyEquivalentEntry.m; sourceTree = "<group>"; };
 		E21FE442062B79AB0059585C /* KeyEquivalentManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KeyEquivalentManager.m; sourceTree = "<group>"; };
@@ -1096,7 +1096,6 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -1131,12 +1130,9 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				MAC_OS_X_VERSION_MIN_REQUIRED = MAC_OS_X_VERSION_10_2;
-				OPTIMIZATION_CFLAGS = "-O3";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "Chicken of the VNC";
-				REMOVE_CVS_FROM_RESOURCES = YES;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -1146,7 +1142,6 @@
 				);
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.0b1;
 			};
 			name = Deployment;
 		};
@@ -1160,7 +1155,6 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				MAC_OS_X_VERSION_MIN_REQUIRED = MAC_OS_X_VERSION_10_2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "Chicken of the VNC";
@@ -1172,30 +1166,75 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = app;
-				_CHICKEN_VERSION_ = "$(_CHICKEN_VERSION_)";
 			};
 			name = Default;
 		};
 		E20426EB087531990026AA26 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_VERSION = 3.3;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.0b3;
+				_CHICKEN_VERSION_ = 2.0b4;
 			};
 			name = Development;
 		};
 		E20426EC087531990026AA26 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				_CHICKEN_VERSION_ = 2.0b4;
 			};
 			name = Deployment;
 		};
 		E20426ED087531990026AA26 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 0;
+				_CHICKEN_VERSION_ = 2.0b4;
 			};
 			name = Default;
+		};
+		E21DEC9C097EC77E00F015DE /* Universal, Fast Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Resources/Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "Chicken of the VNC";
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = "Universal, Fast Development";
+		};
+		E21DEC9D097EC77E00F015DE /* Universal, Fast Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.3.9.sdk;
+				ZERO_LINK = NO;
+				_CHICKEN_VERSION_ = 2.0b4;
+			};
+			name = "Universal, Fast Development";
 		};
 /* End XCBuildConfiguration section */
 
@@ -1204,21 +1243,23 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E20426E7087531990026AA26 /* Development */,
+				E21DEC9C097EC77E00F015DE /* Universal, Fast Development */,
 				E20426E8087531990026AA26 /* Deployment */,
 				E20426E9087531990026AA26 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken of the VNC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E20426EB087531990026AA26 /* Development */,
+				E21DEC9D097EC77E00F015DE /* Universal, Fast Development */,
 				E20426EC087531990026AA26 /* Deployment */,
 				E20426ED087531990026AA26 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

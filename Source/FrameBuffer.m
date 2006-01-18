@@ -342,6 +342,8 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 {
 	if ( forceServerBigEndian )
 		free( forceServerBigEndian );
+	if ( tightBytesPerPixelOverride )
+		free( tightBytesPerPixelOverride );
 	[super dealloc];
 }
 
@@ -393,6 +395,8 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 
 - (unsigned int)tightBytesPerPixel
 {
+	if ( tightBytesPerPixelOverride )
+		return *tightBytesPerPixelOverride;
     if((pixelFormat.bitsPerPixel == 32) &&
 		(pixelFormat.depth == 24) &&
         (pixelFormat.redMax == 0xff) &&
@@ -402,6 +406,14 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
     } else {
         return bytesPerPixel;
     }
+}
+
+/* --------------------------------------------------------------------------------- */
+- (void)setTightBytesPerPixelOverride: (unsigned int)count
+{
+	if ( ! tightBytesPerPixelOverride )
+		tightBytesPerPixelOverride = (unsigned int *)malloc(sizeof(unsigned int));
+	*tightBytesPerPixelOverride = count;
 }
 
 /* --------------------------------------------------------------------------------- */

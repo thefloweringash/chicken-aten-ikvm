@@ -18,6 +18,14 @@
 {
 	int i, y, samples, samplesPerByte, shift;
 	unsigned cPixelSize = [frameBuffer tightBytesPerPixel];
+	
+	// hack around UltraVN‚ 1.0.1, Chicken Bug #1351494
+	if ( 4 == cPixelSize )
+	{
+		[frameBuffer setTightBytesPerPixelOverride: 3];
+		cPixelSize = 3;
+	}
+	
 	unsigned char subEncoding, b;
 	FrameBufferPaletteIndex tileBuffer[TILE_HEIGHT * TILE_WIDTH];
 	FrameBufferPaletteIndex* current, *eol;

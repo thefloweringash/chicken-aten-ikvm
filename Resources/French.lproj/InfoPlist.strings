@@ -1,6 +1,6 @@
 /* Localized versions of Info.plist keys */
 
 CFBundleName = "Chicken of the VNC";
-CFBundleShortVersionString = "Chicken of the VNC version __VERSION__";
-CFBundleGetInfoString = "Chicken of the VNC version __VERSION__, Copyright 2002-2005 Geekspiff\nTraduction française par Pascal Frey";
-NSHumanReadableCopyright = "Copyright 2002-2005 Geekspiff\nTraduction française par Pascal Frey";
+CFBundleShortVersionString = "__VERSION__";
+CFBundleGetInfoString = "Chicken of the VNC version __VERSION__, Copyright 2002-2006 Geekspiff\nTraduction française par Pascal Frey";
+NSHumanReadableCopyright = "Copyright 2002-2006 Geekspiff\nTraduction française par Pascal Frey";

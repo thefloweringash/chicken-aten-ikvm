@@ -873,7 +873,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 {
 	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
 	int eventIndex, eventCount = [_pendingEvents count];
-	NSTimeInterval time1, time2;
+	NSTimeInterval time1 = 0, time2;
 	
 	for ( eventIndex = 0; eventIndex < eventCount; ++eventIndex )
 	{

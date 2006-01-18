@@ -1,14 +1,25 @@
-{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf110
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf230
 {\fonttbl\f0\fswiss\fcharset77 Helvetica-Bold;\f1\fswiss\fcharset77 Helvetica;}
 {\colortbl;\red255\green255\blue255;}
-\vieww9000\viewh8400\viewkind0
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f0\b\fs24 \cf0 Chicken Internal Version History\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\qc
 \cf0 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
-\cf0 2.0b3 (August 22, 2005)\
+\cf0 2.0b4 (January 18, 2006)\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b0 \cf0 - Chicken of the VNC is now a universal binary.\
+- Resolved an issue that caused an "ZLibHex unknown subencoding" error when using ZRLE encoding to connect to an UltraVNC server.\
+- Resolved an issue that caused pasting text to work incorrectly if the text contained repeating characters.\
+- Bonjour server discovery now works properly when the server uses a non-standard port or display number.\
+- Clicking an inactive connection window no longer passes that click through to the server.\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b \cf0 2.0b3 (August 22, 2005)\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
 
 \f1\b0 \cf0 - Window frames are now saved properly.\

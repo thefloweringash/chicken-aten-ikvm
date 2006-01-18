@@ -1193,7 +1193,7 @@
 			};
 			name = Default;
 		};
-		E21DEC9C097EC77E00F015DE /* Universal, Fast Development */ = {
+		E21DEC9C097EC77E00F015DE /* Universal Fast Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -1220,9 +1220,9 @@
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
-			name = "Universal, Fast Development";
+			name = "Universal Fast Development";
 		};
-		E21DEC9D097EC77E00F015DE /* Universal, Fast Development */ = {
+		E21DEC9D097EC77E00F015DE /* Universal Fast Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
@@ -1234,7 +1234,7 @@
 				ZERO_LINK = NO;
 				_CHICKEN_VERSION_ = 2.0b4;
 			};
-			name = "Universal, Fast Development";
+			name = "Universal Fast Development";
 		};
 /* End XCBuildConfiguration section */
 
@@ -1243,7 +1243,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E20426E7087531990026AA26 /* Development */,
-				E21DEC9C097EC77E00F015DE /* Universal, Fast Development */,
+				E21DEC9C097EC77E00F015DE /* Universal Fast Development */,
 				E20426E8087531990026AA26 /* Deployment */,
 				E20426E9087531990026AA26 /* Default */,
 			);
@@ -1254,7 +1254,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E20426EB087531990026AA26 /* Development */,
-				E21DEC9D097EC77E00F015DE /* Universal, Fast Development */,
+				E21DEC9D097EC77E00F015DE /* Universal Fast Development */,
 				E20426EC087531990026AA26 /* Deployment */,
 				E20426ED087531990026AA26 /* Default */,
 			);

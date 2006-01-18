@@ -36,7 +36,7 @@ if (!(condition)) return [self scriptError: (errno) description: \
 	[[RFBConnectionManager sharedManager] setLaunchedByURL:YES];
 	
     NSString *command = [[self commandDescription] commandName];
-    NSString *verb;
+    NSString *verb = nil;
     NSString *urlString = [self directParameter];
     NSURL *url;
     

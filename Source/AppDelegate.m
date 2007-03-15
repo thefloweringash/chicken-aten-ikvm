@@ -40,6 +40,11 @@
 	[[PrefController sharedController] showWindow];
 }
 
+- (BOOL) applicationShouldHandleReopen: (NSApplication *) app hasVisibleWindows: (BOOL) visibleWindows
+{
+	if(!visibleWindows) [self showConnectionDialog:nil];
+	return NO;
+}
 
 - (IBAction)changeRendezvousUse:(id)sender
 {

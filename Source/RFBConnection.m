@@ -191,7 +191,15 @@ static void socket_address(struct sockaddr_in *addr, NSString* host, int port)
 			return nil;
 		}
 		if(connect(sock, (struct sockaddr *)&remote, sizeof(remote)) < 0) {
-			NSString *actionStr = NSLocalizedString( @"NoConnection", nil );
+			NSString *actionStr;
+			switch( errno )
+			{
+				case EADDRNOTAVAIL:
+					actionStr = NSLocalizedString( @"NoNamedServer", nil );
+					break;
+				default:
+					actionStr = NSLocalizedString( @"NoConnection", nil );
+			}
 			actionStr = [NSString stringWithFormat:actionStr, host, port];
 			[self perror:actionStr call:@"connect()"];
 			[self release];

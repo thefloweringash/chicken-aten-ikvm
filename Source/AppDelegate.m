@@ -42,8 +42,13 @@
 
 - (BOOL) applicationShouldHandleReopen: (NSApplication *) app hasVisibleWindows: (BOOL) visibleWindows
 {
-	if(!visibleWindows) [self showConnectionDialog:nil];
-	return NO;
+	if(!visibleWindows)
+	{
+		[self showConnectionDialog:nil];
+		return NO;
+	}
+	
+	return YES;
 }
 
 - (IBAction)changeRendezvousUse:(id)sender

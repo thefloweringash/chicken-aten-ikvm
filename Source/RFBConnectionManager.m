@@ -340,6 +340,8 @@
     [aConnection autorelease];
     if ( mRunningFromCommandLine ) 
 		[NSApp terminate:self];
+	else if ( 0 == [connections count] )
+		[self showConnectionDialog:nil];
 }
 
 - (bool)connect:(id<IServerData>)server;

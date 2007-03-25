@@ -80,6 +80,9 @@
  *	_emulationButton:	The button number that mouse button #1 is currently being emulated as.  A mouse up
  *						event on button #1 will be mapped to a mouse up event on this button.
  *
+ *  _lastMousePoint:    Maintains the last unpublished mouse move. Mouse moves are cached and only sent to the
+ *                      server on a periodic basis so as not to flood the server with mouse moves.
+ *
  * When an event is received from the NSResponder, it is added to _pendingEvents.  Then, _pendingEvents 
  * is scanned to determine whether any action can be taken.  Things that might occur at this point are:
  *
@@ -127,6 +130,10 @@ typedef enum {
 	NSTimeInterval _tapAndClickButtonSpeed[2];
 	NSTimeInterval _tapAndClickTimeout[2];
 	NSTimer *_tapAndClickTimer;
+	
+	NSTimer *_mouseTimer;
+	NSPoint  _lastMousePoint;
+	bool     _unsentMouseMoveExists;
 }
 
 // Talking to the server
@@ -147,6 +154,8 @@ typedef enum {
 - (void)mouseDragged:(NSEvent *)theEvent;
 - (void)rightMouseDragged:(NSEvent *)theEvent;
 - (void)otherMouseDragged:(NSEvent *)theEvent;
+- (void)sendUnpublishedMouseMove;
+- (void)clearUnpublishedMouseMove;
 
 // Local Keyboard Events
 - (void)keyDown: (NSEvent *)theEvent;

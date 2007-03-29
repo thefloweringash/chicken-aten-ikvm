@@ -22,9 +22,10 @@
 #import "EncodingReader.h"
 #import <zlib.h>
 
-#undef	SUPPORT_JPEG
+#define SUPPORT_JPEG
+//#undef	SUPPORT_JPEG
 #ifdef SUPPORT_JPEG
-#import "/sw/include/jpeglib.h"
+#import "../libjpeg/jpeglib.h"
 #endif
 
 #define NUM_ZSTREAMS		4

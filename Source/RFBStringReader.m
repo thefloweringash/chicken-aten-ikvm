@@ -63,6 +63,12 @@
         free(buffer);
     }
     buffer = malloc(length);
+    
+    // - Prevent the DOS attack on http://www.securityfocus.com/archive/1/458907/100/0/threaded
+    
+    if (!buffer)
+        [NSException raise: NSGenericException format: @"Invalid computer name size sent by server, Chicken will bail out"];
+    
     [target setReaderWithoutReset:self];
     bytesRead = 0;
 }

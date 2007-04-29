@@ -69,7 +69,7 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 		if( YES == [[info objectForKey: kProfile_EnableCopyrect_Key] boolValue] ) {
 			numberOfEnabledEncodings = 2;
 			enabledEncodings[0] = rfbEncodingCopyRect;
-			enabledEncodings[1] = rfbEncodingQualityLevel4; // hardcoding in jpeg support, this should be a selection
+			enabledEncodings[1] = rfbEncodingQualityLevel6; // hardcoding in jpeg support, this should be a selection
 		} else {
 			numberOfEnabledEncodings = 0;
 		}

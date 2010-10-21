@@ -19,23 +19,32 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "ByteReader.h"
 #import "FrameBuffer.h"
 
-#define COLLECT_STATS	
+//#define COLLECT_STATS	
 
-@interface EncodingReader : ByteReader
+@class FrameBufferUpdateReader;
+@class RFBConnection;
+
+/* This represents a reader for a single encoding type of rectangles. */
+@interface EncodingReader : NSObject
 {
-    NSRect		frame;
-    id			frameBuffer;
-    unsigned		bytesTransferred;
+    FrameBufferUpdateReader *updater;
+    RFBConnection           *connection;
+    NSRect                  frame; // rectangle into which we should write
+    FrameBuffer			    *frameBuffer;
+//    unsigned                bytesTransferred;
 }
+
+- (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater
+           connection: (RFBConnection *)aConnection;
 
 - (void)setRectangle:(NSRect)aRect;
 - (void)setFrameBuffer:(id)aBuffer;
-- (id)rectangleList;
-- (NSRect)rectangle;
-- (FrameBuffer*)frameBuffer;
-- (unsigned)bytesTransferred;
+- (void)readEncoding;
+//- (id)rectangleList;
+//- (NSRect)rectangle;
+//- (FrameBuffer*)frameBuffer;
+//- (unsigned)bytesTransferred;
 
 @end

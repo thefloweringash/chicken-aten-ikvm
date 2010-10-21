@@ -21,33 +21,67 @@
 #import <AppKit/AppKit.h>
 #import "ByteReader.h"
 
-@interface FrameBufferUpdateReader : ByteReader
+@class ByteBlockReader;
+@class CopyRectangleEncodingReader;
+@class CoRREEncodingReader;
+@class CursorPseudoEncodingReader;
+@class DesktopNameEncodingReader;
+@class EncodingReader;
+@class HextileEncodingReader;
+@class RawEncodingReader;
+@class RFBConnection;
+@class RFBProtocol;
+@class RREEncodingReader;
+@class TightEncodingReader;
+@class ZlibEncodingReader;
+@class ZlibHexEncodingReader;
+@class ZRLEEncodingReader;
+
+/* Handles frame buffer update messages from the server, which form the crux of
+ * the RFB protocol. This message consists of a list of rectangles, and there is
+ * an instance variable for each encoding of a rectangle. */
+@interface FrameBufferUpdateReader : NSObject
 {
-    id	headerReader;
-    id	rectHeaderReader;
-    id	rawEncodingReader;
-    id	copyRectangleEncodingReader;
-    id	rreEncodingReader;
-    id	coRreEncodingReader;
-    id	hextileEncodingReader;
-    id	tightEncodingReader;
-	id	zlibEncodingReader;
-	id	zrleEncodingReader;
-	id	zlibHexEncodingReader;
-    id	connection;
+    ByteBlockReader	    *headerReader;
+    ByteBlockReader     *rectHeaderReader;
+
+    RawEncodingReader           *rawEncodingReader;
+    CopyRectangleEncodingReader *copyRectangleEncodingReader;
+    RREEncodingReader           *rreEncodingReader;
+    CoRREEncodingReader         *coRreEncodingReader;
+    HextileEncodingReader       *hextileEncodingReader;
+    TightEncodingReader         *tightEncodingReader;
+    ZlibEncodingReader          *zlibEncodingReader;
+    ZRLEEncodingReader          *zrleEncodingReader;
+    ZlibHexEncodingReader       *zlibHexEncodingReader;
+
+    DesktopNameEncodingReader   *desktopNameReader;
+    CursorPseudoEncodingReader  *cursorReader;
+
+    RFBConnection   *connection;
+    RFBProtocol     *protocol;
+    unsigned        bytesPerPixel;  // bytes per pixel in framebuffer
+
     NSRect currentRect;
     CARD16 numberOfRects;
-    double bytesTransferred;
+    NSMutableArray  *invalidRects;
+    NSSize resize;
+    BOOL shouldResize;
+    //double bytesTransferred;
     double bytesRepresented;
     double rectsTransferred;
 }
 
+- (id)initWithProtocol: (RFBProtocol *)aProtocol connection: (RFBConnection *)aConnection;
+
+- (void)readMessage;
 - (void)setFrameBuffer:(id)aBuffer;
 - (void)updateComplete;
+- (void)didRect:(EncodingReader*)aReader;
 
-- (double)compressRatio;
+//- (double)compressRatio;
 - (double)rectanglesTransferred;
-- (double)bytesTransferred;
+//- (double)bytesTransferred;
 - (double)bytesRepresented;
 
 @end

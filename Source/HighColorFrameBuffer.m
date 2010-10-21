@@ -43,7 +43,7 @@ typedef	unsigned short			FBColor;
 		bitsPerColor = 4;
 		[self setPixelFormat:theFormat];
 		sps = MIN((SCRATCHPAD_SIZE * sizeof(FBColor)), (aSize.width * aSize.height * sizeof(FBColor)));
-		pixels = malloc(aSize.width * aSize.height * sizeof(FBColor));
+		pixels = calloc(aSize.width * aSize.height, sizeof(FBColor));
 		scratchpad = malloc(sps);
 	}
     return self;

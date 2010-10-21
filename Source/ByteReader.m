@@ -44,11 +44,6 @@
     }
 }
 
-- (void)setReaderWithoutReset:(ByteReader*)aReader
-{
-    [target setReaderWithoutReset:aReader];
-}
-
 - (void)setReader:(ByteReader*)aReader
 {
     [target setReader:aReader];

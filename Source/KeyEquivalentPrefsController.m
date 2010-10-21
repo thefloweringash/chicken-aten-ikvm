@@ -17,6 +17,12 @@
 
 #pragma mark Creation/Deletion
 
+static KeyEquivalentPrefsController *sharedController = nil;
+
++ (KeyEquivalentPrefsController *)sharedController;
+{
+    return sharedController;
+}
 
 - (void)awakeFromNib
 {
@@ -32,6 +38,8 @@
 //	[[KeyEquivalentManager defaultManager] makeScenariosPersistant];
 // end DEBUGGING
 	[self loadSelectedScenario];
+
+	sharedController = self;
 }
 
 
@@ -62,11 +70,15 @@
 	NSMutableArray *newArray = [NSMutableArray array];
 	NSMenu *mainMenu = [NSApp mainMenu];
 	[self addEntriesInMenu: mainMenu toArray: newArray withScenario: scenario];
-	[mSelectedScenario autorelease];
+	[mSelectedScenario release];
 	mSelectedScenario = [newArray retain];
 	[mOutlineView reloadData];
 }
 
+- (void)menusChanged
+{
+    [self changeSelectedScenario: nil];
+}
 
 - (NSString *)selectedScenarioName
 {

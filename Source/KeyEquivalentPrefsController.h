@@ -18,9 +18,12 @@
 	id mOriginalDelegate;
 }
 
++ (KeyEquivalentPrefsController *)sharedController;
+
 // Interface Interaction
 - (IBAction)changeSelectedScenario: (NSPopUpButton *)sender;
 - (void)loadSelectedScenario;
+- (void)menusChanged;
 - (NSString *)selectedScenarioName;
 - (IBAction)restoreDefaults: (NSButton *)sender;
 

@@ -32,9 +32,9 @@ typedef enum
 	EDIT_PASSWORD,
 	SAVE_PASSWORD,
 	CONNECT,
-	DELETE,
-	SERVER_SAVE,
-	ADD_SERVER_ON_CONNECT
+	//DELETE,
+	//SERVER_SAVE,
+	//ADD_SERVER_ON_CONNECT
 } SUPPORT_TYPE;
 
 @protocol IServerDataDelegate;
@@ -68,7 +68,7 @@ typedef enum
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setLastProfile: (NSString*)lastProfile;
-- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
+//- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
 
 - (void)copyServer: (id<IServerData>)server;
 

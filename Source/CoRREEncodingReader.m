@@ -21,26 +21,25 @@
 #import "CoRREEncodingReader.h"
 #import "ByteBlockReader.h"
 #import "RectangleList.h"
+#import "RFBConnection.h"
+#import "FrameBufferUpdateReader.h"
 
 @implementation CoRREEncodingReader
 
 - (void)setBackground:(NSData*)data
 {
     [frameBuffer fillRect:frame withPixel:(unsigned char*)[data bytes]];
-    if(useList) {
-        float	rgb[3];
-        [frameBuffer getRGB:rgb fromPixel:(unsigned char*)[data bytes]];
-        [rectList putRectangle:frame withColor:rgb];
-    }
     if(numOfSubRects) {
         int size = ([frameBuffer bytesPerPixel] + 4) * numOfSubRects;
+#if 0
 #ifdef COLLECT_STATS
         bytesTransferred += size;
 #endif
+#endif
         [subRectReader setBufferSize:size];
-        [target setReader:subRectReader];
+        [connection setReader:subRectReader];
     } else {
-        [target performSelector:action withObject:self];
+        [updater didRect: self];
     }
 }
 
@@ -48,14 +47,10 @@
 {
     unsigned char*	bytes = (unsigned char*)[data bytes];
     unsigned char*	pixptr;
-    float		rgb[3];
     NSRect		r;
     unsigned int	bpp = [frameBuffer bytesPerPixel];
 
     while(numOfSubRects--) {
-        if(useList) {
-            [frameBuffer getRGB:rgb fromPixel:bytes];
-        }
         pixptr = bytes;
         bytes += bpp;
         r.origin.x = *bytes++ + frame.origin.x;
@@ -63,11 +58,8 @@
         r.size.width = *bytes++;
         r.size.height = *bytes++;
         [frameBuffer fillRect:r withPixel:pixptr];
-        if(useList) {
-            [rectList putRectangle:r withColor:rgb];
-        }
     }
-    [target performSelector:action withObject:self];
+    [updater didRect: self];
 }
 
 @end

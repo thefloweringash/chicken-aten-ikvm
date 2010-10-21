@@ -25,26 +25,23 @@
 #import "ByteBlockReader.h"
 #import "RFBStringReader.h"
 
+/* This handles the handshaking messages from the server. */
 @implementation RFBHandshaker
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithConnection: (RFBConnection *)aConnection;
 {
-	if (self = [super initTarget:aTarget action:anAction]) {
-		authCountReader = [[CARD8Reader alloc] initTarget:self action:@selector(setAuthCount:)];
-		authTypeReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthType:)];
-		connFailedReader = [[RFBStringReader alloc] initTarget:self action:@selector(connFailed:)];
+	if (self = [super init]) {
+        connection = aConnection;
+        connFailedReader = [[RFBStringReader alloc] initTarget:self action:@selector(connFailed:) connection:connection];
 		challengeReader = [[ByteBlockReader alloc] initTarget:self action:@selector(challenge:) size:CHALLENGESIZE];
 		authResultReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthResult:)];
-		serverInitReader = [[RFBServerInitReader alloc] initTarget:self action:@selector(setServerInit:)];
+        serverInitReader = nil;
 	}
     return self;
 }
 
 - (void)dealloc
 {
-	[authCountReader release];
-	[authTypeArrayReader release];
-    [authTypeReader release];
     [connFailedReader release];
     [challengeReader release];
     [authResultReader release];
@@ -52,36 +49,49 @@
     [super dealloc];
 }
 
-- (void)resetReader
+- (void)handshake
 {
     char clientData[sz_rfbProtocolVersionMsg + 1];
-	int protocolMinorVersion = MIN(rfbProtocolMinorVersion, [target serverMinorVersion]);
+	int protocolMinorVersion = [connection protocolMinorVersion];
 
 	sprintf(clientData, rfbProtocolVersionFormat, rfbProtocolMajorVersion, protocolMinorVersion);
-    [target writeBytes:(unsigned char*)clientData length:sz_rfbProtocolVersionMsg];
+    [connection writeBytes:(unsigned char*)clientData length:sz_rfbProtocolVersionMsg];
 		
-	if (protocolMinorVersion >= 7)
-		[target setReader:authCountReader];
-	else
-		[target setReader:authTypeReader];
+	if (protocolMinorVersion >= 7) {
+        CARD8Reader *authCountReader;
+
+		authCountReader = [[CARD8Reader alloc] initTarget:self action:@selector(setAuthCount:)];
+		[connection setReader:authCountReader];
+        [authCountReader release];
+    } else {
+        CARD32Reader    *authTypeReader;
+
+		authTypeReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthType:)];
+		[connection setReader:authTypeReader];
+        [authTypeReader release];
+    }
 }
 
 - (void)sendClientInit
 {
-    unsigned char shared = [target connectShared] ? 1 : 0;
+    unsigned char shared = [connection connectShared] ? 1 : 0;
 
-    [target writeBytes:&shared length:1];
-    [target setReader:serverInitReader];
+    [connection writeBytes:&shared length:1];
+    [serverInitReader release];
+    serverInitReader = [[RFBServerInitReader alloc] initWithConnection: connection andHandshaker: self];
+    [serverInitReader readServerInit];
 }
 
 // Protocol 3.7+
 - (void)setAuthCount:(NSNumber*)authCount {
 	if ([authCount intValue] == 0) {
-		[target setReader:connFailedReader];
+        [connFailedReader readString];
 	}
 	else {
+        ByteBlockReader *authTypeArrayReader;
 		authTypeArrayReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setAuthArray:) size:[authCount intValue]];
-		[target setReader:authTypeArrayReader];
+		[connection setReader:authTypeArrayReader];
+        [authTypeArrayReader release];
 	}
 }
 
@@ -98,18 +108,18 @@
 		
 		switch (availableAuthType) {
 			case rfbNoAuth: {
-				[target writeBytes:&availableAuthType length:1];
+				[connection writeBytes:&availableAuthType length:1];
 				
-				if (MIN(rfbProtocolMinorVersion, [target serverMinorVersion]) >= 8) // For 3.8+ we need to get a result back from the server
-					[target setReader: authResultReader];
+				if ([connection protocolMinorVersion] >= 8) // For 3.8+ we need to get a result back from the server
+					[connection setReader: authResultReader];
 				else // For 3.7 we continue on with Client Init
 					[self sendClientInit];
 				
 				return;
 			}
 			case rfbVncAuth: {
-				[target writeBytes:&availableAuthType length:1];
-				[target setReader:challengeReader];
+				[connection writeBytes:&availableAuthType length:1];
+				[connection setReader:challengeReader];
 				return;
 			}
 			default: {
@@ -126,29 +136,29 @@
 
 
 	// No valid auth type found
-	NSLog(errorStr);
+	NSLog(@"%s", errorStr);
 	availableAuthType= 0;
-	[target writeBytes:&availableAuthType length:1];
-	[target terminateConnection:errorStr];
+	[connection writeBytes:&availableAuthType length:1];
+	[connection terminateConnection:errorStr];
 }
 
 - (void)setAuthType:(NSNumber*)authType
 {
     switch([authType unsignedIntValue]) {
         case rfbConnFailed:
-            [target setReader:connFailedReader];
+            [connFailedReader readString];
             break;
         case rfbNoAuth:
             [self sendClientInit];
             break;
         case rfbVncAuth:
-            [target setReader:challengeReader];
+            [connection setReader:challengeReader];
             break;
         default:
 		{
 			NSString *errorStr = NSLocalizedString( @"UnknownAuthType", nil );
 			errorStr = [NSString stringWithFormat:errorStr, authType];
-            [target terminateConnection:errorStr];
+            [connection terminateConnection:errorStr];
             break;
 		}
     }
@@ -159,51 +169,53 @@
     unsigned char bytes[CHALLENGESIZE];
 
     [theChallenge getBytes:bytes length:CHALLENGESIZE];
-    vncEncryptBytes(bytes, (char*)[[target password] cString]);
-    [target writeBytes:bytes length:CHALLENGESIZE];
-    [target setReader:authResultReader];
+    vncEncryptBytes(bytes, (char*)[[connection password] UTF8String]);
+    [connection writeBytes:bytes length:CHALLENGESIZE];
+    [connection setReader:authResultReader];
 }
 
 - (void)setAuthResult:(NSNumber*)theResult
 {
-	NSString *errorStr;
+    NSString *errorStr;
 
     switch([theResult unsignedIntValue]) {
         case rfbVncAuthOK:
             [self sendClientInit];
-            break;
+            return;
         case rfbVncAuthFailed:
-			if (MIN(rfbProtocolMinorVersion, [target serverMinorVersion]) >= 8) { // 3.8+ We get an error return string (unlocalized)
-				[target setReader:connFailedReader];
-			}
-			else {
-				errorStr = NSLocalizedString( @"AuthenticationFailed", nil );
-				[target terminateConnection:errorStr];
-			}
+            if ([connection protocolMinorVersion] >= 8) {
+                 // 3.8+ We get an error return string (unlocalized)
+                [connFailedReader readString];
+                return;
+            }
+            else {
+                errorStr = @"";
+            }
             break;
         case rfbVncAuthTooMany:
-			errorStr = NSLocalizedString( @"AuthenticationFailedTooMany", nil );
-            [target terminateConnection:errorStr];
+            errorStr = NSLocalizedString( @"AuthenticationFailedTooMany", nil );
             break;
         default:
-			errorStr = NSLocalizedString( @"UnknownAuthResult", nil );
-			errorStr = [NSString stringWithFormat:errorStr, theResult];
-            [target terminateConnection:errorStr];
+            errorStr = NSLocalizedString( @"UnknownAuthResult", nil );
+            errorStr = [NSString stringWithFormat:errorStr, theResult];
             break;
     }
+    [connection authenticationFailed:errorStr];
 }
 
 - (void)setServerInit:(ServerInitMessage*)serverMsg
 {
-    [target performSelector:action withObject:serverMsg];
+    [connection start:serverMsg];
 }
 
 - (void)connFailed:(NSString*)theReason
 {
-    [target terminateConnection:[NSString stringWithFormat:@"%@ - %@:\n%@",
-		NSLocalizedString( @"AuthenticationFailed", nil ),
-		NSLocalizedString(@"ServerReports", nil) , 
-		theReason]];
+    NSString *errorStr;
+
+    errorStr = [NSString stringWithFormat:@"%@:%@",
+                        NSLocalizedString(@"ServerReports", nil),
+                        theReason];
+    [connection authenticationFailed:errorStr];
 }
 
 @end

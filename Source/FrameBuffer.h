@@ -32,6 +32,9 @@ typedef union _FrameBufferColor {
 
 typedef unsigned char	FrameBufferPaletteIndex;
 
+/* Stores the current frame buffer. The putXXX, fillXXX are used to update the
+ * buffer from server messages. The drawRect message then renders this on
+ * screen. */
 @interface FrameBuffer : NSObject
 {
     BOOL		isBig;
@@ -55,10 +58,9 @@ typedef unsigned char	FrameBufferPaletteIndex;
     unsigned		drawPixelCount;
     unsigned		copyPixelCount;
     unsigned		putPixelCount;
-    BOOL			*forceServerBigEndian;
-	BOOL			currentReaderIsTight;
-	int				serverMajorVersion;
-	int				serverMinorVersion;
+
+    BOOL			forceServerBigEndian;
+    BOOL            serverIsBigEndian;
 	unsigned int	*tightBytesPerPixelOverride;
 }
 
@@ -77,6 +79,7 @@ typedef unsigned char	FrameBufferPaletteIndex;
 - (void)getRGB:(float*)rgb fromPixel:(unsigned char*)pixValue;
 - (NSSize)size;
 - (void)setPixelFormat:(rfbPixelFormat*)theFormat;
+- (rfbPixelFormat *)pixelFormat;
 
 - (void)fillColor:(FrameBufferColor*)fbc fromPixel:(unsigned char*)pixValue;
 - (void)fillRect:(NSRect)aRect withPixel:(unsigned char*)pixValue;
@@ -97,6 +100,26 @@ typedef unsigned char	FrameBufferPaletteIndex;
 - (void)putRect:(NSRect)aRect fromRGBBytes:(unsigned char*)rgb;
 
 @end
+
+// macros to read from pointers to big-endian data to host format
+#ifdef __ppc__
+#define PIX16BIG(v) (*(CARD16 *)(v))
+#define PIX32BIG(v) (*(CARD32 *)(v))
+#else
+#define PIX16BIG(v) (((v)[0] << 8) | (v)[1])
+#define PIX32BIG(v) (((v)[0] << 24) | ((v)[1] << 16) | ((v)[2] << 8) | (v)[3])
+#endif
+#define PIX24BIG(v) (((v)[0] << 16) | ((v)[1] << 8) | (v)[2])
+
+// macros to read from pointers to little-endian data to host format
+#ifdef __i386__
+#define PIX16LITTLE(v) (*(CARD16 *)(v))
+#define PIX32LITTLE(v) (*(CARD32 *)(v))
+#else
+#define PIX16LITTLE(v) ((v)[0] | ((v)[1] << 8))
+#define PIX32LITTLE(v) ((v)[0] | ((v)[1] << 8) | ((v)[2] << 16) | ((v)[3] <<24))
+#endif
+#define PIX24LITTLE(v) ((v)[0] | ((v)[1] << 8) | ((v)[2] << 16))
 
 #endif /* __FRAMEBUFFER_H_INCLUDED__ */
 

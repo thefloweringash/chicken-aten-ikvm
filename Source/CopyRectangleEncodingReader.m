@@ -21,15 +21,18 @@
 #import "CopyRectangleEncodingReader.h"
 #import "ByteBlockReader.h"
 #import "RFBConnection.h"
+#import "FrameBufferUpdateReader.h"
 
 @implementation CopyRectangleEncodingReader
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater connection: (RFBConnection *)aConnection
 {
-    if (self = [super initTarget:aTarget action:anAction]) {
+    if (self = [super initWithUpdater: aUpdater connection: aConnection]) {
 		posReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setPosition:) size:4];
+#if 0
 #ifdef COLLECT_STATS
 		bytesTransferred = 4;
+#endif
 #endif
 	}
     return self;
@@ -41,9 +44,9 @@
     [super dealloc];
 }
 
-- (void)resetReader
+- (void)readEncoding
 {
-    [target setReader:posReader];
+    [connection setReader:posReader];
 }
 
 - (void)setPosition:(NSData*)position
@@ -55,7 +58,7 @@
     srect.origin.x = ntohs(source[0]);
     srect.origin.y = ntohs(source[1]);
     [frameBuffer copyRect:srect to:frame.origin];
-    [target performSelector:action withObject:self];
+    [updater didRect: self];
 }
 
 @end

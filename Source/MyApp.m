@@ -7,6 +7,7 @@
 //
 
 #import "MyApp.h"
+#import "EventFilter.h"
 #import "KeyEquivalentManager.h"
 #import "RFBConnection.h"
 #import "RFBView.h"
@@ -57,13 +58,13 @@
 			{
 				unsigned int modifiers = [anEvent modifierFlags] & 0xFFFF0000;
 				
-				[lastCharacters autorelease];
+				[lastCharacters release];
 				lastCharacters = nil;
 				if ( [keyManager performEquivalentWithCharacters: characters modifiers: modifiers] )
 				{
 					lastCharacters = [characters retain];
 					RFBConnection *delegate = [rfbView delegate];
-					[delegate clearAllEmulationStates];
+					[[delegate eventFilter] clearAllEmulationStates];
 				}
 				else
 				{
@@ -75,7 +76,7 @@
 			// already been handled.
 			else if ( lastCharacters && [lastCharacters isEqualToString: characters] )
 			{
-				[lastCharacters autorelease];
+				[lastCharacters release];
 				lastCharacters = nil;
 				return;
 			}

@@ -57,7 +57,6 @@ if (!(condition)) return [self scriptError: (errno) description: \
 	url = [NSURL URLWithString: urlString];
     
 	ServerDataViewController* viewCtrlr = [[ServerDataViewController alloc] initWithReleaseOnCloseOrConnect];
-	[viewCtrlr setConnectionDelegate:[RFBConnectionManager sharedManager]];
 	
 	[[RFBConnectionManager sharedManager] setLaunchedByURL:YES];
 	
@@ -67,13 +66,14 @@ if (!(condition)) return [self scriptError: (errno) description: \
 		portString = [NSString stringWithFormat: @"%d", [portNumber intValue]];
 	NSString *hostAndPort = [NSString stringWithFormat: @"%@:%@", [url host], portString];
 	
-	ServerStandAlone* server = [[[ServerStandAlone alloc] init] autorelease];
+	ServerStandAlone* server = [[ServerStandAlone alloc] init];
 	[server setName:[url host]];
 	[server setHostAndPort:hostAndPort];
 	[server setPassword:[url password]];
 	
 	[viewCtrlr setServer:server];
 	[[viewCtrlr window] makeKeyAndOrderFront:self];
+    [server release];
 	
 	// XXX CFURLCreateStringByAddingPercentEscapes is more permissive
     // wrt URL formats; may want to use it instead (see release notes)

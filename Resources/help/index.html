@@ -40,9 +40,9 @@
 	<ul class="explanation">
 		<li><span class="item">Servers:</span>  You can store commonly used servers in this section.  Use the + and - buttons to add and remove servers.</li>
 
-		<li><span class="item">Host:</span>  The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You may optionally specify a port number here by appending it with a colon (like myserver.com:5900).  You must be able to "ping" the host to connect to it.</li>
+		<li><span class="item">Host:</span>  The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You may optionally specify a port number here by appending it with a colon (like myserver.com:5900).  </li>
 
-		<li><span class="item">Display:</span>  The display number for the connection.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on either your computer or on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
+		<li><span class="item">Display or port:</span> The display number for the connection. Numbers greater than or equal 50 will be interpreted as a port instead of a display. Thus, 0 has the same effects as 5900.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on either your computer or on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
 
 		<li><span class="item">Password:</span>  The password needed to connect to the server running at the specified host and display.  If Remember Password was checked, this will be fetched from your Mac OS X Keychain after you've entered it initially.</li>
 
@@ -201,15 +201,12 @@
 	</ul>
 </div>
 
-<div class="section">
+<!-- <div class="section">
 	<h1>Known Problems</h1>
 	
 	<ul>
-		<li>It is not possible to auto-scroll diagonally in full-screen mode, only horizontally or vertically.</li>
-		<li>Window size may be incorrect after switching out of fullscreen mode.</li>
-		<li>A server window smaller than the client screen is not centered in fullscreen mode.</li>
 	</ul>
-</div>
+</div> -->
 
 <div class="section">
 	<h1>Source Code</h1>
@@ -223,6 +220,34 @@
 	
 	<div id="versionHistory">
 	<dl>
+        <dt>Version 2.1b1</dt>
+        <dd><ul>
+            <li>- The open connection window is displayed after the last connection is closed and when there are no connections open and the Dock icon is selected.</li>
+            <li>- Improved invalid host error messages. (bug 1653634)
+            <li>- Fixed the Denial of Service concept attack posted at <a href="http://www.securityfocus.com/archive/1/458907/100/0/threaded">http://www.securityfocus.com/archive/1/458907/100/0/threaded</a> by "poplix".</li>
+            <li>- Support for JPEG encoding using libjpeg-turbo.</li>
+            <li>- Added Japanese localization.</li>
+            <li>- A server screen smaller than the client screen is centered in fullscreen mode.</li>
+            <li>- Scrolling with the trackpad works more smoothly.</li>
+            <li>- IPv6 is supported.</li>
+            <li>- Supports client-side display of remote cursor.</li>
+            <li>- Mouse movement throttling means that fewer mouse movements are sent over slow connections.</li>
+            <li>- Connection attempts can be cancelled.</li>
+            <li>- Uses TCP keep-alive, which makes it less likely that idle connection will be dropped.</li>
+            <li>- "Display" box has been replaced by "Display or port" box.</li>
+            <li>- Option to immediately enter fullscreen mode in the Listener interface.</li>
+            <li>- Modifier keys can be unmapped.</li>
+            <li>- Prompts for a password if one is required.</li>
+            <li>- Prevent crashes due to SIGPIPE.</li>
+            <li>- Allows scrolling diagonally in fullscreen mode.</li>
+            <li>- If "Remember Password" is not checked, then the password is only used for that connection attempt, and not the entire Chicken session.</li>
+            <li>- Fixed issue with unintended key autorepeat when using the shift key.</li>
+            <li>- Fixed crash when closing a window which had been assigned a shortcut key.</li>
+            <li>- Fixed issue with stuck modifier keys when entering fullscreen mode or using Spaces.</li>
+            <li>- Fixed handling of certain servers which claimed to be using the non-existent RFB version 4.0.</li>
+            <li>- Use sheets instead of alerts for most connection errors.</li>
+        </ul></dd>
+
 		<dt>Version 2.0b4 (January 18, 2006)</dt>
 		<dd><ul>
 			<li>- Chicken of the VNC is now a universal binary.</li>

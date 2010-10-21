@@ -29,24 +29,29 @@
 #import "ServerCutTextReader.h"
 #import "SetColorMapEntriesReader.h"
 
+/* This class essentially handles all messages from the server once the initial
+ * handshaking has been completed. It also sends the initial messages with the
+ * supported encodings and the pixel format to the server. */
 @implementation RFBProtocol
 
-- (id)initTarget:(id)aTarget serverInfo:(id)info
+- (id)initWithConnection:(RFBConnection*)aConnection
+          andServerInfo:(id)info
 {
-    if (self = [super initTarget:aTarget action:NULL]) {
-		rfbPixelFormat	myFormat;
-	
-		memcpy(&myFormat, (rfbPixelFormat*)[info pixelFormatData], sizeof(myFormat));
-		[self setPixelFormat:&myFormat];
-		[aTarget setDisplaySize:[info size] andPixelFormat:&myFormat];
-		[aTarget setDisplayName:[info name]];
+    if (self = [super init]) {
+        connection = aConnection;
+       
+        [self setPixelFormat:[info pixelFormatData]];
+
 		[self setEncodings];
 		typeReader = [[CARD8Reader alloc] initTarget:self action:@selector(receiveType:)];
-		msgTypeReader[rfbFramebufferUpdate] = [[FrameBufferUpdateReader alloc] initTarget:self action:@selector(frameBufferUpdateComplete:)];
-		msgTypeReader[rfbSetColourMapEntries] = [[SetColorMapEntriesReader alloc] initTarget:self action:@selector(setColormapEntries:)];
-		msgTypeReader[rfbBell] = nil;
-		msgTypeReader[rfbServerCutText] = [[ServerCutTextReader alloc] initTarget:self action:@selector(serverCutText:)];
-		[self requestUpdate:[aTarget visibleRect] incremental:NO];
+        msgTypeReader[rfbFramebufferUpdate] = [[FrameBufferUpdateReader alloc]
+                initWithProtocol:self connection:connection];
+        msgTypeReader[rfbSetColourMapEntries] = [[SetColorMapEntriesReader alloc] initWithProtocol:self connection:connection];
+        msgTypeReader[rfbBell] = nil;
+        msgTypeReader[rfbServerCutText] = [[ServerCutTextReader alloc]
+                initWithProtocol:self connection:connection];
+
+        [connection setReader: typeReader];
 	}
     return self;
 }
@@ -62,61 +67,43 @@
     [super dealloc];
 }
 
-- (CARD16)numberOfEncodings
-{
-    return numberOfEncodings;
-}
-
-- (CARD32*)encodings
-{
-    return encodings;
-}
-
+/* Sends the list of supported encodings to the server. Note that it only
+ * buffers the message, without actually writing it. It is assumed that a
+ * subsequent message will be written without buffering. */
 - (void)changeEncodingsTo:(CARD32*)newEncodings length:(CARD16)l
 {
     int i;
     rfbSetEncodingsMsg msg;
-    CARD32	enc[64];
+    CARD32	*enc = (CARD32 *)malloc(l * sizeof(CARD32));
 
-    numberOfEncodings = l;
     msg.type = rfbSetEncodings;
     msg.nEncodings = htons(l);
-    [target writeBytes:(unsigned char*)&msg length:sizeof(msg)];
+    [connection writeBufferedBytes:(unsigned char*)&msg length:sizeof(msg)];
     for(i=0; i<l; i++) {
-        encodings[i] = newEncodings[i];
-        enc[i] = htonl(encodings[i]);
+        enc[i] = htonl(newEncodings[i]);
     }
-    [target writeBytes:(unsigned char*)&enc length:numberOfEncodings * sizeof(CARD32)];
+    [connection writeBufferedBytes:(unsigned char*)enc length:l*sizeof(CARD32)];
+    free(enc);
 }
 
 - (void)setEncodings
 {
-    Profile* profile = [target profile];
+    Profile* profile = [connection profile];
     CARD16 i, l = [profile numberOfEnabledEncodings];
-    CARD32	enc[64];
+    CARD32	*enc = (CARD32 *)malloc(l * sizeof(CARD32));
 
     for(i=0; i<l; i++) {
         enc[i] = [profile encodingAtIndex:i];
     }
     [self changeEncodingsTo:enc length:l];
+    free(enc);
 }
 
-- (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag
-{
-    rfbFramebufferUpdateRequestMsg	msg;
-
-    msg.type = rfbFramebufferUpdateRequest;
-    msg.incremental = aFlag;
-    msg.x = frame.origin.x; msg.x = htons(msg.x);
-    msg.y = frame.origin.y; msg.y = htons(msg.y);
-    msg.w = frame.size.width; msg.w = htons(msg.w);
-    msg.h = frame.size.height; msg.h = htons(msg.h);
-    [target writeBytes:(unsigned char*)&msg length:sz_rfbFramebufferUpdateRequestMsg];
-}
-
+/* Sends the pixel format to the server. Note that it buffers without writing.
+ * It is assumed that a later message will do a non-buffered write. */
 - (void)setPixelFormat:(rfbPixelFormat*)aFormat
 {
-    Profile* profile = [target profile];
+    Profile* profile = [connection profile];
     rfbSetPixelFormatMsg	msg;
 
     msg.type = rfbSetPixelFormat;
@@ -145,7 +132,8 @@
     msg.format.redMax = htons(msg.format.redMax);
     msg.format.greenMax = htons(msg.format.greenMax);
     msg.format.blueMax = htons(msg.format.blueMax);
-    [target writeBytes:(unsigned char*)&msg length:sz_rfbSetPixelFormatMsg];
+    [connection writeBufferedBytes:(unsigned char*)&msg
+                            length:sz_rfbSetPixelFormatMsg];
 }
 
 - (FrameBufferUpdateReader*)frameBufferUpdateReader
@@ -158,34 +146,9 @@
     [msgTypeReader[rfbFramebufferUpdate] setFrameBuffer:aBuffer];
 }
 
-- (void)frameBufferUpdateComplete:(id)aReader
+- (void)messageReaderDone
 {
-	[target setReader:self];
-	[target queueUpdateRequest];
-}
-
-- (void)requestIncrementalFrameBufferUpdateForVisibleRect:(id)aReader
-{
-    if(isStopped) {
-        shouldUpdate = YES;
-    } else {
-		[self requestUpdate:[target visibleRect] incremental:YES];
-	}
-}
-
-- (void)setColormapEntries:(id)aReader
-{
-    [target setReader:self];
-}
-
-- (void)serverCutText:(NSString*)aText
-{
-    [target setReader:self];
-}
-
-- (void)resetReader
-{
-    [target setReader:typeReader];
+    [connection setReader:typeReader];
 }
 
 - (void)receiveType:(NSNumber*)type
@@ -195,30 +158,12 @@
     if(t > MAX_MSGTYPE) {
 		NSString *errorStr = NSLocalizedString( @"UnknownMessageType", nil );
 		errorStr = [NSString stringWithFormat:errorStr, type];
-        [target terminateConnection:errorStr];
+        [connection terminateConnection:errorStr];
     } else if(t == rfbBell) {
-        [target ringBell];
-        [target setReader:self];
+        NSBeep();
+        [connection setReader:typeReader];
     } else {
-        [target setReader:(msgTypeReader[t])];
-    }
-}
-
-- (void)continueUpdate
-{
-    if(isStopped) {
-        isStopped = NO;
-        if(shouldUpdate) {
-            [self requestIncrementalFrameBufferUpdateForVisibleRect: nil];
-            shouldUpdate = NO;
-        }
-    }
-}
-
-- (void)stopUpdate
-{
-    if(!isStopped) {
-        isStopped = YES;
+        [msgTypeReader[t] readMessage];
     }
 }
 

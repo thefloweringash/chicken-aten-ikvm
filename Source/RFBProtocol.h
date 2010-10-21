@@ -24,28 +24,25 @@
 
 #define	MAX_MSGTYPE	rfbServerCutText
 
-@interface RFBProtocol : ByteReader
+@class RFBConnection;
+
+/* Handles processing data from the server once the connection is up and the
+ * protocol is established. It has instance variables which handle each message
+ * type, except for rfbBell, which is handled internally. */
+@interface RFBProtocol : NSObject
 {
+    RFBConnection   *connection;
+
     id			typeReader;
     id			msgTypeReader[MAX_MSGTYPE + 1];
-    BOOL		isStopped;
-    BOOL		shouldUpdate;
-
-    CARD16		numberOfEncodings;
-    CARD32		encodings[16];
 }
 
-- (id)initTarget:(id)aTarget serverInfo:(id)info;
+- (id)initWithConnection:(RFBConnection *)aTarget andServerInfo:(id)info;
 - (void)setFrameBuffer:(id)aBuffer;
-- (void)requestIncrementalFrameBufferUpdateForVisibleRect:(id)aReader;
-- (void)continueUpdate;
-- (void)stopUpdate;
+- (void)messageReaderDone;
 
-- (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag;
 - (void)setPixelFormat:(rfbPixelFormat*)aFormat;
 
-- (CARD16)numberOfEncodings;
-- (CARD32*)encodings;
 - (void)changeEncodingsTo:(CARD32*)newEncodings length:(CARD16)l;
 - (void)setEncodings;
 

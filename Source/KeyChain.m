@@ -34,7 +34,6 @@ static KeyChain* defaultKeyChain = nil;
 {
     OSStatus ret;
     KCItemRef itemref = NULL;
-    void *p = (void *)malloc(128 * sizeof(char));
     
     if ([service length] == 0 || [account length] == 0) {
         return ;
@@ -43,13 +42,11 @@ static KeyChain* defaultKeyChain = nil;
     if (!password || [password length] == 0) {
         [self removeGenericPasswordForService:service account:account];
     } else {
-        strcpy(p,[password cString]);
-    
         if (itemref = [self _genericPasswordReferenceForService:service account:account])
         KCDeleteItem(itemref);
-        ret = kcaddgenericpassword([service cString], [account cString], [password cStringLength], 
-        p, NULL);
-        free(p); 
+        ret = kcaddgenericpassword([service UTF8String], [account UTF8String],
+                [password lengthOfBytesUsingEncoding: NSUTF8StringEncoding],
+                [password UTF8String], NULL);
     }
 }
 
@@ -57,7 +54,7 @@ static KeyChain* defaultKeyChain = nil;
 {
     OSStatus ret;
     UInt32 length;
-    void *p = (void *)malloc(maxPasswordLength * sizeof(char));
+    char *p = (char *)malloc(maxPasswordLength+1);
     NSString *string = @"";
     
     if ([service length] == 0 || [account length] == 0) {
@@ -65,10 +62,14 @@ static KeyChain* defaultKeyChain = nil;
         return @"";
     }
     
-    ret = kcfindgenericpassword([service cString], [account cString], maxPasswordLength-1, p, &length, nil);
+    ret = kcfindgenericpassword([service UTF8String], [account UTF8String],
+            maxPasswordLength, p, &length, nil);
 
-    if (!ret)
-        string = [NSString stringWithCString:(const char*)p length:length];
+    if (!ret) {
+        string = [[NSString alloc] initWithBytes:p length:length
+                encoding:NSUTF8StringEncoding];
+        [string autorelease];
+    }
     free(p); 
     return string;
 }
@@ -84,7 +85,6 @@ static KeyChain* defaultKeyChain = nil;
 {
     if (![self isEqual:defaultKeyChain]) {
         maxPasswordLength = length ;
-    } else {
     }
 }
 
@@ -100,7 +100,7 @@ static KeyChain* defaultKeyChain = nil;
 - (KCItemRef)_genericPasswordReferenceForService:(NSString *)service account:(NSString*)account
 {
     KCItemRef itemref = nil;
-    kcfindgenericpassword([service cString],[account cString],nil,nil,nil,&itemref);
+    kcfindgenericpassword([service UTF8String],[account UTF8String],0,nil,nil,&itemref);
     return itemref;
 }
 

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ConnectionFullscreenScenario</key>
+	<array>
+		<dict>
+			<key>Characters</key>
+			<string>`</string>
+			<key>Modifiers</key>
+			<integer>1835008</integer>
+			<key>Title</key>
+			<string>Fullscreen Mode</string>
+		</dict>
+	</array>
+	<key>ConnectionWindowFrontmostScenario</key>
+	<array>
+		<dict>
+			<key>Characters</key>
+			<string>`</string>
+			<key>Modifiers</key>
+			<integer>1835008</integer>
+			<key>Title</key>
+			<string>Fullscreen Mode</string>
+		</dict>
+	</array>
+	<key>NonConnectionWindowFrontmostScenario</key>
+	<array>
+		<dict>
+			<key>Characters</key>
+			<string>?</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Chicken of the VNC Help</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>p</string>
+			<key>Modifiers</key>
+			<integer>1572864</integer>
+			<key>Title</key>
+			<string>Connection Profiles…</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>m</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Minimize</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>v</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Paste</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>n</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>New Connection…</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>o</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Open Connection…</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>l</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Listen for Server…</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>w</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Close Window</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>h</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Hide Chicken of the VNC</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>x</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Cut</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>h</string>
+			<key>Modifiers</key>
+			<integer>1572864</integer>
+			<key>Title</key>
+			<string>Hide Others</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>q</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Quit Chicken of the VNC</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>,</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Preferences…</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>Z</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Redo</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>a</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Select All</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>z</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Undo</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>c</string>
+			<key>Modifiers</key>
+			<integer>1048576</integer>
+			<key>Title</key>
+			<string>Copy</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
+			<string>~</string>
+			<key>Modifiers</key>
+			<integer>1835008</integer>
+			<key>Title</key>
+			<string>Fullscreen Mode</string>
+		</dict>
+	</array>
+</dict>
+</plist>

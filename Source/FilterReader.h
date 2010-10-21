@@ -19,16 +19,25 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "ByteReader.h"
 #import "FrameBuffer.h"
-#import "EncodingReader.h"
+#import "TightEncodingReader.h"
+#import "RFBConnection.h"
 
-@interface FilterReader : ByteReader
+/* Base class for filters which are used by the Tight encoding */
+@interface FilterReader : NSObject
 {
-    FrameBuffer*	frameBuffer;
-    unsigned		bytesPerPixel;
+    TightEncodingReader *target;
+    RFBConnection       *connection;
+
+    FrameBuffer*        frameBuffer;
+    unsigned            bytesPerPixel;
     unsigned            bytesTransferred;
 }
+
+- (id)initWithTarget: (TightEncodingReader *)aTarget
+          andConnection: (RFBConnection *)aConnection;
+
+- (void)resetFilterForRect:(NSRect)rect;
 
 - (void)setFrameBuffer:(FrameBuffer*)aFrameBuffer;
 - (NSData*)filter:(NSData*)data rows:(unsigned)numRows;

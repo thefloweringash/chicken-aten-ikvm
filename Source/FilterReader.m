@@ -23,20 +23,33 @@
 
 @implementation FilterReader
 
+- (id)initWithTarget: (TightEncodingReader *)aTarget
+          andConnection: (RFBConnection *)aConnection
+{
+    if (self = [super init]) {
+        target = aTarget;
+        connection = aConnection;
+    }
+    return self;
+}
+
+/* Begin using filter. When it has read enough, it should call [target
+ * filterInitDone]. The default does this right away. */
+- (void)resetFilterForRect:(NSRect)rect
+{
+    [target filterInitDone];
+}
+
 - (void)setFrameBuffer:(FrameBuffer*)aFrameBuffer
 {
     frameBuffer = aFrameBuffer;
     bytesPerPixel = [frameBuffer tightBytesPerPixel];
 }
 
+/* Filter the data. Default is to return it unchanged. */
 - (NSData*)filter:(NSData*)data rows:(unsigned)numRows
 {
     return data;
-}
-
-- (void)resetReader
-{
-    [target performSelector:action withObject:self];
 }
 
 - (unsigned)bitsPerPixel

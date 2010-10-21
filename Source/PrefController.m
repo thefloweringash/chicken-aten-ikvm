@@ -30,16 +30,14 @@ static int const kPrefsVersion = 0x00000002;
 {
 	NSUserDefaults *defaults;
 	NSMutableDictionary *defaultDict;
-	NSMutableArray *encodings;
-	NSMutableDictionary *encoding;
 	NSDictionary *profiles;
-	int i;
 	
 	defaults = [NSUserDefaults standardUserDefaults];
 	defaultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithBool: YES],			kPrefs_FullscreenWarning_Key,
 		[NSNumber numberWithFloat: 26.0],		kPrefs_AutoscrollIncrement_Key,
 		[NSNumber numberWithBool: NO],			kPrefs_FullscreenScrollbars_Key,
+            // The following two seem to be no longer used
 		[NSNumber numberWithInt: 128],			kPrefs_PSMaxRect_Key,
 		[NSNumber numberWithInt: 10000],		kPrefs_PSThreshold_Key,
 		[NSNumber numberWithBool: YES],			kPrefs_UseRendezvous_Key,
@@ -49,46 +47,12 @@ static int const kPrefsVersion = 0x00000002;
 		[NSNumber numberWithDouble: 30.0],		kPrefs_IntervalBeforeReconnect_Key, 
 		nil,									nil];
 	
-	// create the encodings for the default profile
-	encodings = [NSMutableArray array];
-	encoding = [NSMutableDictionary dictionaryWithObject: [NSNumber numberWithBool: YES] 
-												  forKey: kProfile_EncodingEnabled_Key];
-	for ( i = 0; i < NUMENCODINGS; ++i )
-	{
-		[encoding setObject: [NSNumber numberWithInt: gEncodingValues[i]] forKey: kProfile_EncodingValue_Key];
-		[encodings addObject: [[encoding copy] autorelease]];
-	}
-		
-	// create the default profile
+    Profile *defaultProfile = [[Profile alloc] init];
 	NSString *profileName = NSLocalizedString(@"defaultProfileName", nil);
-	NSDictionary *profile = [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithInt: 0],										kProfile_PixelFormat_Key,
-		[NSNumber numberWithBool: YES],										kProfile_EnableCopyrect_Key,
-		encodings,															kProfile_Encodings_Key,
-		[NSNumber numberWithShort: kRemoteMetaModifier],					kProfile_LocalAltModifier_Key,
-		[NSNumber numberWithShort: kRemoteAltModifier],						kProfile_LocalCommandModifier_Key,
-		[NSNumber numberWithShort: kRemoteControlModifier],					kProfile_LocalControlModifier_Key,
-		[NSNumber numberWithShort: kRemoteShiftModifier],					kProfile_LocalShiftModifier_Key,
-		[NSNumber numberWithInt: (int)kNoMouseButtonEmulation],				kProfile_Button2EmulationScenario_Key, 
-		[NSNumber numberWithInt: (int)kClickWhileHoldingModifierEmulation],	kProfile_Button3EmulationScenario_Key, 
-		[NSNumber numberWithUnsignedInt: NSControlKeyMask],		kProfile_ClickWhileHoldingModifierForButton2_Key, 
-		[NSNumber numberWithUnsignedInt: NSControlKeyMask],		kProfile_ClickWhileHoldingModifierForButton3_Key, 
-		[NSNumber numberWithUnsignedInt: NSCommandKeyMask],		kProfile_MultiTapModifierForButton2_Key, 
-		[NSNumber numberWithUnsignedInt: NSCommandKeyMask],		kProfile_MultiTapModifierForButton3_Key, 
-		[NSNumber numberWithDouble: 0],							kProfile_MultiTapDelayForButton2_Key, 
-		[NSNumber numberWithDouble: 0],							kProfile_MultiTapDelayForButton3_Key, 
-		[NSNumber numberWithUnsignedInt: 2],					kProfile_MultiTapCountForButton2_Key, 
-		[NSNumber numberWithUnsignedInt: 2],					kProfile_MultiTapCountForButton3_Key, 
-		[NSNumber numberWithUnsignedInt: NSAlternateKeyMask],	kProfile_TapAndClickModifierForButton2_Key, 
-		[NSNumber numberWithUnsignedInt: NSShiftKeyMask],		kProfile_TapAndClickModifierForButton3_Key, 
-		[NSNumber numberWithDouble: 0],							kProfile_TapAndClickButtonSpeedForButton2_Key, 
-		[NSNumber numberWithDouble: 0],							kProfile_TapAndClickButtonSpeedForButton3_Key, 
-		[NSNumber numberWithDouble: 5],							kProfile_TapAndClickTimeoutForButton2_Key, 
-		[NSNumber numberWithDouble: 5],							kProfile_TapAndClickTimeoutForButton3_Key, 
-		[NSNumber numberWithBool: YES],							kProfile_IsDefault_Key,
-		nil,												nil];
-	profiles = [NSDictionary dictionaryWithObject: profile forKey: profileName];
-	[defaultDict setObject: profiles forKey: kPrefs_ConnectionProfiles_Key];
+    profiles = [NSDictionary dictionaryWithObject: [defaultProfile dictionary]
+                                           forKey:profileName];
+    [defaultDict setObject: profiles forKey: kPrefs_ConnectionProfiles_Key];
+    [defaultProfile release];
 	
 	[defaults registerDefaults: defaultDict];
 }
@@ -110,8 +74,6 @@ static int const kPrefsVersion = 0x00000002;
 {
 	if ( self = [super init] )
 	{
-		[self autorelease];
-
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		int prefsVersion = [[defaults objectForKey: kPrefs_Version_Key] intValue];
 		BOOL badPrefsVersion = (kPrefsVersion > prefsVersion);
@@ -130,8 +92,6 @@ static int const kPrefsVersion = 0x00000002;
 		
 		if ( badPrefsVersion )
 			[defaults setObject: [NSNumber numberWithInt: kPrefsVersion] forKey: kPrefs_Version_Key];
-		
-		[self retain];
 	}
 	return self;
 }
@@ -151,14 +111,6 @@ static int const kPrefsVersion = 0x00000002;
 
 - (BOOL)fullscreenHasScrollbars
 {  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_FullscreenScrollbars_Key] boolValue];  }
-
-
-- (int)PS_THRESHOLD
-{  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_PSThreshold_Key] intValue];  }
-
-
-- (int)PS_MAXRECTS
-{  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_PSMaxRect_Key] intValue];  }
 
 
 - (float)frontFrameBufferUpdateSeconds

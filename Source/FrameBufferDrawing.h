@@ -18,6 +18,10 @@
  *
  */
 
+/* Note that this is not an actual include file, but a hack for doing
+ * templating. The FrameBuffer subclasses do some defines and set-up and then
+ * include this file to do the actual work. */
+
 /* --------------------------------------------------------------------------------- */
 /* the compiler will hopefully pull the switch() and if()s out of the loop after inlining... */
 
@@ -27,14 +31,10 @@ static inline unsigned int cvt_pixel24(unsigned char* v, FrameBuffer* this)
 {
     unsigned int pix = 0, col;
 	
-    if([this serverIsBigEndian]) {
-        pix += *v++; pix <<= 8;
-        pix += *v++; pix <<= 8;
-        pix += *v;
+    if(this->serverIsBigEndian) {
+        pix = PIX24BIG(v);
     } else {
-        pix = *v++;
-        pix += (((unsigned int)*v++) << 8);
-        pix += (((unsigned int)*v++) << 16);
+        pix = PIX24LITTLE(v);
     }
     col = this->redClut[(pix >> this->pixelFormat.redShift) & this->pixelFormat.redMax];
     col += this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
@@ -51,23 +51,17 @@ static inline unsigned int cvt_pixel(unsigned char* v, FrameBuffer *this)
             pix = *v;
             break;
         case 2:
-            if([this serverIsBigEndian]) {
-                pix = *v++; pix <<= 8; pix += *v;
+            if(this->serverIsBigEndian) {
+                pix = PIX16BIG(v);
             } else {
-                pix = *v++; pix += (((unsigned int)*v) << 8);
+                pix = PIX16LITTLE(v);
             }
             break;
         case 4:
-            if([this serverIsBigEndian]) {
-                pix = *v++; pix <<= 8;
-                pix += *v++; pix <<= 8;
-                pix += *v++; pix <<= 8;
-                pix += *v;
+            if(this->serverIsBigEndian) {
+                pix = PIX32BIG(v);
             } else {
-                pix = *v++;
-                pix += (((unsigned int)*v++) << 8);
-                pix += (((unsigned int)*v++) << 16);
-                pix += (((unsigned int)*v) << 24);
+                pix = PIX32LITTLE(v);
             }
             break;
 		default:
@@ -110,6 +104,12 @@ static inline unsigned int cvt_pixel(unsigned char* v, FrameBuffer *this)
     FBColor* start;
     unsigned int stride, i, lines;
 
+    // clip to framebuffer
+    if (aRect.size.width > size.width - aRect.origin.x)
+        aRect.size.width = size.width - aRect.origin.x;
+    if (aRect.size.height > size.height - aRect.origin.y)
+        aRect.size.height = size.height - aRect.origin.y;
+
 #ifdef DEBUG_DRAW
 printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height, aColor);
 #endif
@@ -136,6 +136,11 @@ printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect
 	FBColor*		start;
 	unsigned int	stride, i, lines;
 
+    if (NSMaxX(aRect) > size.width || NSMaxY(aRect) > size.height) {
+        NSLog(@"Ignoring too large rectangle in putRect:withColors:fromPalette:");
+        return;
+    }
+
     start = pixels + (int)(aRect.origin.y * size.width) + (int)aRect.origin.x;
     lines = aRect.size.height;
     stride = size.width - aRect.size.width;
@@ -154,6 +159,15 @@ printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect
 	FBColor*		start;
 	unsigned int	stride, width;
 	unsigned int	offLines, offPixels;
+    int             rectPixels;
+
+    if (NSMaxX(aRect) > size.width || NSMaxY(aRect) > size.height) {
+        NSLog(@"Ignoring too large rectangel in putRun:");
+        return;
+    }
+    rectPixels = ((int) aRect.size.width) * ((int) aRect.size.height);
+    if (length > rectPixels - offset)
+        length = rectPixels - offset;
 
 	offLines = offset / (int)aRect.size.width;
 	offPixels = offset - (offLines * (int)aRect.size.width);
@@ -209,6 +223,11 @@ printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect
         int lines = aRect.size.height;
         int i;
 
+        if (aRect.size.width + aPoint.x > size.width 
+                || aRect.size.height + aPoint.y > size.height) {
+            NSLog(@"Ignoring copyRect:to: because out of bounds");
+            return;
+        }
 #ifdef DEBUG_DRAW
 printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height, aPoint.x, aPoint.y);
 #endif
@@ -257,14 +276,19 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
         FBColor* start;
         unsigned int stride, i, lines;
 
-    #ifdef DEBUG_DRAW
-    printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height);
-    #endif
+        if (NSMaxX(aRect) > size.width || NSMaxY(aRect) > size.height) {
+            NSLog(@"Ignoring too large rectangle in putRect:fromTightData:");
+            return;
+        }
 
-    #ifdef PINFO
+#ifdef DEBUG_DRAW
+        printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height);
+#endif
+
+#ifdef PINFO
         putRectCount++;
         putPixelCount += aRect.size.width * aRect.size.height;
-    #endif
+#endif
 
         start = pixels + (int)(aRect.origin.y * size.width) + (int)aRect.origin.x;
         lines = aRect.size.height;
@@ -286,6 +310,11 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
 {
 	FBColor* start;
 	unsigned int stride, i, lines, col;
+
+    if (NSMaxX(aRect) > size.width || NSMaxY(aRect) > size.height) {
+        NSLog(@"Ignoring too large rectangle in putRect:fromRGBBytes:");
+        return;
+    }
 
 #ifdef PINFO
 	putRectCount++;
@@ -317,6 +346,11 @@ c += blueClut[(p >> pixelFormat.blueShift) & pixelFormat.blueMax]
     FBColor* start;
     unsigned int stride, i, lines, pix, col;
 
+    if (NSMaxX(aRect) > size.width || NSMaxY(aRect) > size.height) {
+        NSLog(@"Ignoring too large rectangle in putRect:fromData:");
+        return;
+    }
+
 #ifdef DEBUG_DRAW
 printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height);
 #endif
@@ -342,10 +376,11 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 			}
 			break;
 		case 2:
-			if([self serverIsBigEndian]) {
+			if(serverIsBigEndian) {
 				while(lines--) {
 					for(i=aRect.size.width; i; i--) {
-						pix = *data++; pix <<= 8; pix += *data++;
+						pix = PIX16BIG(data);
+                        data += 2;
 						CLUT(col, pix);
 						*start++ = col;
 					}
@@ -354,7 +389,8 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 			} else {
 				while(lines--) {
 					for(i=aRect.size.width; i; i--) {
-						pix = *data++; pix += (((unsigned int)*data++) << 8);
+                        pix = PIX16LITTLE(data);
+                        data += 2;
 						CLUT(col, pix);
 						*start++ = col;
 					}
@@ -363,13 +399,11 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 			}
 			break;
 		case 4:
-			if([self serverIsBigEndian]) {
+			if(serverIsBigEndian) {
 				while(lines--) {
 					for(i=aRect.size.width; i; i--) {
-						pix = *data++; pix <<= 8;
-						pix += *data++; pix <<= 8;
-						pix += *data++; pix <<= 8;
-						pix += *data++;
+                        pix = PIX32BIG(data);
+                        data += 4;
 						CLUT(col, pix);
 						*start++ = col;
 					}
@@ -378,10 +412,8 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 			} else {
 				while(lines--) {
 					for(i=aRect.size.width; i; i--) {
-						pix = *data++;
-						pix += (((unsigned int)*data++) << 8);
-						pix += (((unsigned int)*data++) << 16);
-						pix += (((unsigned int)*data++) << 24);
+                        pix = PIX32LITTLE(data);
+                        data += 4;
 						CLUT(col, pix);
 						*start++ = col;
 					}
@@ -392,7 +424,8 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 	}
 }
 
-/* --------------------------------------------------------------------------------- */
+/* Draws an updated region of the FrameBuffer to the screen. The region of the
+ * framebuffer is given by aRect and the on-screen location is aPoint. */
 - (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint
 {
     NSRect r;
@@ -435,7 +468,6 @@ printf("draw x=%f y=%f w=%f h=%f at x=%f y=%f\n", aRect.origin.x, aRect.origin.y
         NSDrawBitmap(r, r.size.width, r.size.height, bitsPerColor, samplesPerPixel, sizeof(FBColor) * 8, bpr, NO, NO, NSDeviceRGBColorSpace, (const unsigned char**)&scratchpad);
     }
 }
-
 
 /*
 NSDrawBitmap

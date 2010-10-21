@@ -80,4 +80,9 @@
 	[[NSWorkspace sharedWorkspace] openFile: path];
 }
 
+- (NSMenuItem *)getFullScreenMenuItem
+{
+    return fullScreenMenuItem;
+}
+
 @end

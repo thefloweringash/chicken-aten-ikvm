@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-
+/* Encapsulates key press with modifiers. This is mapped to a menu event by
+ * KeyEquivalentScenario. */
 @interface KeyEquivalent : NSObject <NSCopying> {
 	NSString *mCharacters;
 	unsigned int mModifiers;

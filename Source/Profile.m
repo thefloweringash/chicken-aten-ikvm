@@ -23,6 +23,21 @@
 #import "ProfileManager.h"
 #import "FrameBuffer.h"
 #import <Carbon/Carbon.h>
+#define XK_MISCELLANY
+#include <X11/keysymdef.h>
+
+#define INTERPRET_LOCALLY_PREFERENCE 6
+
+const unsigned int gEncodingValues[NUMENCODINGS] = {
+	rfbEncodingZRLE,
+	rfbEncodingTight,
+	rfbEncodingZlib,
+	rfbEncodingZlibHex,
+	rfbEncodingHextile,
+    rfbEncodingCoRRE,
+    rfbEncodingRRE,
+    rfbEncodingRaw
+};
 
 
 static NSTimeInterval
@@ -43,115 +58,375 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 
 @implementation Profile
 
-- (id)initWithDictionary:(NSDictionary*)d name: (NSString *)name
+- (void)defaultEmulationScenarios
+{
+    _buttonEmulationScenario[0] = kNoMouseButtonEmulation;
+    _buttonEmulationScenario[1] = kClickWhileHoldingModifierEmulation;
+    _clickWhileHoldingModifier[0] = NSControlKeyMask;
+    _clickWhileHoldingModifier[1] = NSControlKeyMask;
+    _multiTapModifier[0] = NSCommandKeyMask;
+    _multiTapModifier[1] = NSCommandKeyMask;
+    _multiTapDelay[0] = 0.0;
+    _multiTapDelay[1] = 0.0;
+    _multiTapCount[0] = 2;
+    _multiTapCount[1] = 2;
+    _tapAndClickModifier[0] = NSAlternateKeyMask;
+    _tapAndClickModifier[1] = NSShiftKeyMask;
+    _tapAndClickButtonSpeed[0] = 0.0;
+    _tapAndClickButtonSpeed[1] = 0.0;
+    _tapAndClickTimeout[0] = 5.0;
+    _tapAndClickTimeout[1] = 5.0;
+}
+
+// create the default profile
+- (id)init
+{
+    if (self = [super init]) {
+        int     i;
+
+        name = [NSLocalizedString(@"defaultProfileName", nil) retain];
+        isDefault = YES;
+
+        commandKeyPreference = kRemoteAltModifier;
+        altKeyPreference =  kRemoteMetaModifier;
+        shiftKeyPreference = kRemoteShiftModifier;
+        controlKeyPreference = kRemoteControlModifier;
+        enableCopyRect = YES;
+        enableJpegEncoding = YES;
+        numEncodings = NUMENCODINGS;
+        encodings = (struct encoding*)malloc(NUMENCODINGS * sizeof(*encodings));
+        for ( i = 0; i < NUMENCODINGS; ++i ) {
+            encodings[i].encoding = gEncodingValues[i];
+            encodings[i].enabled = YES;
+        }
+        [self makeEnabledEncodings];
+
+        [self defaultEmulationScenarios];
+
+        //_interpretModifiersLocally = NO;
+        pixelFormatIndex = 0;
+    }
+    return self;
+}
+
+/* Initialize profile from saved dictionary */
+- (id)initWithDictionary:(NSDictionary*)info name: (NSString *)aName
 {
     if (self = [super init]) {
 		NSArray* enc;
 		int i;
 
-		info = [[d deepMutableCopy] retain];
-		[info setObject: name forKey: @"ProfileName"];
+        name = [aName retain];
+        isDefault = [[info objectForKey:kProfile_IsDefault_Key] boolValue];
 		
-		// we're guaranteed that all keys are present
-		commandKeyCode = [ProfileManager modifierCodeForPreference: 
-			[info objectForKey: kProfile_LocalCommandModifier_Key]];
+        commandKeyPreference = [[info objectForKey: kProfile_LocalCommandModifier_Key]
+                                intValue];
+        
+        altKeyPreference = [[info objectForKey: kProfile_LocalAltModifier_Key]
+                                intValue];
+        
+        shiftKeyPreference = [[info objectForKey: kProfile_LocalShiftModifier_Key]
+                                intValue];
+        
+        controlKeyPreference = [[info objectForKey: kProfile_LocalControlModifier_Key]
+                                intValue];
 		
-		altKeyCode = [ProfileManager modifierCodeForPreference: 
-			[info objectForKey: kProfile_LocalAltModifier_Key]];
-		
-		shiftKeyCode = [ProfileManager modifierCodeForPreference: 
-			[info objectForKey: kProfile_LocalShiftModifier_Key]];
-		
-		controlKeyCode = [ProfileManager modifierCodeForPreference: 
-			[info objectForKey: kProfile_LocalControlModifier_Key]];
-		
+        id obj = [info objectForKey: kProfile_EnableJpegEncoding_Key];
+        enableJpegEncoding = obj == nil || [obj boolValue];
+        enableCopyRect = [[info objectForKey: kProfile_EnableCopyrect_Key]
+                                    boolValue];
+
 		enc = [info objectForKey: kProfile_Encodings_Key];
-		if( YES == [[info objectForKey: kProfile_EnableCopyrect_Key] boolValue] ) {
-			numberOfEnabledEncodings = 2;
-			enabledEncodings[0] = rfbEncodingCopyRect;
-			enabledEncodings[1] = rfbEncodingQualityLevel6; // hardcoding in jpeg support, this should be a selection
-		} else {
-			numberOfEnabledEncodings = 0;
-		}
-		for(i=0; i<[enc count]; i++) {
-			NSDictionary *e = [enc objectAtIndex:i];
-			if ( [[e objectForKey: kProfile_EncodingEnabled_Key] boolValue] )
-				enabledEncodings[numberOfEnabledEncodings++] = [[e objectForKey: kProfile_EncodingValue_Key] intValue];
-		}
+        numEncodings = [enc count];
+        encodings = (struct encoding*)malloc(numEncodings * sizeof(*encodings));
+        for (i = 0; i < numEncodings; i++) {
+            NSDictionary *e = [enc objectAtIndex:i];
+            encodings[i].encoding = [[e objectForKey:kProfile_EncodingValue_Key]
+                                            intValue];
+            encodings[i].enabled = [[e objectForKey:kProfile_EncodingEnabled_Key]
+                                            boolValue];
+        }
+
+        [self makeEnabledEncodings];
 		
-		_button2EmulationScenario = (EventFilterEmulationScenario)[[info objectForKey: kProfile_Button2EmulationScenario_Key] intValue];
+        if ([info objectForKey:kProfile_Button2EmulationScenario_Key]) {
+            _buttonEmulationScenario[0] = (EventFilterEmulationScenario)[[info objectForKey: kProfile_Button2EmulationScenario_Key] intValue];
+            
+            _buttonEmulationScenario[1] = (EventFilterEmulationScenario)[[info objectForKey: kProfile_Button3EmulationScenario_Key] intValue];
+            
+            _clickWhileHoldingModifier[0] = [[info objectForKey: kProfile_ClickWhileHoldingModifierForButton2_Key] unsignedIntValue];
+            
+            _clickWhileHoldingModifier[1] = [[info objectForKey: kProfile_ClickWhileHoldingModifierForButton3_Key] unsignedIntValue];
+            
+            _multiTapModifier[0] = [[info objectForKey: kProfile_MultiTapModifierForButton2_Key] unsignedIntValue];
+            
+            _multiTapModifier[1] = [[info objectForKey: kProfile_MultiTapModifierForButton3_Key] unsignedIntValue];
+            
+            _multiTapDelay[0] = (NSTimeInterval)[[info objectForKey: kProfile_MultiTapDelayForButton2_Key] doubleValue];
+        //	if ( 0.0 == _multiTapDelay[0] )
+        //		_multiTapDelay[0] = DoubleClickInterval();
+            
+            _multiTapDelay[1] = (NSTimeInterval)[[info objectForKey: kProfile_MultiTapDelayForButton3_Key] doubleValue];
+    //		if ( 0.0 == _multiTapDelay[1] )
+    //			_multiTapDelay[1] = DoubleClickInterval();
+            
+            _multiTapCount[0] = [[info objectForKey: kProfile_MultiTapCountForButton2_Key] unsignedIntValue];
+            
+            _multiTapCount[1] = [[info objectForKey: kProfile_MultiTapCountForButton3_Key] unsignedIntValue];
+            
+            _tapAndClickModifier[0] = [[info objectForKey: kProfile_TapAndClickModifierForButton2_Key] unsignedIntValue];
+            
+            _tapAndClickModifier[1] = [[info objectForKey: kProfile_TapAndClickModifierForButton3_Key] unsignedIntValue];
+            
+            _tapAndClickButtonSpeed[0] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickButtonSpeedForButton2_Key] doubleValue];
+    //		if ( 0.0 == _tapAndClickButtonSpeed[0] )
+    //			_tapAndClickButtonSpeed[0] = DoubleClickInterval();
+            
+            _tapAndClickButtonSpeed[1] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickButtonSpeedForButton3_Key] doubleValue];
+    //		if ( 0.0 == _tapAndClickButtonSpeed[1] )
+    //			_tapAndClickButtonSpeed[1] = DoubleClickInterval();
+            
+            _tapAndClickTimeout[0] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickTimeoutForButton2_Key] doubleValue];
+            
+            _tapAndClickTimeout[1] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickTimeoutForButton3_Key] doubleValue];
+        } else {
+            [self defaultEmulationScenarios];
+        }
 		
-		_button3EmulationScenario = (EventFilterEmulationScenario)[[info objectForKey: kProfile_Button3EmulationScenario_Key] intValue];
-		
-		_clickWhileHoldingModifier[0] = [[info objectForKey: kProfile_ClickWhileHoldingModifierForButton2_Key] unsignedIntValue];
-		
-		_clickWhileHoldingModifier[1] = [[info objectForKey: kProfile_ClickWhileHoldingModifierForButton3_Key] unsignedIntValue];
-		
-		_multiTapModifier[0] = [[info objectForKey: kProfile_MultiTapModifierForButton2_Key] unsignedIntValue];
-		
-		_multiTapModifier[1] = [[info objectForKey: kProfile_MultiTapModifierForButton3_Key] unsignedIntValue];
-		
-		_multiTapDelay[0] = (NSTimeInterval)[[info objectForKey: kProfile_MultiTapDelayForButton2_Key] doubleValue];
-		if ( 0.0 == _multiTapDelay[0] )
-			_multiTapDelay[0] = DoubleClickInterval();
-		
-		_multiTapDelay[1] = (NSTimeInterval)[[info objectForKey: kProfile_MultiTapDelayForButton3_Key] doubleValue];
-		if ( 0.0 == _multiTapDelay[1] )
-			_multiTapDelay[1] = DoubleClickInterval();
-		
-		_multiTapCount[0] = [[info objectForKey: kProfile_MultiTapCountForButton2_Key] unsignedIntValue];
-		
-		_multiTapCount[1] = [[info objectForKey: kProfile_MultiTapCountForButton3_Key] unsignedIntValue];
-		
-		_tapAndClickModifier[0] = [[info objectForKey: kProfile_TapAndClickModifierForButton2_Key] unsignedIntValue];
-		
-		_tapAndClickModifier[1] = [[info objectForKey: kProfile_TapAndClickModifierForButton3_Key] unsignedIntValue];
-		
-		_tapAndClickButtonSpeed[0] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickButtonSpeedForButton2_Key] doubleValue];
-		if ( 0.0 == _tapAndClickButtonSpeed[0] )
-			_tapAndClickButtonSpeed[0] = DoubleClickInterval();
-		
-		_tapAndClickButtonSpeed[1] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickButtonSpeedForButton3_Key] doubleValue];
-		if ( 0.0 == _tapAndClickButtonSpeed[1] )
-			_tapAndClickButtonSpeed[1] = DoubleClickInterval();
-		
-		_tapAndClickTimeout[0] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickTimeoutForButton2_Key] doubleValue];
-		
-		_tapAndClickTimeout[1] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickTimeoutForButton3_Key] doubleValue];
-		
+        //_interpretModifiersLocally = [[info objectForKey: kProfile_InterpretModifiersLocally_Key] boolValue];
+
+        pixelFormatIndex = [[info objectForKey: kProfile_PixelFormat_Key]
+                                intValue];
 	}
+    return self;
+}
+
+/* Initialize profile as copy of other profile */
+- (id)initWithProfile: (Profile *)profile andName: (NSString *)aName
+{
+    if (self = [super init]) {
+        int     i;
+
+        name = [aName retain];
+        isDefault = NO;
+        pixelFormatIndex = profile->pixelFormatIndex;
+
+        commandKeyPreference = profile->commandKeyPreference;
+        altKeyPreference = profile->altKeyPreference;
+        shiftKeyPreference = profile->shiftKeyPreference;
+        controlKeyPreference = profile->controlKeyPreference;
+
+        numEncodings = profile->numEncodings;
+        encodings = (struct encoding*)malloc(numEncodings * sizeof(*encodings));
+        memcpy(encodings, profile->encodings, numEncodings *sizeof(*encodings));
+        enableCopyRect = profile->enableCopyRect;
+        enableJpegEncoding = profile->enableJpegEncoding;
+        [self makeEnabledEncodings];
+
+        for (i = 0; i < 2; i++) {
+            _buttonEmulationScenario[i] = profile->_buttonEmulationScenario[i];
+            _clickWhileHoldingModifier[i] = profile->_clickWhileHoldingModifier[i];
+            _multiTapModifier[i] = profile->_multiTapModifier[i];
+            _multiTapDelay[i] = profile->_multiTapDelay[i];
+            _multiTapCount[i] = profile->_multiTapCount[i];
+            _tapAndClickModifier[i] = profile->_tapAndClickModifier[i];
+            _tapAndClickButtonSpeed[i] = profile->_tapAndClickButtonSpeed[i];
+            _tapAndClickTimeout[i] = profile->_tapAndClickTimeout[i];
+        }
+
+        //_interpretModifiersLocally = profile->_interpretModifiersLocally;
+    }
     return self;
 }
 
 - (void)dealloc
 {
-    [info release];
+    [name release];
+    free(encodings);
+    if (enabledEncodings)
+        free(enabledEncodings);
     [super dealloc];
 }
 
+/* Makes list of encodings and pseudo-encodings which gets sent to server */
+- (void)makeEnabledEncodings
+{
+    int     i;
+    /* :TODO: rfbEncodingDesktopName is implemented but not tested. */
+    CARD32  pseudoEncodings[] = {//rfbEncodingDesktopName,
+        rfbEncodingRichCursor, rfbEncodingLastRect, rfbEncodingPointerPos,
+        rfbEncodingDesktopSize};
+    int     numPseudos = sizeof(pseudoEncodings)/sizeof(*pseudoEncodings);
+
+    if (enabledEncodings)
+        free(enabledEncodings);
+            // + 2 for CopyRect and Jpeg quality level
+    enabledEncodings = (CARD32 *)malloc((numEncodings + numPseudos + 2) * sizeof(CARD32));
+
+    // Fixed pseudo-encodings, which we always support
+    memcpy(enabledEncodings, pseudoEncodings, numPseudos * sizeof(CARD32));
+    numberOfEnabledEncodings = numPseudos;
+
+    // User-specified list of encodings
+    if (enableCopyRect) 
+        enabledEncodings[numberOfEnabledEncodings++] = rfbEncodingCopyRect;
+    for(i=0; i<numEncodings; i++) {
+        if (encodings[i].enabled) {
+            CARD32 encoding = encodings[i].encoding;
+            enabledEncodings[numberOfEnabledEncodings++] = encoding;
+            if (encoding == rfbEncodingTight && enableJpegEncoding)
+                enabledEncodings[numberOfEnabledEncodings++]
+                    = rfbEncodingQualityLevel6;
+        }
+    }
+}
+
+- (NSDictionary *)dictionary
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    int i;
+
+    if (isDefault)
+        [dict setObject:[NSNumber numberWithBool:YES]
+                 forKey:kProfile_IsDefault_Key];
+
+    // modifier keys
+    [dict setObject:[NSNumber numberWithInt:commandKeyPreference]
+             forKey:kProfile_LocalCommandModifier_Key];
+    [dict setObject:[NSNumber numberWithInt:altKeyPreference]
+             forKey:kProfile_LocalAltModifier_Key];
+    [dict setObject:[NSNumber numberWithInt:shiftKeyPreference]
+             forKey:kProfile_LocalShiftModifier_Key];
+    [dict setObject:[NSNumber numberWithInt:controlKeyPreference]
+             forKey:kProfile_LocalControlModifier_Key];
+
+    // encodings
+    [dict setObject:[NSNumber numberWithBool:enableJpegEncoding]
+             forKey:kProfile_EnableJpegEncoding_Key];
+    [dict setObject:[NSNumber numberWithBool:enableCopyRect]
+             forKey:kProfile_EnableCopyrect_Key];
+    NSMutableArray  *enc = [[NSMutableArray alloc] init];
+    for (i = 0; i < numEncodings; i++) {
+        NSMutableDictionary *e = [[NSMutableDictionary alloc] init];
+        [e setObject:[NSNumber numberWithUnsignedInt:encodings[i].encoding]
+              forKey:kProfile_EncodingValue_Key];
+        [e setObject:[NSNumber numberWithBool:encodings[i].enabled]
+              forKey:kProfile_EncodingEnabled_Key];
+        [enc addObject:e];
+        [e release];
+    }
+    [dict setObject:enc forKey:kProfile_Encodings_Key];
+    [enc release];
+    
+    // mouse emulation
+    [dict setObject:[NSNumber numberWithInt:_buttonEmulationScenario[0]]
+             forKey:kProfile_Button2EmulationScenario_Key];
+    [dict setObject:[NSNumber numberWithInt:_buttonEmulationScenario[1]]
+             forKey:kProfile_Button3EmulationScenario_Key];
+    [dict setObject:[NSNumber numberWithUnsignedInt:_clickWhileHoldingModifier[0]]
+             forKey:kProfile_ClickWhileHoldingModifierForButton2_Key];
+    [dict setObject:[NSNumber numberWithUnsignedInt:_clickWhileHoldingModifier[1]]
+             forKey:kProfile_ClickWhileHoldingModifierForButton3_Key];
+    [dict setObject:[NSNumber numberWithUnsignedInt:_multiTapModifier[0]]
+             forKey:kProfile_MultiTapModifierForButton2_Key];
+    [dict setObject:[NSNumber numberWithUnsignedInt:_multiTapModifier[1]]
+             forKey:kProfile_MultiTapModifierForButton3_Key];
+    [dict setObject:[NSNumber numberWithDouble:_multiTapDelay[0]]
+             forKey:kProfile_MultiTapDelayForButton2_Key];
+    [dict setObject:[NSNumber numberWithDouble:_multiTapDelay[1]]
+             forKey:kProfile_MultiTapDelayForButton3_Key];
+    [dict setObject:[NSNumber numberWithUnsignedInt:_multiTapCount[0]]
+             forKey:kProfile_MultiTapCountForButton2_Key];
+    [dict setObject:[NSNumber numberWithUnsignedInt:_multiTapCount[1]]
+             forKey:kProfile_MultiTapCountForButton3_Key];
+    [dict setObject:[NSNumber numberWithUnsignedInt:_tapAndClickModifier[0]]
+             forKey:kProfile_TapAndClickModifierForButton2_Key];
+    [dict setObject:[NSNumber numberWithUnsignedInt:_tapAndClickModifier[1]]
+             forKey:kProfile_TapAndClickModifierForButton3_Key];
+    [dict setObject:[NSNumber numberWithDouble:_tapAndClickButtonSpeed[0]]
+             forKey:kProfile_TapAndClickButtonSpeedForButton2_Key];
+    [dict setObject:[NSNumber numberWithDouble:_tapAndClickButtonSpeed[1]]
+             forKey:kProfile_TapAndClickButtonSpeedForButton3_Key];
+    [dict setObject:[NSNumber numberWithDouble:_tapAndClickTimeout[0]]
+             forKey:kProfile_TapAndClickTimeoutForButton2_Key];
+    [dict setObject:[NSNumber numberWithDouble:_tapAndClickTimeout[1]]
+             forKey:kProfile_TapAndClickTimeoutForButton3_Key];
+
+    //[dict setObject:[NSNumber numberWithBool:_interpretModifiersLocally]
+     //        forKey:kProfile_InterpretModifiersLocally_Key];
+    [dict setObject:[NSNumber numberWithInt:pixelFormatIndex]
+             forKey:kProfile_PixelFormat_Key];
+
+    return [dict autorelease];
+}
+
+
 - (NSString*)profileName
 {
-    return [info objectForKey:@"ProfileName"];
+    return name;
+}
+
+- (BOOL)isDefault
+{
+    return isDefault;
+}
+
+- (CARD32)modifierCodeForPreference: (int)pref
+{
+    CARD32 modifierKeyCodes[] = {XK_Alt_L, XK_Meta_L, XK_Control_L,
+        XK_Shift_L, XK_Super_L, XK_VoidSymbol, XK_VoidSymbol};
+
+    if (pref >= 0 && pref < sizeof(modifierKeyCodes) / sizeof(CARD32))
+        return modifierKeyCodes[pref];
+    else {
+        NSLog(@"Invalid modifier code: %d", pref);
+        return XK_VoidSymbol;
+    }
 }
 
 - (CARD32)commandKeyCode
 {
-    return commandKeyCode;
+    return [self modifierCodeForPreference:commandKeyPreference];
 }
 
 - (CARD32)altKeyCode
 {
-    return altKeyCode;
+    return [self modifierCodeForPreference:altKeyPreference];
 }
 
 - (CARD32)shiftKeyCode
 {
-    return shiftKeyCode;
+    return [self modifierCodeForPreference:shiftKeyPreference];
 }
 
 - (CARD32)controlKeyCode
 {
-    return controlKeyCode;
+    return [self modifierCodeForPreference:controlKeyPreference];
+}
+
+- (int)commandKeyPreference
+{
+    return commandKeyPreference;
+}
+
+- (int)altKeyPreference
+{
+    return altKeyPreference;
+}
+
+- (int)shiftKeyPreference
+{
+    return shiftKeyPreference;
+}
+
+- (int)controlKeyPreference
+{
+    return controlKeyPreference;
+}
+
+- (int)pixelFormatIndex
+{
+    return pixelFormatIndex;
 }
 
 - (CARD16)numberOfEnabledEncodings
@@ -164,20 +439,26 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     return enabledEncodings[index];
 }
 
+- (BOOL)enableCopyRect
+{
+    return enableCopyRect;
+}
+
+- (BOOL)enableJpegEncoding
+{
+    return enableJpegEncoding;
+}
+
 - (BOOL)useServerNativeFormat
 {
-    int i = [[info objectForKey: kProfile_PixelFormat_Key] intValue];
-
-    return (i == 0) ? YES : NO;
+    return (pixelFormatIndex == 0) ? YES : NO;
 }
 
 - (void)getPixelFormat:(rfbPixelFormat*)format
 {
-    int i = [[info objectForKey: kProfile_PixelFormat_Key] intValue];
-
     format->bigEndian = [FrameBuffer bigEndian];
     format->trueColour = YES;
-    switch(i) {
+    switch(pixelFormatIndex) {
         case 0:
             break;
         case 1:
@@ -220,10 +501,10 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 }
 
 - (EventFilterEmulationScenario)button2EmulationScenario
-{  return _button2EmulationScenario;  }
+{  return _buttonEmulationScenario[ButtonNumberToArrayIndex(2)];  }
 
 - (EventFilterEmulationScenario)button3EmulationScenario
-{  return _button3EmulationScenario;  }
+{  return _buttonEmulationScenario[ButtonNumberToArrayIndex(3)];  }
 
 - (unsigned int)clickWhileHoldingModifierForButton: (unsigned int)button
 {
@@ -240,7 +521,10 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 - (NSTimeInterval)multiTapDelayForButton: (unsigned int)button
 {
 	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	return _multiTapDelay[buttonIndex];
+    if (_multiTapDelay[buttonIndex] == 0.0)
+        return DoubleClickInterval();
+    else
+        return _multiTapDelay[buttonIndex];
 }
 
 - (unsigned int)multiTapCountForButton: (unsigned int)button
@@ -258,13 +542,163 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 - (NSTimeInterval)tapAndClickButtonSpeedForButton: (unsigned int)button
 {
 	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	return _tapAndClickButtonSpeed[buttonIndex];
+    if (_tapAndClickButtonSpeed[buttonIndex] == 0.0)
+        return DoubleClickInterval();
+    else
+        return _tapAndClickButtonSpeed[buttonIndex];
 }
 
 - (NSTimeInterval)tapAndClickTimeoutForButton: (unsigned int)button
 {
 	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
 	return _tapAndClickTimeout[buttonIndex];
+}
+
+- (BOOL)interpretModifiersLocally
+{
+	return altKeyPreference == INTERPRET_LOCALLY_PREFERENCE; //_interpretModifiersLocally;
+}
+
+- (int)numEncodings
+{
+    return numEncodings;
+}
+
+- (NSString *)encodingNameAtIndex: (int)index
+{
+    CARD32  encoding = encodings[index].encoding;
+    NSString    *encodingNames[] = { // names indexed by RFB encoding numbers
+        @"Raw", @"" /* CopyRect */, @"RRE", @"", @"CoRRE",
+        @"Hextile", @"Zlib", @"Tight", @"ZlibHex", @"Ultra",
+        @"", @"", @"", @"", @"", @"", @"ZRLE"};
+
+    if (encoding < sizeof(encodingNames) / sizeof(*encodingNames))
+        return encodingNames[encoding];
+    else
+        return @"";
+}
+
+- (BOOL)encodingEnabledAtIndex: (int)index
+{
+    return encodings[index].enabled;
+}
+
+- (void)setCommandKeyPreference:(int)pref
+{
+    commandKeyPreference = pref;
+}
+
+- (void)setAltKeyPreference:(int)pref
+{
+    altKeyPreference = pref;
+}
+
+- (void)setShiftKeyPreference:(int)pref
+{
+    shiftKeyPreference = pref;
+}
+
+- (void)setControlKeyPreference:(int)pref
+{
+    controlKeyPreference = pref;
+}
+
+- (void)setPixelFormatIndex:(int)index
+{
+    pixelFormatIndex = index;
+}
+
+- (void)setEmulationScenario:(EventFilterEmulationScenario)scenario
+                   forButton:(unsigned)button;
+{
+    unsigned    index = ButtonNumberToArrayIndex(button);
+    _buttonEmulationScenario[index] = scenario;
+}
+
+- (void)setClickWhileHoldingModifier:(unsigned)modifier
+                           forButton:(unsigned)button
+{
+    _clickWhileHoldingModifier[ButtonNumberToArrayIndex(button)] = modifier;
+}
+
+- (void)setMultiTapModifier:(unsigned)modifier forButton:(unsigned)button
+{
+    _multiTapModifier[ButtonNumberToArrayIndex(button)] = modifier;
+}
+
+- (void)setMultiTapCount:(unsigned)count forButton:(unsigned)button
+{
+    _multiTapCount[ButtonNumberToArrayIndex(button)] = count;
+}
+
+- (void)setMultiTapDelay:(NSTimeInterval)delay forButton:(unsigned) button
+{
+    unsigned    index = ButtonNumberToArrayIndex(button);
+    _multiTapDelay[index] = delay;
+}
+
+- (void)setTapAndClickModifier:(unsigned)modifier forButton:(unsigned)button
+{
+    _tapAndClickModifier[ButtonNumberToArrayIndex(button)] = modifier;
+}
+
+- (void)setTapAndClickButtonSpeed:(NSTimeInterval)speed
+                        forButton:(unsigned)button
+{
+    unsigned    index = ButtonNumberToArrayIndex(button);
+    _tapAndClickButtonSpeed[index] = speed;
+}
+
+- (void)setTapAndClickTimeout:(NSTimeInterval)timeout forButton:(unsigned)button
+{
+    unsigned    index = ButtonNumberToArrayIndex(button);
+    _tapAndClickTimeout[index] = timeout;
+}
+
+#if 0
+- (void)setInterpretModifiersLocally:(BOOL)interpretModifiersLocally
+{
+    //_interpretModifiersLocally = interpretModifiersLocally;
+}
+#endif
+
+- (void)setEncodingEnabled:(BOOL)enabled atIndex:(int)index
+{
+    if (index >= 0 && index < numEncodings)
+        encodings[index].enabled = enabled;
+    else
+        NSLog(@"Bad encoding index: %d", index);
+    [self makeEnabledEncodings];
+}
+
+/* Reorders the encodings so that the one at src is now at dst, and the relative
+ * order of the others is unchanged. Note that the index dst is counted
+ * including the encoding being at src. */
+- (void)moveEncodingFrom:(int)src to:(int)dst
+{
+    struct encoding e = encodings[src];
+    if (src > dst) 
+        memmove(encodings + dst + 1, encodings + dst,
+                (src - dst) * sizeof(struct encoding));
+    else {
+        dst--;
+        memmove(encodings + src, encodings + src + 1,
+                (dst - src) * sizeof(struct encoding));
+    }
+    encodings[dst] = e;
+    [self makeEnabledEncodings];
+}
+
+- (void)setCopyRectEnabled:(BOOL)enabled
+{
+    enableCopyRect = enabled;
+    [self makeEnabledEncodings];
+}
+
+- (void)setJpegEncodingEnabled:(BOOL)enabled
+{
+    enableJpegEncoding = enabled;
+    [self makeEnabledEncodings];
 }
 
 @end

@@ -22,48 +22,68 @@
 #import "EventFilter.h"
 #import "rfbproto.h"
 
-// Jason added the following constants that represent the different possible modifier key popup choices
-typedef enum {
-	kCommmandKeyPopupIndex	= 0,
-	kOptionKeyPopupIndex	= 1,
-	kControlKeyPopupIndex	= 2,
-	kShiftKeyPopupIndex		= 3, 
-	kWindowsKeyPopupIndex		= 4
-} ModifierKeyIndex;
+// Encodings
+#define NUMENCODINGS					8
+extern const unsigned int gEncodingValues[];
 
-#define kMetaKeyCode 0xffe7
-#define kControlKeyCode 0xffe3
-#define kAltKeyCode 0xffe9
-#define kShiftKeyCode 0xffe1
-#define kWindowsKeyCode 0xffeb
-
-// end of Jason's addition
+struct encoding {
+    CARD32  encoding;
+    BOOL    enabled;
+};
 
 @interface Profile : NSObject
 {
-    NSMutableDictionary* info;
-    CARD32 commandKeyCode, altKeyCode, shiftKeyCode, controlKeyCode;
+    NSString *name;
+    BOOL isDefault;
+    int pixelFormatIndex;
+
+    int commandKeyPreference;
+    int altKeyPreference;
+    int shiftKeyPreference;
+    int controlKeyPreference;
+
+    // encodings
     CARD16 numberOfEnabledEncodings;
-    CARD32 enabledEncodings[20];
-	EventFilterEmulationScenario _button2EmulationScenario;
-	EventFilterEmulationScenario _button3EmulationScenario;
+    CARD32 *enabledEncodings; // enabled encodings, including pseudo
+    BOOL enableCopyRect;
+    BOOL enableJpegEncoding;
+    struct encoding *encodings; // all non-pseudo encodings, even disabled
+    int numEncodings;
+
+    // emulation
+	EventFilterEmulationScenario _buttonEmulationScenario[2];
 	unsigned int _clickWhileHoldingModifier[2];
 	unsigned int _multiTapModifier[2];
-	NSTimeInterval _multiTapDelay[2];
+	NSTimeInterval _multiTapDelay[2]; // 0 means double click interval
 	unsigned int _multiTapCount[2];
 	unsigned int _tapAndClickModifier[2];
-	NSTimeInterval _tapAndClickButtonSpeed[2];
+	NSTimeInterval _tapAndClickButtonSpeed[2]; // 0 means double click interval
 	NSTimeInterval _tapAndClickTimeout[2];
+
+//	BOOL _interpretModifiersLocally;
 }
 
+- (id)init;
 - (id)initWithDictionary:(NSDictionary*)d name: (NSString *)name;
+- (id)initWithProfile: (Profile *)profile andName: (NSString *)aName;
+- (void)makeEnabledEncodings;
+- (NSDictionary *)dictionary;
 - (NSString*)profileName;
+- (BOOL)isDefault;
+
 - (CARD32)commandKeyCode;
 - (CARD32)altKeyCode;
 - (CARD32)shiftKeyCode;
 - (CARD32)controlKeyCode;
+- (int)commandKeyPreference;
+- (int)altKeyPreference;
+- (int)shiftKeyPreference;
+- (int)controlKeyPreference;
+- (int)pixelFormatIndex;
 - (CARD16)numberOfEnabledEncodings;
 - (CARD32)encodingAtIndex:(unsigned)index;
+- (BOOL)enableCopyRect;
+- (BOOL)enableJpegEncoding;
 - (BOOL)useServerNativeFormat;
 - (void)getPixelFormat:(rfbPixelFormat*)format;
 - (EventFilterEmulationScenario)button2EmulationScenario;
@@ -75,5 +95,32 @@ typedef enum {
 - (unsigned int)tapAndClickModifierForButton: (unsigned int)button;
 - (NSTimeInterval)tapAndClickButtonSpeedForButton: (unsigned int)button;
 - (NSTimeInterval)tapAndClickTimeoutForButton: (unsigned int)button;
+- (BOOL)interpretModifiersLocally;
+- (int)numEncodings;
+- (NSString *)encodingNameAtIndex: (int)index;
+- (BOOL)encodingEnabledAtIndex: (int)index;
+
+- (void)setCommandKeyPreference:(int)pref;
+- (void)setAltKeyPreference:(int)pref;
+- (void)setShiftKeyPreference:(int)pref;
+- (void)setControlKeyPreference:(int)pref;
+- (void)setPixelFormatIndex:(int)index;
+- (void)setEmulationScenario:(EventFilterEmulationScenario)scenario
+                   forButton:(unsigned)button;
+- (void)setClickWhileHoldingModifier:(unsigned)modifier
+                           forButton:(unsigned)button;
+- (void)setMultiTapModifier:(unsigned)modifier forButton:(unsigned)button;
+- (void)setMultiTapCount: (unsigned)count forButton:(unsigned)button;
+- (void)setMultiTapDelay:(NSTimeInterval)delay forButton:(unsigned) button;
+- (void)setTapAndClickModifier:(unsigned)modifer forButton:(unsigned)button;
+- (void)setTapAndClickButtonSpeed:(NSTimeInterval)speed
+                        forButton:(unsigned)button;
+- (void)setTapAndClickTimeout:(NSTimeInterval)timeout
+                    forButton:(unsigned)button;
+//- (void)setInterpretModifiersLocally:(BOOL)interpretModifiersLocally;
+- (void)setEncodingEnabled:(BOOL)enabled atIndex:(int)index;
+- (void)moveEncodingFrom:(int)src to:(int)dst;
+- (void)setCopyRectEnabled:(BOOL)enabled;
+- (void)setJpegEncodingEnabled:(BOOL)enabled;
 
 @end

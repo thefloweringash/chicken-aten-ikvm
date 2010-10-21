@@ -21,12 +21,13 @@
 #import "HextileEncodingReader.h"
 #import "CARD8Reader.h"
 #import "ByteBlockReader.h"
+#import "FrameBufferUpdateReader.h"
 
 @implementation HextileEncodingReader
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater connection: (RFBConnection *)aConnection
 {
-    if (self = [super initTarget:aTarget action:anAction]) {
+    if (self = [super initWithUpdater: aUpdater connection: aConnection]) {
 		subEncodingReader = [[CARD8Reader alloc] initTarget:self action:@selector(setSubEncoding:)];
 		rawReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawRawTile:)];
 		backGroundReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
@@ -57,7 +58,7 @@
     [foreGroundReader setBufferSize:[aBuffer bytesPerPixel]];
 }
 
-- (void)resetReader
+- (void)readEncoding
 {
 #ifdef COLLECT_STATS
     bytesTransferred = 0;
@@ -65,9 +66,12 @@
     currentTile.origin = frame.origin;
     currentTile.size.width = MIN(frame.size.width, TILE_SIZE);
     currentTile.size.height = MIN(frame.size.height, TILE_SIZE);
-    [target setReader:subEncodingReader];
+    [connection setReader:subEncodingReader];
 }
 
+/* Advances the data to the next tile. After reading the current tile, this
+ * updates the currentTile variable and fills the rectangle with the default
+ * background color, which is to reuse the previous background color. */
 - (void)nextTile
 {
     currentTile.origin.x += TILE_SIZE;
@@ -75,7 +79,7 @@
         currentTile.origin.x = frame.origin.x;
         currentTile.origin.y += TILE_SIZE;
         if(currentTile.origin.y >= NSMaxY(frame)) {
-            [target performSelector:action withObject:self];
+            [updater didRect: self];
             return;
         }
     }
@@ -88,24 +92,25 @@
         currentTile.size.height -= NSMaxY(currentTile) - NSMaxY(frame);
     }
     [frameBuffer fillRect:currentTile withFbColor:&background];
-    [target setReader:subEncodingReader];
+    [connection setReader:subEncodingReader];
 }
 
+/* Sets the reader to the appropriate header byte, based on subEncodingMask */
 - (void)checkSubEncoding
 {
     if(subEncodingMask & rfbHextileRaw) {
         int s = [frameBuffer bytesPerPixel] * currentTile.size.width * currentTile.size.height;
         subEncodingMask = 0;
         [rawReader setBufferSize:s];
-        [target setReader:rawReader];
+        [connection setReader:rawReader];
     } else if(subEncodingMask & rfbHextileBackgroundSpecified) {
         subEncodingMask &= ~rfbHextileBackgroundSpecified;
-        [target setReader:backGroundReader];
+        [connection setReader:backGroundReader];
     } else if(subEncodingMask & rfbHextileForegroundSpecified) {
         subEncodingMask &= ~(rfbHextileForegroundSpecified | rfbHextileSubrectsColoured);
-        [target setReader:foreGroundReader];
+        [connection setReader:foreGroundReader];
     } else if(subEncodingMask & rfbHextileAnySubrects) {
-        [target setReader:numOfSubRectReader];
+        [connection setReader:numOfSubRectReader];
     } else {
         [self nextTile];
     }
@@ -159,10 +164,10 @@
     numOfSubRects = [aNumber unsignedCharValue];
     if(subEncodingMask & rfbHextileSubrectsColoured) {
         [subColorRectReader setBufferSize:([frameBuffer bytesPerPixel] + 2) * numOfSubRects];
-        [target setReader:subColorRectReader];
+        [connection setReader:subColorRectReader];
     } else {
         [subRectReader setBufferSize:numOfSubRects * 2];
-        [target setReader:subRectReader];
+        [connection setReader:subRectReader];
     }
 }
 

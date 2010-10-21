@@ -18,18 +18,20 @@
 {
 	if( self = [super init] )
 	{
-		mProfiles = (NSMutableDictionary *)[[PrefController sharedController] profileDict];
-		NSParameterAssert( mProfiles != nil );
-		mProfiles = [[mProfiles deepMutableCopy] retain];
+		NSDictionary *dict = [[PrefController sharedController] profileDict];
+        mProfileDicts = [[NSMutableDictionary alloc] initWithDictionary:dict];
+
+        mProfiles = [[NSMutableDictionary alloc] init];
 		NSString* key;
-		NSEnumerator* keys = [mProfiles keyEnumerator];
+		NSEnumerator* keys = [mProfileDicts keyEnumerator];
 
 		while((key = [keys nextObject]) != nil) {
-			NSMutableDictionary* d = [[[mProfiles objectForKey:key] mutableCopy] autorelease];
-			[mProfiles setObject:d forKey:key];
+			NSMutableDictionary* d = [mProfileDicts objectForKey:key];
+            Profile *p = [[Profile alloc] initWithDictionary:d name:key];
+            [mProfiles setObject:p forKey:key];
 		}
-		
-		[self updateAllProfiles]; // for the new EventFilter stuff
+
+		//[self updateAllProfiles]; // for the new EventFilter stuff
 	}
 	
 	return self;
@@ -38,6 +40,7 @@
 - (void)dealloc
 {
 	[mProfiles release];
+    [mProfileDicts release];
 	[super dealloc];
 }
 
@@ -52,7 +55,7 @@
 	return sInstance;
 }
 
-- (NSMutableDictionary *)defaultProfile
+- (Profile *)defaultProfile
 {
 	return [mProfiles objectForKey: [self defaultProfileName]];
 }
@@ -64,33 +67,44 @@
 	
 	while ( profileName = [profileNameEnumerator nextObject] )
 	{
-		NSDictionary *profile = [mProfiles objectForKey: profileName];
-		if ( [profile objectForKey: kProfile_IsDefault_Key] )
+		Profile *profile = [mProfiles objectForKey: profileName];
+		if ( [profile isDefault] )
 			return profileName;
 	}
 	[NSException raise: NSInternalInconsistencyException format: @"No default profile could be found"];
 	return nil; // never executed
 }
 
-- (NSMutableDictionary*)profileForKey:(id)key
+- (Profile*)profileForKey:(id)key
 {
 	return [mProfiles objectForKey:key];
 }
 
-- (void)setProfile:(NSMutableDictionary*)profile forKey:(id) key
+- (BOOL)profileWithNameExists:(NSString *)name
+{
+    Profile* p = [mProfiles objectForKey: name];
+	
+    return nil != p;
+}
+
+- (void)setProfile:(Profile*)profile forKey:(id) key
 {
 	[mProfiles setObject:profile forKey:key];
+    [mProfileDicts setObject:[profile dictionary] forKey:key];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ProfileListChangeMsg
 														object:self];
+	[[PrefController sharedController] setProfileDict: mProfileDicts];
 }
 
 - (void)removeProfileForKey:(id) key
 {
 	[mProfiles removeObjectForKey:key];
+    [mProfileDicts removeObjectForKey:key];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ProfileListChangeMsg
 														object:self];
+	[[PrefController sharedController] setProfileDict: mProfileDicts];
 }
 
 - (int)count
@@ -98,9 +112,11 @@
 	return [mProfiles count];
 }
 
-- (void)save
+/* Invoked when profile has changed, so that it can be saved to preferences. */
+- (void)saveProfile: (Profile *)profile
 {
-	[[PrefController sharedController] setProfileDict: mProfiles];
+    [mProfileDicts setObject:[profile dictionary] forKey:[profile profileName]];
+	[[PrefController sharedController] setProfileDict: mProfileDicts];
 }
 
 - (NSArray*)sortedKeyArray
@@ -108,6 +124,7 @@
 	return [[mProfiles allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
+#if 0
 - (void)updateAllProfiles
 {
 	NSString* key;
@@ -157,5 +174,6 @@
 		}
 	}
 }
+#endif
 
 @end

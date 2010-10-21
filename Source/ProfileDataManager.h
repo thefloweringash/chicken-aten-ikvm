@@ -11,10 +11,13 @@
 /** This message indicates that the profile list has changed */
 #define ProfileListChangeMsg @"ProfileListChangeMsg"
 
+@class Profile;
+
 @interface ProfileDataManager : NSObject {
 
 @private
 	NSMutableDictionary *mProfiles;
+    NSMutableDictionary *mProfileDicts;
 }
 
 /**
@@ -23,14 +26,15 @@
  *  @return Shared singleton instance of the ProfileDataManager class. */
 + (ProfileDataManager*) sharedInstance;
 
-- (NSMutableDictionary *)defaultProfile;
+- (Profile *)defaultProfile;
 - (NSString *)defaultProfileName;
-- (NSMutableDictionary *)profileForKey:(id) key;
-- (void)setProfile:(NSMutableDictionary*) profile forKey:(id) key;
+- (Profile *)profileForKey:(id) key;
+- (BOOL)profileWithNameExists:(NSString *)name;
+- (void)setProfile:(Profile*) profile forKey:(id) key;
 - (void)removeProfileForKey:(id) key;
 - (int)count;
-- (void)save;
+- (void)saveProfile:(Profile *)profile;
 - (NSArray*)sortedKeyArray;
-- (void)updateAllProfiles;
+//- (void)updateAllProfiles;
 
 @end

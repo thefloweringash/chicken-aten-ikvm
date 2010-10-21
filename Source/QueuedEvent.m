@@ -44,13 +44,11 @@
 
 
 + (QueuedEvent *)keyDownEventWithCharacter: (unichar)character
-				characterIgnoringModifiers: (unichar)unmodCharacter
 								 timestamp: (NSTimeInterval)timestamp
 {
 	QueuedEvent *event = [[[[self class] alloc] init] autorelease];
 	event->_eventType = kQueuedKeyDownEvent;
 	event->_character = character;
-	event->_characterIgnoringModifiers = unmodCharacter;
 	event->_timestamp = timestamp;
 	
 	return event;
@@ -58,13 +56,11 @@
 
 
 + (QueuedEvent *)keyUpEventWithCharacter: (unichar)character
-			  characterIgnoringModifiers: (unichar)unmodCharacter
 							   timestamp: (NSTimeInterval)timestamp
 {
 	QueuedEvent *event = [[[[self class] alloc] init] autorelease];
 	event->_eventType = kQueuedKeyUpEvent;
 	event->_character = character;
-	event->_characterIgnoringModifiers = unmodCharacter;
 	event->_timestamp = timestamp;
 	
 	return event;
@@ -111,8 +107,10 @@
 - (unichar)character
 {  return _character;  }
 
+#if 0
 - (unichar)characterIgnoringModifiers
 {  return _characterIgnoringModifiers;  }
+#endif
 
 - (unsigned int)modifier
 {  return _modifier;  }
@@ -182,8 +180,7 @@
 	else if ( _eventType <= kQueuedKeyUpEvent )
 	{
 		NSString *chars = [self _descriptionForCharacter: _character];
-		NSString *charsIgnoringModifiers = [self _descriptionForCharacter: _characterIgnoringModifiers];
-		return [NSString stringWithFormat: @"%@ '%@' '%@']", eventType, chars, charsIgnoringModifiers];
+		return [NSString stringWithFormat: @"%@ '%@']", eventType, chars];
 	}
 	NSString *modifier = [self _descriptionForModifier];
 	return [NSString stringWithFormat: @"%@ %@]", eventType, modifier];

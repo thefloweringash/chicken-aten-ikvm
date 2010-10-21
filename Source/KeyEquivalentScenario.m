@@ -41,9 +41,11 @@
 			
 			if ( characters && title )
 			{
-				KeyEquivalent *keyEquivalent = [[[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers] autorelease];
-				KeyEquivalentEntry *keyEquivalentEntry = [[[KeyEquivalentEntry alloc] initWithTitle: title] autorelease];
+				KeyEquivalent *keyEquivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
+				KeyEquivalentEntry *keyEquivalentEntry = [[KeyEquivalentEntry alloc] initWithTitle: title];
 				[mEquivalentToEntryMapping setObject: keyEquivalentEntry forKey: keyEquivalent];
+				[keyEquivalent release];
+				[keyEquivalentEntry release];
 			}
 		}
 	}
@@ -139,7 +141,6 @@
 		}
 	}
 }
-
 
 #pragma mark -
 #pragma mark Making Scenarios Active

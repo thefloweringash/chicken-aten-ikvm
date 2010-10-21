@@ -22,6 +22,7 @@
 // Dictionary Keys
 extern NSString *kProfile_PixelFormat_Key;
 extern NSString *kProfile_EnableCopyrect_Key;
+extern NSString *kProfile_EnableJpegEncoding_Key;
 extern NSString *kProfile_Encodings_Key;
 extern NSString *kProfile_EncodingValue_Key;
 extern NSString *kProfile_EncodingEnabled_Key;
@@ -29,6 +30,7 @@ extern NSString *kProfile_LocalAltModifier_Key;
 extern NSString *kProfile_LocalCommandModifier_Key;
 extern NSString *kProfile_LocalControlModifier_Key;
 extern NSString *kProfile_LocalShiftModifier_Key;
+extern NSString *kProfile_InterpretModifiersLocally_Key;
 extern NSString *kProfile_Button2EmulationScenario_Key;
 extern NSString *kProfile_Button3EmulationScenario_Key;
 extern NSString *kProfile_ClickWhileHoldingModifierForButton2_Key;
@@ -51,18 +53,17 @@ extern NSString *kProfile_IsDefault_Key;
 extern NSString *ProfileAddDeleteNotification;
 
 // Modifier Key Mapping
+// These values are the values stored in preferences, and must remain in sync
+// with the order in the ProfileManager pulldowns
 typedef enum {
 	kRemoteAltModifier		= 0,
 	kRemoteMetaModifier		= 1,
 	kRemoteControlModifier	= 2,
 	kRemoteShiftModifier	= 3,
-	kRemoteWindowsModifier	= 4
+	kRemoteWindowsModifier	= 4,
+    kRemoteNoModifier       = 5
 } ModifierKeyIdentifier;
 
-// Encodings
-#define NUMENCODINGS					8
-extern const unsigned int gEncodingValues[];
-	
 	
 @interface ProfileManager : NSWindowController
 {
@@ -90,8 +91,10 @@ extern const unsigned int gEncodingValues[];
     IBOutlet NSPopUpButton *mCommandKey;
     IBOutlet NSPopUpButton *mControlKey;
     IBOutlet NSPopUpButton *mShiftKey;
+//    IBOutlet NSButton *mInterpretModifiersLocally;
     IBOutlet NSTableView *mEncodingTableView;
 	IBOutlet NSButton *mEnableCopyRect;
+    IBOutlet NSButton *mEnableJpegEncoding;
     IBOutlet NSMatrix *mPixelFormatMatrix;
 	int mEncodingDragRow;
 }
@@ -101,8 +104,7 @@ extern const unsigned int gEncodingValues[];
 - (void)wakeup;
 
 	// Utilities
-+ (NSString *)nameForEncodingType: (CARD32)type;
-+ (CARD32)modifierCodeForPreference: (id)preference;
+//+ (NSString *)nameForEncodingType: (CARD32)type;
 
 	// Profile Manager Window
 - (IBAction)showWindow: (id)sender;

@@ -21,7 +21,7 @@
 #import "ProfileManager_private.h"
 #import "ProfileDataManager.h"
 
-
+#if 0
 static const NSString* gEncodingNames[NUMENCODINGS] = {
 	@"ZRLE",
     @"Tight",
@@ -32,23 +32,13 @@ static const NSString* gEncodingNames[NUMENCODINGS] = {
     @"RRE",
     @"Raw"
 };
-
-
-const unsigned int gEncodingValues[NUMENCODINGS] = {
-	rfbEncodingZRLE,
-	rfbEncodingTight,
-	rfbEncodingZlib,
-	rfbEncodingZlibHex,
-	rfbEncodingHextile,
-    rfbEncodingCoRRE,
-    rfbEncodingRRE,
-    rfbEncodingRaw
-};
+#endif
 
 
 // --- Dictionary Keys --- //
 NSString *kProfile_PixelFormat_Key = @"PixelFormat";
 NSString *kProfile_EnableCopyrect_Key = @"EnableCopyRect";
+NSString *kProfile_EnableJpegEncoding_Key = @"EnableJpegEncoding";
 NSString *kProfile_Encodings_Key = @"Encodings";
 NSString *kProfile_EncodingValue_Key = @"ID";
 NSString *kProfile_EncodingEnabled_Key = @"Enabled";
@@ -56,6 +46,7 @@ NSString *kProfile_LocalAltModifier_Key = @"NewAltKey";
 NSString *kProfile_LocalCommandModifier_Key = @"NewCommandKey";
 NSString *kProfile_LocalControlModifier_Key = @"NewControlKey";
 NSString *kProfile_LocalShiftModifier_Key = @"NewShiftKey";
+NSString *kProfile_InterpretModifiersLocally_Key = @"InterpretModifiersLocally";
 NSString *kProfile_Button2EmulationScenario_Key = @"Button2EmulationScenario";
 NSString *kProfile_Button3EmulationScenario_Key = @"Button3EmulationScenario";
 NSString *kProfile_ClickWhileHoldingModifierForButton2_Key = @"ClickWhileHoldingModifierForButton2";
@@ -112,6 +103,7 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 }
 
 
+#if 0
 #pragma mark -
 #pragma mark Utilities
 
@@ -121,28 +113,7 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 	int index = [self _indexForEncodingType: type];
 	return (NSString *)gEncodingNames[index];
 }
-
-
-+ (CARD32)modifierCodeForPreference: (id)preference
-{
-	switch ([preference shortValue])
-	{
-		case kRemoteAltModifier:
-			return kAltKeyCode;
-		case kRemoteMetaModifier:
-			return kMetaKeyCode;
-		case kRemoteControlModifier:
-			return kControlKeyCode;
-		case kRemoteShiftModifier:
-			return kShiftKeyCode;
-		case kRemoteWindowsModifier:
-			return kWindowsKeyCode;
-	}
-	[NSException raise: NSInternalInconsistencyException format: @"Invalid modifier code"];
-	return 0; // never executed
-	
-}
-
+#endif
 
 #pragma mark -
 #pragma mark Profile Manager Window
@@ -158,32 +129,25 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 
 - (Profile *)defaultProfile 
 {
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-	NSMutableDictionary *defaultProfile = [profiles defaultProfile];
-	NSParameterAssert( defaultProfile != nil );
-	NSString *defaultProfileName = [profiles defaultProfileName];
-	NSParameterAssert( defaultProfileName != nil );
-    return [[[Profile alloc] initWithDictionary:defaultProfile name: defaultProfileName] autorelease];
+    return [[ProfileDataManager sharedInstance] defaultProfile];
 }
 
 
 - (BOOL)profileWithNameExists:(NSString*)name
 {
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-    NSMutableDictionary* p = [profiles profileForKey: name];
-	
-    return nil != p;
+    return [[ProfileDataManager sharedInstance] profileWithNameExists:name];
 }
 
 
 - (Profile *)profileNamed: (NSString*)name
 {
 	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-    NSMutableDictionary* p = [profiles profileForKey: name];
+    Profile* p = [profiles profileForKey: name];
 	
     if( nil == p )
-		return [self defaultProfile];
-    return [[[Profile alloc] initWithDictionary:p name: name] autorelease];
+		return [profiles defaultProfile];
+    else
+        return p;
 }
 
 
@@ -193,13 +157,12 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 
 - (IBAction)addProfile: (id)sender
 {
-	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-
-    NSMutableDictionary *newProfile = [[self _currentProfileDictionary] deepMutableCopy];
-	[newProfile removeObjectForKey: kProfile_IsDefault_Key];
+    ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
+    Profile *current = [self _currentProfile];
 	NSString *newName = [mProfileNameField stringValue];
+    Profile *newProfile = [[Profile alloc] initWithProfile:current
+                                                   andName:newName];
     [profiles setProfile:newProfile forKey: newName];
-    [profiles save];
 	
 	[mProfileTable reloadData];
     [self _selectProfileNamed: newName];
@@ -214,7 +177,6 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
 	
     [profiles removeProfileForKey: [self _currentProfileName]];
-    [profiles save];
 	[mProfileTable reloadData];
 	
     [[NSNotificationCenter defaultCenter] postNotificationName:ProfileAddDeleteNotification
@@ -229,78 +191,63 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 {
 	int tag, value;
 	
-    NSMutableDictionary* profile = [self _currentProfileDictionary];
+    Profile* profile = [self _currentProfile];
 	
-    [profile setObject: [NSNumber numberWithInt: [[mPixelFormatMatrix selectedCell] tag]]
-                forKey: kProfile_PixelFormat_Key];
-	[profile setObject: [NSNumber numberWithBool: ([mEnableCopyRect state] == NSOnState) ? YES : NO]
-				forKey: kProfile_EnableCopyrect_Key];
+    [profile setPixelFormatIndex:[[mPixelFormatMatrix selectedCell] tag]];
+    [profile setCopyRectEnabled:[mEnableCopyRect state]];
+    [profile setJpegEncodingEnabled:[mEnableJpegEncoding state]];
     
-	tag = [[mEmulationPopup2 selectedItem] tag];
-	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
-				forKey: kProfile_Button2EmulationScenario_Key];
-	[mEmulationTabView2 selectTabViewItemAtIndex: tag];
-	tag = [[mClickWhileHoldingEmulationModifier2 selectedItem] tag];
-	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
-				forKey: kProfile_ClickWhileHoldingModifierForButton2_Key];
-	tag = [[mMultiTapEmulationModifier2 selectedItem] tag];
-	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
-				forKey: kProfile_MultiTapModifierForButton2_Key];
-	value = [mMultiTapEmulationCountStepper2 intValue];
-	[profile setObject:[NSNumber numberWithUnsignedInt: value]
-				forKey: kProfile_MultiTapCountForButton2_Key];
-	[mMultiTapEmulationCountText2 setIntValue: value];
-	tag = [[mTapAndClickEmulationModifier2 selectedItem] tag];
-	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
-				forKey: kProfile_TapAndClickModifierForButton2_Key];
-	[profile setObject: [NSNumber numberWithDouble: [mTapAndClickEmulationTimeout2 doubleValue]]
-				forKey: kProfile_TapAndClickTimeoutForButton2_Key];
-	
-	tag = [[mEmulationPopup3 selectedItem] tag];
-	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
-				forKey: kProfile_Button3EmulationScenario_Key];
-	[mEmulationTabView3 selectTabViewItemAtIndex: tag];
-	tag = [[mClickWhileHoldingEmulationModifier3 selectedItem] tag];
-	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
-				forKey: kProfile_ClickWhileHoldingModifierForButton3_Key];
-	tag = [[mMultiTapEmulationModifier3 selectedItem] tag];
-	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
-				forKey: kProfile_MultiTapModifierForButton3_Key];
-	value = [mMultiTapEmulationCountStepper3 intValue];
-	[profile setObject:[NSNumber numberWithUnsignedInt: value]
-				forKey: kProfile_MultiTapCountForButton3_Key];
-	[mMultiTapEmulationCountText3 setIntValue: value];
-	tag = [[mTapAndClickEmulationModifier3 selectedItem] tag];
-	[profile setObject:[NSNumber numberWithUnsignedInt: tag]
-				forKey: kProfile_TapAndClickModifierForButton3_Key];
-	[profile setObject: [NSNumber numberWithDouble: [mTapAndClickEmulationTimeout3 doubleValue]]
-				forKey: kProfile_TapAndClickTimeoutForButton3_Key];
-	
-    [profile setObject: [[self class] _tagForModifierIndex: [mCommandKey indexOfSelectedItem]] 
-				forKey: kProfile_LocalCommandModifier_Key];
-    [profile setObject: [[self class] _tagForModifierIndex: [mControlKey indexOfSelectedItem]] 
-				forKey: kProfile_LocalControlModifier_Key];
-    [profile setObject: [[self class] _tagForModifierIndex: [mAltKey indexOfSelectedItem]] 
-				forKey: kProfile_LocalAltModifier_Key];
-    [profile setObject: [[self class] _tagForModifierIndex: [mShiftKey indexOfSelectedItem]] 
-				forKey: kProfile_LocalShiftModifier_Key];
-	
-    [[ProfileDataManager sharedInstance] save];
+    tag = [[mEmulationPopup2 selectedItem] tag];
+    [profile setEmulationScenario:tag forButton:2];
+    [mEmulationTabView2 selectTabViewItemAtIndex: tag];
+    tag = [[mClickWhileHoldingEmulationModifier2 selectedItem] tag];
+    [profile setClickWhileHoldingModifier:tag forButton:2];
+    tag = [[mMultiTapEmulationModifier2 selectedItem] tag];
+    [profile setMultiTapModifier:tag forButton:2];
+    value = [mMultiTapEmulationCountStepper2 intValue];
+    [profile setMultiTapCount:value forButton:2];
+    [mMultiTapEmulationCountText2 setIntValue: value];
+    tag = [[mTapAndClickEmulationModifier2 selectedItem] tag];
+    [profile setTapAndClickModifier:tag forButton:2];
+    [profile setTapAndClickTimeout:[mTapAndClickEmulationTimeout2 doubleValue]
+                         forButton:2];
+    
+    tag = [[mEmulationPopup3 selectedItem] tag];
+    [profile setEmulationScenario:tag forButton:3];
+    [mEmulationTabView3 selectTabViewItemAtIndex: tag];
+    tag = [[mClickWhileHoldingEmulationModifier3 selectedItem] tag];
+    [profile setClickWhileHoldingModifier:tag forButton:3];
+    tag = [[mMultiTapEmulationModifier3 selectedItem] tag];
+    [profile setMultiTapModifier:tag forButton:3];
+    value = [mMultiTapEmulationCountStepper3 intValue];
+    [profile setMultiTapCount:value forButton:3];
+    [mMultiTapEmulationCountText3 setIntValue: value];
+    tag = [[mTapAndClickEmulationModifier3 selectedItem] tag];
+    [profile setTapAndClickModifier:tag forButton:3];
+    [profile setTapAndClickTimeout:[mTapAndClickEmulationTimeout3 doubleValue]
+                forButton:3];
+    
+    [profile setCommandKeyPreference:[mCommandKey indexOfSelectedItem]];
+    [profile setControlKeyPreference: [mControlKey indexOfSelectedItem]];
+    [profile setAltKeyPreference: [mAltKey indexOfSelectedItem]];
+    [profile setShiftKeyPreference: [mShiftKey indexOfSelectedItem]];
+    //[profile setInterpretModifiersLocally: [mInterpretModifiersLocally state]];
+    
+    [[ProfileDataManager sharedInstance] saveProfile:profile];
 }
 
 
 - (IBAction)toggleSelectedEncodingEnabled: (id)sender
 {
-	NSMutableArray *encodings = [[self _currentProfileDictionary] objectForKey: kProfile_Encodings_Key];
-	int selectedIndex = [mEncodingTableView selectedRow];
-	NSParameterAssert ( selectedIndex >= 0 && selectedIndex < NUMENCODINGS );
-	
-	NSMutableDictionary *encoding = [encodings objectAtIndex: selectedIndex];
-	BOOL wasEnabled = [[encoding objectForKey: kProfile_EncodingEnabled_Key] boolValue];
-	[encoding setObject: [NSNumber numberWithBool: !wasEnabled] forKey: kProfile_EncodingEnabled_Key];
-	
-	[[ProfileDataManager sharedInstance] save];
-	[mEncodingTableView reloadData];
+    Profile *profile = [self _currentProfile];
+    int selectedIndex = [mEncodingTableView selectedRow];
+    NSParameterAssert ( selectedIndex >= 0 && selectedIndex < NUMENCODINGS );
+    
+    BOOL wasEnabled = [profile encodingEnabledAtIndex:selectedIndex];
+    [profile setEncodingEnabled:!wasEnabled atIndex:selectedIndex];
+    
+    [[ProfileDataManager sharedInstance] saveProfile:profile];
+    [mEncodingTableView reloadData];
 }
 
 
@@ -326,9 +273,7 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 {
 	if ( mEncodingTableView == aTableView )
 	{
-		NSDictionary* profile = [self _currentProfileDictionary];
-		NSArray* encodings = [profile objectForKey: kProfile_Encodings_Key];
-		return [encodings count];
+        return [[self _currentProfile] numEncodings];
 	}
 	
     return [[ProfileDataManager sharedInstance] count];
@@ -340,23 +285,20 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 {
 	if ( mEncodingTableView == aTableView )
 	{
-		NSDictionary* profile = [self _currentProfileDictionary];
-		NSArray* encodings = [profile objectForKey: kProfile_Encodings_Key];
-		NSParameterAssert( rowIndex >= 0 && rowIndex< [encodings count] );		
+		Profile* profile = [self _currentProfile];
+		NSParameterAssert( rowIndex >= 0 && rowIndex< [profile numEncodings] );
 
-		NSDictionary *entry = [encodings objectAtIndex: rowIndex];
-		NSParameterAssert( entry != nil );
-
-		if ( [[aTableColumn identifier] isEqualToString:@"Enabled"] )
-			return [entry objectForKey: kProfile_EncodingEnabled_Key];
-		int index = [[entry objectForKey: kProfile_EncodingValue_Key] intValue];
-		return [[self class] nameForEncodingType: index];
-	}
-
-    NSArray* profileNames = [self _sortedProfileNames];
-	NSParameterAssert( rowIndex >= 0 && rowIndex< [profileNames count] );		
-	
-	return [profileNames objectAtIndex: rowIndex];
+		if ( [[aTableColumn identifier] isEqualToString:@"Enabled"] ) {
+            BOOL enabled = [profile encodingEnabledAtIndex:rowIndex];
+            return [NSNumber numberWithBool:enabled];
+        } else
+            return [profile encodingNameAtIndex:rowIndex];
+	} else {
+        NSArray* profileNames = [self _sortedProfileNames];
+        NSParameterAssert( rowIndex >= 0 && rowIndex< [profileNames count] );
+        
+        return [profileNames objectAtIndex: rowIndex];
+    }
 }
 
 
@@ -401,22 +343,11 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 		if ( [pboard availableTypeFromArray: [NSArray arrayWithObject: kProfileDragEntry]] )
 		{
 			NSData *data = [pboard dataForType: kProfileDragEntry];
-			NSMutableDictionary *encoding = [NSPropertyListSerialization propertyListFromData: data mutabilityOption: NSPropertyListMutableContainersAndLeaves format: nil errorDescription: nil];
 			
-			NSDictionary* profile = [self _currentProfileDictionary];
-			NSMutableArray* encodings = [profile objectForKey: kProfile_Encodings_Key];
-			NSParameterAssert( row >= 0 && row <= [encodings count] );
+			Profile* profile = [self _currentProfile];
+            [profile moveEncodingFrom:*(int *)[data bytes] to:row];
 			
-			int oldIndex = [encodings indexOfObject: encoding];
-			NSParameterAssert( NSNotFound != oldIndex );
-			
-			[encodings insertObject: encoding atIndex: row];
-			
-			if ( row < oldIndex )
-				oldIndex++;
-			[encodings removeObjectAtIndex: oldIndex];
-			
-			[[ProfileDataManager sharedInstance] save];
+            [[ProfileDataManager sharedInstance] saveProfile:profile];
 			[mEncodingTableView reloadData];
 			return YES;
 		}
@@ -432,16 +363,11 @@ static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
 		NSParameterAssert( [rows count] == 1 );
 		int rowIndex = [[rows objectAtIndex: 0] intValue];
 		
-		NSDictionary* profile = [self _currentProfileDictionary];
-		NSArray* encodings = [profile objectForKey: kProfile_Encodings_Key];
-		NSParameterAssert( rowIndex >= 0 && rowIndex< [encodings count] );		
-		
-		NSDictionary *encoding = [encodings objectAtIndex: rowIndex];
-		NSParameterAssert( encoding != nil );
-
-		NSData *data = [NSPropertyListSerialization dataFromPropertyList: encoding format: NSPropertyListXMLFormat_v1_0 errorDescription: nil];
+        NSData *data = [[NSData alloc] initWithBytes:&rowIndex
+                                              length:sizeof(int)];
 		[pboard declareTypes: [NSArray arrayWithObject: kProfileDragEntry] owner: nil];
 		[pboard setData: data forType: kProfileDragEntry];
+        [data release];
 		
 		mEncodingDragRow = rowIndex;
 		

@@ -12,6 +12,7 @@
 
 @implementation ProfileManager (Private)
 
+#if 0
 + (int)_indexForEncodingType: (CARD32)type
 {
 	int i;
@@ -22,29 +23,10 @@
 	[NSException raise: NSInternalInconsistencyException format: @"Bad encoding type given, no corresponding index"];
 	return -1; // never executed
 }
+#endif
 
 
-+ (NSNumber *)_tagForModifierIndex: (int)index
-{
-	switch ( index )
-	{
-		case 0:
-			return [NSNumber numberWithShort: kRemoteAltModifier];
-		case 1:
-			return [NSNumber numberWithShort: kRemoteMetaModifier];
-		case 2:
-			return [NSNumber numberWithShort: kRemoteControlModifier];
-		case 3:
-			return [NSNumber numberWithShort: kRemoteShiftModifier];
-		case 4:
-			return [NSNumber numberWithShort: kRemoteWindowsModifier];
-	}
-	[NSException raise: NSInternalInconsistencyException format: @"Unsupported modifier index tag %d", index];
-	return nil; // never executed
-}
-
-
-- (NSMutableDictionary *)_currentProfileDictionary
+- (Profile *)_currentProfile
 {
 	NSString *name = [self _currentProfileName];
 	if ( nil == name )
@@ -66,7 +48,9 @@
 
 - (void)_selectProfileAtIndex: (int)index
 {
-	[mProfileTable selectRow: index byExtendingSelection: NO];
+    NSIndexSet  *set = [[NSIndexSet alloc] initWithIndex: index];
+    [mProfileTable selectRowIndexes: set byExtendingSelection: NO];
+    [set release];
 	
 	NSArray *profileNames = [self _sortedProfileNames];
 	[mProfileNameField setStringValue: [profileNames objectAtIndex: index]];
@@ -105,10 +89,10 @@
 	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
 	BOOL enabled;
 	
-	enabled = [profiles profileForKey: profileName] && ![profileName isEqualToString: [profiles defaultProfileName]];
+	enabled = [profiles profileWithNameExists: profileName] && ![profileName isEqualToString: [profiles defaultProfileName]];
     [mDeleteProfileButton setEnabled: enabled];
 	
-	enabled = ![profiles profileForKey: profileName] && (0 != [profileName length]);
+	enabled = ![profiles profileWithNameExists: profileName] && (0 != [profileName length]);
     [mNewProfileButton setEnabled: enabled];
 }
 
@@ -117,44 +101,46 @@
 {
 	int tag, value;
 	
-    NSDictionary* spd = [self _currentProfileDictionary];
-	NSParameterAssert( spd != nil );
+    Profile *profile = [self _currentProfile];
+	NSParameterAssert( profile != nil );
 
-    [mPixelFormatMatrix selectCellWithTag: [[spd objectForKey: kProfile_PixelFormat_Key] intValue]];
-    [mEnableCopyRect setState: [[spd objectForKey: kProfile_EnableCopyrect_Key] boolValue] ? NSOnState : NSOffState];
+    [mPixelFormatMatrix selectCellWithTag: [profile pixelFormatIndex]];
+    [mEnableCopyRect setState: [profile enableCopyRect]];
+    [mEnableJpegEncoding setState: [profile enableJpegEncoding]];
 	
-	tag = [[spd objectForKey: kProfile_Button2EmulationScenario_Key] unsignedIntValue];
+    tag = [profile button2EmulationScenario];
 	[mEmulationPopup2 selectItemAtIndex: [mEmulationPopup2 indexOfItemWithTag: tag]];
 	[mEmulationTabView2 selectTabViewItemAtIndex: tag];
-	tag = [[spd objectForKey: kProfile_ClickWhileHoldingModifierForButton2_Key] unsignedIntValue];
+    tag = [profile clickWhileHoldingModifierForButton:2];
 	[mClickWhileHoldingEmulationModifier2 selectItemAtIndex: [mClickWhileHoldingEmulationModifier2 indexOfItemWithTag: tag]];
-	tag = [[spd objectForKey: kProfile_MultiTapModifierForButton2_Key] unsignedIntValue];
+    tag = [profile multiTapModifierForButton:2];
 	[mMultiTapEmulationModifier2 selectItemAtIndex: [mMultiTapEmulationModifier2 indexOfItemWithTag: tag]];
-	value = [[spd objectForKey: kProfile_MultiTapCountForButton2_Key] unsignedIntValue];
+    value = [profile multiTapCountForButton:2];
 	[mMultiTapEmulationCountStepper2 setIntValue: value];
 	[mMultiTapEmulationCountText2 setIntValue: value];
-	tag = [[spd objectForKey: kProfile_TapAndClickModifierForButton2_Key] unsignedIntValue];
+    tag = [profile tapAndClickModifierForButton:2];
 	[mTapAndClickEmulationModifier2 selectItemAtIndex: [mTapAndClickEmulationModifier2 indexOfItemWithTag: tag]];
-	[mTapAndClickEmulationTimeout2 setDoubleValue: [[spd objectForKey: kProfile_TapAndClickTimeoutForButton2_Key] doubleValue]];
+    [mTapAndClickEmulationTimeout2 setDoubleValue: [profile tapAndClickTimeoutForButton:2]];
 	
-	tag = [[spd objectForKey: kProfile_Button3EmulationScenario_Key] unsignedIntValue];
+	tag = [profile button3EmulationScenario];
 	[mEmulationPopup3 selectItemAtIndex: [mEmulationPopup3 indexOfItemWithTag: tag]];
 	[mEmulationTabView3 selectTabViewItemAtIndex: tag];
-	tag = [[spd objectForKey: kProfile_ClickWhileHoldingModifierForButton3_Key] unsignedIntValue];
+    tag = [profile clickWhileHoldingModifierForButton:3];
 	[mClickWhileHoldingEmulationModifier3 selectItemAtIndex: [mClickWhileHoldingEmulationModifier3 indexOfItemWithTag: tag]];
-	tag = [[spd objectForKey: kProfile_MultiTapModifierForButton3_Key] unsignedIntValue];
+    tag = [profile multiTapModifierForButton:3];
 	[mMultiTapEmulationModifier3 selectItemAtIndex: [mMultiTapEmulationModifier3 indexOfItemWithTag: tag]];
-	value = [[spd objectForKey: kProfile_MultiTapCountForButton3_Key] unsignedIntValue];
+    value = [profile multiTapDelayForButton:3];
 	[mMultiTapEmulationCountStepper3 setIntValue: value];
 	[mMultiTapEmulationCountText3 setIntValue: value];
-	tag = [[spd objectForKey: kProfile_TapAndClickModifierForButton3_Key] unsignedIntValue];
+    tag = [profile tapAndClickModifierForButton:3];
 	[mTapAndClickEmulationModifier3 selectItemAtIndex: [mTapAndClickEmulationModifier3 indexOfItemWithTag: tag]];
-	[mTapAndClickEmulationTimeout3 setDoubleValue: [[spd objectForKey: kProfile_TapAndClickTimeoutForButton3_Key] doubleValue]];
+    [mTapAndClickEmulationTimeout3 setDoubleValue: [profile tapAndClickTimeoutForButton:3]];
 	
-	[mCommandKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalCommandModifier_Key] shortValue]];
-    [mControlKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalControlModifier_Key] shortValue]];
-    [mAltKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalAltModifier_Key] shortValue]];
-    [mShiftKey selectItemAtIndex:[[spd objectForKey: kProfile_LocalShiftModifier_Key] shortValue]];
+	[mCommandKey selectItemAtIndex:[profile commandKeyPreference]];
+    [mControlKey selectItemAtIndex:[profile controlKeyPreference]];
+    [mAltKey selectItemAtIndex:[profile altKeyPreference]];
+    [mShiftKey selectItemAtIndex:[profile shiftKeyPreference]];
+    //[mInterpretModifiersLocally setState:[profile interpretModifiersLocally]];
 	
     [mEncodingTableView reloadData];
 }

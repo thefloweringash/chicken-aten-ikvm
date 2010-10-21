@@ -11,6 +11,8 @@
 
 @implementation NSObject (Chicken)
 
+/* Peforms a copy of an object, recursively copying arrays and dictionaries to
+ * mutable versions of themselves. */
 - (id)deepMutableCopy
 {
 	BOOL isArray = [self isKindOfClass: [NSArray class]];

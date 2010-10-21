@@ -24,9 +24,10 @@
 
 @implementation GradientFilter
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithTarget:(TightEncodingReader *)aTarget
+          andConnection:(RFBConnection *)aConnection
 {
-    if (self = [super initTarget:aTarget action:anAction]) {
+    if (self = [super initWithTarget: aTarget andConnection: aConnection]) {
 		filterData = [[NSMutableData alloc] init];
 		prevRow = thisRow = src = NULL;
 	}
@@ -48,9 +49,9 @@ static void _free(void* p) {
     [super dealloc];
 }
 
-- (void)resetReader
+- (void)resetFilterForRect:(NSRect)rect
 {
-    rowSize = [target rectangle].size.width;
+    rowSize = rect.size.width;
     rowBytes = rowSize * bytesPerPixel;
     if(rowSize > rowCapacity) {
         rowCapacity = rowSize;
@@ -62,7 +63,7 @@ static void _free(void* p) {
         src = malloc(3 * rowSize * sizeof(int));
     }
     memset(prevRow, 0, 3 * rowSize * sizeof(int));
-    [target performSelector:action withObject:self];
+    [target filterInitDone];
 }
 
 - (NSData*)filter:(NSData*)data rows:(unsigned)numRows

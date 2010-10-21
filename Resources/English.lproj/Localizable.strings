@@ -6,32 +6,41 @@
 "RFBDefaultServerName" = "New Server";
 "RFBUntitledServerName" = "Untitled Server";
 "Connecting..." = "Connecting...";
+"Connect" = "Connect";
+"DisplayIsPort" = "Display %d is port %d";
+"PortIsDisplay" = "Port %d is display %d";
+"PortNum" = "Port %d";
 
 // Error Actions
 "OpenConnection" = "Open Connection";
 "NoNamedServer" = "Could not find a server with the name \"%@\"";
-"NoConnection" = "Could not connect to server %@:%d";
+"NoConnection" = "Could not connect to server %@ port %d";
+"NotVNC" = "Not a VNC server";
 "UnknownAuthType" = "Unknown authType %@";
 "UnknownAuthResult" = "Unknown authResult %@";
-"AuthenticationFailed" = "Authentication Failed";
-"AuthenticationFailedTooMany" = "Authentication Failed (too many failures)";
+//"AuthenticationFailed" = "Authentication Failed";
+"AuthenticationFailedTooMany" = "Too many failures";
 "UnknownMessageType" = "Unknown message type %@\n";
 "ServerReports" = "Server Reports";
 "ARDAuthWarning" = "\nPlease configure Apple Remote Desktop to allow VNC Viewers to control the screen.\n";
 
 // Profiles
 "defaultProfileName" = "Default Profile";
+"EditProfiles" = "Edit Connection Profiles...";
 
 // Connection Terminated
 "ConnectionTerminated" = "Connection Terminated";
 "Reconnect" = "Reconnect";
 "ServerClosed" = "The server closed the connection";
 "ServerError" = "Write to server: %s";
+"ProtocolError" = "Protocol error";
+"ZrleTooSmall" = "ZRLE rectangle contained insufficient data";
 
 // Fullscreen
 "FullscreenHeader" = "Your connection is entering fullscreen mode";
 "Fullscreen" = "Fullscreen";
-"FullscreenReason" = "You may return to windowed mode by pressing the proper key equivalent at any time.  You can change this key equivalent in the Preferences if necessary.";
+"FullscreenReason1" = "You may return to windowed mode by pressing the proper key equivalent ";
+"FullscreenReason2" = "at any time.  You can change this key equivalent in the Preferences if necessary.";
 
 // Listener
 "listenStart" = "Start";
@@ -43,3 +52,11 @@
 // Rendezvous
 "AddressResolveFailed" = "address resolve failed";
 "Resolving" = "resolving...";
+
+// Connection Info
+"ConnectionStatistics" = "Bytes Received: %@\nBytes Represented: %@\nCompression: %.2f\nRectangles: %u";
+"ServerInfo" = "VNC Protocol Version: %d.%d\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %@\n\tTruecolor: %@\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d";
+"big-endian" = "big-endian";
+"little-endian" = "little-endian";
+"yes" = "yes";
+"no" = "no";

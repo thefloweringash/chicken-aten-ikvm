@@ -6,32 +6,41 @@
 "RFBDefaultServerName" = "Nouveau serveur";
 "RFBUntitledServerName" = "Serveur sans titre";
 "Connecting..." = "Connexion en cours…";
+"Connect" = "Connecter";
+"DisplayIsPort" = "Affichage %d est port %d";
+"PortIsDisplay" = "Port %d est affichage %d";
+"PortNum" = "Port %d";
 
 /* Error Actions */
 "OpenConnection" = "Ouvrir une connexion";
 "NoNamedServer" = "Impossible de trouver un serveur avec le nom \"%@\"";
-"NoConnection" = "Impossible de se connecter au serveur %@:%d";
+"NoConnection" = "Impossible de se connecter au serveur %@ port %d";
+"NotVNC" = "Not a VNC server";
 "UnknownAuthType" = "Type d'authentification inconnu %@";
 "UnknownAuthResult" = "Resultat d'authentification inconnu %@";
-"AuthenticationFailed" = "Echec de l'authentification";
-"AuthenticationFailedTooMany" = "Echec de l'authentification (trop d'echecs)";
+//"AuthenticationFailed" = "Echec de l'authentification";
+"AuthenticationFailedTooMany" = "Trop d'echecs";
 "UnknownMessageType" = "Message de type inconnu %@\n";
 "ServerReports" = "Le serveur a répondu";
 "ARDAuthWarning" = "\nVeuillez configurer Apple Remote Desktop pour autoriser les clients VNC à contrôler l'écran\n";
 
 /* Profiles */
 "defaultProfileName" = "Profile par défaut";
+"EditProfiles" = "Edit Connection Profiles...";
 
 /* Connection Terminated */
 "ConnectionTerminated" = "Connexion interrompue";
 "Reconnect" = "Reconnecter";
 "ServerClosed" = "Le serveur a fermé la connexion";
 "ServerError" = "Ecrire au serveur: %s";
+"ProtocolError" = "Protocol error";
+"ZrleTooSmall" = "ZRLE rectangle contained insufficient data";
 
 /* Fullscreen */
 "FullscreenHeader" = "Vous allez passer en mode plein écran";
 "Fullscreen" = "Plein écran";
-"FullscreenReason" = "Vous pouvez retourner en mode fenêtre en appellant le raccourci clavier à tout moment.  Vous pouvez changer ce raccourci clavier dans les préférences.";
+"FullscreenReason1" = "Vous pouvez retourner en mode fenêtre en appellant le raccourci clavier ";
+"FullscreenReason2" = "à tout moment.  Vous pouvez changer ce raccourci clavier dans les préférences.";
 
 /* Listener */
 "listenStart" = "Démarrer";
@@ -44,3 +53,10 @@
 "AddressResolveFailed" = "Echec de la résolution d'adresse";
 "Resolving" = "Résolution d'adresse…";
 
+// Connection Info
+"ConnectionStatistics" = "Bytes Received: %@\nBytes Represented: %@\nCompression: %.2f\nRectangles: %u";
+"ServerInfo" = "VNC Protocol Version: %d.%d\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %@\n\tTruecolor: %@\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d";
+"big-endian" = "big-endian";
+"little-endian" = "little-endian";
+"yes" = "oui";
+"no" = "non";

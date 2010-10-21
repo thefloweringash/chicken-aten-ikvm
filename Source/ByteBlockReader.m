@@ -20,13 +20,18 @@
 
 #import "ByteBlockReader.h"
 
-extern BOOL gIsJaguar;
-
 @implementation ByteBlockReader
+
+- (id)initTarget:(id)aTarget action:(SEL)anAction
+{
+    return [self initTarget:aTarget action:anAction size:0];
+}
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction size:(unsigned)aSize
 {
 	if (self = [super initTarget:aTarget action:anAction]) {
+		capacity = 0;
+		buffer = NULL;
 		[self setBufferSize:aSize];
 	}
     return self;
@@ -42,14 +47,19 @@ extern BOOL gIsJaguar;
 
 - (void)setBufferSize:(unsigned)aSize
 {
-    if(aSize > capacity) {
-        capacity = aSize;
+    size = aSize;
+    if(size > capacity) {
+        capacity = size;
         if(buffer) {
             free(buffer);
         }
-        buffer = malloc(aSize);
+        buffer = malloc(size);
+
+        if (buffer == NULL) {
+            capacity = aSize = 0;
+            NSLog(@"Memory allocation failed in setBufferSize:");
+        }
     }
-    size = aSize;
 }
 
 - (unsigned)bufferSize
@@ -64,18 +74,20 @@ extern BOOL gIsJaguar;
 
 - (unsigned)readBytes:(unsigned char*)theBytes length:(unsigned)aLength
 {
-	// we can save some time here by not copying the data into a new NSData object.  Unfortunately, we can only save this time on Jaguar.  It's important to remember that all of our targets must treat this data as _READ_ONLY_!
-	
+    // we can save some time here by not copying the data into a new NSData object.  It's important to remember that all of our targets must treat this data as _READ_ONLY_ and temporary!
+
     unsigned canConsume = MIN(aLength, (size - bytesRead));
-    
-    memcpy(buffer + bytesRead, theBytes, canConsume);
-    if((bytesRead += canConsume) == size) {
-		if (gIsJaguar) {
-			[target performSelector:action withObject:[NSData dataWithBytesNoCopy:buffer length:size freeWhenDone: NO]];
-		}
-		else {
-			[target performSelector:action withObject:[NSData dataWithBytes:buffer length:size]];
-		}
+
+    if (canConsume == size) {
+        NSData  *data = [NSData dataWithBytesNoCopy:theBytes length:size
+                            freeWhenDone: NO];
+        bytesRead = size;
+        [target performSelector:action withObject:data];
+    } else {
+        memcpy(buffer + bytesRead, theBytes, canConsume);
+        if((bytesRead += canConsume) == size) {
+            [target performSelector:action withObject:[NSData dataWithBytesNoCopy:buffer length:size freeWhenDone: NO]];
+        }
     }
     return canConsume;
 }

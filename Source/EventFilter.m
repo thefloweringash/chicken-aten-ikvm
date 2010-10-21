@@ -13,6 +13,24 @@
 #import "RFBConnection.h"
 #import "RFBView.h"
 
+/* The basic path of an event through this system is as follows (this ignores
+ * any emulation scenarios which might be triggered):
+    - First the mouseDown, keyDown, etc. message is invoked.
+    - This creates a QueuedEvent and adds it to _pendingQueue, possibly by
+      calling a queue... message.
+    - Then sendAnyValidEventsToServerNow checks the queued events against
+      possible emulations scenarios. This step is sometimes skipped.
+    - The sendAllPendingQueueEntriesNow and sendPendingQueueEntriesInRange:
+      methods are call sendEvent: with the QueuedEvent instance.
+    - The sendEvent: message dispatches the event to send... messages.
+    - The send... messages call send.. or mouse(Clicked)At: in RFBConnection.
+    - The methods in RFBConnection have responsibility for translating Cocoa
+      representations of characters and modifiers to RFB key symbols and
+      packaging the event in a RFB message.
+    - With the exception of mouseAt:, the messages sent to RFBConnection only
+      buffer the messages, so writeBuffer is sent in write this data. */
+
+#define SCROLL_THRESH 1.0
 
 static inline unsigned int
 ButtonNumberToArrayIndex( unsigned int buttonNumber )
@@ -26,6 +44,12 @@ static inline unsigned int
 ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 {  return 1 << (buttonNumber-1);  }
 
+@interface EventFilter (Private)
+
+- (void)_synthesizeRemainingKeyUpEvents;
+- (void)_sendKeyEvent:(QueuedEvent *)event;
+
+@end
 
 @implementation EventFilter
 
@@ -40,6 +64,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	{
 //		NSLog(@"resetting multi-tap timer");
 		[self sendAllPendingQueueEntriesNow];
+        [_connection writeBuffer];
 	}
 }
 
@@ -49,12 +74,17 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	[_tapAndClickTimer invalidate];
 	[_tapAndClickTimer release];
 	_tapAndClickTimer = nil;
-	[_view setCursorTo: @"rfbCursor"];
-	if ( timer )
+	[_view setCursorTo: nil];
+	if ( timer ) {
 		[self sendAllPendingQueueEntriesNow];
+        [_connection writeBuffer];
+	}
 }
 
 
+/* Checks to see if caps lock has been pressed while we were not the active
+ * application, in which case we wouldn't have received a flagsChanged: message.
+ * */
 - (void)_updateCapsLockStateIfNecessary
 {
 	if ( _watchEventForCapsLock )
@@ -75,10 +105,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		_pendingEvents = [[NSMutableArray alloc] init];
 		_pressedKeys = [[NSMutableSet alloc] init];
 		_emulationButton = 1;
-	    _mouseTimer = nil;
-        _unsentMouseMoveExists = NO;
-		_lastMousePoint.x = -1;
-		_lastMousePoint.y = -1;
 		
 		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(applicationDidBecomeActive:) name: NSApplicationDidBecomeActiveNotification object: nil];
 	}
@@ -93,6 +119,8 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	[self sendAllPendingQueueEntriesNow];
 	[self synthesizeRemainingEvents];
 	[self sendAllPendingQueueEntriesNow];
+    [_connection writeBuffer];
+
 	[_pendingEvents release];
 	[_pressedKeys release];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -110,14 +138,8 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)setConnection: (RFBConnection *)connection
 {
 	_connection = connection;
+    _profile = [connection profile];
 	_viewOnly = [connection viewOnly];
-	
-	Profile *profile = [connection profile];
-	if ( profile )
-	{
-		[self setButton2EmulationScenario: [profile button2EmulationScenario]];
-		[self setButton3EmulationScenario: [profile button3EmulationScenario]];
-	}
 }
 
 
@@ -165,99 +187,36 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)scrollWheel: (NSEvent *)theEvent
 {
+	int addMask;
+
 	if ( _viewOnly )
 		return;
 
+    // touchpads can generate lots of scroll events with deltaY close to 0,
+    // which we ignore
+    if ( [theEvent deltaY] > SCROLL_THRESH )
+		addMask = rfbButton4Mask;
+	else if ( [theEvent deltaY] < -SCROLL_THRESH )
+		addMask = rfbButton5Mask;
+    else
+        return;
+
 	[self sendAllPendingQueueEntriesNow];
-	int addMask;
     NSPoint	p = [_view convertPoint: [[_view window] convertScreenToBase: [NSEvent mouseLocation]] 
 						  fromView: nil];
-    if ( [theEvent deltaY] > 0.0 )
-		addMask = rfbButton4Mask;
-	else
-		addMask = rfbButton5Mask;
-    [self clearUnpublishedMouseMove];
-    [_connection mouseAt: p buttons: _pressedButtons | addMask];	// 'Mouse button down'
-    [_connection mouseAt: p buttons: _pressedButtons];			// 'Mouse button up'
+
+    [_connection mouseClickedAt: p buttons: _pressedButtons | addMask];	// 'Mouse button down'
+    [_connection mouseClickedAt: p buttons: _pressedButtons];			// 'Mouse button up'
+    [_connection writeBuffer];
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
-	if ( _viewOnly )
-		return;
-	
-	if( nil != _mouseTimer )
-	{
-        [_mouseTimer invalidate];
-		[_mouseTimer release];
-        _mouseTimer = nil;
-    }
+    if (_viewOnly)
+        return;
 
 	NSPoint currentPoint = [_view convertPoint: [theEvent locationInWindow] fromView: nil];
-
-	//#define CHANGE_DIFF 5
-	#define IGNORE_COUNT 10
-	
-	static int ct = IGNORE_COUNT;
-    bool bSendEventImmediately = NO;
-	
-	if( IGNORE_COUNT == ct )
-	{
-	//	if( (_lastMousePoint.x - currentPoint.x <= CHANGE_DIFF && _lastMousePoint.x - currentPoint.x >= -CHANGE_DIFF) &&
-	//		(_lastMousePoint.y - currentPoint.y <= CHANGE_DIFF && _lastMousePoint.y - currentPoint.y >= -CHANGE_DIFF) )
-	//	{
-            bSendEventImmediately = YES;
-	//	}
-		
-		ct = 0;
-	}
-	else
-	{
-		++ct;
-	}
-    
-    _unsentMouseMoveExists = YES;
-    _lastMousePoint = currentPoint;
-    
-    if( YES == bSendEventImmediately )
-    {
-        NSLog( @"Forced Mouse Move." );
-        [self sendUnpublishedMouseMove];
-    }
-    else
-    {
-        NSLog( @"Ignored Mouse Move." );
-        _mouseTimer = [NSTimer scheduledTimerWithTimeInterval: 0.05
-                                                       target: self
-                                                     selector: @selector(handleMouseTimer:)
-                                                     userInfo: nil
-                                                      repeats: NO];
-		[_mouseTimer retain];
-    }
-}
-
-- (void)handleMouseTimer: (NSTimer *) timer
-{
-	[_mouseTimer release];
-    _mouseTimer = nil;
-    
-    [self sendUnpublishedMouseMove];
-    
-    NSLog( @"Sent Mouse Move." );
-}
-
-- (void)clearUnpublishedMouseMove
-{
-	_unsentMouseMoveExists = NO;
-}
-
-- (void)sendUnpublishedMouseMove
-{
-    if( YES == _unsentMouseMoveExists )
-    {
-        [self clearUnpublishedMouseMove];
-        [_connection mouseAt: _lastMousePoint buttons: _pressedButtons];
-    }
+    [_connection mouseAt: currentPoint buttons: _pressedButtons];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -283,141 +242,30 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)keyDown: (NSEvent *)theEvent
 {
 	[self _updateCapsLockStateIfNecessary];
+
 	NSString *characters = [theEvent characters];
-	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
-	
 	unsigned int modifiers = [theEvent modifierFlags];
 	if ( [[KeyEquivalentManager defaultManager] performEquivalentWithCharacters: characters modifiers: modifiers] )
 	{
 		[self discardAllPendingQueueEntries];
-		return;
-	}
-	
-	unsigned int i, charLength = [characters length];
-	unsigned int unmodLength = [charactersIgnoringModifiers length];
-	unsigned int length = unmodLength > charLength ? unmodLength : charLength;
-	
-	NSParameterAssert( characters && charactersIgnoringModifiers );
-	NSParameterAssert( charLength <= unmodLength );
-	
-	for ( i = 0; i < length; ++i )
-	{
-		unichar character;
-		unichar characterIgnoringModifiers;
-		
-		if ( i < charLength )
-			character = [characters characterAtIndex: i];
-		else
-			character = [charactersIgnoringModifiers characterAtIndex: i];
-		
-		if ( i < unmodLength )
-			characterIgnoringModifiers = [charactersIgnoringModifiers characterAtIndex: i];
-		else
-			characterIgnoringModifiers = [characters characterAtIndex: i];
-		
-		QueuedEvent *event = [QueuedEvent keyDownEventWithCharacter: character
-										 characterIgnoringModifiers: characterIgnoringModifiers
-														  timestamp: [theEvent timestamp]];
-		[_pendingEvents addObject: event];
-		[self sendAnyValidEventsToServerNow];
-	}
+	} else
+        [self queueKeyEventFromEvent:theEvent];
 }
 
 - (void)keyUp: (NSEvent *)theEvent
 {
 	[self _updateCapsLockStateIfNecessary];
-	NSString *characters = [theEvent characters];
-	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
-	
-	unsigned int i, charLength = [characters length];
-	unsigned int unmodLength = [charactersIgnoringModifiers length];
-	unsigned int length = unmodLength > charLength ? unmodLength : charLength;
-
-	NSParameterAssert( characters && charactersIgnoringModifiers );
-	NSParameterAssert( charLength <= unmodLength );
-	
-	for ( i = 0; i < length; ++i )
-	{
-		unichar character;
-		unichar characterIgnoringModifiers;
-		
-		if ( i < charLength )
-			character = [characters characterAtIndex: i];
-		else
-			character = [charactersIgnoringModifiers characterAtIndex: i];
-		
-		if ( i < unmodLength )
-			characterIgnoringModifiers = [charactersIgnoringModifiers characterAtIndex: i];
-		else
-			characterIgnoringModifiers = [characters characterAtIndex: i];
-		
-		QueuedEvent *event = [QueuedEvent keyUpEventWithCharacter: character
-									   characterIgnoringModifiers: characterIgnoringModifiers
-														timestamp: [theEvent timestamp]];
-		[_pendingEvents addObject: event];
-		[self sendAnyValidEventsToServerNow];
-	}
+    [self queueKeyEventFromEvent:theEvent];
 }
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-	unsigned int newState = [theEvent modifierFlags];
-    newState = ~(~newState | 0xFFFF);
-	unsigned int changedState = newState ^ _queuedModifiers;
-	NSTimeInterval timestamp = [theEvent timestamp];
-	_queuedModifiers = newState;
-	
-	if ( NSShiftKeyMask & changedState )
-	{
-		if ( NSShiftKeyMask & newState )
-			[self queueModifierPressed: NSShiftKeyMask timestamp: timestamp];
-		else
-			[self queueModifierReleased: NSShiftKeyMask timestamp: timestamp];
-	}
-	if ( NSControlKeyMask & changedState )
-	{
-		if ( NSControlKeyMask & newState )
-			[self queueModifierPressed: NSControlKeyMask timestamp: timestamp];
-		else
-			[self queueModifierReleased: NSControlKeyMask timestamp: timestamp];
-	}
-	if ( NSAlternateKeyMask & changedState )
-	{
-		if ( NSAlternateKeyMask & newState )
-			[self queueModifierPressed: NSAlternateKeyMask timestamp: timestamp];
-		else
-			[self queueModifierReleased: NSAlternateKeyMask timestamp: timestamp];
-	}
-	if ( NSCommandKeyMask & changedState )
-	{
-		if ( NSCommandKeyMask & newState )
-			[self queueModifierPressed: NSCommandKeyMask timestamp: timestamp];
-		else
-			[self queueModifierReleased: NSCommandKeyMask timestamp: timestamp];
-	}
-	if ( NSAlphaShiftKeyMask & changedState )
-	{
-		if ( NSAlphaShiftKeyMask & newState )
-			[self queueModifierPressed: NSAlphaShiftKeyMask timestamp: timestamp];
-		else
-			[self queueModifierReleased: NSAlphaShiftKeyMask timestamp: timestamp];
-	}
-	if ( NSNumericPadKeyMask & changedState )
-	{
-		if ( NSNumericPadKeyMask & newState )
-			[self queueModifierPressed: NSNumericPadKeyMask timestamp: timestamp];
-		else
-			[self queueModifierReleased: NSNumericPadKeyMask timestamp: timestamp];
-	}
-	if ( NSHelpKeyMask & changedState )
-	{
-		if ( NSHelpKeyMask & newState )
-			[self queueModifierPressed: NSHelpKeyMask timestamp: timestamp];
-		else
-			[self queueModifierReleased: NSHelpKeyMask timestamp: timestamp];
-	}
-}
+    [self _synthesizeRemainingKeyUpEvents];
 
+    [self queueModifiers:[theEvent modifierFlags]
+               timestamp:[theEvent timestamp]];
+    [_connection writeBuffer];
+}
 
 #pragma mark -
 #pragma mark Synthesized Events
@@ -426,6 +274,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)clearAllEmulationStates
 {
 	[self sendAllPendingQueueEntriesNow];
+    [self synthesizeRemainingEvents];
+    [self sendAllPendingQueueEntriesNow];
+    [_connection writeBuffer];
+
 	_emulationButton = 1;
 	_clickWhileHoldingModifierStillDown[0] = NO;
 	_clickWhileHoldingModifierStillDown[1] = NO;
@@ -455,6 +307,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 													timestamp: [theEvent timestamp]];
 	[_pendingEvents addObject: event];
 	[self sendAnyValidEventsToServerNow];
+    [_connection writeBuffer];
 }
 
 
@@ -472,8 +325,117 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 												  timestamp: [theEvent timestamp]];
 	[_pendingEvents addObject: event];
 	[self sendAnyValidEventsToServerNow];
+    [_connection writeBuffer];
 }
 
+- (void)queueKeyEventFromEvent: (NSEvent *)theEvent
+{
+    NSString *unmodified = [theEvent charactersIgnoringModifiers];
+    NSString *modified = [theEvent characters];
+    NSString *characters;
+    unsigned int length;
+	unsigned int i;
+    unsigned int oldModifiers = 0;
+    unsigned int modifiers = [theEvent modifierFlags];
+
+    /* If shift is down, the OS does the capitalization on
+     * charactersIgnoringModifiers, but if caps lock is down, it doesn't. */
+    if (modifiers & NSAlphaShiftKeyMask)
+        unmodified = [unmodified uppercaseString];
+
+    // figure out the appropriate string to send to the server
+    if ([modified length] > 0 && [modified characterAtIndex:0] < 0x20) {
+        /* The OS translates Ctrl + letter into ASCII control sequences,
+         * which are also used for Tab, Escape, Return, and Enter. So, in
+         * these cases, we use the unmodified characters instead. */
+        characters = unmodified;
+    } else if ([modified length] > 0 && [modified characterAtIndex:0] < 0x80
+                    && !(modifiers & NSCommandKeyMask)
+                    && ![modified isEqualToString: unmodified]) {
+        /* Some non-US keyboards require holding option or control in order to
+         * type basic ASCII characters. Since these characters can be so
+         * crucial, we the modified key if it's in the ASCII range.
+         *
+         * Note that the command key tends to block the effect of the shift key
+         * on [theEvent characters], so this heuristic can't be applied with the
+         * command key is down. */
+        characters = modified;
+
+        if ([theEvent type] == NSKeyDown) {
+            /* We clear the modifiers for a keydown event so that the server
+             * doesn't try to interpret the modifiers on top of the already
+             * modified character. */
+            oldModifiers = modifiers;
+            [self queueModifiers:modifiers & ~NSControlKeyMask
+                                           & ~NSAlternateKeyMask
+                       timestamp:[theEvent timestamp]];
+        }
+    } else if ([_profile interpretModifiersLocally]) {
+        characters = modified;
+        if ((modifiers & (NSShiftKeyMask | NSAlphaShiftKeyMask))
+                    && (modifiers & NSCommandKeyMask)) {
+            // command tends to block the effect of shift
+            characters = [characters uppercaseString];
+        }
+    } else {
+        characters = unmodified;
+    }
+
+    length = [characters length];
+	NSParameterAssert( characters );
+	
+	for ( i = 0; i < length; ++i )
+	{
+		unichar character;
+        QueuedEvent *event;
+
+        character = [characters characterAtIndex: i];
+
+        if ((modifiers & NSNumericPadKeyMask) && character < 0x40)
+            character += 0xf600; // encode numpad keys in private use area
+		
+        if ([theEvent type] == NSKeyDown) {
+            event = [QueuedEvent keyDownEventWithCharacter: character
+                                                 timestamp: [theEvent timestamp]];
+        } else {
+            event = [QueuedEvent keyUpEventWithCharacter: character
+                                               timestamp: [theEvent timestamp]];
+        }
+		[_pendingEvents addObject: event];
+		[self sendAnyValidEventsToServerNow];
+	}
+
+    if (oldModifiers) {
+        /* Note that it would probably be better to wait until after the
+         * matching key up event before restoring the modifiers. */
+        [self queueModifiers:oldModifiers timestamp:[theEvent timestamp]];
+    }
+
+    [_connection writeBuffer];
+}
+
+/* Queues a change in the modifier state. Note that unlike the preceeding
+ * queue... messages, this does not write the connection buffer. */
+- (void)queueModifiers:(unsigned int)newState
+             timestamp:(NSTimeInterval)timestamp
+{
+    unsigned int pressed = newState & ~_queuedModifiers;
+    unsigned int released = ~newState & _queuedModifiers;
+    unsigned int masks[] = {NSShiftKeyMask, NSControlKeyMask,
+                            NSAlternateKeyMask, NSCommandKeyMask,
+                            NSAlphaShiftKeyMask, NSNumericPadKeyMask,
+                            NSHelpKeyMask};
+    int i;
+
+	_queuedModifiers = newState;
+	
+    for (i = 0; i < sizeof(masks) / sizeof(masks[0]); i++) {
+        if (masks[i] & pressed)
+			[self queueModifierPressed: masks[i] timestamp: timestamp];
+        else if (masks[i] & released)
+			[self queueModifierReleased: masks[i] timestamp: timestamp];
+    }
+}
 
 - (void)queueModifierPressed: (unsigned int)modifier timestamp: (NSTimeInterval)timestamp
 {
@@ -486,15 +448,15 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)queueModifierReleased: (unsigned int)modifier timestamp: (NSTimeInterval)timestamp
 {
-	if ( kClickWhileHoldingModifierEmulation == _buttonEmulationScenario[0] 
+    if ( kClickWhileHoldingModifierEmulation == [_profile button2EmulationScenario]
 		 && _clickWhileHoldingModifierStillDown[0] 
-		 && modifier == _clickWhileHoldingModifier[0] )
+		 && modifier == [_profile clickWhileHoldingModifierForButton:2] )
 	{
 		_clickWhileHoldingModifierStillDown[0] = NO;
 	}
-	if ( kClickWhileHoldingModifierEmulation == _buttonEmulationScenario[1] 
+    if ( kClickWhileHoldingModifierEmulation == [_profile button3EmulationScenario]
 		 && _clickWhileHoldingModifierStillDown[1] 
-		 && modifier == _clickWhileHoldingModifier[1] )
+		 && modifier == [_profile clickWhileHoldingModifierForButton:3] )
 	{
 		_clickWhileHoldingModifierStillDown[1] = NO;
 	}
@@ -511,31 +473,50 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	[self _updateCapsLockStateIfNecessary];
 	int index, strLength = [string length];
 	NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-	
+    unsigned oldModifiers = _pressedModifiers;
+	BOOL shiftKeyDown = NO;
+	NSCharacterSet  *upper = [NSCharacterSet uppercaseLetterCharacterSet];
+	QueuedEvent *event;
+
 	[self clearAllEmulationStates];
-	BOOL capsLockWasPressed = (_pressedModifiers & NSAlphaShiftKeyMask) ? YES : NO;
-	
+
 	for ( index = 0; index < strLength; ++index )
 	{
 		unichar character = [string characterAtIndex: index];
 		
-		// hack - lets' be polite to the server
-		if ( '\n' == character )
-			character = '\r';
-		
-		QueuedEvent *event = [QueuedEvent keyDownEventWithCharacter: character
-										 characterIgnoringModifiers: character
-														  timestamp: now];
-		[_pendingEvents addObject: event];
+		/* Fake shift key presses for uppercase letters. Strictly speaking, this
+         * shouldn't be necessary, since the server should not depend on the
+         * state of the shift key to interpret the keysym, but it helps with
+         * some servers. */
+		if (!shiftKeyDown && [upper characterIsMember:character]) {
+			event = [QueuedEvent modifierDownEventWithCharacter:NSShiftKeyMask
+													  timestamp:now];
+            [self _sendKeyEvent:event];
+			shiftKeyDown = YES;
+		} else if (shiftKeyDown && ![upper characterIsMember:character]) {
+			event = [QueuedEvent modifierUpEventWithCharacter:NSShiftKeyMask
+													timestamp:now];
+            [self _sendKeyEvent:event];
+			shiftKeyDown = NO;
+		}
+
+		event = [QueuedEvent keyDownEventWithCharacter: character
+											 timestamp: now];
+        [self _sendKeyEvent:event];
 		event = [QueuedEvent keyUpEventWithCharacter: character
-						  characterIgnoringModifiers: character
 										   timestamp: now];
-		[_pendingEvents addObject: event];
+        [self _sendKeyEvent:event];
+	}
+
+	if (shiftKeyDown) {
+		event = [QueuedEvent modifierUpEventWithCharacter:NSShiftKeyMask
+												timestamp:now];
+        [self _sendKeyEvent:event];
 	}
 	
-	[self sendAllPendingQueueEntriesNow];
-	if ( capsLockWasPressed )
-		_pressedModifiers |= NSAlphaShiftKeyMask;
+    [self queueModifiers: oldModifiers timestamp:now];
+    [self sendAllPendingQueueEntriesNow];
+    [_connection writeBuffer];
 }
 
 
@@ -547,6 +528,8 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 #pragma mark Event Processing
 
 
+/* Returns the number of events from the end of the queue to delay sending,
+ * because they might be part of an emulation scheme */
 - (unsigned int)_sendAnyValidEventsToServerForButton: (unsigned int)button 
 									scenario: (EventFilterEmulationScenario)scenario
 {
@@ -571,13 +554,16 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 }
 
 
+/* Sends events from the queue which are not part of an emulation sequence. */
 - (void)sendAnyValidEventsToServerNow
 {
 	unsigned int eventsToDelay2;
 	unsigned int eventsToDelay3;
 	
-	eventsToDelay2 = [self _sendAnyValidEventsToServerForButton: 2 scenario: _buttonEmulationScenario[0]];
-	eventsToDelay3 = [self _sendAnyValidEventsToServerForButton: 3 scenario: _buttonEmulationScenario[1]];
+	eventsToDelay2 = [self _sendAnyValidEventsToServerForButton: 2 scenario:
+                            [_profile button2EmulationScenario]];
+	eventsToDelay3 = [self _sendAnyValidEventsToServerForButton: 3 scenario:
+                            [_profile button3EmulationScenario]];
 	
 	unsigned int eventsToDelay = eventsToDelay3 > eventsToDelay2 ? eventsToDelay3 : eventsToDelay2;
 	if ( eventsToDelay )
@@ -593,6 +579,8 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		[self sendAllPendingQueueEntriesNow];
 }
 
+
+/* The _send* methods send particular queued events */
 
 - (void)_sendMouseEvent: (QueuedEvent *)event
 {
@@ -627,8 +615,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	
 	if ( _pressedButtons != oldPressedButtons )
     {
-        [self clearUnpublishedMouseMove];
-		[_connection mouseAt: [event locationInWindow] buttons: _pressedButtons];
+		[_connection mouseClickedAt: [event locationInWindow] buttons: _pressedButtons];
     }
 }
 
@@ -636,34 +623,17 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)_sendKeyEvent: (QueuedEvent *)event
 {
 	unichar character = [event character];
-	unichar characterIgnoringModifiers = [event characterIgnoringModifiers];
-	NSNumber *encodedChar = [NSNumber numberWithInt: (int)characterIgnoringModifiers];
-	unichar sendKey;
-	
-	// turns out that servers seem to ignore any keycodes over 128.  so no point in 
-	// sending 'em.  Also, turns out that RealVNC doesn't track the status of the capslock
-	// key.  So, I'll repurpose 'character' here to be the shifted character, if needed.
-	// 
-	// I'll maintain state of the unmodified character because, for example, if you set 
-	// caps lock and then keyrepeat something and unset caps lock while you're doing it, 
-	// the key up character will be for the lowercase letter.
-	if ( NSAlphaShiftKeyMask & _pressedModifiers )
-		character = toupper(characterIgnoringModifiers);
-	else
-		character = characterIgnoringModifiers;
-	sendKey = character;
-	
+	NSNumber *encodedChar = [NSNumber numberWithInt: (int)character];
+
 	if ( kQueuedKeyDownEvent == [event type] )
 	{
-        [self sendUnpublishedMouseMove];
 		[_pressedKeys addObject: encodedChar];
-		[_connection sendKey: sendKey pressed: YES];
+		[_connection sendKey: character pressed: YES];
 	}
 	else if ( [_pressedKeys containsObject: encodedChar] )
 	{
-        [self sendUnpublishedMouseMove];
 		[_pressedKeys removeObject: encodedChar];
-		[_connection sendKey: sendKey pressed: NO];
+		[_connection sendKey: character pressed: NO];
 	}
 }
 
@@ -674,13 +644,11 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	
 	if ( kQueuedModifierDownEvent == [event type] )
 	{
-        [self sendUnpublishedMouseMove];
 		_pressedModifiers |= modifier;
 		[_connection sendModifier: modifier pressed: YES];
 	}
 	else if ( _pressedModifiers & modifier )
 	{
-        [self sendUnpublishedMouseMove];
 		_pressedModifiers &= ~modifier;
 		[_connection sendModifier: modifier pressed: NO];
 	}
@@ -731,45 +699,21 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 {  [_pendingEvents removeAllObjects];  }
 
 
+// :TOFIX: all the events setting a timestamp using timeIntervalSince1970 are
+// inconsistent with NSEvent's timestamps, which are time since start-up
 - (void)_synthesizeRemainingMouseUpEvents
 {
 	NSPoint p = NSZeroPoint;
 	NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-	
-	if ( rfbButton1Mask && _pressedButtons )
-	{
-		QueuedEvent *event = [QueuedEvent mouseUpEventForButton: 1
-													   location: p
-													  timestamp: now];
-		[_pendingEvents addObject: event];
-	}
-	if ( rfbButton2Mask && _pressedButtons )
-	{
-		QueuedEvent *event = [QueuedEvent mouseUpEventForButton: 2
-													   location: p
-													  timestamp: now];
-		[_pendingEvents addObject: event];
-	}
-	if ( rfbButton3Mask && _pressedButtons )
-	{
-		QueuedEvent *event = [QueuedEvent mouseUpEventForButton: 3
-													   location: p
-													  timestamp: now];
-		[_pendingEvents addObject: event];
-	}
-	if ( rfbButton4Mask && _pressedButtons )
-	{
-		QueuedEvent *event = [QueuedEvent mouseUpEventForButton: 4
-													   location: p
-													  timestamp: now];
-		[_pendingEvents addObject: event];
-	}
-	if ( rfbButton5Mask && _pressedButtons )
-	{
-		QueuedEvent *event = [QueuedEvent mouseUpEventForButton: 5
-													   location: p
-													  timestamp: now];
-		[_pendingEvents addObject: event];
+    int     button;
+
+    for (button = 1; button <= 5; button++) {
+        if (_pressedButtons & ButtonNumberToRFBButtomMask(button)) {
+            QueuedEvent *event = [QueuedEvent mouseUpEventForButton: button
+                                                           location: p
+                                                          timestamp: now];
+            [_pendingEvents addObject: event];
+        }
 	}
 }
 
@@ -784,7 +728,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	{
 		unichar character = (unichar) [encodedKey intValue];
 		QueuedEvent *event = [QueuedEvent keyUpEventWithCharacter: character
-									   characterIgnoringModifiers: character
 														timestamp: now];
 		[_pendingEvents addObject: event];
 	}
@@ -793,32 +736,23 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)_synthesizeRemainingModifierUpEvents
 {
-	NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+	NSTimeInterval  now = [[NSDate date] timeIntervalSince1970];
+#if 0
+    unsigned int    masks[] = {NSShiftKeyMask, NSControlKeyMask,
+                                   NSAlternateKeyMask, NSCommandKeyMask};
+    int     i;
 	
-	if ( NSShiftKeyMask && _pressedModifiers )
-	{
-		QueuedEvent *event = [QueuedEvent modifierUpEventWithCharacter: NSShiftKeyMask
-															 timestamp: now];
-		[_pendingEvents addObject: event];
-	}
-	if ( NSControlKeyMask && _pressedModifiers )
-	{
-		QueuedEvent *event = [QueuedEvent modifierUpEventWithCharacter: NSControlKeyMask
-															 timestamp: now];
-		[_pendingEvents addObject: event];
-	}
-	if ( NSAlternateKeyMask && _pressedModifiers )
-	{
-		QueuedEvent *event = [QueuedEvent modifierUpEventWithCharacter: NSAlternateKeyMask
-															 timestamp: now];
-		[_pendingEvents addObject: event];
-	}
-	if ( NSCommandKeyMask && _pressedModifiers )
-	{
-		QueuedEvent *event = [QueuedEvent modifierUpEventWithCharacter: NSCommandKeyMask
-															 timestamp: now];
-		[_pendingEvents addObject: event];
-	}
+    for (i = 0; i < sizeof(masks) / sizeof(masks[0]); i++) {
+        if (masks[i] & _pressedModifiers) {
+            QueuedEvent *event;
+            event = [QueuedEvent modifierUpEventWithCharacter:masks[i]
+                                                    timestamp:now]; 
+            [_pendingEvents addObject:event];
+        }
+    }
+#else
+    [self queueModifiers:0 timestamp:now];
+#endif
 }
 
 
@@ -833,9 +767,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (unsigned int)handleClickWhileHoldingForButton: (unsigned int)button
 {
 	int eventCount = [_pendingEvents count];
+    unsigned    cwhModifier = [_profile clickWhileHoldingModifierForButton:button];
 	if ( eventCount > 2 )
 		return 0;
-	
+
 	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
 	
 	if ( eventCount == 2 )
@@ -843,7 +778,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		QueuedEvent *event1 = [_pendingEvents objectAtIndex: 0];
 		
 		if ( kQueuedModifierDownEvent == [event1 type] 
-			 && _clickWhileHoldingModifier[buttonIndex] == [event1 modifier] )
+            && cwhModifier == [event1 modifier] )
 		{
 			QueuedEvent *event2 = [_pendingEvents objectAtIndex: 1];
 			
@@ -861,9 +796,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	if ( eventCount == 1 )
 	{
 		QueuedEvent *event = [_pendingEvents objectAtIndex: 0];
+		unsigned	buttonIndex = ButtonNumberToArrayIndex(button);
 
 		if ( kQueuedModifierDownEvent == [event type] 
-			 && _clickWhileHoldingModifier[buttonIndex] == [event modifier] )
+            && cwhModifier == [event modifier] )
 		{
 			return 1;
 		}
@@ -883,10 +819,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (unsigned int)handleMultiTapForButton: (unsigned int)button
 {
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
 	NSEnumerator *eventEnumerator = [_pendingEvents objectEnumerator];
 	QueuedEvent *event;
 	unsigned int validEvents = 0;
+    unsigned int    mtModifier = [_profile multiTapModifierForButton:button];
 	
 	[self _resetMultiTapTimer: nil];
 
@@ -895,7 +831,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		QueuedEventType eventType = [event type];
 		unsigned int modifier = [event modifier];
 		
-		if ( _multipTapModifier[buttonIndex] != modifier )
+        if ( mtModifier != modifier )
 			return 0;
 		
 		if ( 0 == validEvents % 2 )
@@ -909,15 +845,14 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 			if ( kQueuedModifierUpEvent != eventType )
 				return 0;
 			validEvents++;
-			if ( validEvents / 2 == _multipTapCount[buttonIndex] )
+            if ( validEvents / 2 == [_profile multiTapCountForButton:button] )
 			{
 				[self discardAllPendingQueueEntries];
 				NSPoint	p = [_view convertPoint: [[_view window] convertScreenToBase: [NSEvent mouseLocation]] 
 									  fromView: nil];
 				unsigned int rfbButton = ButtonNumberToRFBButtomMask( button );
-                [self clearUnpublishedMouseMove];
-				[_connection mouseAt: p buttons: _pressedButtons | rfbButton];	// 'Mouse button down'
-				[_connection mouseAt: p buttons: _pressedButtons];				// 'Mouse button up'
+				[_connection mouseClickedAt: p buttons: _pressedButtons | rfbButton];	// 'Mouse button down'
+				[_connection mouseClickedAt: p buttons: _pressedButtons];				// 'Mouse button up'
 				return 0;
 			}
 		}
@@ -925,7 +860,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	
 	if ( validEvents && (validEvents % 2 == 0) )
 	{
-		_multiTapTimer = [[NSTimer scheduledTimerWithTimeInterval: _multipTapDelay[buttonIndex] target: self selector: @selector(_resetMultiTapTimer:) userInfo: nil repeats: NO] retain];
+		_multiTapTimer = [[NSTimer scheduledTimerWithTimeInterval: [_profile multiTapDelayForButton:button] target: self selector: @selector(_resetMultiTapTimer:) userInfo: nil repeats: NO] retain];
 //		NSLog(@"starting multi-tap timer");
 	}
 	
@@ -935,9 +870,9 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (unsigned int)handleTapModifierAndClickForButton: (unsigned int)button
 {
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
 	int eventIndex, eventCount = [_pendingEvents count];
 	NSTimeInterval time1 = 0, time2;
+    unsigned    emulModifier = [_profile tapAndClickModifierForButton:button];
 	
 	for ( eventIndex = 0; eventIndex < eventCount; ++eventIndex )
 	{
@@ -947,37 +882,33 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		
 		if ( 0 == eventIndex )
 		{
-			if ( ! (kQueuedModifierDownEvent == eventType && modifier == _tapAndClickModifier[buttonIndex]) )
+			if ( ! (kQueuedModifierDownEvent == eventType && modifier == emulModifier) )
 				return 0;
 			time1 = [event timestamp];
 		}
 		
 		else if ( 1 == eventIndex )
 		{
-			if ( ! (kQueuedModifierUpEvent == eventType && modifier == _tapAndClickModifier[buttonIndex]) )
+			if ( ! (kQueuedModifierUpEvent == eventType && modifier == emulModifier) )
 				return 0;
 			time2 = [event timestamp];
-			if ( time2 - time1 > _tapAndClickButtonSpeed[buttonIndex] )
+			if ( time2 - time1 > [_profile tapAndClickButtonSpeedForButton:button] )
 				return 0;
 
 			if ( ! _tapAndClickTimer )
 			{
-				_tapAndClickTimer = [[NSTimer scheduledTimerWithTimeInterval: _tapAndClickTimeout[buttonIndex] target: self selector: @selector(_resetTapModifierAndClick:) userInfo: nil repeats: NO] retain];
+                _tapAndClickTimer = [[NSTimer scheduledTimerWithTimeInterval: [_profile tapAndClickTimeoutForButton:button] target: self selector: @selector(_resetTapModifierAndClick:) userInfo: nil repeats: NO] retain];
 				[_view setCursorTo: (button == 2) ? @"rfbCursor2" : @"rfbCursor3"];
 			}
 		}
 		
 		else if ( 2 == eventIndex )
 		{
-			if ( kQueuedKeyDownEvent == eventType && '\e' == [event character] )
-			{
-				[self discardAllPendingQueueEntries];
-				[self _resetTapModifierAndClick: nil];
-				return 0;
-			}
-			
 			if ( kQueuedMouse1DownEvent != eventType )
 			{
+                if ( kQueuedKeyDownEvent == eventType
+                        && '\e' == [event character] )
+                    [self discardAllPendingQueueEntries];
 				[self _resetTapModifierAndClick: nil];
 				return 0;
 			}
@@ -991,105 +922,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	}
 
 	return eventCount;
-}
-
-
-#pragma mark -
-#pragma mark Configuration
-
-
-- (void)_updateConfigurationForButton: (unsigned int)button
-{
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	Profile *profile = [_connection profile];
-	
-	switch (_buttonEmulationScenario[buttonIndex])
-	{
-		case kNoMouseButtonEmulation:
-			break;
-		case kClickWhileHoldingModifierEmulation:
-			[self setClickWhileHoldingModifier: [profile clickWhileHoldingModifierForButton: button] button: button];
-			break;
-		case kMultiTapModifierEmulation:
-			[self setMultiTapModifier: [profile multiTapModifierForButton: button] button: button];
-			[self setMultiTapDelay: [profile multiTapDelayForButton: button] button: button];
-			[self setMultiTapCount: [profile multiTapCountForButton: button] button: button];
-			break;
-		case kTapModifierAndClickEmulation:
-			[self setTapAndClickModifier: [profile tapAndClickModifierForButton: button] button: button];
-			[self setTapAndClickButtonSpeed: [profile tapAndClickButtonSpeedForButton: button] button: button];
-			[self setTapAndClickTimeout: [profile tapAndClickTimeoutForButton: button] button: button];
-			break;
-		default:
-			[NSException raise: NSInternalInconsistencyException format: @"unsupported emulation scenario for button %d", button];
-	}
-}
-
-
-- (void)setButton2EmulationScenario: (EventFilterEmulationScenario)scenario
-{
-	_buttonEmulationScenario[0] = scenario;
-	if ( _viewOnly )
-		_buttonEmulationScenario[0] = kNoMouseButtonEmulation;
-	[self _updateConfigurationForButton: 2];
-}
-
-
-- (void)setButton3EmulationScenario: (EventFilterEmulationScenario)scenario
-{
-	_buttonEmulationScenario[1] = scenario;
-	if ( _viewOnly )
-		_buttonEmulationScenario[1] = kNoMouseButtonEmulation;
-	[self _updateConfigurationForButton: 3];
-}
-
-
-- (void)setClickWhileHoldingModifier: (unsigned int)modifier button: (unsigned int)button
-{
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	_clickWhileHoldingModifier[buttonIndex] = modifier;
-}
-
-
-- (void)setMultiTapModifier: (unsigned int)modifier button: (unsigned int)button
-{
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	_multipTapModifier[buttonIndex] = modifier;
-}
-
-
-- (void)setMultiTapDelay: (NSTimeInterval)delay button: (unsigned int)button
-{
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	_multipTapDelay[buttonIndex] = delay;
-}
-
-
-- (void)setMultiTapCount: (unsigned int)count button: (unsigned int)button
-{
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	_multipTapCount[buttonIndex] = count;
-}
-
-
-- (void)setTapAndClickModifier: (unsigned int)modifier button: (unsigned int)button
-{
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	_tapAndClickModifier[buttonIndex] = modifier;
-}
-
-
-- (void)setTapAndClickButtonSpeed: (NSTimeInterval)speed button: (unsigned int)button
-{
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	_tapAndClickButtonSpeed[buttonIndex] = speed;
-}
-
-
-- (void)setTapAndClickTimeout: (NSTimeInterval)timeout button: (unsigned int)button
-{
-	unsigned int buttonIndex = ButtonNumberToArrayIndex( button );
-	_tapAndClickTimeout[buttonIndex] = timeout;
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class Profile;
 @class RFBConnection, RFBView;
 
 /*
@@ -80,9 +81,6 @@
  *	_emulationButton:	The button number that mouse button #1 is currently being emulated as.  A mouse up
  *						event on button #1 will be mapped to a mouse up event on this button.
  *
- *  _lastMousePoint:    Maintains the last unpublished mouse move. Mouse moves are cached and only sent to the
- *                      server on a periodic basis so as not to flood the server with mouse moves.
- *
  * When an event is received from the NSResponder, it is added to _pendingEvents.  Then, _pendingEvents 
  * is scanned to determine whether any action can be taken.  Things that might occur at this point are:
  *
@@ -104,6 +102,7 @@ typedef enum {
 
 @interface EventFilter : NSObject {
 	RFBConnection *_connection;
+	Profile *_profile;
 	RFBView *_view;
 	
 	NSMutableArray *_pendingEvents;
@@ -115,25 +114,11 @@ typedef enum {
 	unsigned int _pressedButtons;
 	unsigned int _pressedModifiers;
 	
-	EventFilterEmulationScenario _buttonEmulationScenario[2];
+    // emulation state
 	unsigned int _emulationButton;
-		
-	unsigned int _clickWhileHoldingModifier[2];
 	BOOL _clickWhileHoldingModifierStillDown[2];
-	
-	unsigned int _multipTapModifier[2];
-	NSTimeInterval _multipTapDelay[2];
-	unsigned int _multipTapCount[2];
 	NSTimer *_multiTapTimer;
-	
-	unsigned int _tapAndClickModifier[2];
-	NSTimeInterval _tapAndClickButtonSpeed[2];
-	NSTimeInterval _tapAndClickTimeout[2];
 	NSTimer *_tapAndClickTimer;
-	
-	NSTimer *_mouseTimer;
-	NSPoint  _lastMousePoint;
-	bool     _unsentMouseMoveExists;
 }
 
 // Talking to the server
@@ -154,8 +139,6 @@ typedef enum {
 - (void)mouseDragged:(NSEvent *)theEvent;
 - (void)rightMouseDragged:(NSEvent *)theEvent;
 - (void)otherMouseDragged:(NSEvent *)theEvent;
-- (void)sendUnpublishedMouseMove;
-- (void)clearUnpublishedMouseMove;
 
 // Local Keyboard Events
 - (void)keyDown: (NSEvent *)theEvent;
@@ -166,6 +149,9 @@ typedef enum {
 - (void)clearAllEmulationStates;
 - (void)queueMouseDownEventFromEvent: (NSEvent *)theEvent buttonNumber: (unsigned int)button;
 - (void)queueMouseUpEventFromEvent: (NSEvent *)theEvent buttonNumber: (unsigned int)button;
+- (void)queueKeyEventFromEvent: (NSEvent *)theEvent;
+- (void)queueModifiers:(unsigned int)newState
+             timestamp:(NSTimeInterval)timestamp;
 - (void)queueModifierPressed: (unsigned int)modifier timestamp: (NSTimeInterval)timestamp;
 - (void)queueModifierReleased: (unsigned int)modifier timestamp: (NSTimeInterval)timestamp;
 - (void)pasteString: (NSString *)string;
@@ -179,19 +165,5 @@ typedef enum {
 - (unsigned int)handleClickWhileHoldingForButton: (unsigned int)button;
 - (unsigned int)handleMultiTapForButton: (unsigned int)button;
 - (unsigned int)handleTapModifierAndClickForButton: (unsigned int)button;
-
-// Configuration
-- (void)setButton2EmulationScenario: (EventFilterEmulationScenario)scenario;
-- (void)setButton3EmulationScenario: (EventFilterEmulationScenario)scenario;
-
-- (void)setClickWhileHoldingModifier: (unsigned int)modifier button: (unsigned int)button;
-
-- (void)setMultiTapModifier: (unsigned int)modifier button: (unsigned int)button;
-- (void)setMultiTapDelay: (NSTimeInterval)delay button: (unsigned int)button;
-- (void)setMultiTapCount: (unsigned int)count button: (unsigned int)button;
-
-- (void)setTapAndClickModifier: (unsigned int)modifier button: (unsigned int)button;
-- (void)setTapAndClickButtonSpeed: (NSTimeInterval)speed button: (unsigned int)button;
-- (void)setTapAndClickTimeout: (NSTimeInterval)timeout button: (unsigned int)button;
 
 @end

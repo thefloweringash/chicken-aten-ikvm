@@ -28,11 +28,12 @@
     IBOutlet NSTextField *portText;
     IBOutlet NSButton *localOnlyBtn;
     IBOutlet NSPopUpButton *profilePopup;
+    IBOutlet NSButton *fullscreen;
 
 	IBOutlet NSButton *actionBtn;
 	IBOutlet NSTextField *statusText;
 
-    NSFileHandle* listeningSocket;
+    NSFileHandle* listeningSockets[2]; // listening socket: IPv4 and IPv6
     Profile* listeningProfile;
 }
 
@@ -43,5 +44,7 @@
 
 - (BOOL)startListenerOnPort:(int)port withProfile:(Profile*)profile localOnly:(BOOL)local;
 - (void)stopListener;
+
+- (void)setProfilePopupToProfile: (NSString *)profileName;
 
 @end

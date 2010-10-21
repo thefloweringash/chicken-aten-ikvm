@@ -21,6 +21,7 @@
 
 
 #import "ListenerController.h"
+#import "AppDelegate.h"
 #import "ProfileDataManager.h"
 #import "ProfileManager.h"
 #import "RFBConnectionManager.h"
@@ -35,6 +36,7 @@
 NSString *kPrefs_ListenerPort_Key       = @"ListenerPort";
 NSString *kPrefs_ListenerLocal_Key      = @"ListenerLocal";
 NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
+NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
 
 @interface ListenerController ( private )
 + (void)initPrefs;
@@ -74,7 +76,8 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 	if (self = [super initWithWindowNibName:@"ListenDialog"]) {
         [self setWindowFrameAutosaveName:@"vnc_listen"];
         
-        listeningSocket = nil;
+        listeningSockets[0] = nil;
+        listeningSockets[1] = nil;
     }
 	
 	return self;
@@ -83,9 +86,7 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 
 - (void)dealloc
 {	
-    if (listeningSocket) {
-        [self stopListener];
-    }
+    [self stopListener];
     [self savePrefs];
 	[super dealloc];
 		
@@ -113,7 +114,8 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 
 - (void)actionPressed:(id)sender
 {
-    if (!listeningSocket) {
+    if (!listeningSockets[0]) {
+        // listen
         ProfileManager* pm = [ProfileManager sharedManager];
         
         int port = [portText intValue];
@@ -128,12 +130,18 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 
 - (void)valueChanged:(id)sender
 {
+    if (sender == profilePopup
+            && [sender indexOfSelectedItem] == [sender numberOfItems] - 1) {
+        [self setProfilePopupToProfile:[[NSUserDefaults standardUserDefaults]
+                                    stringForKey: kPrefs_ListenerProfile_Key]];
+        [[NSApp delegate] showProfileManager: nil];
+    }
     [self savePrefs];
 }
 
 - (void)updateUI
 {
-    BOOL active = listeningSocket != nil;
+    BOOL active = listeningSockets[0] != nil;
     
     if (![self isWindowLoaded])
         return;
@@ -146,33 +154,27 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     [portText     setEnabled: !active];
     [localOnlyBtn setEnabled: !active];
     [profilePopup setEnabled: !active];
+    [fullscreen   setEnabled: !active];
 }
 
 
 #pragma mark -
 #pragma mark Socket Listener
 
-- (BOOL)startListenerOnPort:(int)port withProfile:(Profile*)profile localOnly:(BOOL)local;
+- (NSFileHandle *)listenAtAddress:(struct sockaddr *)listenAddress
+    ofLength:(socklen_t)addressLen
 {
-    int fdForListening;
-    struct sockaddr_in serverAddress;
-    int yes = 1;
-
-    if (listeningSocket)
-        return YES;
-        
         // In order to use NSFileHandle's acceptConnectionInBackgroundAndNotify method, we need to create a file descriptor that is itself a socket, bind that socket, and then set it up for listening. At this point, it's ready to be handed off to acceptConnectionInBackgroundAndNotify.
-    if((fdForListening = socket(AF_INET, SOCK_STREAM, 0)) <= 0)
-        return NO;
-    
-    memset(&serverAddress, 0, sizeof(serverAddress));
-    serverAddress.sin_family = AF_INET;
-    serverAddress.sin_addr.s_addr = htonl(local ? INADDR_LOOPBACK : INADDR_ANY);
-    serverAddress.sin_port = htons(port);
+    int yes = 1;
+    int fdForListening;
+    NSFileHandle    *handle;
 
+    if((fdForListening = socket(listenAddress->sa_family, SOCK_STREAM, 0)) <= 0)
+        return nil;
+    
     if (
         setsockopt(fdForListening, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes))
-    ||  bind(fdForListening, (struct sockaddr *)&serverAddress, sizeof(serverAddress))
+    ||  bind(fdForListening, listenAddress, addressLen)
     ||  listen(fdForListening, 1)
     ) {
         int e = errno;
@@ -182,22 +184,66 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
         }
         
         close(fdForListening);
-        return NO;
+        return nil;
     }
 
-    listeningSocket = [[NSFileHandle alloc]
+    handle = [[NSFileHandle alloc]
         initWithFileDescriptor:fdForListening
         closeOnDealloc:YES];
-    listeningProfile = [profile retain];
 
     [[NSNotificationCenter defaultCenter]
         addObserver:self
         selector:@selector(connectionReceived:)
         name:NSFileHandleConnectionAcceptedNotification
-        object:listeningSocket];
+        object:handle];
         
-    [listeningSocket acceptConnectionInBackgroundAndNotify];
+    [handle acceptConnectionInBackgroundAndNotify];
+
+    return handle;
+}
+
+- (void)stopListeningForNdx:(int)ndx
+{
+    [listeningSockets[ndx] closeFile];
+
+    [[NSNotificationCenter defaultCenter]
+        removeObserver:self
+        name:NSFileHandleConnectionAcceptedNotification
+        object:listeningSockets[ndx]];
     
+    [listeningSockets[ndx] release]; listeningSockets[ndx] = nil;
+}
+
+- (BOOL)startListenerOnPort:(int)port withProfile:(Profile*)profile localOnly:(BOOL)local;
+{
+    struct sockaddr_in listenAddress;
+    struct sockaddr_in6 listenAddress6;
+
+    if (listeningSockets[0])
+        return YES;
+        
+    memset(&listenAddress, 0, sizeof(listenAddress));
+    listenAddress.sin_family = AF_INET;
+    listenAddress.sin_addr.s_addr = htonl(local ? INADDR_LOOPBACK : INADDR_ANY);
+    listenAddress.sin_port = htons(port);
+    listeningSockets[0] = [self listenAtAddress: (struct sockaddr *)&listenAddress
+                                       ofLength:sizeof(listenAddress)];
+    if (!listeningSockets[0])
+        return NO;
+
+    memset(&listenAddress6, 0, sizeof(listenAddress6));
+    listenAddress6.sin6_family = AF_INET6;
+    listenAddress6.sin6_addr = local ? in6addr_loopback : in6addr_any;
+    listenAddress6.sin6_port = htons(port);
+    listeningSockets[1] = [self listenAtAddress:(struct sockaddr *)&listenAddress6
+                                       ofLength:sizeof(listenAddress6)];
+    if (!listeningSockets[1]) {
+        [self stopListeningForNdx: 0];
+        return NO;
+    }
+
+    listeningProfile = [profile retain];
+
     [self updateUI];
     
     return YES;
@@ -205,17 +251,13 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 
 - (void)stopListener
 {
-    if (!listeningSocket)
-        return;
-        
-    [listeningSocket closeFile];
-    
-    [[NSNotificationCenter defaultCenter]
-        removeObserver:self
-        name:NSFileHandleConnectionAcceptedNotification
-        object:listeningSocket];
-        
-    [listeningSocket release];  listeningSocket = nil;
+    int     i;
+
+    for (i = 0; i < 2; i++) {
+        if (listeningSockets[i])
+            [self stopListeningForNdx: i];
+    }
+
     [listeningProfile release]; listeningProfile = nil;
     
     [self updateUI];
@@ -224,13 +266,17 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 
 - (void)connectionReceived:(NSNotification *)aNotification {
     NSFileHandle * incomingConnection = [[aNotification userInfo] objectForKey:NSFileHandleNotificationFileHandleItem];
+    ServerFromConnection    *server;
+
     [[aNotification object] acceptConnectionInBackgroundAndNotify];
     
     RFBConnectionManager* cm = [RFBConnectionManager sharedManager];
+    server = [[ServerFromConnection alloc] initFromConnection:incomingConnection];
+    [server setFullscreen: [NSApp isActive] && [fullscreen state]];
     [cm createConnectionWithFileHandle:incomingConnection 
-        server:[ServerFromConnection createFromConnection:incomingConnection]
-        profile:listeningProfile
-        owner:cm];
+        server:server
+        profile:listeningProfile];
+    [server release];
 }
 
 #pragma mark -
@@ -244,6 +290,7 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
             @"NO",                          kPrefs_ListenerLocal_Key,
             NSLocalizedString(@"defaultProfileName", nil),
                                             kPrefs_ListenerProfile_Key,
+            @"NO",                          kPrefs_ListenerFullscreen_Key,
             nil, nil]];
 }
 
@@ -259,14 +306,12 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
         [user boolForKey: kPrefs_ListenerLocal_Key] ? NSOnState : NSOffState];
 
     {
-        ProfileManager *pm = [ProfileManager sharedManager];
         NSString* profileName = [user stringForKey: kPrefs_ListenerProfile_Key];
         
-        if ( profileName && [pm profileWithNameExists: profileName] )
-            [profilePopup selectItemWithTitle: profileName];
-        else
-            [profilePopup selectItemWithTitle: [[pm defaultProfile] profileName]];
+        [self setProfilePopupToProfile: profileName];
     }
+
+    [fullscreen setState: [user boolForKey: kPrefs_ListenerFullscreen_Key]];
 }
 
 - (void)savePrefs
@@ -278,11 +323,12 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     [user setInteger:[portText intValue] forKey: kPrefs_ListenerPort_Key];
     [user setBool:([localOnlyBtn state] == NSOnState) forKey: kPrefs_ListenerLocal_Key];
     [user setValue:[profilePopup titleOfSelectedItem] forKey: kPrefs_ListenerProfile_Key];
+    [user setBool:[fullscreen state] forKey: kPrefs_ListenerFullscreen_Key];
 }
 
 
 #pragma mark -
-#pragma mark Profile Management
+# pragma mark Profile Management
 
 - (void)updateProfileView:(id)notification
 {
@@ -306,7 +352,9 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 
 	[profilePopup removeAllItems];
 	[profilePopup addItemsWithTitles:
-        [[ProfileDataManager sharedInstance] sortedKeyArray]];
+         [[ProfileDataManager sharedInstance] sortedKeyArray]];
+    [[profilePopup menu] addItem: [NSMenuItem separatorItem]];
+    [profilePopup addItemWithTitle:NSLocalizedString(@"EditProfiles", nil)];
 	
 	[self setProfilePopupToProfile: lastProfile];
     [lastProfile release];

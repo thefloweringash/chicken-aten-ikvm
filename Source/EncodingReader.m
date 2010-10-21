@@ -23,6 +23,16 @@
 
 @implementation EncodingReader
 
+- (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater
+           connection: (RFBConnection *)aConnection
+{
+    if (self = [super init]) {
+        updater = aUpdater;
+        connection = aConnection;
+    }
+    return self;
+}
+
 - (void)setRectangle:(NSRect)aRect
 {
     frame = aRect;
@@ -33,6 +43,13 @@
     frameBuffer = aBuffer;
 }
 
+/* every implementing class should override this */
+- (void)readEncoding
+{
+    NSLog(@"Unimplemented readEncoding in EncodingReader");
+}
+
+#if 0
 - (id)rectangleList
 {
     return nil;
@@ -42,15 +59,20 @@
 {
     return frame;
 }
+#endif
 
+#if 0
 - (FrameBuffer*)frameBuffer
 {
     return frameBuffer;
 }
+#endif
 
+#if 0
 - (unsigned)bytesTransferred
 {
     return bytesTransferred;
 }
+#endif
 
 @end

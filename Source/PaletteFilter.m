@@ -27,9 +27,10 @@
 
 @implementation PaletteFilter
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithTarget:(TightEncodingReader*)aTarget
+          andConnection: (RFBConnection *)aConnection
 {
-    if (self = [super initTarget:aTarget action:anAction]) {
+    if (self = [super initWithTarget:aTarget andConnection:aConnection]) {
 		numColorReader = [[CARD8Reader alloc] initTarget:self action:@selector(setColors:)];
 		paletteReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setPalette:)];
 		filterData = [[NSMutableData alloc] init];
@@ -48,9 +49,9 @@
     [super dealloc];
 }
 
-- (void)resetReader
+- (void)resetFilterForRect:(NSRect)rect
 {
-    rowSize = [target rectangle].size.width;
+    rowSize = rect.size.width;
     if(rowSize > rowCapacity) {
         rowCapacity = rowSize;
 		if(src) {
@@ -58,9 +59,10 @@
 		}
         src = malloc(3 * rowSize * sizeof(int));
     }
-    [target setReader:numColorReader];
+    [connection setReader:numColorReader];
 }
 
+/* Just read the number of colors */
 - (void)setColors:(NSNumber*)n
 {
     numColors = [n unsignedCharValue] + 1;
@@ -68,9 +70,10 @@
 #ifdef COLLECT_STATS
     bytesTransferred = 1 + numColors * bytesPerPixel;
 #endif
-    [target setReader:paletteReader];
+    [connection setReader:paletteReader];
 }
 
+/* Just read the palette */
 - (void)setPalette:(NSData*)data
 {
 /*   {
@@ -84,7 +87,7 @@
     }
 */
     [frameBuffer splitRGB:(unsigned char*)[data bytes] pixels:numColors into:palette];
-    [target performSelector:action withObject:self];
+    [target filterInitDone];
 }
 
 - (NSData*)filter:(NSData*)data rows:(unsigned)numRows

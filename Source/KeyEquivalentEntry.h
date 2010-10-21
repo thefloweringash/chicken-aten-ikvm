@@ -10,6 +10,8 @@
 @class KeyEquivalent;
 
 
+/* Encapsulates a menu item, which will be assigned to a key equivalence by
+ * KeyEquivalentScenario. */
 @interface KeyEquivalentEntry : NSObject {
 	NSMenuItem *mMenuItem;
 }

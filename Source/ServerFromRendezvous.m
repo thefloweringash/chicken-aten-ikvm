@@ -115,9 +115,9 @@
 		case EDIT_ADDRESS:
 		case EDIT_PORT:
 		case EDIT_NAME:
-		case DELETE:
-		case SERVER_SAVE:
-		case ADD_SERVER_ON_CONNECT:
+		//case DELETE:
+		//case SERVER_SAVE:
+		//case ADD_SERVER_ON_CONNECT:
 			return NO;
 		case EDIT_PASSWORD:
 		case SAVE_PASSWORD:
@@ -152,7 +152,7 @@
                     _display = _port - 5900;
                 else
                     _display = 0;
-				return [NSString stringWithCString:inet_ntoa(sinAddr)];
+				return [NSString stringWithUTF8String:inet_ntoa(sinAddr)];
             }
 		}
 		return NSLocalizedString( @"AddressResolveFailed", nil );

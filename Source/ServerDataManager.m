@@ -182,7 +182,7 @@ static ServerDataManager* gInstance = nil;
 	{
 		id<IServerData> server = [self getServerWithName: serverName];
 		NSParameterAssert( server != nil );
-		if ( ! [server doYouSupport: SERVER_SAVE] )
+        if ( ! [server respondsToSelector: @selector(encodeWithCoder:)] )
 		{
 			[savableServers removeObjectForKey: serverName];
 			
@@ -275,9 +275,41 @@ static ServerDataManager* gInstance = nil;
 	return [mServers count];
 }
 
+/* Returns the number of saveable servers, i.e. excluding Rendezvous servers */
+- (unsigned)saveableCount
+{
+    NSEnumerator    *servers = [mServers objectEnumerator];
+    ServerBase      *server;
+    unsigned        count = 0;
+    
+    while (server = [servers nextObject]) {
+        if ([server respondsToSelector:@selector(encodeWithCoder:)])
+            count++;
+    }
+    return count;
+}
+
+#if 0
 - (NSEnumerator*) getServerEnumerator
 {
 	return [mServers objectEnumerator];
+}
+#endif
+
+/* Returns an array of the server names, sorted alphabetically */
+- (NSArray *)sortedServerNames
+{
+    NSEnumerator *serverEnumerator = [mServers objectEnumerator];
+	id<IServerData> server;
+    NSMutableArray  *names = [[NSMutableArray alloc] init];
+	
+	while ( server = [serverEnumerator nextObject] )
+	{
+		[names addObject:[server name]];
+	}
+	
+	[names sortUsingSelector:@selector(caseInsensitiveCompare:)];
+    return [names autorelease];
 }
 
 - (unsigned) groupCount

@@ -78,11 +78,15 @@
  */
 - (unsigned) serverCount;
 
+- (unsigned)saveableCount;
+
 /*
  *  Allows access to all servers managed by ServerDataManager.
  *  @return The enumerator that can be used to enumerate through all servers. 
  */
-- (NSEnumerator*) getServerEnumerator;
+//- (NSEnumerator*) getServerEnumerator;
+
+- (NSArray *)sortedServerNames;
 
 /*
  *  Provides the number of groups managed by ServerDataManager.

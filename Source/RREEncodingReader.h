@@ -27,13 +27,15 @@
     id			backPixReader;
     id			subRectReader;
     CARD32		numOfSubRects;
-    id			rectList;
-    BOOL		useList;
+//    id			rectList;
+//    BOOL		useList;
     unsigned int	psThreshold;
     unsigned int	maxPsRects;
 }
 
+#if 0
 - (void)setPSThreshold:(unsigned int)anInt;
 - (void)setMaximumPSRectangles:(unsigned int)anInt;
+#endif
 
 @end

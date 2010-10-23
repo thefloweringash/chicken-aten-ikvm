@@ -21,13 +21,16 @@
 #import "RREEncodingReader.h"
 #import "CARD32Reader.h"
 #import "ByteBlockReader.h"
-#import "RectangleList.h"
+//#import "RectangleList.h"
+#import "RFBConnection.h"
+#import "FrameBufferUpdateReader.h"
 
 #define PS_THRESHOLD	0x10000
 #define PS_MAXRECT	128
 
 @implementation RREEncodingReader
 
+#if 0
 - (void)setPSThreshold:(unsigned int)anInt
 {
     psThreshold = anInt;
@@ -37,16 +40,21 @@
 {
     maxPsRects = anInt;
 }
+#endif
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater connection: (RFBConnection *)aConnection
 {
-    if (self = [super initTarget:aTarget action:anAction]) {
+    if (self = [super initWithUpdater: aUpdater connection: aConnection]) {
+#if 0
 		[self setPSThreshold:PS_THRESHOLD];
 		[self setMaximumPSRectangles:PS_MAXRECT];
+#endif
 		numOfReader = [[CARD32Reader alloc] initTarget:self action:@selector(setNumOfRects:)];
 		backPixReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
 		subRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawRectangles:)];
+#if 0
 		rectList = [[RectangleList alloc] initElements:psThreshold];
+#endif
 	}
     return self;
 }
@@ -56,7 +64,7 @@
     [numOfReader release];
     [backPixReader release];
     [subRectReader release];
-    [rectList release];
+    //[rectList release];
     [super dealloc];
 }
 
@@ -66,12 +74,12 @@
     [backPixReader setBufferSize:[aBuffer bytesPerPixel]];
 }
 
-- (void)resetReader
+- (void)readEncoding
 {
 #ifdef COLLECT_STATS
     bytesTransferred = 4 + [frameBuffer bytesPerPixel];
 #endif
-    [target setReader:numOfReader];
+    [connection setReader:numOfReader];
 }
 
 - (void)setNumOfRects:(NSNumber*)aNumber
@@ -82,37 +90,50 @@
     numOfSubRects = [aNumber unsignedIntValue];
     avgSize = totalSize / (numOfSubRects + 1);
 
+#if 0
     if((numOfSubRects < maxPsRects) || (avgSize > psThreshold)) {
         useList = YES;
         [rectList startWithNumber:numOfSubRects + 1];
     } else {
         useList = NO;
     }
-    [target setReader:backPixReader];
+#endif
+    [connection setReader:backPixReader];
 }
 
+#if 0
+/* This used to return the list of rectangles for immediate drawing. These were
+ * then drawn using a fill primitive and not a copy from the framebuffer.
+ * However, we now draw only once the frame buffer update is complete, and not
+ * as each rectangle comes in. Thus, the non-nil return value only serves to
+ * indicate that we've already marked our rectangles as dirty by calling
+ * connection drawRect: directly. This code and the related stuff in
+ * RectangleList.m and CoRREEncodingReader.m should be cleaned up. */
 - (id)rectangleList
 {
     return (useList) ? rectList : nil;
 }
+#endif
 
 - (void)setBackground:(NSData*)data
 {
     [frameBuffer fillRect:frame withPixel:(unsigned char*)[data bytes]];
+#if 0
     if(useList) {
         float	rgb[3];
         [frameBuffer getRGB:rgb fromPixel:(unsigned char*)[data bytes]];
         [rectList putRectangle:frame withColor:rgb];
     }
+#endif
     if(numOfSubRects) {
         int size = ([frameBuffer bytesPerPixel] + 8) * numOfSubRects;
 #ifdef COLLECT_STATS
 	bytesTransferred += size;
 #endif
         [subRectReader setBufferSize:size];
-        [target setReader:subRectReader];
+        [connection setReader:subRectReader];
     } else {
-        [target performSelector:action withObject:self];
+        [updater didRect:self];
     }
 }
 
@@ -120,15 +141,17 @@
 {
     unsigned char*	bytes = (unsigned char*)[data bytes];
     unsigned char*	pixptr;
-    float		rgb[3];
+    //float		rgb[3];
     rfbRectangle	subRect;
     NSRect		r;
     unsigned int	bpp = [frameBuffer bytesPerPixel];
 
     while(numOfSubRects--) {
+#if 0
         if(useList) {
             [frameBuffer getRGB:rgb fromPixel:bytes];
         }
+#endif
         pixptr = bytes;
         bytes += bpp;
         memcpy(&subRect, bytes, sizeof(subRect));
@@ -138,11 +161,16 @@
         r.size.width = ntohs(subRect.w);
         r.size.height = ntohs(subRect.h);
         [frameBuffer fillRect:r withPixel:pixptr];
+#if 0
         if(useList) {
-            [rectList putRectangle:r withColor:rgb];
+ //           [rectList putRectangle:r withColor:rgb];
+            r.origin.x -= frame.origin.x;
+            r.origin.y -= frame.origin.y;
+            [connection drawRectFromBuffer:r];
         }
+#endif
     }
-    [target performSelector:action withObject:self];
+    [updater didRect:self];
 }
 
 @end

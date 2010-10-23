@@ -20,10 +20,11 @@
 #import "EventFilter.h"
 #import "RFBConnection.h"
 #import "FrameBuffer.h"
-#import "RectangleList.h"
+//#import "RectangleList.h"
 
 @implementation RFBView
 
+/* One-time initializer to read the cursors into memory. */
 + (NSCursor *)_cursorForName: (NSString *)name
 {
 	static NSDictionary *sMapping = nil;
@@ -41,20 +42,21 @@
 			NSDictionary *cursorEntry = [entries objectForKey: cursorName];
 			NSString *localPath = [cursorEntry objectForKey: @"localPath"];
 			NSString *path = [mainBundle pathForResource: localPath ofType: nil];
-			NSImage *image = [[[NSImage alloc] initWithContentsOfFile: path] autorelease];
+			NSImage *image = [[NSImage alloc] initWithContentsOfFile: path];
 			
 			int hotspotX = [[cursorEntry objectForKey: @"hotspotX"] intValue];
 			int hotspotY = [[cursorEntry objectForKey: @"hotspotY"] intValue];
 			NSPoint hotspot = {hotspotX, hotspotY};
 			
-			NSCursor *cursor = [[[NSCursor alloc] initWithImage: image hotSpot: hotspot] autorelease];
+			NSCursor *cursor = [[NSCursor alloc] initWithImage: image hotSpot: hotspot];
 			[(NSMutableDictionary *)sMapping setObject: cursor forKey: cursorName];
+            [cursor release];
+            [image release];
 		}
 	}
 	
 	return [sMapping objectForKey: name];
 }
-
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
@@ -70,7 +72,7 @@
 {
     NSRect f = [self frame];
     
-    [fbuf autorelease];
+    [fbuf release];
     fbuf = [aBuffer retain];
     f.size = [aBuffer size];
     [self setFrame:f];
@@ -79,15 +81,27 @@
 - (void)dealloc
 {
     [fbuf release];
+    [_serverCursor release];
+    [_modifierCursor release];
     [super dealloc];
 }
 
 - (void)setCursorTo: (NSString *)name
 {
-	if ( ! name )
-		name = @"rfbCursor";
-	_cursor = [[self class] _cursorForName: name];
+    [_modifierCursor release];
+	if (name == nil)
+        _modifierCursor = nil;
+    else
+        _modifierCursor = [[[self class] _cursorForName: name] retain];
     [[self window] invalidateCursorRectsForView: self];
+}
+
+- (void)setServerCursorTo: (NSCursor *)aCursor
+{
+    [_serverCursor release];
+    _serverCursor = [aCursor retain];
+    if (!_modifierCursor)
+        [[self window] invalidateCursorRectsForView: self];
 }
 
 - (void)setDelegate:(RFBConnection *)delegate
@@ -106,35 +120,30 @@
 
 - (void)drawRect:(NSRect)destRect
 {
-    NSRect b = [self bounds];
-    NSRect r = destRect;
+    NSRect          b = [self bounds];
+    const NSRect    *rects;
+    int             numRects;
+    int             i;
 
-    r.origin.y = b.size.height - NSMaxY(r);
-    [fbuf drawRect:r at:destRect.origin];
-    //[delegate queueUpdateRequest];
+    [self getRectsBeingDrawn:&rects count:&numRects];
+    for (i = 0; i < numRects; i++) {
+        NSRect      r = rects[i];
+        r.origin.y = b.size.height - NSMaxY(r);
+        [fbuf drawRect:r at:rects[i].origin];
+    }
 }
 
-- (void)displayFromBuffer:(NSRect)aRect
-{
-    NSRect b = [self bounds];
-    NSRect r = aRect;
-
-    r.origin.y = b.size.height - NSMaxY(r);
-    [self displayRect:r];
-}
-
-- (void)drawRectList:(id)aList
-{
-    [self lockFocus];
-    [aList drawRectsInRect:[self bounds]];
-    [self unlockFocus];
-}
-
+/* Called by system to set-up cursors for this view */
 - (void)resetCursorRects
 {
     NSRect cursorRect;
     cursorRect = [self visibleRect];
-    [self addCursorRect: cursorRect cursor: _cursor];
+    if (_modifierCursor)
+        [self addCursorRect: cursorRect cursor: _modifierCursor];
+    else if (_serverCursor)
+        [self addCursorRect: cursorRect cursor: _serverCursor];
+    else
+        [self addCursorRect: cursorRect cursor: [[self class] _cursorForName: @"rfbCursor"]];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -173,12 +182,6 @@
 - (void)otherMouseDragged:(NSEvent *)theEvent
 {  [_eventFilter otherMouseDragged: theEvent];  }
 
-// jason - this doesn't work, I think because the server I'm testing against doesn't support
-// rfbButton4Mask and rfbButton5Mask (8 & 16).  They're not a part of rfbProto, so that ain't
-// too surprising.
-// 
-// Later note - works fine now, maybe more servers have added support since I wrote the original
-// comment
 - (void)scrollWheel:(NSEvent *)theEvent
 {  [_eventFilter scrollWheel: theEvent];  }
 

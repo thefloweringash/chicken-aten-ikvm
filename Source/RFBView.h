@@ -22,20 +22,22 @@
 
 @interface RFBView : NSView
 {
-    RFBConnection *_delegate;
-	EventFilter *_eventFilter;
-    NSCursor *_cursor;
-    FrameBuffer *fbuf;
+    RFBConnection   *_delegate;
+    EventFilter     *_eventFilter;
+    NSCursor        *_modifierCursor;
+    NSCursor        *_serverCursor; // cursor sent by server, if any
+    FrameBuffer     *fbuf;
 }
 
 - (void)setFrameBuffer:(id)aBuffer;
 - (void)setDelegate:(RFBConnection *)delegate;
 - (RFBConnection *)delegate;
 - (void)drawRect:(NSRect)aRect;
-- (void)displayFromBuffer:(NSRect)aRect;
-- (void)drawRectList:(id)aList;
+//- (void)displayFromBuffer:(NSRect)aRect;
+//- (void)drawRectList:(id)aList;
 
 - (void)setCursorTo: (NSString *)name;
+- (void)setServerCursorTo: (NSCursor *)aCursor;
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender;
 - (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender;

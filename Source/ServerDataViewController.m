@@ -21,10 +21,15 @@
 
 
 #import "ServerDataViewController.h"
+#import "AppDelegate.h"
+#import "ConnectionWaiter.h"
 #import "IServerData.h"
 #import "ProfileDataManager.h"
 #import "ProfileManager.h"
+#import "RFBConnectionManager.h"
+#import "ServerBase.h"
 #import "ServerDataManager.h"
+#import "ServerStandAlone.h"
 
 @implementation ServerDataViewController
 
@@ -39,6 +44,8 @@
 		
 		[connectIndicatorText setStringValue:@""];
 		[box setBorderType:NSNoBorder];
+
+        connectionWaiter = nil;
 		
 		[self loadProfileIntoView];
 		
@@ -84,6 +91,8 @@
 		[save release];
 	}
 	
+    [connectionWaiter cancel];
+    [connectionWaiter release];
 	[super dealloc];
 		
 	[[NSNotificationCenter defaultCenter] removeObserver:self
@@ -115,7 +124,9 @@
 	// Set properties in dialog box
     if (mServer != nil)
 	{
-		if( NO == removedSaveCheckbox && NO == [mServer doYouSupport:ADD_SERVER_ON_CONNECT] )
+        NSString    *str = @"";
+
+        if( NO == removedSaveCheckbox && NO == [mServer respondsToSelector:@selector(setAddToServerListOnConnect:)] )
 		{
             [self setSaveCheckboxIsVisible: NO];
 		}
@@ -140,9 +151,29 @@
 		[password    setEnabled: [mServer doYouSupport:EDIT_PASSWORD]];
 		[rememberPwd setEnabled: [mServer doYouSupport:SAVE_PASSWORD]];
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];
+
+        [viewOnly setEnabled: YES];
+        [fullscreen setEnabled: YES];
 		
-		if ( [mServer isPortSpecifiedInHost] )
+		if ( [mServer isPortSpecifiedInHost] ) {
 			[display setEnabled: NO];
+            [displayDescription setStringValue:@""];
+            str = [NSString stringWithFormat:NSLocalizedString(@"PortNum", nil),
+                    [mServer port]];
+        } else {
+            int         val = [mServer display];
+
+            if (val < DISPLAY_MAX)
+                str = [NSString stringWithFormat:NSLocalizedString(@"DisplayIsPort", nil),
+                        val, val + PORT_BASE];
+            else if (val >= PORT_BASE && val < PORT_BASE + DISPLAY_MAX)
+                str = [NSString stringWithFormat:NSLocalizedString(@"PortIsDisplay", nil),
+                        val, val - PORT_BASE];
+            else
+                str = [NSString stringWithFormat:NSLocalizedString(@"PortNum", nil),
+                        val];
+        }
+        [displayDescription setStringValue:str];
     }
 	else
 	{
@@ -162,6 +193,8 @@
 		[fullscreen setIntValue:0];
 		[viewOnly setIntValue:0];
 		[self setProfilePopupToProfile: nil];
+
+        [displayDescription setStringValue:@""];
 	}
 }
 
@@ -187,6 +220,8 @@
 	NSArray* profileKeys = [NSArray arrayWithArray:[[ProfileDataManager sharedInstance] sortedKeyArray]];
 	
 	[profilePopup addItemsWithTitles:profileKeys];
+    [[profilePopup menu] addItem: [NSMenuItem separatorItem]];
+    [profilePopup addItemWithTitle:NSLocalizedString(@"EditProfiles", nil)];
 	
 	[self setProfilePopupToProfile: [mServer lastProfile]];
 }
@@ -208,14 +243,14 @@
     }
 }
 
+- (void)setSuperController:(RFBConnectionManager *)aSuperController
+{
+    superController = aSuperController;
+}
+
 - (id<IServerData>)server
 {
 	return mServer;
-}
-
-- (void)setConnectionDelegate:(id<ConnectionDelegate>)delegate
-{
-	mDelegate = delegate;
 }
 
 - (void)controlTextDidChange:(NSNotification *)aNotification
@@ -263,7 +298,14 @@
 
 - (IBAction)profileSelectionChanged:(id)sender
 {
-	if( nil != mServer )
+    if ([sender indexOfSelectedItem] == [sender numberOfItems] - 1) {
+        // :TORESOLVE: this flickers the popup in the "Edit" state
+        //          how to prevent this? some way to reject selection change?
+        [self setProfilePopupToProfile: [mServer lastProfile]];
+        // open profile manager window
+        [[NSApp delegate] showProfileManager: nil];
+    }
+    else if( nil != mServer )
 	{
 		[mServer setLastProfile:[sender titleOfSelectedItem]];
 	}
@@ -289,7 +331,7 @@
 {
 	if( nil != mServer )
 	{
-		[mServer setAddToServerListOnConnect:![mServer addToServerListOnConnect]];
+		[(id)mServer setAddToServerListOnConnect:![mServer addToServerListOnConnect]];
 	}
 }
 
@@ -300,32 +342,95 @@
 
 - (IBAction)connectToServer:(id)sender
 {
-    BOOL saveCheckboxWasVisible = !removedSaveCheckbox;
+    NSWindow *window;
+
+    saveCheckboxWasVisible = !removedSaveCheckbox;
     [self setSaveCheckboxIsVisible: NO];
 	[connectIndicator startAnimation:self];
 	[connectIndicatorText setStringValue:NSLocalizedString(@"Connecting...", @"Connect in process notification string")];
 	[connectIndicatorText display];
+
+    [self disableControls];
+    [connectBtn setTitle: NSLocalizedString(@"Cancel", nil)];
+    [connectBtn setAction: @selector(cancelConnect:)];
+    [connectBtn setKeyEquivalent:@"."];
+    [connectBtn setKeyEquivalentModifierMask:NSCommandKeyMask];
 	
-	bool bConnectSuccess = [mDelegate connect:mServer];
-	
+    Profile* profile = [[ProfileManager sharedManager] profileNamed:[mServer lastProfile]];
+    
+    // Asynchronously creates a connection to the server
+    window = superController ? [superController window] : [self window];
+    connectionWaiter = [[ConnectionWaiter alloc] initWithServer:mServer
+                            profile:profile delegate:self window:window];
+    if (connectionWaiter == nil)
+        [self connectionFailed];
+}
+
+- (IBAction)cancelConnect: (id)sender
+{
+    [connectionWaiter cancel];
+    [self connectionAttemptEnded];
+}
+
+- (void)connectionSucceeded: (RFBConnection *)theConnection
+{
+    if (![mServer rememberPassword])
+        [mServer setPassword: @""];
+    [[RFBConnectionManager sharedManager] successfulConnection:theConnection
+                                                      toServer:mServer];
+
+    if (superController)
+        [[superController window] orderOut:self];
+    [self connectionAttemptEnded];
+
+    if( [mServer addToServerListOnConnect] )
+    {
+        [[ServerDataManager sharedInstance] addServer:mServer];
+    }
+
+    if( YES == selfTerminate )
+    {
+        // shouldCloseDocument will trigger the autorelease
+        [[self window] performClose:self];
+    }
+}
+
+- (void)connectionFailed
+{
+    [self connectionAttemptEnded];
+}
+
+/* Update the interface to indicate the end of the connection attempt. */
+- (void)connectionAttemptEnded
+{
 	[connectIndicator stopAnimation:self];
 	[connectIndicatorText setStringValue:@""];
 	[connectIndicatorText display];
     [self setSaveCheckboxIsVisible: saveCheckboxWasVisible];
-	
-	if( YES == bConnectSuccess )
-	{
-		if( YES == [mServer doYouSupport:ADD_SERVER_ON_CONNECT] && [mServer addToServerListOnConnect] )
-		{
-			[[ServerDataManager sharedInstance] addServer:mServer];
-		}
-		
-		if( YES == selfTerminate )
-		{
-			// shouldCloseDocument will trigger the autorelease
-			[[self window] performClose:self];
-		}
-	}
+
+    [self updateView:nil];
+    [superController setControlsEnabled: YES];
+    [connectBtn setTitle: NSLocalizedString(@"Connect", nil)];
+    [connectBtn setAction: @selector(connectToServer:)];
+    [connectBtn setKeyEquivalent:@"\r"];
+    [connectBtn setKeyEquivalentModifierMask:0];
+
+    [connectionWaiter release];
+    connectionWaiter = nil;
+}
+
+/* Disables or enables controls as part of connection attempt */
+- (void)disableControls
+{
+    [display setEnabled: NO];
+    [hostName setEnabled: NO];
+    [password setEnabled: NO];
+    [profilePopup setEnabled: NO];
+    [rememberPwd setEnabled: NO];
+    [fullscreen setEnabled: NO];
+    [shared setEnabled: NO];
+    [viewOnly setEnabled: NO];
+    [superController setControlsEnabled: NO];
 }
 
 - (void)windowClose:(id)notification

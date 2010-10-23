@@ -21,13 +21,18 @@
 
 
 #import <Cocoa/Cocoa.h>
+#import "ConnectionWaiter.h"
 
 @protocol IServerData;
 @protocol ConnectionDelegate;
+@class RFBConnection;
+@class RFBConnectionManager;
 
 @interface ServerDataViewController : NSWindowController
+                                            <ConnectionWaiterDelegate>
 {
     IBOutlet NSTextField *display;
+    IBOutlet NSTextField *displayDescription;
     IBOutlet NSTextField *hostName;
     IBOutlet NSTextField *password;
     IBOutlet NSPopUpButton *profilePopup;
@@ -43,18 +48,19 @@
 	IBOutlet NSTextField *connectIndicatorText;
 	
 	id<IServerData> mServer;
-	id<ConnectionDelegate> mDelegate;
 	
 	bool selfTerminate;
 	bool removedSaveCheckbox;
+
+    ConnectionWaiter    *connectionWaiter;
+    BOOL saveCheckboxWasVisible;
+    RFBConnectionManager *superController;
 }
 
 - (id)initWithReleaseOnCloseOrConnect;
 
 - (void)setServer:(id<IServerData>)server;
 - (id<IServerData>)server;
-
-- (void)setConnectionDelegate:(id<ConnectionDelegate>)delegate;
 
 - (IBAction)rememberPwdChanged:(id)sender;
 - (IBAction)profileSelectionChanged:(id)sender;
@@ -63,6 +69,15 @@
 - (IBAction)viewOnlyChanged:(id)sender;
 - (IBAction)connectToServer:(id)sender;
 - (IBAction)addServerChanged:(id)sender;
+
+- (IBAction)connectToServer:(id)sender;
+- (IBAction)cancelConnect: (id)sender;
+
+- (void)connectionSucceeded: (RFBConnection *)theConnection;
+- (void)connectionFailed;
+- (void)connectionAttemptEnded;
+
+- (void)disableControls;
 
 - (NSBox*)box;
 
@@ -73,11 +88,15 @@
 - (void)loadProfileIntoView;
 
 - (void)setSaveCheckboxIsVisible:(BOOL)visible;
+- (void)setSuperController:(RFBConnectionManager *)aSuperController;
 
 @end
 
+#if 0
 @protocol ConnectionDelegate
 
-- (bool)connect:(id<IServerData>)server;
+- (void)successfulConnection: (RFBConnection *)connection
+                    toServer:(id<IServerData>)server;
 
 @end
+#endif

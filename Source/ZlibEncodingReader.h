@@ -16,10 +16,10 @@
 	unsigned int	capacity;
 	id				numBytesReader;
 	id				pixelReader;
-	id				connection;
 	z_stream		stream;
 }
 
+- (unsigned)maximumUncompressedSize;
 - (void)setUncompressedData:(unsigned char*)data length:(int)length;
 
 @end

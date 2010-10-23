@@ -19,13 +19,24 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "ByteReader.h"
+#import <rfbproto.h>
 
-@interface SetColorMapEntriesReader : ByteReader
+@class RFBProtocol;
+@class RFBConnection;
+
+@interface SetColorMapEntriesReader : NSObject
 {
+    RFBProtocol *protocol;
+    RFBConnection   *connection;
+
     id		headerReader;
     id		colorReader;
     CARD16	numberOfColors;
 }
+
+- (id)initWithProtocol: (RFBProtocol *)aProtocol
+            connection:(RFBConnection *)aConnection;
+
+- (void)readMessage;
 
 @end

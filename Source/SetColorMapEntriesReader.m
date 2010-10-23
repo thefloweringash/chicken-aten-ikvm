@@ -20,12 +20,16 @@
 
 #import "SetColorMapEntriesReader.h"
 #import "ByteBlockReader.h"
+#import "RFBProtocol.h"
 
 @implementation SetColorMapEntriesReader
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithProtocol: (RFBProtocol *)aProtocol
+            connection:(RFBConnection *)aConnection
 {
-	if (self = [super initTarget:aTarget action:anAction]) {
+	if (self = [super init]) {
+        protocol = aProtocol;
+        connection = aConnection;
 		headerReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setHeader:) size:5];
 		colorReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setColors:)];
 	}
@@ -39,9 +43,9 @@
     [super dealloc];
 }
 
-- (void)resetReader
+- (void)readMessage
 {
-    [target setReader:headerReader];
+    [connection setReader:headerReader];
 }
 
 - (void)setHeader:(NSData*)header
@@ -51,12 +55,13 @@
     memcpy(&msg.pad, [header bytes], sizeof(msg) - 1);
     numberOfColors = ntohs(msg.nColours);
     [colorReader setBufferSize:numberOfColors * 3 * sizeof(CARD16)];
-    [target setReader:colorReader];
+    [connection setReader:colorReader];
 }
 
+/* Dummy method: doesn't actually process the color map */
 - (void)setColors:(NSData*)colors
 {
-    [target performSelector:action withObject:self];
+    [protocol messageReaderDone];
 }
 
 @end

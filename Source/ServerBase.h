@@ -22,18 +22,22 @@
 #import <Foundation/Foundation.h>
 #import "IServerData.h"
 
+#define PORT_BASE 5900
+#define DISPLAY_MAX 50 // numbers >= this are interpreted as a port
+
 @interface ServerBase : NSObject <IServerData> {
 	NSString* _name;
 	NSString* _host;
 	NSString* _hostAndPort;
 	NSString* _password;
 	bool      _rememberPassword;
-	int       _display;
+	int       _display; // value entered in "Display or port" box
 	int       _port;
 	bool      _shared;
 	bool      _fullscreen;
 	bool      _viewOnly;	
 	NSString* _lastProfile;
+    bool      _isPortSpecifiedInHost;
 	id<IServerDataDelegate> _delegate;
 }
 
@@ -71,7 +75,7 @@
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setLastProfile: (NSString*)lastProfile;
-- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
+//- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 

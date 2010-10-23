@@ -24,6 +24,8 @@
 #import "ProfileManager.h"
 #import "ProfileDataManager.h"
 
+#import <Foundation/Foundation.h>
+
 @implementation ServerBase
 
 - (id)init
@@ -106,7 +108,7 @@
 
 - (bool)isPortSpecifiedInHost
 {
-	return ! [_host isEqualToString: _hostAndPort];
+    return _isPortSpecifiedInHost;
 }
 
 - (int)port
@@ -136,7 +138,7 @@
 
 - (void)setName: (NSString*)name
 {
-	[_name autorelease];
+	[_name release];
 	if( nil != name )
 	{
 		_name = [name retain];
@@ -152,10 +154,10 @@
 
 - (void)setHost: (NSString*)host
 {
-	[_host autorelease];
+	[_host release];
 	if( nil != host )
 	{
-		_host = [host retain];
+        _host = [host retain];
 	}
 	else
 	{
@@ -169,18 +171,53 @@
 - (void)setHostAndPort: (NSString*)hostAndPort
 {
 	BOOL portWasSpecifiedInHost = [self isPortSpecifiedInHost];
+    NSString *strippedHost = [hostAndPort stringByTrimmingCharactersInSet:
+                                    [NSCharacterSet whitespaceCharacterSet]];
 	
-	[_hostAndPort autorelease];
+	[_hostAndPort release];
 	if( nil != hostAndPort )
 	{
 		_hostAndPort = [hostAndPort retain];
 		
-		NSArray *items = [hostAndPort componentsSeparatedByString:@":"];
-		[self setHost: [items objectAtIndex: 0]];
-		if ( [self isPortSpecifiedInHost] )
-			[self setPort: [[items objectAtIndex: 1] intValue]];
-		else if ( portWasSpecifiedInHost )
-			[self setPort: [self display] + 5900];
+        if ([hostAndPort hasPrefix: @"["]) {
+            // IPv6 escaped notation, in which the host is surrounded by []
+            NSRange endBracket = [strippedHost rangeOfString: @"]"];
+            NSRange hostRange;
+
+            hostRange.location = 1;
+            if (endBracket.location == NSNotFound)
+                hostRange.length = [strippedHost length] - 1;
+            else
+                hostRange.length = endBracket.location - 1;
+
+            [self setHost: [strippedHost substringWithRange: hostRange]];
+            
+            if ([strippedHost length] > hostRange.length + 2
+                    && [strippedHost characterAtIndex: hostRange.length + 2] == ':') {
+                // port also specified in string
+                NSString    *portStr;
+                portStr = [strippedHost substringFromIndex: hostRange.length + 3];
+                [self setPort: [portStr intValue]];
+                _isPortSpecifiedInHost = YES;
+            } else
+                _isPortSpecifiedInHost = NO;
+        } else {
+            NSArray *items = [strippedHost componentsSeparatedByString:@":"];
+
+            if ([items count] == 2) {
+                // host:port format
+                [self setHost: [items objectAtIndex: 0]];
+                [self setPort: [[items objectAtIndex: 1] intValue]];
+                _isPortSpecifiedInHost = YES;
+            } else {
+                // Either no colons or IPv6 notation
+                [self setHost: strippedHost];
+                _isPortSpecifiedInHost = NO;
+            }
+        }
+
+        if (portWasSpecifiedInHost && !_isPortSpecifiedInHost)
+            [self setDisplay: [self display]];
 	}
 	else
 	{
@@ -193,7 +230,7 @@
 
 - (void)setPassword: (NSString*)password
 {
-	[_password autorelease];
+	[_password release];
 	
 	if( nil != password )
 	{
@@ -219,7 +256,10 @@
 - (void)setDisplay: (int)display
 {
 	_display = display;
-	[self setPort: _display + 5900];
+    if (_display < DISPLAY_MAX)
+        [self setPort: _display + PORT_BASE];
+    else
+        [self setPort: _display];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -261,12 +301,12 @@
 {
 	ProfileDataManager* profileManager = [ProfileDataManager sharedInstance];
 	
-	if( nil != [profileManager profileForKey: lastProfile] )
+	if( [profileManager profileWithNameExists: lastProfile] )
 	{
 		[_lastProfile autorelease];
 		_lastProfile = [lastProfile retain];
 	}
-	else if( nil == [profileManager profileForKey: _lastProfile] )
+	else if( ![profileManager profileWithNameExists: _lastProfile] )
 	{
 		// This can actually happen at load, and this is a good place to catch it
 		[_lastProfile autorelease];
@@ -287,7 +327,7 @@
 	ProfileDataManager* profileManager = [ProfileDataManager sharedInstance];
 	
 	NSString *lastProfile = [self lastProfile];
-	if( !lastProfile || (nil == [profileManager profileForKey: lastProfile]) )
+	if( !lastProfile || ![profileManager profileWithNameExists: lastProfile] )
 	{
 		[self setLastProfile:[NSString stringWithString:[profileManager defaultProfileName]]];
 	}
@@ -314,10 +354,12 @@
 	return NO;
 }
 
+#if 0
 - (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect
 {
 	// Do nothing
 	assert(0);
 }
+#endif
 
 @end

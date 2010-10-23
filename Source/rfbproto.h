@@ -314,7 +314,15 @@ typedef struct {
 #define rfbEncodingZlib 6
 #define rfbEncodingTight 7
 #define rfbEncodingZlibHex 8
+#define rfbEncodingUltra 9
 #define rfbEncodingZRLE 16
+
+#define rfbEncodingMax rfbEncodingZRLE
+
+#define rfbEncodingXvp                  0xFFFFFECB
+#define rfbEncodingExtendedDesktopSize  0xFFFFFECC
+#define rfbEncodingDesktopName          0xFFFFFECD
+#define rfbEncodingGii                  0xFFFFFECF
 
 /*
  * Special encoding numbers:
@@ -339,8 +347,10 @@ typedef struct {
 
 #define rfbEncodingXCursor         0xFFFFFF10
 #define rfbEncodingRichCursor      0xFFFFFF11
+#define rfbEncodingPointerPos      0xFFFFFF18
 
 #define rfbEncodingLastRect        0xFFFFFF20
+#define rfbEncodingDesktopSize     0xFFFFFF21
 
 #define rfbEncodingQualityLevel0   0xFFFFFFE0
 #define rfbEncodingQualityLevel1   0xFFFFFFE1

@@ -19,19 +19,23 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "ByteReader.h"
 #import "RFBConnection.h"
 #import "vncauth.h"
 
-@interface RFBHandshaker : ByteReader
+@class ServerInitMessage;
+
+@interface RFBHandshaker : NSObject
 {
-	id  authCountReader;
-	id  authTypeArrayReader;
-    id	authTypeReader;
+    RFBConnection   *connection;
     id	connFailedReader;
     id	challengeReader;
     id	authResultReader;
     id	serverInitReader;
 }
+
+- (id)initWithConnection: (RFBConnection *)aConnection;
+
+- (void)handshake;
+- (void)setServerInit: (ServerInitMessage *)serverMsg;
 
 @end

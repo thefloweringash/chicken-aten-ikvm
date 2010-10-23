@@ -24,6 +24,7 @@
 #import "IServerData.h"
 @class ServerDataManager;
 
+/* A server which is or can be stored in our preferences */
 @interface ServerFromPrefs : ServerBase {
 }
 

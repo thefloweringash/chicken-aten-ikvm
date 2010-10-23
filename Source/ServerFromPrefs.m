@@ -30,6 +30,7 @@
 #define RFB_PASSWORD	  @"Password"
 #define RFB_REMEMBER	  @"RememberPassword"
 #define RFB_DISPLAY		  @"Display"
+#define RFB_DISPLAYMAX    @"DisplayMax"
 #define RFB_SHARED		  @"Shared"
 #define RFB_FULLSCREEN    @"Fullscreen"
 #define RFB_VIEWONLY      @"ViewOnly"
@@ -53,7 +54,10 @@
 		[self setName:             [NSString stringWithString:host]];
 		[self setHostAndPort:      [NSString stringWithString:host]];
 		[self setPassword:         [NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]]];
-		[self setRememberPassword:[[prefDict objectForKey:RFB_REMEMBER] intValue] == 0 ? NO : YES];
+		/* super instead of self here because we don't need to save the
+		 * password. Moreover, if we couldn't get access to the keychain, then
+		 * we don't want to clobber the keychain password. */
+		[super setRememberPassword:[[prefDict objectForKey:RFB_REMEMBER] intValue] == 0 ? NO : YES];
 		[self setDisplay:         [[prefDict objectForKey:RFB_DISPLAY] intValue]];
 		[self setLastProfile:      [prefDict objectForKey:RFB_LAST_PROFILE]];
 		[self setShared:          [[prefDict objectForKey:RFB_SHARED] intValue] == 0 ? NO : YES];
@@ -90,6 +94,7 @@
 	[coder encodeObject:_host			 forKey:RFB_HOST];
 	[coder encodeObject:_hostAndPort     forKey:RFB_HOSTANDPORT];
 	[coder encodeBool:_rememberPassword  forKey:RFB_REMEMBER];
+    [coder encodeInt:DISPLAY_MAX         forKey:RFB_DISPLAYMAX];
 	[coder encodeInt:_display			 forKey:RFB_DISPLAY];
 	[coder encodeObject:_lastProfile	 forKey:RFB_LAST_PROFILE];
 	[coder encodeBool:_shared			 forKey:RFB_SHARED];
@@ -108,8 +113,21 @@
 		[self setName:            [coder decodeObjectForKey:RFB_NAME]];
 		[self setHost:            [coder decodeObjectForKey:RFB_HOST]];
 		[self setPassword:        [NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]]];
-		[self setRememberPassword:[coder decodeBoolForKey:RFB_REMEMBER]];
-		[self setDisplay:         [coder decodeIntForKey:RFB_DISPLAY]];
+        // Note the super instead of self here. See comment in initWithHost.
+		[super setRememberPassword:[coder decodeBoolForKey:RFB_REMEMBER]];
+
+		int displayMax; // what DISPLAY_MAX was used by whoever encoded this
+		if ([coder containsValueForKey: RFB_DISPLAYMAX])
+			displayMax = [coder decodeIntForKey:RFB_DISPLAYMAX];
+		else
+			displayMax = INT_MAX; // COTV version 2.0b4 and earlier
+
+		int display = [coder decodeIntForKey:RFB_DISPLAY];
+		if (display >= displayMax || display < DISPLAY_MAX)
+			[self setDisplay: display];
+		else
+			[self setDisplay: display + PORT_BASE];
+
 		[self setLastProfile:     [coder decodeObjectForKey:RFB_LAST_PROFILE]];
 		[self setShared:          [coder decodeBoolForKey:RFB_SHARED]];
 		[self setFullscreen:      [coder decodeBoolForKey:RFB_FULLSCREEN]];
@@ -130,11 +148,11 @@
 		case EDIT_PASSWORD:
 		case SAVE_PASSWORD:
 		case CONNECT:
-		case DELETE:
-		case SERVER_SAVE:
+		//case DELETE:
+		//case SERVER_SAVE:
 			return YES;
-		case ADD_SERVER_ON_CONNECT:
-			return NO;
+		//case ADD_SERVER_ON_CONNECT:
+			//return NO;
 		default:
 			// handle all cases
 			assert(0);

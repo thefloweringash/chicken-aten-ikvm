@@ -20,19 +20,18 @@
 
 #import <AppKit/AppKit.h>
 #import "EncodingReader.h"
+#import "RFBConnection.h"
 #import <zlib.h>
 
-#define SUPPORT_JPEG
-//#undef	SUPPORT_JPEG
-#ifdef SUPPORT_JPEG
-#import "../libjpeg/jpeglib.h"
-#endif
+#import "../libjpeg-turbo/jpeglib.h"
 
 #define NUM_ZSTREAMS		4
 //#define Z_BUFSIZE		4096
 #define TIGHT_BUFSIZE		16384
 #define Z_BUFSIZE		TIGHT_BUFSIZE
 #define TIGHT_MIN_TO_COMPRESS	12
+
+@class FilterReader, PaletteFilter, GradientFilter;
 
 @interface TightEncodingReader : EncodingReader
 {
@@ -43,26 +42,27 @@
     id		zipLengthReader;
     id		zippedDataReader;
     
-    id		currentFilter;
-    id		copyFilter;
-    id		paletteFilter;
-    id		gradientFilter;
+    FilterReader    *currentFilter;
+    FilterReader    *copyFilter;
+    PaletteFilter   *paletteFilter;
+    GradientFilter  *gradientFilter;
+
     int		pixelBits;
     int		compressedLength;
     int		rowSize;
     int		rowsDone;
     
-    CARD8	cntl;
+    CARD8	cntl; /* Subencoding type */
     BOOL	zStreamActive[NUM_ZSTREAMS];
     z_stream	zStream[NUM_ZSTREAMS];
 
     id		zBuffer;
     int		zBufPos;
-    id		connection;
-#ifdef SUPPORT_JPEG
+
 	struct 	jpeg_source_mgr jpegSrcManager;
-#endif
 }
+
+- (void)filterInitDone;
 
 - (void)uninitializeStream: (int)streamID;
 

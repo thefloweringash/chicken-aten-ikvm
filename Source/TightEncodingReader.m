@@ -20,14 +20,12 @@
 
 #import "TightEncodingReader.h"
 #import "ZipLengthReader.h"
-#import "CopyFilter.h"
 #import "PaletteFilter.h"
+#import "FrameBufferUpdateReader.h"
 #import "GradientFilter.h"
 #import "CARD8Reader.h"
 #import "ByteBlockReader.h"
 #import "RFBConnection.h"
-
-#ifdef SUPPORT_JPEG
 
 static void JpegInitSource(j_decompress_ptr cinfo)
 {
@@ -61,24 +59,23 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 	cinfo->src->bytes_in_buffer = compressedLen;
 }
 
-#endif
-
 @implementation TightEncodingReader
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater connection: (RFBConnection *)aConnection
 {
-    if (self = [super initTarget:aTarget action:anAction]) {
+    if (self = [super initWithUpdater: aUpdater connection: aConnection]) {
 		controlReader = [[CARD8Reader alloc] initTarget:self action:@selector(setControl:)];
 		backPixReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
 		filterIdReader = [[CARD8Reader alloc] initTarget:self action:@selector(setFilterId:)];
 		unzippedDataReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setUnzippedData:)];
 		zippedDataReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setZippedData:)];
 		zipLengthReader = [[ZipLengthReader alloc] initTarget:self action:@selector(setZipLength:)];
-		copyFilter = [[CopyFilter alloc] initTarget:self action:@selector(filterInitDone:)];
-		paletteFilter = [[PaletteFilter alloc] initTarget:self action:@selector(filterInitDone:)];
-		gradientFilter = [[GradientFilter alloc] initTarget:self action:@selector(filterInitDone:)];
+
+        copyFilter = [[FilterReader alloc] initWithTarget:self andConnection:connection];
+        paletteFilter = [[PaletteFilter alloc] initWithTarget:self andConnection:connection];
+        gradientFilter = [[GradientFilter alloc] initWithTarget:self andConnection:connection];
+
 		zBuffer = [[NSMutableData alloc] initWithLength:Z_BUFSIZE];
-		connection = [aTarget topTarget];
 	}
     return self;
 }
@@ -112,14 +109,16 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     [gradientFilter setFrameBuffer:aBuffer];
 }
 
-- (void)resetReader
+- (void)readEncoding
 {
 #ifdef COLLECT_STATS
      bytesTransferred = 1;
 #endif
-    [target setReader:controlReader];
+    [frameBuffer setCurrentReaderIsTight: YES];
+    [connection setReader:controlReader];
 }
 
+/* Have just read the initial control byte, which determines the subencoding */
 - (void)setControl:(NSNumber*)cntlByte
 {
     int streamId;
@@ -132,25 +131,23 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 		cntl >>= 1;
     }
     if(cntl == rfbTightFill) {
-        [target setReader:backPixReader];
+        [connection setReader:backPixReader];
         return;
     }
-#ifdef SUPPORT_JPEG
 	if(cntl == rfbTightJpeg) {
-		[target setReader:zipLengthReader];
+		[connection setReader:zipLengthReader];
 		return;
 	}
-#endif
     if(cntl > rfbTightMaxSubencoding) {
 		[connection terminateConnection:@"Tight encoding: bad subencoding value received.\n"];
         return;
     }
     if(cntl & rfbTightExplicitFilter) {
-        [target setReader:filterIdReader];
+        [connection setReader:filterIdReader];
         return;
     }
     currentFilter = copyFilter;
-    [target setReader:currentFilter];
+    [currentFilter resetFilterForRect:frame];
 }
 
 - (void)setBackground:(NSData*)data
@@ -159,13 +156,13 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
         bytesTransferred += [data length];
 #endif
     [frameBuffer fillRect:frame tightPixel:(unsigned char*)[data bytes]];
-    [target performSelector:action withObject:self];
+    [updater didRect:self];
 }
 
 - (void)setFilterId:(NSNumber*)aByte
 {
 #ifdef COLLECT_STATS
-        bytesTransferred += 1;
+    bytesTransferred += 1;
 #endif
     switch([aByte unsignedCharValue]) {
         case rfbTightFilterCopy:
@@ -179,20 +176,21 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
             break;
         default:
             currentFilter = nil;
-	    [connection terminateConnection:[NSString stringWithFormat:@"Tight encoding: unknown filter code %@ received.\n", aByte]];
+            [connection terminateConnection:[NSString stringWithFormat:@"Tight encoding: unknown filter code %@ received.\n", aByte]];
             return;
     }
-    [target setReader:currentFilter];
+    [currentFilter resetFilterForRect:frame];
 }
 
-- (void)filterInitDone:(FilterReader*)theFilter
+/* Whatever header the filter needs has now been processed */
+- (void)filterInitDone
 {
     int size;
 
 #ifdef COLLECT_STATS
-    bytesTransferred += [theFilter bytesTransferred];
+    bytesTransferred += [currentFilter bytesTransferred];
 #endif
-    if((pixelBits = [theFilter bitsPerPixel]) == 0) {
+    if((pixelBits = [currentFilter bitsPerPixel]) == 0) {
         [connection terminateConnection:@"Tight encoding: palette with length 0 received\n"];
         return;
     }
@@ -201,10 +199,10 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     size = rowSize * frame.size.height;
     if(size < TIGHT_MIN_TO_COMPRESS) {
         [unzippedDataReader setBufferSize:size];
-        [target setReader:unzippedDataReader];
+        [connection setReader:unzippedDataReader];
         return;
     }
-    [target setReader:zipLengthReader];
+    [connection setReader:zipLengthReader];
 }
 
 - (void)setUnzippedData:(NSData*)data
@@ -214,7 +212,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 #endif
     data = [currentFilter filter:data rows:frame.size.height];
     [frameBuffer putRect:frame fromTightData:(unsigned char*)[data bytes]];
-    [target performSelector:action withObject:self];
+    [updater didRect:self];
 }
 
 - (void)setZipLength:(NSNumber*)zl
@@ -232,13 +230,11 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 		bytesTransferred += 3;
     }
 #endif
-#ifdef SUPPORT_JPEG
 	if(cntl == rfbTightJpeg) {
 		[zippedDataReader setBufferSize:[zl unsignedIntValue]];
-		[target setReader:zippedDataReader];
+		[connection setReader:zippedDataReader];
 		return;
 	}
-#endif
     streamId = cntl & 0x03;
     stream = zStream + streamId;
     if(!zStreamActive[streamId]) {
@@ -262,7 +258,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     zBufPos = 0;
     rowsDone = 0;
     [zippedDataReader setBufferSize:MIN(compressedLength, Z_BUFSIZE)];
-    [target setReader:zippedDataReader];
+    [connection setReader:zippedDataReader];
 }
 
 - (void)setZippedData:(NSData*)data
@@ -281,7 +277,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 #ifdef COLLECT_STATS
     bytesTransferred += [data length];
 #endif
-#ifdef SUPPORT_JPEG
 	if(cntl == rfbTightJpeg) {
 		struct jpeg_decompress_struct cinfo;
 		struct jpeg_error_mgr jerr;
@@ -292,7 +287,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 		cinfo.err = jpeg_std_error(&jerr);
 		jpeg_create_decompress(&cinfo);
 		cinfo.src = &jpegSrcManager;
-		JpegSetSrcManager(&cinfo, (char*)[data bytes], [data length]);
+		JpegSetSrcManager(&cinfo, (CARD8*)[data bytes], [data length]);
 		jpeg_read_header(&cinfo, TRUE);
 		cinfo.out_color_space = JCS_RGB;
 		jpeg_start_decompress(&cinfo);
@@ -313,10 +308,9 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 		free(buffer);
 		jpeg_finish_decompress(&cinfo);
 		jpeg_destroy_decompress(&cinfo);
-        [target performSelector:action withObject:self];
+        [updater didRect:self];
 		return;
 	}
-#endif
     stream = zStream + (cntl & 0x03);
     stream->next_in = (unsigned char*)[data bytes];
     stream->avail_in = [data length];
@@ -334,6 +328,8 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
             }
             return;
         }
+
+        // write all the rows inflated in this cycle
         numRows = (Z_BUFSIZE - stream->avail_out) / rowSize;
         filtered = [currentFilter filter:zBuffer rows:numRows];
         r = frame;
@@ -349,13 +345,14 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     } while(stream->avail_out == 0);
     if((compressedLength -= [data length]) > 0) {
         [zippedDataReader setBufferSize:MIN(compressedLength, Z_BUFSIZE)];
-        [target setReader:zippedDataReader];
+        [connection setReader:zippedDataReader];
     } else {
-        [target performSelector:action withObject:self];
+        [updater didRect:self];
     }
 }
 
-- (void)uninitializeStream: (int)streamID {
+- (void)uninitializeStream: (int)streamID
+{
 	if(zStreamActive[streamID]) {
 		if((inflateEnd(&zStream[streamID]) != Z_OK) && (zStream[streamID].msg != NULL)) {
 			NSLog(@"inflateEnd: %s\n", zStream[streamID].msg);

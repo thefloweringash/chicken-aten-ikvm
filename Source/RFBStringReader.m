@@ -19,58 +19,60 @@
  */
 
 #import "RFBStringReader.h"
+#import "ByteBlockReader.h"
 #import "CARD32Reader.h"
+#import "RFBConnection.h"
 
+/* Reads a string from the server. The default is to assume that the string is
+ * in UTF-8 format, although that can be overriden by the encoding: parameter */
 @implementation RFBStringReader
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction
+      connection: (RFBConnection *)aConnection
 {
-	if (self = [super initTarget:aTarget action:anAction]) {
-		lengthReader = [[CARD32Reader alloc] initTarget:self action:@selector(setLength:)];
+    return [self initTarget:aTarget action:anAction connection:aConnection
+                   encoding:NSUTF8StringEncoding];
+}
+
+- (id)initTarget:(id)aTarget action:(SEL)anAction
+      connection: (RFBConnection *)aConnection
+        encoding:(NSStringEncoding)anEncoding
+{
+	if (self = [super init]) {
+        target = aTarget;
+        action = anAction;
+        connection = aConnection;
+        encoding = anEncoding;
 	}
     return self;
 }
 
-- (void)dealloc
+- (void)readString
 {
+    CARD32Reader    *lengthReader;
+
+    lengthReader = [[CARD32Reader alloc] initTarget:self action:@selector(setLength:)];
+    [connection setReader:lengthReader];
     [lengthReader release];
-    if(buffer != NULL) {
-        free(buffer);
-    }
-    [super dealloc];
 }
 
-- (void)resetReader
+- (void)setLength:(NSNumber *)theLength
 {
-    [target setReader:lengthReader];
+    ByteBlockReader *contentReader;
+
+    unsigned    length = [theLength unsignedIntValue];
+    contentReader = [[ByteBlockReader alloc] initTarget:self
+                                 action:@selector(setContent:) size:length];
+    [connection setReader:contentReader];
+    [contentReader release];
 }
 
-- (unsigned)readBytes:(unsigned char*)theBytes length:(unsigned)aLength
+- (void)setContent:(NSData *)content
 {
-    unsigned canConsume = MIN(aLength, (length - bytesRead));
-
-    memcpy(buffer + bytesRead, theBytes, canConsume);
-    if((bytesRead += canConsume) == length) {
-        [target performSelector:action withObject:[NSString stringWithCString:buffer length:length]];
-    }
-    return canConsume;
-}
-
-- (void)setLength:(NSNumber*)theLength
-{
-    length = [theLength unsignedIntValue];
-    if(buffer) {
-        free(buffer);
-    }
-    buffer = malloc(length);
-    
-    // - Prevent the DOS attack on http://www.securityfocus.com/archive/1/458907/100/0/threaded
-    
-    if (!buffer)
-        [NSException raise: NSGenericException format: @"Invalid computer name size sent by server, Chicken will bail out"];
-    
-    [target setReaderWithoutReset:self];
-    bytesRead = 0;
+    NSString    *str;
+    str = [[NSString alloc] initWithData:content encoding:encoding];
+    [target performSelector:action withObject:str];
+    [str release];
 }
 
 @end

@@ -19,15 +19,24 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "ByteReader.h"
 #import "rfbproto.h"
 
-@interface RFBStringReader : ByteReader
+@class RFBConnection;
+
+@interface RFBStringReader : NSObject
 {
-    CARD32	length;
-    char*	buffer;
-    CARD32	bytesRead;
-    id		lengthReader;
+    id              target;
+    SEL             action;
+	RFBConnection	*connection;
+    NSStringEncoding    encoding;
 }
+
+- (id)initTarget:(id)aTarget action:(SEL)anAction
+      connection: (RFBConnection *)aConnection;
+- (id)initTarget:(id)aTarget action:(SEL)anAction
+      connection: (RFBConnection *)aConnection
+        encoding:(NSStringEncoding)anEncoding;
+
+- (void)readString;
 
 @end

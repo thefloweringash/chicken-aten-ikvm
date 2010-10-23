@@ -17,12 +17,16 @@
  */
 
 #import <AppKit/AppKit.h>
+#import <ServerDataViewController.h>
+#import "ConnectionWaiter.h"
+
 @class Profile, ProfileManager;
+@class RFBConnection;
 @class ServerDataViewController;
-@protocol ConnectionDelegate, IServerData;
+@protocol IServerData;
 
 
-@interface RFBConnectionManager : NSWindowController<ConnectionDelegate>
+@interface RFBConnectionManager : NSWindowController<ConnectionWaiterDelegate>
 {
 	IBOutlet NSTableView *serverList;
 	IBOutlet NSTableView *groupList;
@@ -31,12 +35,16 @@
 	IBOutlet NSBox *serverGroupBox;
 	IBOutlet NSSplitView *splitView;
     IBOutlet NSButton *serverDeleteBtn;
+    IBOutlet NSButton *serverAddBtn;
     NSMutableArray*	connections;
 	ServerDataViewController* mServerCtrler;
 	BOOL mDisplayGroups;
 	BOOL mRunningFromCommandLine;
 	BOOL mLaunchedByURL;
-	NSMutableArray* mOrderedServerNames;
+	NSArray* mOrderedServerNames;
+
+    ConnectionWaiter    *connectionWaiter;
+    BOOL lockedSelection;
 }
 
 + (id)sharedManager;
@@ -44,22 +52,30 @@
 - (void)wakeup;
 - (BOOL)runFromCommandLine;
 - (void)runNormally;
+- (void)connectionSucceeded:(RFBConnection *)conn;
+- (void)connectionFailed;
 
 - (void)showNewConnectionDialog: (id)sender;
 - (void)showConnectionDialog: (id)sender;
 
 - (void)removeConnection:(id)aConnection;
-- (bool)connect:(id<IServerData>)server;
+//- (bool)connect:(id<IServerData>)server;
 - (void)cmdlineUsage;
 
 - (void)selectedHostChanged;
 
+- (void)setControlsEnabled:(BOOL)enabled;
+
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
-- (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner;
+#if 0
+- (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile;
+#endif
 - (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file 
-    server:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner;
+    server:(id<IServerData>) server profile:(Profile *) someProfile;
+- (void)successfulConnection: (RFBConnection *)theConnection
+                    toServer:(id<IServerData>)server;
 
 - (IBAction)addServer:(id)sender;
 - (IBAction)deleteSelectedServer:(id)sender;
@@ -72,6 +88,7 @@
 - (void)serverListDidChange:(NSNotification*)notification;
 
 - (id<IServerData>)selectedServer;
+- (BOOL)selectServerByName:(NSString *)aName;
 
 - (void)useRendezvous:(BOOL)useRendezvous;
 

@@ -19,6 +19,7 @@
 #import "KeyChain.h"
 #import "RFBConnectionManager.h"
 #import "RFBConnection.h"
+#import "ConnectionWaiter.h"
 #import "PrefController.h"
 #import "ProfileManager.h"
 #import "Profile.h"
@@ -50,21 +51,19 @@
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+
+#if 0
 	[self release];
+#else
+	[[NSUserDefaults standardUserDefaults] synchronize];
+#endif
 }
 
 - (void)reloadServerArray
 {
-    NSEnumerator *serverEnumerator = [[ServerDataManager sharedInstance] getServerEnumerator];
-	id<IServerData> server;
-	
-	[mOrderedServerNames removeAllObjects];
-	while ( server = [serverEnumerator nextObject] )
-	{
-		[mOrderedServerNames addObject:[server name]];
-	}
-	
-	[mOrderedServerNames sortUsingSelector:@selector(caseInsensitiveCompare:)];
+    ServerDataManager   *manager = [ServerDataManager sharedInstance];
+    [mOrderedServerNames release];
+    mOrderedServerNames = [[manager sortedServerNames] retain];
 }
 
 - (void)wakeup
@@ -76,19 +75,19 @@
 	mDisplayGroups = NO;
 	mLaunchedByURL = NO;
 	
-	mOrderedServerNames = [[NSMutableArray alloc] init];
+	mOrderedServerNames = nil;
 	[self reloadServerArray];
 	
 	mServerCtrler = [[ServerDataViewController alloc] init];
-	[mServerCtrler setConnectionDelegate:self];
 
-    sigblock(sigmask(SIGPIPE));
+    signal(SIGPIPE, SIG_IGN);
     connections = [[NSMutableArray alloc] init];
     [[ProfileManager sharedManager] wakeup];
     
 	NSBox *serverCtrlerBox = [mServerCtrler box];
 	[serverCtrlerBox retain];
 	[serverCtrlerBox removeFromSuperview];
+    [mServerCtrler setSuperController: self];
 	
     // figure out whether the size has changed in order to ease localization
     NSSize originalSize = [serverDataBoxLocal frame].size;
@@ -125,6 +124,9 @@
 	
 	[splitView adjustSubviews];
 	[self useRendezvous: [[PrefController sharedController] usesRendezvous]];
+
+    connectionWaiter = nil;
+    lockedSelection = -1;
 }
 
 - (BOOL)runFromCommandLine
@@ -154,7 +156,7 @@
 		{
 			if (i + 1 >= argCount) [self cmdlineUsage];
 			NSString *passwordFile = [args objectAtIndex:++i];
-			char *decrypted_password = vncDecryptPasswdFromFile((char*)[passwordFile cString]);
+			char *decrypted_password = vncDecryptPasswdFromFile((char*)[passwordFile UTF8String]);
 			if (decrypted_password == NULL)
 			{
 				NSLog(@"Cannot read password from file.");
@@ -162,7 +164,7 @@
 			} 
 			else
 			{
-				[cmdlineServer setPassword: [NSString stringWithCString:decrypted_password]];
+				[cmdlineServer setPassword: [NSString stringWithUTF8String:decrypted_password]];
 				free(decrypted_password);
 			}
 		}
@@ -201,10 +203,16 @@
 	
 	if ( mRunningFromCommandLine )
 	{
+        // :TORESOLVE: currently no way to cancel without killing program
+        ConnectionWaiter    *cw;
+
 		if ( nil == profile )
 			profile = [profileManager defaultProfile];	
-		[self createConnectionWithServer:cmdlineServer profile:profile owner:self];
-		return YES;
+        
+        cw = [[ConnectionWaiter alloc] initWithServer:cmdlineServer
+                profile:profile delegate:self window:nil];
+        [cw release];
+        return YES;
 	}
 	return NO;
 }
@@ -252,10 +260,20 @@
     exit(1);
 }
 
+/* Connection initiated from the command-line succeeded */
+- (void)connectionSucceeded:(RFBConnection *)conn
+{
+    [self successfulConnection:conn toServer: nil];
+}
+
+/* Connection initiated from command-line failed */
+- (void)connectionFailed
+{
+}
+
 - (void)showNewConnectionDialog:(id)sender
 {
 	ServerDataViewController* viewCtrlr = [[ServerDataViewController alloc] initWithReleaseOnCloseOrConnect];
-	[viewCtrlr setConnectionDelegate:[RFBConnectionManager sharedManager]];
 	
 	ServerStandAlone* server = [[[ServerStandAlone alloc] init] autorelease];
 	
@@ -269,6 +287,7 @@
 	[[self window] makeKeyAndOrderFront:self];
 }
 
+#if 0
 - (void)dealloc
 {
 	[[NSUserDefaults standardUserDefaults] synchronize];
@@ -279,10 +298,35 @@
 	[serverGroupBox release];
     [super dealloc];
 }
+#endif
 
 - (id<IServerData>)selectedServer
 {
 	return [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:[serverList selectedRow]]];
+}
+
+// Selects a server by name. Returns whether or not it found the named server
+- (BOOL)selectServerByName:(NSString *)aName
+{
+	NSEnumerator *serverEnumerator = [mOrderedServerNames objectEnumerator];
+	int index = 0;
+	NSString *name;
+
+	while ( name = [serverEnumerator nextObject] )
+	{
+		if ( name && [name isEqualToString: aName] )
+		{
+            NSIndexSet  *set = [[NSIndexSet alloc] initWithIndex: index];
+			[serverList selectRowIndexes: set byExtendingSelection: NO];
+            [set release];
+
+            if (lockedSelection >= 0)
+                lockedSelection = index;
+			return YES;
+		}
+		index++;
+	}
+    return NO;
 }
 
 - (void)selectedHostChanged
@@ -292,8 +336,22 @@
 	id<IServerData> selectedServer = [self selectedServer];
 	[mServerCtrler setServer:selectedServer];
 	
-	
-	[serverDeleteBtn setEnabled: [selectedServer doYouSupport:DELETE]];
+    [self setControlsEnabled:YES];
+}
+
+// Disable and enable controls. Controls are disabled during a connection
+// attempt and enabled afterwords.
+- (void)setControlsEnabled:(BOOL)enabled
+{
+    ServerBase  *server = [self selectedServer];
+
+    lockedSelection = enabled ? -1 : [serverList selectedRow];
+
+    [serverDeleteBtn setEnabled: enabled
+            && [[ServerDataManager sharedInstance] saveableCount] > 1
+                // can only delete servers which can be saved
+            && [server respondsToSelector:@selector(encodeWithCoder:)]];
+    [serverAddBtn setEnabled: enabled];
 }
 
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost
@@ -338,63 +396,38 @@
     [aConnection retain];
     [connections removeObject:aConnection];
     [aConnection autorelease];
-    if ( mRunningFromCommandLine ) 
+    if ( NO && mRunningFromCommandLine ) 
+        // This breaks if the connection is trying to reconnect. Also, it seems
+        // like in many circumstances it would be best not to quit anyways.
 		[NSApp terminate:self];
 	else if ( 0 == [connections count] )
 		[self showConnectionDialog:nil];
 }
 
-- (bool)connect:(id<IServerData>)server;
-{
-    Profile* profile = [[ProfileManager sharedManager] profileNamed:[server lastProfile]];
-    
-    // Only close the open dialog of the connection was successful
-	bool bRetVal = [self createConnectionWithServer:server profile:profile owner:self];
-    if( YES == bRetVal && server == [self selectedServer])
-	{
-        [[self window] orderOut:self];
-    }
-	
-	return bRetVal;
-}
-
-/* Do the work of creating a new connection and add it to the list of connections. */
-- (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner
+/* Creates a connection from an already connected file handle */
+- (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file server:(id<IServerData>) server profile:(Profile *) someProfile
 {
 	/* change */
     RFBConnection* theConnection;
-    bool returnVal = YES;
 
-    theConnection = [[[RFBConnection alloc] initWithServer:server profile:someProfile owner:someOwner] autorelease];
+    theConnection = [[RFBConnection alloc] initWithFileHandle:file server:server profile:someProfile];
     if(theConnection) {
-        [theConnection setManager:self];
         [connections addObject:theConnection];
+        [theConnection release];
+        return YES;
     }
     else {
-        returnVal = NO;
+        return NO;
     }
-    
-    return returnVal;
 }
 
-- (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file server:(id<IServerData>) server profile:(Profile *) someProfile owner:(id) someOwner
+/* Registers a successful connection using an already-created RFBConnection
+ * object. */
+- (void)successfulConnection: (RFBConnection *)theConnection
+        toServer: (id<IServerData>)server
 {
-	/* change */
-    RFBConnection* theConnection;
-    bool returnVal = YES;
-
-    theConnection = [[[RFBConnection alloc] initWithFileHandle:file server:server profile:someProfile owner:someOwner] autorelease];
-    if(theConnection) {
-        [theConnection setManager:self];
-        [connections addObject:theConnection];
-    }
-    else {
-        returnVal = NO;
-    }
-    
-    return returnVal;
+    [connections addObject:theConnection];
 }
-
 
 - (IBAction)addServer:(id)sender
 {
@@ -403,21 +436,9 @@
 	NSString *newName = [newServer name];
 	NSParameterAssert( newName != nil );
 	
-	NSEnumerator *serverEnumerator = [mOrderedServerNames objectEnumerator];
 	[self reloadServerArray];
 	
-	int index = 0;
-	NSString *name;
-	while ( name = [serverEnumerator nextObject] )
-	{
-		if ( name && [name isEqualToString: newName] )
-		{
-			[serverList selectRow: index byExtendingSelection: NO];
-			[serverList editColumn: 0 row: index withEvent: nil select: YES];
-			break;
-		}
-		index++;
-	}
+    [self selectServerByName: newName];
 }
 
 - (IBAction)deleteSelectedServer:(id)sender
@@ -435,12 +456,7 @@
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
-    // Don't bother caching - this won't happen often enough to matter.
-    // If you  want to cache this, make a class so we can refactor it from everywhere else
-    BOOL gIsJaguar = [NSString instancesRespondToSelector: @selector(decomposedStringWithCanonicalMapping)];
-
-    // [[NSApp windows] count] is the best option, but it don't work pre-jaguar
-    if ((gIsJaguar && ([[NSApp windows] count] == 0)) || ((!gIsJaguar) && (![self haveAnyConnections]))) {
+    if ([[NSApp windows] count] == 0) {
         [[self window] makeKeyAndOrderFront:self];
     }
 }
@@ -503,6 +519,9 @@
 
 - (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
+    if (lockedSelection != -1)
+        return NO;
+
 	if( serverList == aTableView )
 	{
 		id<IServerData> server = [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:row]];
@@ -517,24 +536,19 @@
 	return NO;	
 }
 
+- (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)row
+{
+    // prevent the user from changing the selection during a connection attempt
+    return lockedSelection == -1 || lockedSelection == row;
+}
+
 - (void)afterSort:(id<IServerData>)server
 {
 	[[self window] makeFirstResponder:[self window]];
 	
 	[self reloadServerArray];
-	NSEnumerator *serverEnumerator = [mOrderedServerNames objectEnumerator];
 	
-	int index = 0;
-	NSString *name;
-	while ( name = [serverEnumerator nextObject] )
-	{
-		if ( name && [name isEqualToString: [server name]] )
-		{
-			[serverList selectRow: index byExtendingSelection: NO];
-			break;
-		}
-		index++;
-	}
+    [self selectServerByName: [server name]];
 }
 
 - (void)tableView:(NSTableView *)aTableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -575,9 +589,11 @@
 
 - (void)serverListDidChange:(NSNotification*)notification
 {
+    NSString    *name = [[self selectedServer] name];
 	[self reloadServerArray];
 	[serverList reloadData];
-	[self selectedHostChanged];
+    if (![self selectServerByName:name])
+        [self selectedHostChanged];
 }
 
 - (void)useRendezvous:(BOOL)useRendezvous
@@ -610,10 +626,10 @@
 {
 	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
 	RFBConnection *thisConnection;
-	NSWindow *keyWindow = [NSApp keyWindow];
+	//NSWindow *keyWindow = [NSApp keyWindow];
 	
 	while (thisConnection = [connectionEnumerator nextObject]) {
-		if ([thisConnection window] == keyWindow) {
+		if ([thisConnection hasKeyWindow]) {
 			[thisConnection setFrameBufferUpdateSeconds: interval];
 			break;
 		}
@@ -624,10 +640,10 @@
 {
 	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
 	RFBConnection *thisConnection;
-	NSWindow *keyWindow = [NSApp keyWindow];
+	//NSWindow *keyWindow = [NSApp keyWindow];
 	
 	while (thisConnection = [connectionEnumerator nextObject]) {
-		if ([thisConnection window] != keyWindow) {
+		if ([thisConnection hasKeyWindow]) {
 			[thisConnection setFrameBufferUpdateSeconds: interval];
 		}
 	}

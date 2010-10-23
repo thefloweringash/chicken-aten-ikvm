@@ -21,14 +21,20 @@
 #import "ServerCutTextReader.h"
 #import "RFBStringReader.h"
 #import "ByteBlockReader.h"
+#import "RFBConnection.h"
+#import "RFBProtocol.h"
 
 @implementation ServerCutTextReader
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithProtocol: (RFBProtocol *)aProtocol connection: (RFBConnection *)aConnection;
 {
-	if (self = [super initTarget:aTarget action:anAction]) {
+	if (self = [super init]) {
+        protocol = aProtocol;
+        connection = aConnection;
 		dummyReader = [[ByteBlockReader alloc] initTarget:self action:@selector(padding:) size:3];
-		textReader = [[RFBStringReader alloc] initTarget:self action:@selector(setText:)];
+        textReader = [[RFBStringReader alloc] initTarget:self
+                action:@selector(setText:) connection:connection
+              encoding:NSISOLatin1StringEncoding];
 	}
     return self;
 }
@@ -40,14 +46,14 @@
     [super dealloc];
 }
 
-- (void)resetReader
+- (void)readMessage
 {
-    [target setReader:dummyReader];
+    [connection setReader:dummyReader];
 }
 
 - (void)padding:(NSData*)pad
 {
-    [target setReader:textReader];
+    [textReader readString];
 }
 
 - (void)setText:(NSString*)aText
@@ -56,7 +62,7 @@
 
     [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
     [pb setString:aText forType:NSStringPboardType];
-    [target performSelector:action withObject:aText];
+    [protocol messageReaderDone];
 }
 
 @end

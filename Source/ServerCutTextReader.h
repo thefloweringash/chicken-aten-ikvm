@@ -19,12 +19,20 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "ByteReader.h"
 
-@interface ServerCutTextReader : ByteReader
+@class RFBConnection;
+@class RFBProtocol;
+
+@interface ServerCutTextReader : NSObject
 {
-    id	dummyReader;
-    id	textReader;
+    RFBConnection   *connection;
+    RFBProtocol     *protocol;
+    id              dummyReader;
+    id              textReader;
 }
+
+- (id)initWithProtocol: (RFBProtocol *)aProtocol connection: (RFBConnection *)aConnection;
+
+- (void)readMessage;
 
 @end

@@ -24,10 +24,12 @@
 
 @implementation ServerFromConnection
 
+#if 0
 + (id<IServerData>)createFromConnection:(NSFileHandle*)file
 {
 	return [[[ServerFromConnection alloc] initFromConnection:file] autorelease];
 }
+#endif
 
 - (id)initFromConnection:(NSFileHandle*)file
 {
@@ -52,9 +54,9 @@
 		case EDIT_NAME:
 		case SAVE_PASSWORD:
 		case CONNECT:
-		case DELETE:
-		case SERVER_SAVE:
-		case ADD_SERVER_ON_CONNECT:
+		//case DELETE:
+		//case SERVER_SAVE:
+		//case ADD_SERVER_ON_CONNECT:
 			return NO;
 		default:
 			// handle all cases

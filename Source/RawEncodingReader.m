@@ -20,12 +20,13 @@
 
 #import "RawEncodingReader.h"
 #import "ByteBlockReader.h"
+#import "FrameBufferUpdateReader.h"
 
 @implementation RawEncodingReader
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater connection: (RFBConnection *)aConnection
 {
-    if (self = [super initTarget:aTarget action:anAction]) {
+    if (self = [super initWithUpdater: aUpdater connection: aConnection]) {
 		pixelReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setPixels:)];
 	}
     return self;
@@ -37,7 +38,7 @@
     [super dealloc];
 }
 
-- (void)resetReader
+- (void)readEncoding
 {
     unsigned s = [frameBuffer bytesPerPixel] * frame.size.width * frame.size.height;
 
@@ -45,13 +46,13 @@
     bytesTransferred = s;
 #endif
     [pixelReader setBufferSize:s];
-    [target setReader:pixelReader];
+    [connection setReader:pixelReader];
 }
 
 - (void)setPixels:(NSData*)pixel
 {
     [frameBuffer putRect:frame fromData:(unsigned char*)[pixel bytes]];
-    [target performSelector:action withObject:self];
+    [updater didRect:self];
 }
 
 @end

@@ -12,7 +12,6 @@
 
 @interface ZlibHexEncodingReader : HextileEncodingReader
 {
-	id				connection;
 	id				zLengthReader;
 	z_stream		rawStream;
 	z_stream		encodedStream;

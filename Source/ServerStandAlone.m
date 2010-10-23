@@ -40,11 +40,11 @@
 		case EDIT_ADDRESS:
 		case EDIT_PORT:
 		case EDIT_NAME:
-		case DELETE:
-		case SERVER_SAVE:
+		//case DELETE:
+		//case SERVER_SAVE:
 		case EDIT_PASSWORD:
 		case CONNECT:
-		case ADD_SERVER_ON_CONNECT:
+		//case ADD_SERVER_ON_CONNECT:
 			return YES;
 		case SAVE_PASSWORD:
 			return mAddToServerListOnConnect;

@@ -20,6 +20,7 @@
 
 #import "RFBServerInitReader.h"
 #import "ByteBlockReader.h"
+#import "RFBHandshaker.h"
 #import "RFBStringReader.h"
 
 @implementation ServerInitMessage
@@ -27,16 +28,16 @@
 - (void)setFixed:(NSData*)data
 {
     memcpy(&fixed, [data bytes], sizeof(fixed));
-    fixed.width = ntohs(fixed.width);
-    fixed.height = ntohs(fixed.height);
-    fixed.red_max = ntohs(fixed.red_max);
-    fixed.green_max = ntohs(fixed.green_max);
-    fixed.blue_max = ntohs(fixed.blue_max);
+    fixed.framebufferWidth = ntohs(fixed.framebufferWidth);
+    fixed.framebufferHeight = ntohs(fixed.framebufferHeight);
+    fixed.format.redMax = ntohs(fixed.format.redMax);
+    fixed.format.greenMax = ntohs(fixed.format.greenMax);
+    fixed.format.blueMax = ntohs(fixed.format.blueMax);
 }
 
-- (unsigned char*)pixelFormatData
+- (rfbPixelFormat *)pixelFormatData
 {
-    return &fixed.bpp;
+    return &fixed.format;
 }
 
 - (void)dealloc
@@ -47,7 +48,7 @@
 
 - (void)setName:(NSString*)aName
 {
-    [name autorelease];
+    [name release];
     name = [aName retain];
 }
 
@@ -60,8 +61,8 @@
 {
     NSSize s;
 
-    s.width = fixed.width;
-    s.height = fixed.height;
+    s.width = fixed.framebufferWidth;
+    s.height = fixed.framebufferHeight;
     return s;
 }
 
@@ -69,39 +70,46 @@
 
 @implementation RFBServerInitReader
 
-- (id)initTarget:(id)aTarget action:(SEL)anAction
+- (id)initWithConnection: (RFBConnection *)aConnection
+          andHandshaker: (RFBHandshaker *)aHandshaker
 {
-	if (self = [super initTarget:aTarget action:anAction]) {
-		blockReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBlock:) size:20];
-		nameReader = [[RFBStringReader alloc] initTarget:self action:@selector(setName:)];
-		msg = [[ServerInitMessage alloc] init];
-	}
+    if (self = [super init]) {
+        connection = aConnection;
+        handshaker = aHandshaker;
+        nameReader = [[RFBStringReader alloc] initTarget:self
+                action:@selector(setName:) connection: connection];
+        msg = [[ServerInitMessage alloc] init];
+    }
     return self;
 }
 
 - (void)dealloc
 {
     [nameReader release];
-    [blockReader release];
     [msg release];
     [super dealloc];
 }
 
-- (void)resetReader
+- (void)readServerInit
 {
-    [target setReader:blockReader];
+    ByteBlockReader *blockReader;
+
+    blockReader = [[ByteBlockReader alloc] initTarget:self
+            action:@selector(setBlock:) size:20];
+    [connection setReader:blockReader];
+    [blockReader release];
 }
 
 - (void)setBlock:(NSData*)theBlock
 {
     [msg setFixed:theBlock];
-    [target setReader:nameReader];
+    [nameReader readString];
 }
 
 - (void)setName:(NSString*)aName
 {
     [msg setName:aName];
-    [target performSelector:action withObject:msg];
+    [handshaker setServerInit: msg];
 }
 
 @end

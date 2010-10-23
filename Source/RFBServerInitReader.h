@@ -19,10 +19,17 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "ByteReader.h"
+#import "rfbproto.h"
 
+@class RFBConnection;
+@class RFBHandshaker;
+@class RFBStringReader;
+
+/* This reads the intitial message from the server, which consists of a server
+ * initiailization message. */
 @interface ServerInitMessage : NSObject
 {
+#if 0
     struct {
         CARD16	width;
         CARD16	height;
@@ -38,6 +45,9 @@
         CARD8	blue_shift;
         CARD8	padding[3];
     } fixed;
+#else
+    rfbServerInitMsg fixed;
+#endif
     NSString*	name;
 }
 
@@ -45,15 +55,20 @@
 - (void)setName:(NSString*)aName;
 - (NSString*)name;
 - (NSSize)size;
-- (unsigned char*)pixelFormatData;
+- (rfbPixelFormat *)pixelFormatData;
 
 @end
 
-@interface RFBServerInitReader : ByteReader
+@interface RFBServerInitReader : NSObject
 {
-    id	blockReader;
-    id	nameReader;
-    ServerInitMessage* msg;
+    RFBConnection       *connection;
+    RFBHandshaker       *handshaker;
+    RFBStringReader     *nameReader;
+    ServerInitMessage*  msg;
 }
+
+- (id)initWithConnection: (RFBConnection *)aConnection
+          andHandshaker: (RFBHandshaker *)aHandshaker;
+- (void)readServerInit;
 
 @end

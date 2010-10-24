@@ -12,7 +12,6 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1331"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -39,7 +38,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="NSMenuItem" id="308718677">
 						<reference key="NSMenu" ref="282285570"/>
-						<string key="NSTitle">Chicken of the VNC</string>
+						<string key="NSTitle">Chicken</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSKeyEquivModMask">1048576</int>
 						<int key="NSMnemonicLoc">2147483647</int>
@@ -53,12 +52,12 @@
 						</object>
 						<string key="NSAction">submenuAction:</string>
 						<object class="NSMenu" key="NSSubmenu" id="760284937">
-							<string key="NSTitle">Chicken of the VNC</string>
+							<string key="NSTitle">Chicken</string>
 							<object class="NSMutableArray" key="NSMenuItems">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMenuItem" id="1032421739">
 									<reference key="NSMenu" ref="760284937"/>
-									<string key="NSTitle">A propos de Chicken of the VNC…</string>
+									<string key="NSTitle">A propos de Chicken…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="686561877"/>
@@ -136,7 +135,7 @@
 								</object>
 								<object class="NSMenuItem" id="240823719">
 									<reference key="NSMenu" ref="760284937"/>
-									<string key="NSTitle">Masquer Chicken of the VNC</string>
+									<string key="NSTitle">Masquer Chicken</string>
 									<string key="NSKeyEquiv">h</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -174,7 +173,7 @@
 								</object>
 								<object class="NSMenuItem" id="881842331">
 									<reference key="NSMenu" ref="760284937"/>
-									<string key="NSTitle">Quitter Chicken of the VNC</string>
+									<string key="NSTitle">Quitter Chicken</string>
 									<string key="NSKeyEquiv">q</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -616,7 +615,7 @@
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMenuItem" id="467141965">
 									<reference key="NSMenu" ref="681501031"/>
-									<string key="NSTitle">Aide Chicken of the VNC</string>
+									<string key="NSTitle">Aide Chicken</string>
 									<string key="NSKeyEquiv">?</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -643,7 +642,7 @@
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{246.944, 6}</string>
 				<object class="NSView" key="NSWindowView" id="11249135">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -652,11 +651,12 @@
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{124, 137}, {265, 39}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="986137082">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">0</int>
-								<string key="NSContents">Chicken of the VNC</string>
+								<string key="NSContents">Chicken</string>
 								<object class="NSFont" key="NSSupport">
 									<string key="NSName">Helvetica-Bold</string>
 									<double key="NSSize">28</double>
@@ -681,13 +681,14 @@
 						<object class="NSTextField" id="218962631">
 							<reference key="NSNextResponder" ref="11249135"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{59, 20}, {154, 10}}</string>
+							<string key="NSFrame">{{59, 13}, {154, 17}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="513264885">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">0</int>
-								<string key="NSContents">2.0</string>
+								<string key="NSContents">?</string>
 								<object class="NSFont" key="NSSupport" id="743137942">
 									<string key="NSName">Helvetica</string>
 									<double key="NSSize">10</double>
@@ -704,14 +705,15 @@
 						<object class="NSTextField" id="377234953">
 							<reference key="NSNextResponder" ref="11249135"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{126, 99}, {249, 30}}</string>
+							<string key="NSFrame">{{126, 99}, {257, 30}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="29936325">
 								<int key="NSCellFlags">69336577</int>
 								<int key="NSCellFlags2">0</int>
-								<string type="base64-UTF8" key="NSContents">QWRtaW5pc3Ryw6kgcGFyIEphc29uIEhhcnJpcwpiYXPDqSBzdXIgVk5DVmlld2VyIHBhciBIZWxtdXQg
-TWFpZXJob2Zlcg</string>
+								<string type="base64-UTF8" key="NSContents">YmFzw6kgc3VyIENoaWNrZW4gb2YgdGhlIFZOQyBieSBKYXNvbiBIYXJyaXMKYmFzw6kgc3VyIFZOQ1Zp
+ZXdlciBwYXIgSGVsbXV0IE1haWVyaG9mZXI</string>
 								<object class="NSFont" key="NSSupport" id="52375914">
 									<string key="NSName">Helvetica</string>
 									<double key="NSSize">12</double>
@@ -730,6 +732,7 @@ TWFpZXJob2Zlcg</string>
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{342, 20}, {203, 26}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="1004019353">
 								<int key="NSCellFlags">69336577</int>
@@ -768,6 +771,7 @@ IGJ5IEphc29uIEhhcnJpcw</string>
 							</object>
 							<string key="NSFrame">{{20, 80}, {96, 96}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSImageCell" key="NSCell" id="1030598585">
 								<int key="NSCellFlags">130560</int>
@@ -788,6 +792,7 @@ IGJ5IEphc29uIEhhcnJpcw</string>
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{12, 52}, {541, 5}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
@@ -814,12 +819,13 @@ IGJ5IEphc29uIEhhcnJpcw</string>
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{125, 63}, {334, 28}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="40091114">
 								<int key="NSCellFlags">69336577</int>
 								<int key="NSCellFlags2">0</int>
 								<string type="base64-UTF8" key="NSContents">cmVsZWFzZWQgdW5kZXIgdGhlIEdOVSBQdWJsaWMgTGljZW5zZQpzb3VyY2UgY29kZSBhbmQgc3VwcG9y
-dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
+dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 								<reference key="NSSupport" ref="743137942"/>
 								<reference key="NSControlView" ref="731925499"/>
 								<reference key="NSBackgroundColor" ref="460054548"/>
@@ -834,6 +840,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{20, 20}, {39, 10}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="439088003">
 								<int key="NSCellFlags">67239424</int>
@@ -853,6 +860,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{376, 99}, {169, 30}}</string>
 							<reference key="NSSuperview" ref="11249135"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="1072509855">
 								<int key="NSCellFlags">69336577</int>
@@ -868,7 +876,9 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 							</object>
 						</object>
 					</object>
-					<string key="NSFrame">{{1, 1}, {565, 196}}</string>
+					<string key="NSFrameSize">{565, 196}</string>
+					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 832}}</string>
 				<string key="NSMinSize">{246.944, 28}</string>
@@ -1901,6 +1911,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					<string>1367.ImportedFromIB2</string>
 					<string>1402.IBPluginDependency</string>
 					<string>1402.ImportedFromIB2</string>
+					<string>1410.IBEditorWindowLastContentRect</string>
 					<string>1410.IBPluginDependency</string>
 					<string>1410.ImportedFromIB2</string>
 					<string>1452.IBPluginDependency</string>
@@ -1932,7 +1943,9 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					<string>1467.ImportedFromIB2</string>
 					<string>1468.IBPluginDependency</string>
 					<string>1468.ImportedFromIB2</string>
+					<string>1477.IBEditorWindowLastContentRect</string>
 					<string>1477.IBPluginDependency</string>
+					<string>1477.IBWindowTemplateEditedContentRect</string>
 					<string>1477.ImportedFromIB2</string>
 					<string>1477.windowTemplate.hasMinSize</string>
 					<string>1477.windowTemplate.minSize</string>
@@ -1994,6 +2007,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					<string>612.ImportedFromIB2</string>
 					<string>613.IBPluginDependency</string>
 					<string>613.ImportedFromIB2</string>
+					<string>614.IBEditorWindowLastContentRect</string>
 					<string>614.IBPluginDependency</string>
 					<string>614.ImportedFromIB2</string>
 					<string>615.IBPluginDependency</string>
@@ -2072,6 +2086,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>{{730, 605}, {160, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2103,7 +2118,9 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>{{329, 776}, {565, 196}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>{{329, 776}, {565, 196}}</string>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
 					<string>{246.944, 6}</string>
@@ -2143,7 +2160,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{333, 628}, {458, 20}}</string>
+					<string>{{333, 628}, {376, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2165,6 +2182,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>{{345, 425}, {246, 203}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2329,25 +2347,6 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">ByteReader</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">target</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">target</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">target</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Source/ByteReader.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<string key="className">FirstResponder</string>
 					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="actions">
@@ -2487,7 +2486,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">RFBConnection</string>
-					<string key="superclassName">ByteReader</string>
+					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -2611,13 +2610,13 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 							<string>_reconnectIndicator</string>
 							<string>_reconnectPanel</string>
 							<string>authMessage</string>
-							<string>currentReader</string>
 							<string>infoField</string>
-							<string>manager</string>
 							<string>newTitleField</string>
 							<string>optionPanel</string>
 							<string>passwordField</string>
 							<string>passwordSheet</string>
+							<string>rememberNewPassword</string>
+							<string>rfbView</string>
 							<string>scrollView</string>
 							<string>server_</string>
 							<string>statisticField</string>
@@ -2630,10 +2629,10 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
-							<string>id</string>
-							<string>id</string>
 							<string>NSTextField</string>
 							<string>NSPanel</string>
+							<string>NSButton</string>
+							<string>RFBView</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2646,13 +2645,13 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 							<string>_reconnectIndicator</string>
 							<string>_reconnectPanel</string>
 							<string>authMessage</string>
-							<string>currentReader</string>
 							<string>infoField</string>
-							<string>manager</string>
 							<string>newTitleField</string>
 							<string>optionPanel</string>
 							<string>passwordField</string>
 							<string>passwordSheet</string>
+							<string>rememberNewPassword</string>
+							<string>rfbView</string>
 							<string>scrollView</string>
 							<string>server_</string>
 							<string>statisticField</string>
@@ -2672,15 +2671,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 								<string key="candidateClassName">NSTextField</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">currentReader</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
 								<string key="name">infoField</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">manager</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBToOneOutletInfo">
@@ -2700,6 +2691,14 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 								<string key="candidateClassName">NSPanel</string>
 							</object>
 							<object class="IBToOneOutletInfo">
+								<string key="name">rememberNewPassword</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">rfbView</string>
+								<string key="candidateClassName">RFBView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
 								<string key="name">scrollView</string>
 								<string key="candidateClassName">id</string>
 							</object>
@@ -2716,6 +2715,46 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NvdHZuYy5zb3VyY2Vmb3JnZS5uZXQ</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Source/RFBConnection.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">RFBView</string>
+					<string key="superclassName">NSView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>concludeDragOperation:</string>
+							<string>draggingExited:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>concludeDragOperation:</string>
+							<string>draggingExited:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">concludeDragOperation:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">draggingExited:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Source/RFBView.h</string>
 					</object>
 				</object>
 			</object>

@@ -16,12 +16,47 @@
 
 @implementation AppDelegate
 
+/* This will copy the Chicken of the VNC preferences file to a Chicken file, if
+ * the former exists and the latter doesn't. This allows us to inherit Chicken
+ * of the VNC preferences the first time we're run. This has to be called before
+ * any call to NSUserDefaults. */
+- (void)copyCotvncPrefs
+{
+    NSArray         *libDirs;
+    int             i;
+    NSFileManager   *fileManager = [NSFileManager defaultManager];
+
+    libDirs = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,
+                                                  NSUserDomainMask, YES);
+
+    for (i = 0; i < [libDirs count]; i++) {
+        NSString    *path = [libDirs objectAtIndex:i];
+        NSString    *cotvncPref;
+        NSString    *chickenPref;
+        
+        cotvncPref = [path stringByAppendingPathComponent:
+                            @"Preferences/com.geekspiff.chickenofthevnc.plist"];
+        chickenPref = [path stringByAppendingPathComponent:
+                            @"Preferences/net.sourceforge.chicken.plist"];
+
+        if ([fileManager fileExistsAtPath:cotvncPref]
+                && ![fileManager fileExistsAtPath:chickenPref]) {
+            BOOL    success;
+            success = [fileManager copyPath:cotvncPref toPath:chickenPref
+                                    handler:nil];
+            if (!success) {
+                NSLog(@"Failed to copy %@ to %@", cotvncPref, chickenPref);
+            }
+        }
+    }
+}
+
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
+    [self copyCotvncPrefs];
 	// make sure our singleton key equivalent manager is initialized, otherwise, it won't watch the frontmost window
 	[[KeyEquivalentManager defaultManager] loadScenarios];
 }
-
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {

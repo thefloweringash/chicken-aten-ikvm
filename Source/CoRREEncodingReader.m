@@ -20,7 +20,6 @@
 
 #import "CoRREEncodingReader.h"
 #import "ByteBlockReader.h"
-#import "RectangleList.h"
 #import "RFBConnection.h"
 #import "FrameBufferUpdateReader.h"
 

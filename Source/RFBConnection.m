@@ -634,7 +634,6 @@ extern const unsigned int pagef7[];
                fast as will be visible. Note that an NSTimer will be too slow to
                be responsive here. */
             struct timespec t;
-			NSLog(@"Sleeping %f", delay);
             t.tv_sec = 0;
             t.tv_nsec = (long) (delay * 1000.0 * 1000.0 * 1000.0);
             nanosleep(&t, NULL);

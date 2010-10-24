@@ -1329,6 +1329,7 @@ static NSString* byteString(double d)
             KeyEquivalent *keyEquiv = [scen keyEquivalentForMenuItem: menuItem];
             NSString      *keyStr = [[keyEquiv userString] string];
 
+            // :TODO: if there's no key combination, we should warn the user
             if (keyStr) {
                 // If we can determine the fullscreen key combination, we include
                 // it in the message

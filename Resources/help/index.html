@@ -4,36 +4,38 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="style_sheet.css" type="text/css" />
-	<title>About Chicken of the VNC</title>
+	<title>About Chicken</title>
 </head>
 <body>
 
 <div id="PageContainer">
 <div id="header">
-	<h1>Chicken of the VNC</h1>
+	<h1>Chicken</h1>
 	<h2><img src="icon.jpg" width="128" height="128" alt="Chicken Icon" /><br/>
 	brawwwK!</h2>
 	<h3>Based on VNCViewer by Helmut Maierhofer <a href="mailto:helmut.maierhofer@chello.at">helmut.maierhofer@chello.at</a><br/>
 	Mac OS X port and cheesy name by Jason Harris <a href="mailto:support@geekspiff.com">support@geekspiff.com</a><br/>
 	Icon generously provided by Cale Peeples <a href="mailto:cale@dumbculture.com">cale@dumbculture.com</a><br/>
-	http://cotvnc.sourceforge.net/</h3>
+	http://chicken.sourceforge.net/</h3>
 </div>
 
 <div class="section">
-	<h1>About Chicken of the VNC</h1>
-	<p>Chicken of the VNC is a VNC client for Mac OS X.  A VNC client allows one to display and interact with a remote computer screen.  In other words, you can use Chicken of the VNC to interact with a remote computer as though it's right next to you.</p>
+	<h1>About Chicken</h1>
+	<p>Chicken is a VNC client for Mac OS X.  A VNC client allows one to display and interact with a remote computer screen.  In other words, you can use Chicken to interact with a remote computer as though it's right next to you.</p>
 
-<p>Chicken of the VNC was written by Helmut Maierhofer for OpenStep on Intel and Jason Harris (the author of this document) ported it to the Cocoa API on Mac OS X.  Helmut's original version was called VNCViewer, but as there are already several VNC programs on Mac OS X with this name, I decided to save some confusion and call it by this horrible Chicken name instead.</p>
+<p>Chicken was written by Helmut Maierhofer for OpenStep on Intel and Jason Harris (the original author of this document) ported it to the Cocoa API on Mac OS X.  Helmut's original version was called VNCViewer, but as there are already several VNC programs on Mac OS X with this name, Jason decided to save some confusion and call it by the name Chicken of the VNC instead. After several years of inactivity, Dustin Cartwright made some improvements and released them under the current name.</p>
+
+<p>If you've previously used Chicken of the VNC, any preferences or saved servers will be imported by Chicken the first time it is run. However, saved passwordsare not copied.</p>
 
 <p>More information about VNC can be found at the RealVNC website: <a href="http://www.realvnc.com/">http://www.realvnc.com/</a>.</p>
 </div>
 
 <div class="section">
-	<h1>Using Chicken of the VNC</h1>
+	<h1>Using Chicken</h1>
 
 	<p class="smallImportant">Note:  If you have used a version of Chicken of the VNC prior to 1.3, you will need to either delete your preferences (in ~/Library/Preferences/com.geekspiff.chickenofthevnc.plist), or reset the modifier key mappings in all of your stored profiles.  If you wish, you may also delete the "Chicken of the VNC" folder in your preferences, as it is no longer used.</p>
 
-	<p>Use it just like any other VNC client - enter the address of a working VNC server (you can use <em>host:ip</em> notation if you wish), the display number and your password and rock'n'roll...</p>
+	<p>Use it just like any other VNC client - enter the address of a working VNC server (you can use <em>host:port</em> notation if you wish), the display number and your password and rock'n'roll...</p>
 
 	<div class="ss"><img src="connect.jpg" width="356" height="227" alt="Connection Dialog" /></div>
 	
@@ -67,7 +69,7 @@
 	
 	<p>If you wish to connect to a server without using bookmarks, just choose <strong>New Connection</strong> from the <strong>File</strong> menu.  Of course, if you decide that you want to bookmark the server, you can always check the "Save Server" button before you connect.</p>
 	
-	<p>You can get back to the bookmarks window you saw when you launched Chicken of the VNC by selecting <strong>Open Connection</strong> from the <strong>File</strong> menu.</p>
+	<p>You can get back to the bookmarks window you saw when you launched Chicken by selecting <strong>Open Connection</strong> from the <strong>File</strong> menu.</p>
 	
 	<p>You can connect to a server that is behind a firewall by using a listening connection.  Choose <strong>Listen for Server</strong> from the <strong>File</strong> menu and then set the VNC server up to initiate a listening connection to your client machine.</p>
 	
@@ -108,11 +110,11 @@
 	
 	<p>The <strong>Multi-Tap</strong> option lets you emulate a button click by tapping a particular modifier key quickly.  For example, you can right-click at the current mouse position by tapping the Command key twice quickly.</p>
 	
-	<p>The <strong>Tap and Click</strong> option lets you emulate a button click by tappinga modifier key a single time and then clicking the mouse.  This is the behavior that was in previous versions of Chicken of the VNC, so you may already be accustomed to it.  Once you've tapped the modifier key, the mouse cursor will change to indicate that a mouse click will be emulated.  You can cancel emulation by waiting for it to <strong>timeout</strong>, or by pressing the Escape key on your keyboard.</p>
+	<p>The <strong>Tap and Click</strong> option lets you emulate a button click by tapping a modifier key a single time and then clicking the mouse.  This is the behavior that was in previous versions of Chicken of the VNC, so you may already be accustomed to it.  Once you've tapped the modifier key, the mouse cursor will change to indicate that a mouse click will be emulated.  You can cancel emulation by waiting for it to <strong>timeout</strong>, or by pressing the Escape key on your keyboard.</p>
 	
 	<p>If you don't wish to use mouse button emulation, you can set the <strong>No Emulation</strong> option.</p>
 
-	<p>If you are lucky enough to have a two or three button mouse, you don't need to worry about emulation as Chicken of the VNC supports up to three mouse buttons, as well as scroll-wheels on compatible servers.</p>
+	<p>If you are lucky enough to have a two or three button mouse, you don't need to worry about emulation as Chicken supports up to three mouse buttons, as well as scroll-wheels on compatible servers.</p>
 
 	<div class="ss"><img src="profiles3.jpg" width="386" height="253" alt="Profile Dialog" /></div>
 
@@ -164,9 +166,9 @@
 <div class="section">
 	<h1>Command Line Usage</h1>
 	
-	<p>You can use Chicken by calling it from the command line.  To do this, you should 'cd' to the location of Chicken of the VNC.  Then, do the following:</p>
-	<p style="margin-left: 2em;"><code>cd Chicken\ of\ the\ VNC.app/Contents/MacOS/<br />
-	./Chicken\ of\ the\ VNC</code></p>
+	<p>You can use Chicken by calling it from the command line.  To do this, you should 'cd' to the location of Chicken.  Then, do the following:</p>
+	<p style="margin-left: 2em;"><code>cd Chicken.app/Contents/MacOS/<br />
+	./Chicken</code></p>
 	
 	<p>To get help on command line invocation, add "--help" to the invocation.</p>
 </div>
@@ -201,18 +203,19 @@
 	</ul>
 </div>
 
-<!-- <div class="section">
+<div class="section">
 	<h1>Known Problems</h1>
 	
 	<ul>
+        <li>Assigning keyboard equivalents to connection windows and then using them can have strange effects.</li>
 	</ul>
-</div> -->
+</div> 
 
 <div class="section">
 	<h1>Source Code</h1>
 	
-	<p>Because this program is distributed under the GNU license, source code is available for it.  If you're interested in contributing to Chicken of the VNC, it is hosted collaboratively on SourceForge.  The address is
-<a href="http://cotvnc.sourceforge.net/">http://cotvnc.sourceforge.net/</a>.</p>
+	<p>Because this program is distributed under the GNU license, source code is available for it.  If you're interested in contributing to Chicken it is hosted collaboratively on SourceForge.  The address is
+<a href="http://chicken.sourceforge.net/">http://chicken.sourceforge.net/</a>.</p>
 </div>
 
 <div class="section">
@@ -222,30 +225,36 @@
 	<dl>
         <dt>Version 2.1b1</dt>
         <dd><ul>
+            <li>- Name changed to Chicken.</li>
             <li>- The open connection window is displayed after the last connection is closed and when there are no connections open and the Dock icon is selected.</li>
-            <li>- Improved invalid host error messages. (bug 1653634)
+            <li>- Improved invalid host error messages. (bug 1653634)</li>
             <li>- Fixed the Denial of Service concept attack posted at <a href="http://www.securityfocus.com/archive/1/458907/100/0/threaded">http://www.securityfocus.com/archive/1/458907/100/0/threaded</a> by "poplix".</li>
             <li>- Support for JPEG encoding using libjpeg-turbo.</li>
             <li>- Added Japanese localization.</li>
-            <li>- A server screen smaller than the client screen is centered in fullscreen mode.</li>
-            <li>- Scrolling with the trackpad works more smoothly.</li>
-            <li>- IPv6 is supported.</li>
+            <li>- A server screen smaller than the client screen is centered in fullscreen mode (thanks to Yuri D'Elia).</li>
+            <li>- Scrolling with the trackpad works more smoothly (thanks to pen_sq).</li>
+            <li>- IPv6 is supported (thanks to John Wright and Bob Van Zant).</li>
             <li>- Supports client-side display of remote cursor.</li>
             <li>- Mouse movement throttling means that fewer mouse movements are sent over slow connections.</li>
-            <li>- Connection attempts can be cancelled.</li>
+            <li>- Connection attempts can be cancelled. (bug 1031249)</li>
             <li>- Uses TCP keep-alive, which makes it less likely that idle connection will be dropped.</li>
             <li>- "Display" box has been replaced by "Display or port" box.</li>
             <li>- Option to immediately enter fullscreen mode in the Listener interface.</li>
             <li>- Modifier keys can be unmapped.</li>
             <li>- Prompts for a password if one is required.</li>
             <li>- Prevent crashes due to SIGPIPE.</li>
-            <li>- Allows scrolling diagonally in fullscreen mode.</li>
-            <li>- If "Remember Password" is not checked, then the password is only used for that connection attempt, and not the entire Chicken session.</li>
-            <li>- Fixed issue with unintended key autorepeat when using the shift key.</li>
-            <li>- Fixed crash when closing a window which had been assigned a shortcut key.</li>
-            <li>- Fixed issue with stuck modifier keys when entering fullscreen mode or using Spaces.</li>
+            <li>- Allows scrolling diagonally in fullscreen mode. (bug 668887)</li>
+            <li>- If "Remember Password" is not checked, then the password is only used for that connection attempt, and not the entire Chicken session. (bug 1054199)</li>
+            <li>- Fixed issue with unintended key autorepeat when using the shift key. (bug 1520626)</li>
+            <li>- Fixed crash when closing a window which had been assigned a shortcut key. (bug 1011876)</li>
+            <li>- Fixed issue with stuck modifier keys when entering fullscreen mode or using Spaces. (bugs 1423667, 1675113, 2995729)</li>
             <li>- Fixed handling of certain servers which claimed to be using the non-existent RFB version 4.0.</li>
             <li>- Use sheets instead of alerts for most connection errors.</li>
+            <li>- Hiding in fullscreen mode no longer locks machine (bug 1493839)</li>
+            <li>- Fixed crash connecting to Apple Remote Desktop with thousands of colors (bug 1316654)</li>
+            <li>- Denying keychain access doesn't delete passwords from keychain (bug 1637352)</li>
+            <li>- Improved handling of non-US keyboards and text.</li>
+            <li>- Supports server-side mouse movements.</li>
         </ul></dd>
 
 		<dt>Version 2.0b4 (January 18, 2006)</dt>
@@ -427,7 +436,7 @@
 	
 	<div id="contactInfo">
 	<p>You can always get the latest versions of Chicken of the VNC, news and updates at the Source Forge web site:</p>
-<p class="address"><a href="http://cotvnc.sourceforge.net/">http://cotvnc.sourceforge.net/</a></p>
+<p class="address"><a href="http://chicken.sourceforge.net/">http://chicken.sourceforge.net/</a></p>
 
 	<p>To get support on Chicken of the VNC, you can submit a support request</p>
 <p class="address"><a href="http://sourceforge.net/tracker/?atid=507160&group_id=64347&func=browse">http://sourceforge.net/tracker/?atid=507160&group_id=64347&func=browse</a></p>

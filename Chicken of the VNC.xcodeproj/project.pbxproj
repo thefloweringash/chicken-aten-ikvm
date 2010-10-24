@@ -747,7 +747,6 @@
 		E2F546520768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/ProfileManager.nib; sourceTree = "<group>"; };
 		E2F546530768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/OSX_RFBViewer.nib; sourceTree = "<group>"; };
 		E2F546540768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/ListenDialog.nib; sourceTree = "<group>"; };
-		E2F546570768C7C500AB2600 /* Chicken of the VNC.nibTranslate */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "Chicken of the VNC.nibTranslate"; path = "Resources/Chicken of the VNC.nibTranslate"; sourceTree = "<group>"; };
 		F52128E40368AF9F01F702E0 /* GNU Public License.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "GNU Public License.txt"; sourceTree = "<group>"; };
 		F536C26603937E5301178D82 /* ZlibHexEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZlibHexEncodingReader.h; sourceTree = "<group>"; };
 		F536C26703937E5301178D82 /* ZlibHexEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZlibHexEncodingReader.m; sourceTree = "<group>"; };
@@ -901,7 +900,6 @@
 			isa = PBXGroup;
 			children = (
 				E291FAD4088161DA0061216E /* cursors.plist */,
-				E2F546570768C7C500AB2600 /* Chicken of the VNC.nibTranslate */,
 				E2CA650906DA451500B70BDF /* help */,
 				F5DC7177033DB40D01A8010C /* icon.icns */,
 				E21FE256062B6C8D0059585C /* Info.plist */,

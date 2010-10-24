@@ -512,7 +512,7 @@
 		7FC6DF6E05C31B0D0028A970 /* ServerFromRendezvous.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerFromRendezvous.m; sourceTree = "<group>"; };
 		7FD35C1806CC583A00648090 /* ProfileDataManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ProfileDataManager.h; sourceTree = "<group>"; };
 		7FD35C1906CC583A00648090 /* ProfileDataManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ProfileDataManager.m; sourceTree = "<group>"; };
-		7FD66F5805E9E2B500229E5C /* Chicken of the VNC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chicken of the VNC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FD66F5805E9E2B500229E5C /* Chicken.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chicken.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FF0C9A305CDBDCE008E39DD /* CotVNC.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptSuite; name = CotVNC.scriptSuite; path = Resources/CotVNC.scriptSuite; sourceTree = SOURCE_ROOT; };
 		7FF0C9A705CDC9A0008E39DD /* CotVNC.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptTerminology; name = CotVNC.scriptTerminology; path = Resources/CotVNC.scriptTerminology; sourceTree = SOURCE_ROOT; };
 		7FFA8FE9062BA6330008D381 /* ServerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerBase.h; sourceTree = "<group>"; };
@@ -878,7 +878,7 @@
 			isa = PBXGroup;
 			children = (
 				7F916AA50BB6E98900E31F20 /* libjpeg.framework */,
-				7FD66F5805E9E2B500229E5C /* Chicken of the VNC.app */,
+				7FD66F5805E9E2B500229E5C /* Chicken.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1595,9 +1595,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		7F7A93E305E71B5C00E20416 /* Chicken of the VNC */ = {
+		7F7A93E305E71B5C00E20416 /* Chicken */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E20426E6087531990026AA26 /* Build configuration list for PBXNativeTarget "Chicken of the VNC" */;
+			buildConfigurationList = E20426E6087531990026AA26 /* Build configuration list for PBXNativeTarget "Chicken" */;
 			buildPhases = (
 				7F7A93E405E71B5C00E20416 /* Headers */,
 				7F7A941805E71B5C00E20416 /* Resources */,
@@ -1608,9 +1608,9 @@
 			);
 			dependencies = (
 			);
-			name = "Chicken of the VNC";
+			name = Chicken;
 			productName = "Chicken of the VNC";
-			productReference = 7FD66F5805E9E2B500229E5C /* Chicken of the VNC.app */;
+			productReference = 7FD66F5805E9E2B500229E5C /* Chicken.app */;
 			productType = "com.apple.product-type.application";
 		};
 		7F916AA40BB6E98900E31F20 /* libjpeg */ = {
@@ -1651,7 +1651,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7F7A93E305E71B5C00E20416 /* Chicken of the VNC */,
+				7F7A93E305E71B5C00E20416 /* Chicken */,
 				7F916AA40BB6E98900E31F20 /* libjpeg */,
 			);
 		};
@@ -2144,10 +2144,10 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				NASM_OTHER_FLAGS = "-I /Users/dustin/Documents/src/cotvnc/libjpeg-turbo/simd/";
+				NASM_OTHER_FLAGS = "-I $(SRCROOT)/libjpeg-turbo/simd/";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "Chicken of the VNC";
+				PRODUCT_NAME = Chicken;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -2180,10 +2180,10 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				NASM_OTHER_FLAGS = "-I /Users/dustin/Documents/src/cotvnc/libjpeg-turbo/simd/";
+				NASM_OTHER_FLAGS = "-I $(SRCROOT)/libjpeg-turbo/simd/";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "Chicken of the VNC";
+				PRODUCT_NAME = Chicken;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -2211,10 +2211,10 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				NASM_OTHER_FLAGS = "-I /Users/dustin/Documents/src/cotvnc/libjpeg-turbo/simd/";
+				NASM_OTHER_FLAGS = "-I $(SRCROOT)/libjpeg-turbo/simd/";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "Chicken of the VNC";
+				PRODUCT_NAME = Chicken;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -2233,7 +2233,7 @@
 				GCC_VERSION = 4.0;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.0b4;
+				_CHICKEN_VERSION_ = 2.1b1;
 			};
 			name = Development;
 		};
@@ -2242,7 +2242,7 @@
 			buildSettings = {
 				GCC_VERSION = 4.0;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				_CHICKEN_VERSION_ = 2.0b4;
+				_CHICKEN_VERSION_ = 2.1b1;
 			};
 			name = Deployment;
 		};
@@ -2252,7 +2252,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = 4.0;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				_CHICKEN_VERSION_ = 2.0b4;
+				_CHICKEN_VERSION_ = 2.1b1;
 			};
 			name = Default;
 		};
@@ -2275,10 +2275,10 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				NASM_OTHER_FLAGS = "-I /Users/dustin/Documents/src/cotvnc/libjpeg-turbo/simd/";
+				NASM_OTHER_FLAGS = "-I $(SRCROOT)/libjpeg-turbo/simd/";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "Chicken of the VNC";
+				PRODUCT_NAME = Chicken;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -2301,7 +2301,7 @@
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.0b4;
+				_CHICKEN_VERSION_ = 2.1b1;
 			};
 			name = "Universal Fast Development";
 		};
@@ -2319,7 +2319,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		E20426E6087531990026AA26 /* Build configuration list for PBXNativeTarget "Chicken of the VNC" */ = {
+		E20426E6087531990026AA26 /* Build configuration list for PBXNativeTarget "Chicken" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E20426E7087531990026AA26 /* Development */,

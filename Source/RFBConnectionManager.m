@@ -250,7 +250,7 @@
 
 - (void)cmdlineUsage
 {
-    fprintf(stderr, "\nUsage: Chicken of the VNC [options] [host:port]\n\n");
+    fprintf(stderr, "\nUsage: Chicken [options] [host:port]\n\n");
     fprintf(stderr, "options:\n\n");
     fprintf(stderr, "--PasswordFile <password-file>\n");
     fprintf(stderr, "--Profile <profile-name>\n");

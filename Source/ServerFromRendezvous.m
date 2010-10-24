@@ -29,7 +29,7 @@
 
 @implementation ServerFromRendezvous
 
-#define KEYCHAIN_ZEROCONF_SERVICE_NAME	@"cotvnc-zeroconf"
+#define KEYCHAIN_ZEROCONF_SERVICE_NAME	@"Chicken-zeroconf"
 
 + (id<IServerData>)createWithNetService:(NSNetService*)service
 {

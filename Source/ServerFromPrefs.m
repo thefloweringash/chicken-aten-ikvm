@@ -38,7 +38,7 @@
 #define RFB_LAST_PROFILE  @"Profile"
 #define RFB_PORT		  5900
 
-#define KEYCHAIN_SERVICE_NAME	@"cotvnc" // This should really be the appname, but I'm too lame to know how to find that - kjw
+#define KEYCHAIN_SERVICE_NAME	@"Chicken"
 
 @implementation ServerFromPrefs
 

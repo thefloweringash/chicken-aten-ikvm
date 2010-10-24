@@ -68,7 +68,7 @@ NSString *kProfile_IsDefault_Key = @"IsDefault";
 // --- Notifications --- //
 NSString *ProfileAddDeleteNotification = @"ProfileAddedOrDeleted";
 
-static NSString *kProfileDragEntry = @"com.geekspiff.cotvnc.ProfileDragEntry";
+static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry";
 
 
 @implementation ProfileManager

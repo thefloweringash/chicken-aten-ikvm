@@ -25,7 +25,7 @@
 
 <p>Chicken was written by Helmut Maierhofer for OpenStep on Intel and Jason Harris (the original author of this document) ported it to the Cocoa API on Mac OS X.  Helmut's original version was called VNCViewer, but as there are already several VNC programs on Mac OS X with this name, Jason decided to save some confusion and call it by the name Chicken of the VNC instead. After several years of inactivity, Dustin Cartwright made some improvements and released them under the current name.</p>
 
-<p>If you've previously used Chicken of the VNC, any preferences or saved servers will be imported by Chicken the first time it is run. However, saved passwordsare not copied.</p>
+<p>If you've previously used Chicken of the VNC, any preferences or saved servers will be imported by Chicken the first time it is run. However, saved passwords are not copied.</p>
 
 <p>More information about VNC can be found at the RealVNC website: <a href="http://www.realvnc.com/">http://www.realvnc.com/</a>.</p>
 </div>
@@ -44,7 +44,7 @@
 
 		<li><span class="item">Host:</span>  The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You may optionally specify a port number here by appending it with a colon (like myserver.com:5900).  </li>
 
-		<li><span class="item">Display or port:</span> The display number for the connection. Numbers greater than or equal 50 will be interpreted as a port instead of a display. Thus, 0 has the same effects as 5900.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on either your computer or on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
+		<li><span class="item">Display or port:</span> The display number for the connection. Numbers greater than or equal 50 will be treated as a port instead of a display. Thus, 0 has the same effects as 5900.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on either your computer or on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
 
 		<li><span class="item">Password:</span>  The password needed to connect to the server running at the specified host and display.  If Remember Password was checked, this will be fetched from your Mac OS X Keychain after you've entered it initially.</li>
 
@@ -119,7 +119,7 @@
 	<div class="ss"><img src="profiles3.jpg" width="386" height="253" alt="Profile Dialog" /></div>
 
 	<ul class="explanation">
-		<li><span class="item">Modifiers:</span>  You can use this section to map the modifier keys on your Macintosh keyboard to keys commonly used on other operating systems.  This allows you to use the Alt key on a Windows server or the Meta key on a Unix server, for example.</li>
+		<li><span class="item">Modifiers:</span>  You can use this section to map the modifier keys on your Macintosh keyboard to keys commonly used on other operating systems.  This allows you to use the Alt key on a Windows server or the Meta key on a Unix server, for example. If you set the Option key to "none (local keymap)", then Option won't be sent to the server, but can be used to enter special characters using normal Mac keyboard combinations, such as Option-A for &aring; on a US keyboard.</li>
 	</ul>
 
 	<div class="ss"><img src="profiles4.jpg" width="386" height="253" alt="Profile Dialog" /></div>
@@ -255,6 +255,7 @@
             <li>- Denying keychain access doesn't delete passwords from keychain (bug 1637352)</li>
             <li>- Improved handling of non-US keyboards and text.</li>
             <li>- Supports server-side mouse movements.</li>
+            <li>- Option in profile settings so that option key can be used to enter modified characters.</li>
         </ul></dd>
 
 		<dt>Version 2.0b4 (January 18, 2006)</dt>
@@ -437,7 +438,7 @@
 	
 	<div id="contactInfo">
 	<p>You can always get the latest versions of Chicken of the VNC, news and updates at the Source Forge web site:</p>
-<p class="address"><a href="http://sourceforge.net/projects/chicken/">http://chicken.sourceforge.net/</a></p>
+<p class="address"><a href="http://sourceforge.net/projects/chicken/">http://sourceforge.net/projects/chicken/</a></p>
 
 	<p>To get support on Chicken of the VNC, you can post in the help forum:</p>
 <p class="address"><a href="http://sourceforge.net/projects/chicken/forums/forum/1269540">http://sourceforge.net/projects/chicken/forums/forum/1269540</a></p>

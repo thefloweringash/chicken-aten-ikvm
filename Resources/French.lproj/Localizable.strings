@@ -41,6 +41,8 @@
 "Fullscreen" = "Plein écran";
 "FullscreenReason1" = "Vous pouvez retourner en mode fenêtre en appellant le raccourci clavier ";
 "FullscreenReason2" = "à tout moment.  Vous pouvez changer ce raccourci clavier dans les préférences.";
+"FullscreenNoKeyHeader" = "Warning: No key for exiting fullscreen";
+"FullscreenNoKey" = "There is no key equivalent set for returning to windowed mode. You can set this in preferences. Are you sure that you want to enter fullscreen mode without a key equivalent to exit?";
 
 /* Listener */
 "listenStart" = "Démarrer";

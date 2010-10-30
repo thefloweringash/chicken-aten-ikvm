@@ -1315,6 +1315,7 @@ static NSString* byteString(double d)
         NSMutableString         *reason = [NSMutableString string];
         KeyEquivalentScenario   *scen;
         NSMenuItem              *menuItem;
+        NSString *header = NSLocalizedString( @"FullscreenHeader", nil );
 
         [_eventFilter synthesizeRemainingEvents];
 
@@ -1329,19 +1330,21 @@ static NSString* byteString(double d)
             KeyEquivalent *keyEquiv = [scen keyEquivalentForMenuItem: menuItem];
             NSString      *keyStr = [[keyEquiv userString] string];
 
-            // :TODO: if there's no key combination, we should warn the user
             if (keyStr) {
                 // If we can determine the fullscreen key combination, we include
                 // it in the message
                 [reason appendString: @"("];
                 [reason appendString: keyStr];
                 [reason appendString: @") "];
+                [reason appendString: NSLocalizedString(@"FullscreenReason2", nil)];
+            } else {
+                reason = [NSMutableString stringWithString:NSLocalizedString(@"FullscreenNoKey", nil)];
+                header = NSLocalizedString(@"FullscreenNoKeyHeader", nil);
             }
+        } else {
+            [reason appendString: NSLocalizedString(@"FullscreenReason2", nil)];
         }
 
-        [reason appendString: NSLocalizedString( @"FullscreenReason2", nil )];
-
-        NSString *header = NSLocalizedString( @"FullscreenHeader", nil );
         NSString *fullscreenButton = NSLocalizedString( @"Fullscreen", nil );
         NSString *cancelButton = NSLocalizedString( @"Cancel", nil );
         NSBeginAlertSheet(header, fullscreenButton, cancelButton, nil, window,

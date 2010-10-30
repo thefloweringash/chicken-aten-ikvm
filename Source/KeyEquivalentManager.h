@@ -48,4 +48,6 @@ extern NSString *kConnectionFullscreenScenario;
 // Obtaining the current RFBView
 - (RFBView *)keyRFBView;
 
+- (void)removeEquivalentForWindow:(NSString *)title;
+
 @end

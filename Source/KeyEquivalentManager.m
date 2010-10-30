@@ -137,15 +137,7 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 	NSWindow *closingWindow = [aNotification object];
 
     // remove window from KeyEquivalentScenarios if necessary
-    KeyEquivalentEntry      *entry;
-    NSEnumerator            *e = [mScenarioDict objectEnumerator];
-    KeyEquivalentScenario   *scen;
-    
-    entry = [[KeyEquivalentEntry alloc] initWithTitle: [closingWindow title]];
-    while (scen = [e nextObject])
-        [scen removeEntry: entry];
-    [entry release];
-    [[KeyEquivalentPrefsController sharedController] menusChanged];
+    [self removeEquivalentForWindow:[closingWindow title]];
 
     // if all windows now closed, go to non-connection window scenario
 	NSEnumerator *windowEnumerator = [[NSApp windows] objectEnumerator];
@@ -341,5 +333,19 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 
 - (RFBView *)keyRFBView
 {  return mKeyRFBView;  }
+
+
+- (void)removeEquivalentForWindow:(NSString *)title
+{
+    KeyEquivalentEntry      *entry;
+    NSEnumerator            *e = [mScenarioDict objectEnumerator];
+    KeyEquivalentScenario   *scen;
+    
+    entry = [[KeyEquivalentEntry alloc] initWithTitle: title];
+    while (scen = [e nextObject])
+        [scen removeEntry: entry];
+    [entry release];
+    [[KeyEquivalentPrefsController sharedController] menusChanged];
+}
 
 @end

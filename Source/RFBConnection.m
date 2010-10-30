@@ -1266,6 +1266,8 @@ static NSString* byteString(double d)
 	
 		[scrollView retain];
 		[scrollView removeFromSuperview];
+        [[KeyEquivalentManager defaultManager]
+                removeEquivalentForWindow:[window title]];
 		[window setDelegate: nil];
         [window orderOut:nil];
         windowedWindow = window;

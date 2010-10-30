@@ -37,8 +37,8 @@ static inline unsigned int cvt_pixel24(unsigned char* v, FrameBuffer* this)
         pix = PIX24LITTLE(v);
     }
     col = this->redClut[(pix >> this->pixelFormat.redShift) & this->pixelFormat.redMax];
-    col += this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
-    col += this->blueClut[(pix >> this->pixelFormat.blueShift) & this->pixelFormat.blueMax];
+    col |= this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
+    col |= this->blueClut[(pix >> this->pixelFormat.blueShift) & this->pixelFormat.blueMax];
     return col;
 }
 
@@ -68,8 +68,8 @@ static inline unsigned int cvt_pixel(unsigned char* v, FrameBuffer *this)
 			[NSException raise: NSGenericException format: @"Unsupported bytesPerPixel"];
     }
     col = this->redClut[(pix >> this->pixelFormat.redShift) & this->pixelFormat.redMax];
-    col += this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
-    col += this->blueClut[(pix >> this->pixelFormat.blueShift) & this->pixelFormat.blueMax];
+    col |= this->greenClut[(pix >> this->pixelFormat.greenShift) & this->pixelFormat.greenMax];
+    col |= this->blueClut[(pix >> this->pixelFormat.blueShift) & this->pixelFormat.blueMax];
     return col;
 }
 
@@ -327,8 +327,8 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
 	while(lines--) {
         for(i=aRect.size.width; i; i--) {
 			col = redClut[(maxValue * *rgb++) / 255];
-			col += greenClut[(maxValue * *rgb++) / 255];
-			col += blueClut[(maxValue * *rgb++) / 255];
+			col |= greenClut[(maxValue * *rgb++) / 255];
+			col |= blueClut[(maxValue * *rgb++) / 255];
 			*start++ = col;
 		}
 		start += stride;
@@ -338,8 +338,8 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
 /* --------------------------------------------------------------------------------- */
 #define CLUT(c,p)																\
 c = redClut[(p >> pixelFormat.redShift) & pixelFormat.redMax];					\
-c += greenClut[(p >> pixelFormat.greenShift) & pixelFormat.greenMax]; 			\
-c += blueClut[(p >> pixelFormat.blueShift) & pixelFormat.blueMax]
+c |= greenClut[(p >> pixelFormat.greenShift) & pixelFormat.greenMax]; 			\
+c |= blueClut[(p >> pixelFormat.blueShift) & pixelFormat.blueMax]
 
 - (void)putRect:(NSRect)aRect fromData:(unsigned char*)data
 {

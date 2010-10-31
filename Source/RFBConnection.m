@@ -1132,6 +1132,13 @@ extern const unsigned int pagef7[];
          * key while another window is in fullscreen mode. Because of this
          * possibility, we need to make the other connections windowed. */
         [[RFBConnectionManager sharedManager] makeAllConnectionsWindowed];
+        if (![window isKeyWindow]) {
+            /* If some other window was in fullscreen mode, it will become key,
+             * so we need to make our own window key again. Then this method
+             * will be called again, so we can return from this invocation. */
+            [window makeKeyWindow];
+            return;
+        }
     }
 	[self installMouseMovedTrackingRect];
 	[self setFrameBufferUpdateSeconds: [[PrefController sharedController] frontFrameBufferUpdateSeconds]];
@@ -1269,7 +1276,6 @@ static NSString* byteString(double d)
         [[KeyEquivalentManager defaultManager]
                 removeEquivalentForWindow:[window title]];
 		[window setDelegate: nil];
-        [window orderOut:nil];
         windowedWindow = window;
         //[window close];
 		window = [[FullscreenWindow alloc] initWithContentRect:screenRect
@@ -1302,6 +1308,7 @@ static NSString* byteString(double d)
 		[self windowDidResize: nil];
 		[window makeFirstResponder: rfbView];
 		[window makeKeyAndOrderFront:nil];
+        [windowedWindow orderOut:nil];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                 selector:@selector(applicationWillHide:)

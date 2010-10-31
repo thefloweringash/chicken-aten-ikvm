@@ -1369,7 +1369,7 @@ static NSString* byteString(double d)
 
     if (_mouseMovedTrackingTag)
         [rfbView removeTrackingRect: _mouseMovedTrackingTag];
-	_mouseMovedTrackingTag = [rfbView addTrackingRect: [rfbView visibleRect] owner: self userData: nil assumeInside: mouseInVisibleRect];
+	_mouseMovedTrackingTag = [rfbView addTrackingRect: [rfbView bounds] owner: self userData: nil assumeInside: mouseInVisibleRect];
 	if (mouseInVisibleRect)
 		[window setAcceptsMouseMovedEvents: YES];
 }

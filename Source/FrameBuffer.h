@@ -46,6 +46,9 @@ typedef unsigned char	FrameBufferPaletteIndex;
     unsigned int	greenClut[256];
     unsigned int	blueClut[256];
     rfbPixelFormat	pixelFormat;
+    unsigned int    redShiftFromFull;   // bits to shift when converting from
+    unsigned int    greenShiftFromFull; // 8-bit to framebuffer values
+    unsigned int    blueShiftFromFull;
     unsigned int	rshift, gshift, bshift;
     unsigned int	samplesPerPixel, maxValue;
     unsigned int	bitsPerColor;

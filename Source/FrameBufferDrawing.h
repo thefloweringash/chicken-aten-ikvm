@@ -326,9 +326,9 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
     stride = size.width - aRect.size.width;
 	while(lines--) {
         for(i=aRect.size.width; i; i--) {
-			col = redClut[(maxValue * *rgb++) / 255];
-			col |= greenClut[(maxValue * *rgb++) / 255];
-			col |= blueClut[(maxValue * *rgb++) / 255];
+			col = redClut[*rgb++ >> redShiftFromFull];
+			col |= greenClut[*rgb++ >> greenShiftFromFull];
+			col |= blueClut[*rgb++ >> blueShiftFromFull];
 			*start++ = col;
 		}
 		start += stride;

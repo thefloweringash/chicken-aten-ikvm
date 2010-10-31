@@ -203,6 +203,18 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
     m[2] = pixelFormat.blueMax;
 }
 
+- (unsigned int)shiftForColorMax:(unsigned int)colorMax
+{
+    unsigned int    shift = 8;
+
+    while (colorMax) {
+        shift--;
+        colorMax >>= 1;
+    }
+
+    return shift;
+}
+
 /* --------------------------------------------------------------------------------- */
 - (void)setPixelFormat:(rfbPixelFormat*)theFormat
 {
@@ -220,6 +232,10 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
         theFormat->blueMax = 255;	/* limit at our LUT size */
     memcpy(&pixelFormat, theFormat, sizeof(pixelFormat));
     bytesPerPixel = pixelFormat.bitsPerPixel / 8;
+
+    redShiftFromFull = [self shiftForColorMax: theFormat->redMax];
+    greenShiftFromFull = [self shiftForColorMax: theFormat->greenMax];
+    blueShiftFromFull = [self shiftForColorMax: theFormat->blueMax];
 	
     if(samplesPerPixel == 1) {			/* greyscale */
         rweight = 0.3;

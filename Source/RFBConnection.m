@@ -1219,6 +1219,7 @@ static NSString* byteString(double d)
 }
 
 - (IBAction)makeConnectionWindowed: (id)sender {
+	_isFullscreen = NO;
 	[self removeFullscreenTrackingRects];
 	[scrollView retain];
 	[scrollView removeFromSuperview];
@@ -1238,7 +1239,6 @@ static NSString* byteString(double d)
 	[window setDelegate: self];
 	[window setContentView: scrollView];
 	[scrollView release];
-	_isFullscreen = NO;
 	[self _maxSizeForWindowSize: [[window contentView] frame].size];
 	[window setTitle:titleString];
 	[window makeFirstResponder: rfbView];

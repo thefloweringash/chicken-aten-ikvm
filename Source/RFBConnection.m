@@ -248,6 +248,9 @@ extern const unsigned int pagef7[];
 		case NSAlertAlternateReturn:
             _reconnectWaiter = [[ConnectionWaiter alloc] initWithServer:server_
                         profile:_profile delegate:self window:window];
+            NSString *templ = NSLocalizedString(@"NoReconnection", nil);
+            NSString *err = [NSString stringWithFormat:templ, host];
+            [_reconnectWaiter setErrorStr:err];
             _reconnectSheetTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
                     target:self selector:@selector(createReconnectSheet:)
                     userInfo:nil repeats:NO] retain];

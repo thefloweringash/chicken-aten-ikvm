@@ -15,6 +15,7 @@
 "OpenConnection" = "Open Connection";
 "NoNamedServer" = "Could not find a server with the name \"%@\"";
 "NoConnection" = "Could not connect to server %@ port %d";
+"NoReconnection" = "Could not reconnect to server %@";
 "NotVNC" = "Not a VNC server";
 "UnknownAuthType" = "Unknown authType %@";
 "UnknownAuthResult" = "Unknown authResult %@";

@@ -52,7 +52,14 @@
     [profile release];
     [lock release];
     [window release];
+    [errorStr release];
     [super dealloc];
+}
+
+- (void)setErrorStr:(NSString *)str
+{
+    [errorStr release];
+    errorStr = [str retain];
 }
 
 /* Cancels the connection attempt. This prevents any future messages to the
@@ -208,6 +215,9 @@
 {
     if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
         [delegate connectionPrepareForSheet];
+
+    if (errorStr)
+        theAction = errorStr;
 
 	NSString *ok = NSLocalizedString( @"Okay", nil );
     if (window)

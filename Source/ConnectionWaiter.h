@@ -62,11 +62,14 @@
     NSWindow            *window; // for displaying error panels
 
     id<ConnectionWaiterDelegate>    delegate;
+    NSString            *errorStr; // error header, if not the default
 };
 
 - (id)initWithServer:(id<IServerData>)aServer profile:(Profile*)aProfile
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWind;
 - (void)dealloc;
+
+- (void)setErrorStr:(NSString *)str;
 
 - (void)cancel;
 

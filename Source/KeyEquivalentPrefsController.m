@@ -56,10 +56,69 @@ static KeyEquivalentPrefsController *sharedController = nil;
 #pragma mark Interface Interaction
 
 
+/* Recursive method to determine list of all menus which are expanded in the
+ * current view. */
+- (void)getExpandedNames:(NSMutableSet *)expanded from:(NSDictionary *)obj
+{
+    if (![mOutlineView isItemExpanded:obj])
+        return;
+
+    NSEnumerator    *en = [[obj objectForKey:@"items"] objectEnumerator];
+    NSDictionary    *child;
+
+    [expanded addObject: [obj objectForKey:@"title"]];
+
+    while ((child = [en nextObject]) != nil) {
+        [self getExpandedNames:expanded from:child];
+    }
+}
+
+/* Returns a list of all menu names which are currently viewed as expanded. */
+- (NSSet *)getAllExpandedNames
+{
+    NSMutableSet    *expanded = [[NSMutableSet alloc] init];
+    NSEnumerator    *en = [mSelectedScenario objectEnumerator];
+    NSDictionary    *obj;
+
+    while ((obj = [en nextObject]) != nil)
+        [self getExpandedNames:expanded from:obj];
+    return [expanded autorelease];
+}
+
+/* Recursive function for expanding all menus whose name is in expanded. */
+- (void)expandByName:(NSSet *)expanded from:(NSDictionary *)entry
+{
+    if (![expanded member: [entry objectForKey:@"title"]])
+        return;
+
+    [mOutlineView expandItem:entry];
+
+    NSEnumerator   *children = [[entry objectForKey:@"items"] objectEnumerator];
+    NSDictionary   *child;
+
+    while ((child = [children nextObject]) != nil)
+        [self expandByName:expanded from:child];
+}
+
+/* Expands all menus whose name is in expanded. */
+- (void)expandByName:(NSSet *)expanded
+{
+    NSEnumerator    *en = [mSelectedScenario objectEnumerator];
+    NSDictionary    *obj;
+    while ((obj = [en nextObject]) != nil)
+        [self expandByName:expanded from:obj];
+}
+
+/* When the scenario's changed or the menus have changed, we rebuild the tree of
+ * key equivalents to display. We want to keep the expansion states the same, so
+ * we save these in expanded and then expand all entries with the same name. */
 - (IBAction)changeSelectedScenario: (NSPopUpButton *)sender
 {
+    NSSet   *expanded = [self getAllExpandedNames];
+
 	[mOutlineView deselectAll: nil];
 	[self loadSelectedScenario];
+    [self expandByName:expanded];
 }
 
 

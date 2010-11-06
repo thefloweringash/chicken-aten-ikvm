@@ -22,6 +22,7 @@
 #import "NSObject_Chicken.h"
 #import "ProfileManager.h"
 #import "FrameBuffer.h"
+#import "FrameBufferUpdateReader.h"
 #import <Carbon/Carbon.h>
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
@@ -567,12 +568,8 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 - (NSString *)encodingNameAtIndex: (int)index
 {
     CARD32  encoding = encodings[index].encoding;
-    NSString    *encodingNames[] = { // names indexed by RFB encoding numbers
-        @"Raw", @"" /* CopyRect */, @"RRE", @"", @"CoRRE",
-        @"Hextile", @"Zlib", @"Tight", @"ZlibHex", @"Ultra",
-        @"", @"", @"", @"", @"", @"", @"ZRLE"};
 
-    if (encoding < sizeof(encodingNames) / sizeof(*encodingNames))
+    if (encoding <= rfbEncodingMax)
         return encodingNames[encoding];
     else
         return @"";

@@ -221,9 +221,11 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
     int		i;
     double	rweight, gweight, bweight, gamma = 1.0/[[PrefController sharedController] gammaCorrection];
 
+#if 0
     fprintf(stderr, "rfbPixelFormat redMax = %d\n", theFormat->redMax);
     fprintf(stderr, "rfbPixelFormat greenMax = %d\n", theFormat->greenMax);
     fprintf(stderr, "rfbPixelFormat blueMax = %d\n", theFormat->blueMax);
+#endif
     if(theFormat->redMax > 255)
         theFormat->redMax = 255;		/* limit at our LUT size */
     if(theFormat->greenMax > 255)
@@ -350,6 +352,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 	[super dealloc];
 }
 
+#if 0
 /* --------------------------------------------------------------------------------- */
 - (void)monitor:(id)sender
 {
@@ -383,6 +386,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
     _copyPixelCount = copyPixelCount;
     _putPixelCount = putPixelCount;
 }
+#endif
 
 /* --------------------------------------------------------------------------------- */
 - (NSSize)size

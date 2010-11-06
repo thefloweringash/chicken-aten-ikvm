@@ -174,7 +174,8 @@
 {  [_eventFilter mouseMoved: theEvent];  }
 
 - (void)mouseDragged:(NSEvent *)theEvent
-{  [_eventFilter mouseDragged: theEvent];  }
+{  [_eventFilter mouseDragged: theEvent];
+   [_delegate mouseDragged: theEvent];}
 
 - (void)rightMouseDragged:(NSEvent *)theEvent
 {  [_eventFilter rightMouseDragged: theEvent];  }

@@ -1470,8 +1470,41 @@ static NSString* byteString(double d)
     }
 }
 
+/* The tracking rectangles don't apply to mouse movement when the button is
+ * down. So this method tests mouse drags to see if it should trigger fullscreen
+ * scrolling. */
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+    if (!_isFullscreen)
+        return;
+    
+    NSPoint pt = [scrollView convertPoint: [theEvent locationInWindow]
+                                 fromView:nil];
+    NSRect  scrollRect = [scrollView bounds];
+
+    if (pt.x - NSMinX(scrollRect) < kTrackingRectThickness)
+        _horizScrollFactor = -1;
+    else if (NSMaxX(scrollRect) - pt.x < kTrackingRectThickness)
+        _horizScrollFactor = 1;
+    else
+        _horizScrollFactor = 0;
+
+    if (pt.y - NSMinY(scrollRect) < kTrackingRectThickness)
+        _vertScrollFactor = 1;
+    else if (NSMaxY(scrollRect) - pt.y < kTrackingRectThickness)
+        _vertScrollFactor = -1;
+    else
+        _vertScrollFactor = 0;
+
+    if (_horizScrollFactor || _vertScrollFactor)
+        [self beginFullscreenScrolling];
+    else
+        [self endFullscreenScrolling];
+}
+
 - (void)beginFullscreenScrolling {
-	[self endFullscreenScrolling];
+    if (_autoscrollTimer)
+        return;
 	_autoscrollTimer = [[NSTimer scheduledTimerWithTimeInterval: kAutoscrollInterval
 											target: self
 										  selector: @selector(scrollFullscreenView:)

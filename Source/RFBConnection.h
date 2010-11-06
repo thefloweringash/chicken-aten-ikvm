@@ -209,6 +209,7 @@
 - (void)removeMouseMovedTrackingRect;
 - (void)mouseEntered:(NSEvent *)theEvent;
 - (void)mouseExited:(NSEvent *)theEvent;
+- (void)mouseDragged:(NSEvent *)theEvent;
 - (void)beginFullscreenScrolling;
 - (void)endFullscreenScrolling;
 - (void)scrollFullscreenView: (NSTimer *)timer;

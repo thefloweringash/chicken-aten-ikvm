@@ -57,7 +57,7 @@
 "Resolving" = "Résolution d'adresse…";
 
 // Connection Info
-"ConnectionStatistics" = "Bytes Received: %@\nBytes Represented: %@\nCompression: %.2f\nRectangles: %u";
+"ConnectionStatistics" = "Bytes Received: %@\nBytes Represented: %@\nCompression: %.2f\nRectangles: %u\nEncodings:%@";
 "ServerInfo" = "VNC Protocol Version: %d.%d\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %@\n\tTruecolor: %@\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d";
 "big-endian" = "big-endian";
 "little-endian" = "little-endian";

@@ -1214,7 +1214,8 @@ static NSString* byteString(double d)
     [statisticField setStringValue:
         [NSString stringWithFormat: NSLocalizedString(@"ConnectionStatistics", nil),
             byteString(bytesReceived), byteString(represented),
-            represented/bytesReceived, (unsigned)[reader rectanglesTransferred]
+            represented/bytesReceived, (unsigned)[reader rectanglesTransferred],
+            [reader rectsByTypeString]
     	]
     ];
 }

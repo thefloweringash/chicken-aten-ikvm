@@ -53,6 +53,7 @@ typedef unsigned char	FrameBufferPaletteIndex;
     unsigned int	samplesPerPixel, maxValue;
     unsigned int	bitsPerColor;
 
+#if 0
     unsigned		fillRectCount;
     unsigned		drawRectCount;
     unsigned		copyRectCount;
@@ -61,6 +62,7 @@ typedef unsigned char	FrameBufferPaletteIndex;
     unsigned		drawPixelCount;
     unsigned		copyPixelCount;
     unsigned		putPixelCount;
+#endif
 
     BOOL			forceServerBigEndian;
     BOOL            serverIsBigEndian;

@@ -257,7 +257,7 @@
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{185.791, 5}</string>
 				<object class="NSView" key="NSWindowView" id="891319507">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -276,6 +276,7 @@
 											<int key="NSvFlags">256</int>
 											<string key="NSFrame">{{5, 5}, {240, 135}}</string>
 											<reference key="NSSuperview" ref="348029849"/>
+											<reference key="NSWindow"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="654970489">
 												<int key="NSCellFlags">67239424</int>
@@ -297,10 +298,12 @@ ZnQgKHIvZy9iKTogMTIvOC80Cg</string>
 									</object>
 									<string key="NSFrame">{{2, 2}, {250, 147}}</string>
 									<reference key="NSSuperview" ref="1024878477"/>
+									<reference key="NSWindow"/>
 								</object>
 							</object>
 							<string key="NSFrame">{{17, 132}, {254, 165}}</string>
 							<reference key="NSSuperview" ref="891319507"/>
+							<reference key="NSWindow"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
@@ -336,8 +339,9 @@ ZnQgKHIvZy9iKTogMTIvOC80Cg</string>
 										<object class="NSTextField" id="771418797">
 											<reference key="NSNextResponder" ref="551214040"/>
 											<int key="NSvFlags">256</int>
-											<string key="NSFrame">{{5, 29}, {231, 60}}</string>
+											<string key="NSFrame">{{5, 5}, {231, 84}}</string>
 											<reference key="NSSuperview" ref="551214040"/>
+											<reference key="NSWindow"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="226782467">
 												<int key="NSCellFlags">67239424</int>
@@ -353,10 +357,12 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 									</object>
 									<string key="NSFrame">{{2, 2}, {250, 94}}</string>
 									<reference key="NSSuperview" ref="729035294"/>
+									<reference key="NSWindow"/>
 								</object>
 							</object>
 							<string key="NSFrame">{{17, 16}, {254, 112}}</string>
 							<reference key="NSSuperview" ref="891319507"/>
+							<reference key="NSWindow"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
@@ -377,6 +383,8 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						</object>
 					</object>
 					<string key="NSFrameSize">{288, 304}</string>
+					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 832}}</string>
 				<string key="NSMinSize">{185.791, 27}</string>

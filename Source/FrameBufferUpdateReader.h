@@ -21,6 +21,8 @@
 #import <AppKit/AppKit.h>
 #import "ByteReader.h"
 
+extern NSString *encodingNames[];
+
 @class ByteBlockReader;
 @class CopyRectangleEncodingReader;
 @class CoRREEncodingReader;
@@ -68,8 +70,11 @@
     NSSize resize;
     BOOL shouldResize;
     //double bytesTransferred;
+
+    // transfer statistics
     double bytesRepresented;
     double rectsTransferred;
+    unsigned rectsByType[rfbEncodingMax + 1];
 }
 
 - (id)initWithProtocol: (RFBProtocol *)aProtocol connection: (RFBConnection *)aConnection;
@@ -83,5 +88,6 @@
 - (double)rectanglesTransferred;
 //- (double)bytesTransferred;
 - (double)bytesRepresented;
+- (NSString *)rectsByTypeString;
 
 @end

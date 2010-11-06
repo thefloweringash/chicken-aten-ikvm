@@ -38,6 +38,11 @@
 
 #import "debug.h"
 
+NSString *encodingNames[] = { // names indexed by RFB encoding numbers
+    @"Raw", @"CopyRect", @"RRE", @"", @"CoRRE",
+    @"Hextile", @"Zlib", @"Tight", @"ZlibHex", @"Ultra",
+    @"", @"", @"", @"", @"", @"", @"ZRLE"};
+
 @implementation FrameBufferUpdateReader
 
 - (id)initWithProtocol: (RFBProtocol *)aProtocol connection: (RFBConnection *)aConnection;
@@ -214,6 +219,7 @@
             bytesRepresented += currentRect.size.width * currentRect.size.height
                                     * bytesPerPixel;
             rectsTransferred++;
+            rectsByType[e]++;
         }
     }
 }
@@ -257,6 +263,20 @@
 - (double)bytesRepresented
 {
     return bytesRepresented;
+}
+
+- (NSString *)rectsByTypeString
+{
+    NSMutableString *str = [NSMutableString string];
+	int             i;
+
+    for (i = 0; i <= rfbEncodingMax; i++) {
+        if (rectsByType[i] > 0) {
+            [str appendFormat: @" %@ (%u)", encodingNames[i], rectsByType[i]];
+        }
+    }
+
+    return str;
 }
 
 - (void)updateComplete

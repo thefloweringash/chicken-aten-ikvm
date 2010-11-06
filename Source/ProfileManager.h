@@ -23,6 +23,7 @@
 extern NSString *kProfile_PixelFormat_Key;
 extern NSString *kProfile_EnableCopyrect_Key;
 extern NSString *kProfile_EnableJpegEncoding_Key;
+extern NSString *kProfile_JpegQualityLevel_Key;
 extern NSString *kProfile_Encodings_Key;
 extern NSString *kProfile_EncodingValue_Key;
 extern NSString *kProfile_EncodingEnabled_Key;

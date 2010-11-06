@@ -39,6 +39,7 @@ static const NSString* gEncodingNames[NUMENCODINGS] = {
 NSString *kProfile_PixelFormat_Key = @"PixelFormat";
 NSString *kProfile_EnableCopyrect_Key = @"EnableCopyRect";
 NSString *kProfile_EnableJpegEncoding_Key = @"EnableJpegEncoding";
+NSString *kProfile_JpegQualityLevel_Key = @"JpegQualityLevel";
 NSString *kProfile_Encodings_Key = @"Encodings";
 NSString *kProfile_EncodingValue_Key = @"ID";
 NSString *kProfile_EncodingEnabled_Key = @"Enabled";

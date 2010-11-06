@@ -46,7 +46,7 @@ struct encoding {
     CARD16 numberOfEnabledEncodings;
     CARD32 *enabledEncodings; // enabled encodings, including pseudo
     BOOL enableCopyRect;
-    BOOL enableJpegEncoding;
+    int jpegLevel;
     struct encoding *encodings; // all non-pseudo encodings, even disabled
     int numEncodings;
 
@@ -84,6 +84,7 @@ struct encoding {
 - (CARD32)encodingAtIndex:(unsigned)index;
 - (BOOL)enableCopyRect;
 - (BOOL)enableJpegEncoding;
+- (int)jpegLevel;
 - (BOOL)useServerNativeFormat;
 - (void)getPixelFormat:(rfbPixelFormat*)format;
 - (EventFilterEmulationScenario)button2EmulationScenario;
@@ -122,5 +123,6 @@ struct encoding {
 - (void)moveEncodingFrom:(int)src to:(int)dst;
 - (void)setCopyRectEnabled:(BOOL)enabled;
 - (void)setJpegEncodingEnabled:(BOOL)enabled;
+- (void)setJpegLevel:(int)level;
 
 @end

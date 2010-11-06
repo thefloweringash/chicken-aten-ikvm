@@ -93,7 +93,7 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
         shiftKeyPreference = kRemoteShiftModifier;
         controlKeyPreference = kRemoteControlModifier;
         enableCopyRect = YES;
-        enableJpegEncoding = YES;
+        jpegLevel = 6;
         numEncodings = NUMENCODINGS;
         encodings = (struct encoding*)malloc(NUMENCODINGS * sizeof(*encodings));
         for ( i = 0; i < NUMENCODINGS; ++i ) {
@@ -132,8 +132,16 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
         controlKeyPreference = [[info objectForKey: kProfile_LocalControlModifier_Key]
                                 intValue];
 		
-        id obj = [info objectForKey: kProfile_EnableJpegEncoding_Key];
-        enableJpegEncoding = obj == nil || [obj boolValue];
+        id obj = [info objectForKey: kProfile_JpegQualityLevel_Key];
+        if (obj) {
+            jpegLevel = [obj intValue];
+        } else {
+            obj = [info objectForKey: kProfile_EnableJpegEncoding_Key];
+            if (obj == nil || [obj boolValue])
+                jpegLevel = 6;
+            else
+                jpegLevel = -1;
+        }
         enableCopyRect = [[info objectForKey: kProfile_EnableCopyrect_Key]
                                     boolValue];
 
@@ -221,7 +229,7 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
         encodings = (struct encoding*)malloc(numEncodings * sizeof(*encodings));
         memcpy(encodings, profile->encodings, numEncodings *sizeof(*encodings));
         enableCopyRect = profile->enableCopyRect;
-        enableJpegEncoding = profile->enableJpegEncoding;
+        jpegLevel = profile->jpegLevel;
         [self makeEnabledEncodings];
 
         for (i = 0; i < 2; i++) {
@@ -275,9 +283,9 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
         if (encodings[i].enabled) {
             CARD32 encoding = encodings[i].encoding;
             enabledEncodings[numberOfEnabledEncodings++] = encoding;
-            if (encoding == rfbEncodingTight && enableJpegEncoding)
+            if (encoding == rfbEncodingTight && jpegLevel >= 0)
                 enabledEncodings[numberOfEnabledEncodings++]
-                    = rfbEncodingQualityLevel6;
+                    = rfbEncodingQualityLevel0 + jpegLevel;
         }
     }
 }
@@ -302,8 +310,8 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
              forKey:kProfile_LocalControlModifier_Key];
 
     // encodings
-    [dict setObject:[NSNumber numberWithBool:enableJpegEncoding]
-             forKey:kProfile_EnableJpegEncoding_Key];
+    [dict setObject:[NSNumber numberWithInt:jpegLevel]
+             forKey:kProfile_JpegQualityLevel_Key];
     [dict setObject:[NSNumber numberWithBool:enableCopyRect]
              forKey:kProfile_EnableCopyrect_Key];
     NSMutableArray  *enc = [[NSMutableArray alloc] init];
@@ -447,7 +455,12 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 
 - (BOOL)enableJpegEncoding
 {
-    return enableJpegEncoding;
+    return jpegLevel >= 0;
+}
+
+- (int)jpegLevel
+{
+    return jpegLevel;
 }
 
 - (BOOL)useServerNativeFormat
@@ -694,7 +707,15 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 
 - (void)setJpegEncodingEnabled:(BOOL)enabled
 {
-    enableJpegEncoding = enabled;
+    if (!enabled)
+        [self setJpegLevel: -1];
+    else if (jpegLevel < 0)
+        [self setJpegLevel: 6];
+}
+
+- (void)setJpegLevel: (int)level
+{
+    jpegLevel = level;
     [self makeEnabledEncodings];
 }
 

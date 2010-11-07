@@ -209,8 +209,8 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
             return;
     }
     if(theReader == nil) {
-        [connection terminateConnection:[NSString stringWithFormat:
-            @"Unknown rectangle encoding %d -> exiting", e]];
+        NSString    *fmt = NSLocalizedString(@"UnknownRectangle", nil);
+        [connection terminateConnection:[NSString stringWithFormat:fmt, e]];
     } else {
         [theReader setRectangle:currentRect];
         [theReader readEncoding];

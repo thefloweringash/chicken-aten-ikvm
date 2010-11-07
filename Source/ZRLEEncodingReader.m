@@ -170,7 +170,12 @@
 					y += i;
 				}
 			} else {
-                [connection terminateConnection:[NSString stringWithFormat:@"ZRLE unknown subencoding %d encountered\n", subEncoding]];
+                NSString    *format;
+                NSString    *err;
+
+                format = NSLocalizedString(@"ZrleUnknownSubeconding", nil);
+                err = [NSString stringWithFormat:format, subEncoding];
+                [connection terminateConnection:err];
                 return;
             }
 		}

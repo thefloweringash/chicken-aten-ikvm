@@ -61,6 +61,14 @@
     }
 }
 
+- (void)inflateError
+{
+    NSString    *fmt = NSLocalizedString(@"ZlibHexInflateError", nil);
+    NSString    *err = [NSString stringWithFormat: fmt, encodedStream.msg];
+
+    [connection terminateConnection:err];
+}
+
 #define ZLIBHEX_MAX_RAW_TILE_SIZE 4096
 
 /* Read the data for a tile. This may be zlib-compressed, in which case we
@@ -99,7 +107,7 @@
 		encodedStream.data_type = Z_BINARY;
 		inflateResult = inflate(&encodedStream, Z_SYNC_FLUSH);
 		if(inflateResult < 0) {
-			[connection terminateConnection:[NSString stringWithFormat:@"ZlibHex inflate error: %s", encodedStream.msg]];
+            [self inflateError];
             free(buffer);
 			return;
 		}
@@ -134,18 +142,15 @@
 
                 inflateResult = inflate(&encodedStream, Z_SYNC_FLUSH);
                 if (inflateResult < 0) {
-                    NSString    *err;
-                    err = [NSString stringWithFormat:@"ZlibHex inflate error: %s",
-                            encodedStream.msg];
-                    [connection terminateConnection:err];
+                    [self inflateError];
                     free(buffer);
                     return;
                 }
             }
 
             if (size > bufferSz - encodedStream.avail_out) {
-                [connection terminateConnection:
-                    @"ZlibHex deflate size smaller than expected"];
+                NSString    *err = NSLocalizedString(@"ZlibHexDeflateTooSmall", nil);
+                [connection terminateConnection:err];
                 free(buffer);
                 return;
             }

@@ -79,11 +79,14 @@
 	stream.data_type = Z_BINARY;
 	inflateResult = inflate(&stream, Z_SYNC_FLUSH);
     if(inflateResult == Z_NEED_DICT ) {
-		[connection terminateConnection:@"Zlib inflate needs a dictionary.\n"];
+        NSString    *err = NSLocalizedString(@"ZlibNeedsDict", nil);
+		[connection terminateConnection:err];
 		return;
     }
     if(inflateResult < 0) {
-		[connection terminateConnection:[NSString stringWithFormat:@"Zlib inflate error: %s\n", stream.msg]];
+        NSString *err = [NSString stringWithFormat:@"ZlibInflateError",
+                                                    stream.msg];
+		[connection terminateConnection:err];
 		return;
     }
 	[self setUncompressedData:pixels length:capacity - stream.avail_out];

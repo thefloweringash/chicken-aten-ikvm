@@ -139,7 +139,8 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 		return;
 	}
     if(cntl > rfbTightMaxSubencoding) {
-		[connection terminateConnection:@"Tight encoding: bad subencoding value received.\n"];
+        NSString    *err = NSLocalizedString(@"TightBadSubencoding", nil);
+		[connection terminateConnection:err];
         return;
     }
     if(cntl & rfbTightExplicitFilter) {
@@ -176,7 +177,9 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
             break;
         default:
             currentFilter = nil;
-            [connection terminateConnection:[NSString stringWithFormat:@"Tight encoding: unknown filter code %@ received.\n", aByte]];
+            NSString    *fmt = NSLocalizedString(@"TightUnknownFilter", nil);
+            NSString    *err = [NSString stringWithFormat:fmt, aByte];
+            [connection terminateConnection:err];
             return;
     }
     [currentFilter resetFilterForRect:frame];
@@ -191,7 +194,8 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     bytesTransferred += [currentFilter bytesTransferred];
 #endif
     if((pixelBits = [currentFilter bitsPerPixel]) == 0) {
-        [connection terminateConnection:@"Tight encoding: palette with length 0 received\n"];
+        NSString    *err = NSLocalizedString(@"TightZeroPalette", nil);
+        [connection terminateConnection:err];
         return;
     }
     rowSize = (frame.size.width * pixelBits + 7) / 8;
@@ -292,7 +296,8 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 		cinfo.out_color_space = JCS_RGB;
 		jpeg_start_decompress(&cinfo);
 		if(cinfo.output_width != frame.size.width || cinfo.output_height != frame.size.height || cinfo.output_components != 3) {
-			[connection terminateConnection:[NSString stringWithFormat:@"Tight Encoding: Wrong JPEG data received.\n"]];
+            NSString    *err = NSLocalizedString(@"TightWrongJpeg", nil);
+			[connection terminateConnection:err];
 			jpeg_destroy_decompress(&cinfo);
 			return;
 		}

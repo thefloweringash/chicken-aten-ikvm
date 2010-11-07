@@ -35,7 +35,17 @@
 "ServerClosed" = "Le serveur a fermé la connexion";
 "ServerError" = "Ecrire au serveur: %s";
 "ProtocolError" = "Protocol error";
-"ZrleTooSmall" = "ZRLE rectangle contained insufficient data";
+"ZrleTooSmall" = "ZRLE encoding: rectangle contained insufficient data";
+"ZrleUnknownSubencoding" = "ZRLE encoding: unknown subencoding %d encountered";
+"ZlibHexInflateError" = "ZlibHex encoding: inflate error: %s";
+"ZlibHexDeflateTooSmall" = "ZlibHex encoding: deflate size smaller than expected";
+"ZlibNeedsDict" = "Zlib encoding: inflate needs a dictionary";
+"ZlibInflateError" = "Zlib encoding: inflate error: %s"
+"TightBadSubencoding" = "Tight encoding: unknown subencoding received";
+"TightUnknownFilter" = "Tight encoding: unknown filter code %@ received.";
+"TightZeroPalette" = "Tight encoding: palette with length 0 received";
+"TightWrongJpeg" = "Tight encoding: Wrong JPEG data received.";
+"UnknownRectangle" = "Unknown rectangle encoding %d -> exiting";
 
 /* Fullscreen */
 "FullscreenHeader" = "Vous allez passer en mode plein écran";

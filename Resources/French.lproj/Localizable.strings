@@ -46,6 +46,11 @@
 "TightZeroPalette" = "Tight encoding: palette with length 0 received";
 "TightWrongJpeg" = "Tight encoding: Wrong JPEG data received.";
 "UnknownRectangle" = "Unknown rectangle encoding %d -> exiting";
+"TightInflateInitErrorWith" = "InflateInit error: %s.\n";
+"TightInflateInitError" = "InflateInit error\n";
+"TightInflateErr" = "Inflate error\n";
+"ZlibInflateInitErr" = "Zlib encoding: inflateInit: %s.\n";
+"ZlibHexInflateErr" = "ZlibHex inflate error: %s";
 
 /* Fullscreen */
 "FullscreenHeader" = "Vous allez passer en mode plein écran";

@@ -22,8 +22,7 @@
 #import "RFBConnection.h"
 #import "RFBStringReader.h"
 
-/* Pseudo-encoding to support renaming the desktop. Never actually tested,
- * because I couldn't find a server which supports this pseudo-encoding. */
+/* Pseudo-encoding to support renaming the desktop. */
 @implementation DesktopNameEncodingReader
 
 - (void)dealloc

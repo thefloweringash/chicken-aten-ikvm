@@ -48,7 +48,7 @@
 /* Define to 1 if the system has the type `unsigned short'. */
 #undef HAVE_UNSIGNED_SHORT
 
-/* Define if you want use complete types */
+/* Compiler does not support pointers to undefined structures. */
 #undef INCOMPLETE_TYPES_BROKEN
 
 /* Define if you have BSD-like bzero and bcopy */

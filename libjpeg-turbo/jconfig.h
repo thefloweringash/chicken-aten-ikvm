@@ -15,7 +15,7 @@
 #define HAVE_UNSIGNED_SHORT 1
 
 /* Define if you want use complete types */
-#define INCOMPLETE_TYPES_BROKEN 1
+/* #undef INCOMPLETE_TYPES_BROKEN */
 
 /* Define if you have BSD-like bzero and bcopy */
 /* #undef NEED_BSD_STRINGS */

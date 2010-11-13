@@ -49,8 +49,8 @@
 /* Define to 1 if the system has the type `unsigned short'. */
 #define HAVE_UNSIGNED_SHORT 1
 
-/* Define if you want use complete types */
-#define INCOMPLETE_TYPES_BROKEN 1
+/* Compiler does not support pointers to undefined structures. */
+/* #undef INCOMPLETE_TYPES_BROKEN */
 
 /* Define if you have BSD-like bzero and bcopy */
 /* #undef NEED_BSD_STRINGS */
@@ -71,13 +71,13 @@
 #define PACKAGE_NAME "libjpeg-turbo"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libjpeg-turbo 1.0.0"
+#define PACKAGE_STRING "libjpeg-turbo 1.0.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libjpeg-turbo"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.0.0"
+#define PACKAGE_VERSION "1.0.1"
 
 /* Define if shift is unsigned */
 /* #undef RIGHT_SHIFT_IS_UNSIGNED */
@@ -86,7 +86,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "1.0.0"
+#define VERSION "1.0.1"
 
 /* Use accelerated SIMD routines. */
 #define WITH_SIMD 1

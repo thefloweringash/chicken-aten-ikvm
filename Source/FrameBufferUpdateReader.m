@@ -154,7 +154,7 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     currentRect.size.height = ntohs(msg->r.h);
     e = ntohl(msg->encoding);
     if (currentRect.size.width == 0 && currentRect.size.height == 0
-            && e != rfbEncodingPointerPos) {
+            && e != rfbEncodingPointerPos && e != rfbEncodingDesktopName) {
 		// this is a hack for compatibility with OSXvnc 1.0
 		[self updateComplete];
 		return;

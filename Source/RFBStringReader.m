@@ -59,8 +59,13 @@
 - (void)setLength:(NSNumber *)theLength
 {
     ByteBlockReader *contentReader;
-
     unsigned    length = [theLength unsignedIntValue];
+
+    if (length == 0) {
+        [target performSelector:action withObject:@""];
+        return;
+    }
+
     contentReader = [[ByteBlockReader alloc] initTarget:self
                                  action:@selector(setContent:) size:length];
     [connection setReader:contentReader];

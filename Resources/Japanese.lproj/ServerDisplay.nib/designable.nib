@@ -11,7 +11,7 @@
 			<string key="NS.object.0">804</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="23"/>
+			<integer value="6"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -91,7 +91,7 @@
 											<object class="NSPSMatrix" key="NSDrawMatrix"/>
 											<string key="NSFrame">{{11, 7}, {16, 16}}</string>
 											<reference key="NSSuperview" ref="532353323"/>
-											<int key="NSpiFlags">16650</int>
+											<int key="NSpiFlags">20746</int>
 											<double key="NSMaxValue">100</double>
 										</object>
 										<object class="NSButton" id="6927799">

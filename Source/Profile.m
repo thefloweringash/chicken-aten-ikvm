@@ -261,8 +261,7 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 - (void)makeEnabledEncodings
 {
     int     i;
-    /* :TODO: rfbEncodingDesktopName is implemented but not tested. */
-    CARD32  pseudoEncodings[] = {//rfbEncodingDesktopName,
+    CARD32  pseudoEncodings[] = {rfbEncodingDesktopName,
         rfbEncodingRichCursor, rfbEncodingLastRect, rfbEncodingPointerPos,
         rfbEncodingDesktopSize};
     int     numPseudos = sizeof(pseudoEncodings)/sizeof(*pseudoEncodings);

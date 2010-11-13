@@ -249,11 +249,15 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
         stream->opaque = Z_NULL;
         error = inflateInit(stream);
         if(error != Z_OK) {
+            NSString *err;
             if(stream->msg != NULL) {
-                [connection terminateConnection:[NSString stringWithFormat:@"InflateInit error: %s.\n", stream->msg]];
+                NSString *fmt =NSLocalizedString(@"TightInflateInitErrMsg",nil);
+                err = [NSString stringWithFormat:fmt, stream->msg];
+                [connection terminateConnection:[NSString stringWithFormat:fmt, stream->msg]];
             } else {
-                [connection terminateConnection:@"InflateInit error\n"];
+                err = NSLocalizedString(@"TightInflateInitErr", nil);
             }
+            [connection terminateConnection:err];
             return;
         }
         zStreamActive[streamId] = YES;
@@ -329,7 +333,8 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
             if(stream->msg != NULL) {
                 [connection terminateConnection:[NSString stringWithFormat:@"Inflate error: %s.\n", stream->msg]];
             } else {
-                [connection terminateConnection:@"Inflate error\n"];
+                NSString *err = NSLocalizedString(@"TightInflateErr", nil);
+                [connection terminateConnection:err];
             }
             return;
         }

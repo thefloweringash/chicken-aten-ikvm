@@ -21,11 +21,13 @@
 		zLengthReader = [[CARD16Reader alloc] initTarget:self action:@selector(setZLength:)];
 		inflateResult = inflateInit(&rawStream);
 		if(inflateResult != Z_OK) {
-			[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", rawStream.msg]];
+            NSString *fmt = NSLocalizedString(@"ZlibInflateErr", nil);
+			[connection terminateConnection:[NSString stringWithFormat:fmt, rawStream.msg]];
 		}
 		inflateResult = inflateInit(&encodedStream);
 		if(inflateResult != Z_OK) {
-			[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", encodedStream.msg]];
+            NSString *fmt = NSLocalizedString(@"ZlibInflateErr", nil);
+			[connection terminateConnection:[NSString stringWithFormat:fmt, encodedStream.msg]];
 		}
 	}
     return self;
@@ -88,7 +90,8 @@
 		rawStream.data_type = Z_BINARY;
 		inflateResult = inflate(&rawStream, Z_SYNC_FLUSH);
 		if(inflateResult < 0) {
-			[connection terminateConnection:[NSString stringWithFormat:@"ZlibHex inflate error: %s", rawStream.msg]];
+            NSString *fmt = NSLocalizedString(@"ZlibHexInflateErr", nil);
+			[connection terminateConnection:[NSString stringWithFormat:fmt, rawStream.msg]];
 			return;
 		}
 #ifdef COLLECT_STATS

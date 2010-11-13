@@ -26,7 +26,8 @@
 		pixelReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setCompressedData:)];
 		inflateResult = inflateInit(&stream);
 		if (inflateResult != Z_OK) {
-			[connection terminateConnection:[NSString stringWithFormat:@"Zlib encoding: inflateInit: %s.\n", stream.msg]];
+            NSString *err = NSLocalizedString(@"ZlibInflateInitErr", nil);
+			[connection terminateConnection:[NSString stringWithFormat:err, stream.msg]];
 		}
 	}
     return self;

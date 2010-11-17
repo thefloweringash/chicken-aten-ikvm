@@ -76,6 +76,7 @@
 - (void)connect: (id)unused;
 - (void)finishConnection;
 - (void)connectionFailed: (NSString *)cause;
+- (void)serverClosed;
 
 - (void)error:(NSString*)theAction message:(NSString*)theFunction;
 

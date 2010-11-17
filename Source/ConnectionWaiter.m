@@ -22,6 +22,7 @@
 #import "RFBConnection.h"
 #import "RFBConnectionManager.h"
 
+#import <poll.h>
 #import <unistd.h>
 
 @implementation ConnectionWaiter
@@ -133,8 +134,24 @@
         [lock unlock];
 
         if (connect(sock, res->ai_addr, res->ai_addrlen) == 0) {
-            // socket connected successfully
+            /* Socket connected successfully: Now wait for data from server. For
+             * example, if we're tunnelling over SSH, SSH will accept the
+             * connection right away, but we want to wait for the handshake from
+             * the VNC server, before we represent to the user that a connection
+             * ha been made. */
+            struct pollfd   pfd;
+
             freeaddrinfo(res0);
+
+            pfd.fd = sock;
+            pfd.events = POLLERR | POLLHUP | POLLIN;
+            poll(&pfd, 1, -1);
+            if (pfd.revents & (POLLERR | POLLHUP)) {
+                [self performSelectorOnMainThread:@selector(serverClosed)
+                           withObject:nil waitUntilDone:NO];
+                return;
+            }
+
             [self performSelectorOnMainThread:@selector(finishConnection)
                                    withObject:nil waitUntilDone:NO];
             return; 
@@ -182,37 +199,44 @@
 /* DNS lookup has failed. Executed in main thread. */
 - (void)lookupFailed: (NSNumber *)error
 {
-    if (delegate) {
-        // only if we haven't been canceled
-        NSString *actionStr = NSLocalizedString( @"NoNamedServer", nil );
-        NSString *message = [NSString stringWithFormat:@"%s: getaddrinfo()",
-                                gai_strerror([error intValue])];
-        NSString *title = [NSString stringWithFormat:actionStr, [self host]];
+    NSString *actionStr = NSLocalizedString( @"NoNamedServer", nil );
+    NSString *message = [NSString stringWithFormat:@"%s: getaddrinfo()",
+                            gai_strerror([error intValue])];
+    NSString *title = [NSString stringWithFormat:actionStr, [self host]];
 
-        [self error:title message:message];
-    } else
-        [self release];
+    [self error:title message:message];
 }
 
 /* Connection attempt has failed. Executed in main thread. */
 - (void)connectionFailed: (NSString *)cause
 {
-    if (delegate) {
-        // only if we haven't been canceled
-        NSString *actionStr;
-        NSString *message;
+    NSString *actionStr;
+    NSString *message;
 
-        actionStr = NSLocalizedString( @"NoConnection", nil );
-        actionStr = [NSString stringWithFormat:actionStr, [self host], [server port]];
-        message = [NSString stringWithFormat:@"%s: %@", strerror(errno), cause];
-        [self error:actionStr message:message];
-    } else
-        [self release];
+    actionStr = NSLocalizedString( @"NoConnection", nil );
+    actionStr = [NSString stringWithFormat:actionStr, [self host], [server port]];
+    message = [NSString stringWithFormat:@"%s: %@", strerror(errno), cause];
+    [self error:actionStr message:message];
+}
+
+- (void)serverClosed
+{
+    NSString    *templ = NSLocalizedString(@"NoConnection", nil);
+    NSString    *actionStr;
+
+    actionStr = [NSString stringWithFormat:templ, [self host], [server port]];
+    [self error:actionStr message:NSLocalizedString(@"ServerClosed", nil)];
 }
 
 /* Creates error sheet or panel */
 - (void)error:(NSString*)theAction message:(NSString*)message
 {
+    if (delegate == nil) {
+        // only show error if we haven't been canceled
+        [self release];
+        return;
+    }
+
     if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
         [delegate connectionPrepareForSheet];
 

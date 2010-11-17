@@ -42,6 +42,7 @@
 
 // size of write buffer
 #define BUFFER_SIZE 2048
+#define READ_BUF_SIZE (1024*1024)
 
 // tables for mapping Unicode characters to X11 keysyms, defined in Keymap.m
 extern const unsigned int page0[];
@@ -97,8 +98,8 @@ extern const unsigned int pagef7[];
     [versionReader release];
 
     socketHandler = [file retain];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleReadCompletionNotification object:socketHandler];
-    [socketHandler readInBackgroundAndNotify];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleDataAvailableNotification object:socketHandler];
+    [socketHandler waitForDataInBackgroundAndNotify];
     [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil]];
 
     password = [[server password] retain];
@@ -586,15 +587,19 @@ extern const unsigned int pagef7[];
 
 - (void)readData:(NSNotification*)aNotification
 {
-    NSData* data = [[aNotification userInfo] objectForKey:NSFileHandleNotificationDataItem];
-    unsigned consumed, length = [data length];
-    unsigned char* bytes = (unsigned char*)[data bytes];
+    unsigned        consumed;
+    ssize_t         length;
+    unsigned char   *buf = malloc(READ_BUF_SIZE);
+    unsigned char   *bytes = buf;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; // if we process slower than our requests, we don't autorelease until we get a break, which could be never.
 
-    if(!length) {	// server closed socket obviously
+    length = read([socketHandler fileDescriptor], buf, READ_BUF_SIZE);
+
+    if(length <= 0) {	// server closed socket
 		NSString *reason = NSLocalizedString( @"ServerClosed", nil );
         [self terminateConnection:reason];
 		[pool release];
+        free(buf);
         return;
     }
     
@@ -613,13 +618,15 @@ extern const unsigned int pagef7[];
             bytesReceived += consumed;
         if(terminating) {
 			[pool release];
+            free(buf);
             return;
         }
     }
-    [socketHandler readInBackgroundAndNotify];
+    [socketHandler waitForDataInBackgroundAndNotify];
     if ([optionPanel isVisible])
         [self updateStatistics:nil];
 	[pool release];
+    free(buf);
 }
 
 /* Request frame buffer update, possibly after a delay */

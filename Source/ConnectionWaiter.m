@@ -93,6 +93,8 @@
     struct addrinfo hints;
     struct addrinfo *res, *res0;
     NSString        *cause = @"unknown";
+    int             *causeErr = 0;
+    NSString        *errMsg;
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
     NSString    *host = [self host];
     NSString    *port = [NSString stringWithFormat:@"%d", [server port]];
@@ -122,6 +124,7 @@
         int     sock;
         if ((sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) < 0) {
             cause = @"socket()";
+            causeErr = errno;
             continue;
         }
 
@@ -164,6 +167,7 @@
                 break;
             } else {
                 cause = @"connect()";
+                causeErr = errno;
                 close(sock);
                 currentSock = -1;
                 [lock unlock];
@@ -173,8 +177,11 @@
 
     freeaddrinfo(res0);
     // exhausted all possible addresses -> failure
+    pool = [[NSAutoreleasePool alloc] init];
+    errMsg = [NSString stringWithFormat:@"%s: %@", strerror(causeErr), cause];
     [self performSelectorOnMainThread: @selector(connectionFailed:)
-                           withObject: cause waitUntilDone: NO];
+                           withObject: errMsg waitUntilDone: NO];
+    [pool release];
 }
 
 - (void)finishConnection
@@ -215,8 +222,7 @@
 
     actionStr = NSLocalizedString( @"NoConnection", nil );
     actionStr = [NSString stringWithFormat:actionStr, [self host], [server port]];
-    message = [NSString stringWithFormat:@"%s: %@", strerror(errno), cause];
-    [self error:actionStr message:message];
+    [self error:actionStr message:cause];
 }
 
 - (void)serverClosed

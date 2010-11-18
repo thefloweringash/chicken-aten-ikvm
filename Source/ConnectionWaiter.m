@@ -93,7 +93,7 @@
     struct addrinfo hints;
     struct addrinfo *res, *res0;
     NSString        *cause = @"unknown";
-    int             *causeErr = 0;
+    int             causeErr = 0;
     NSString        *errMsg;
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
     NSString    *host = [self host];
@@ -218,7 +218,6 @@
 - (void)connectionFailed: (NSString *)cause
 {
     NSString *actionStr;
-    NSString *message;
 
     actionStr = NSLocalizedString( @"NoConnection", nil );
     actionStr = [NSString stringWithFormat:actionStr, [self host], [server port]];

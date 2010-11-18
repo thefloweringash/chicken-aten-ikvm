@@ -42,5 +42,9 @@
 	<string>OSX_RFBViewer</string>
 	<key>NSPrincipalClass</key>
 	<string>MyApp</string>
+	<key>SUFeedURL</key>
+	<string>http://chicken.sourceforge.net/chicken.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
 </dict>
 </plist>

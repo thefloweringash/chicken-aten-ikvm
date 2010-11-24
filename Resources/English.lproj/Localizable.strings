@@ -29,6 +29,10 @@
 "defaultProfileName" = "Default Profile";
 "EditProfiles" = "Edit Connection Profiles...";
 
+// Couldn't connect
+"ConnectRefused" = "The server refused the connection";
+"ConnectTimedOut" = "The connection attempt timed out";
+
 // Connection Terminated
 "ConnectionTerminated" = "Connection Terminated";
 "Reconnect" = "Reconnect";

@@ -556,6 +556,8 @@ extern const unsigned int pagef7[];
 	if (! _hasManualFrameBufferUpdates)
 		[self queueUpdateRequest];
     [rfbView displayIfNeededIgnoringOpacity];
+    if ([optionPanel isVisible])
+        [self updateStatistics:nil];
     isReceivingUpdate = NO;
 }
 
@@ -623,8 +625,6 @@ extern const unsigned int pagef7[];
         }
     }
     [socketHandler waitForDataInBackgroundAndNotify];
-    if ([optionPanel isVisible])
-        [self updateStatistics:nil];
 	[pool release];
     free(buf);
 }

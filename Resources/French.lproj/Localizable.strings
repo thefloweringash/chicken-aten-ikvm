@@ -29,6 +29,10 @@
 "defaultProfileName" = "Profile par défaut";
 "EditProfiles" = "Edit Connection Profiles...";
 
+// Couldn't connect
+"ConnectRefused" = "The server refused the connection";
+"ConnectTimedOut" = "The connection attempt timed out";
+
 /* Connection Terminated */
 "ConnectionTerminated" = "Connexion interrompue";
 "Reconnect" = "Reconnecter";
@@ -40,7 +44,7 @@
 "ZlibHexInflateError" = "ZlibHex encoding: inflate error: %s";
 "ZlibHexDeflateTooSmall" = "ZlibHex encoding: deflate size smaller than expected";
 "ZlibNeedsDict" = "Zlib encoding: inflate needs a dictionary";
-"ZlibInflateError" = "Zlib encoding: inflate error: %s"
+"ZlibInflateError" = "Zlib encoding: inflate error: %s";
 "TightBadSubencoding" = "Tight encoding: unknown subencoding received";
 "TightUnknownFilter" = "Tight encoding: unknown filter code %@ received.";
 "TightZeroPalette" = "Tight encoding: palette with length 0 received";

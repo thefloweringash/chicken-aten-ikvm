@@ -94,7 +94,7 @@
     struct addrinfo *res, *res0;
     NSString        *cause = @"unknown";
     int             causeErr = 0;
-    NSString        *errMsg;
+    NSString        *errMsg = nil;
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
     NSString    *host = [self host];
     NSString    *port = [NSString stringWithFormat:@"%d", [server port]];
@@ -166,8 +166,14 @@
                 [lock unlock];
                 break;
             } else {
-                cause = @"connect()";
-                causeErr = errno;
+                if (errno == ECONNREFUSED) {
+                    errMsg = @"ConnectRefused";
+                } else if (errno == ETIMEDOUT) {
+                    errMsg = @"ConnectTimedOut";
+                } else {
+                    cause = @"connect()";
+                    causeErr = errno;
+                }
                 close(sock);
                 currentSock = -1;
                 [lock unlock];
@@ -178,7 +184,10 @@
     freeaddrinfo(res0);
     // exhausted all possible addresses -> failure
     pool = [[NSAutoreleasePool alloc] init];
-    errMsg = [NSString stringWithFormat:@"%s: %@", strerror(causeErr), cause];
+    if (errMsg == nil) {
+        errMsg = [NSString stringWithFormat:@"%s: %@", strerror(causeErr),
+                                        cause];
+    }
     [self performSelectorOnMainThread: @selector(connectionFailed:)
                            withObject: errMsg waitUntilDone: NO];
     [pool release];
@@ -206,10 +215,16 @@
 /* DNS lookup has failed. Executed in main thread. */
 - (void)lookupFailed: (NSNumber *)error
 {
+    int      errNum = [error intValue];
     NSString *actionStr = NSLocalizedString( @"NoNamedServer", nil );
-    NSString *message = [NSString stringWithFormat:@"%s: getaddrinfo()",
-                            gai_strerror([error intValue])];
+    NSString *message;
     NSString *title = [NSString stringWithFormat:actionStr, [self host]];
+
+    if (errNum == EAI_NONAME)
+        message = @"";
+    else
+        message = [NSString stringWithFormat:@"%s: getaddrinfo()",
+                                gai_strerror(errNum)];
 
     [self error:title message:message];
 }
@@ -221,6 +236,9 @@
 
     actionStr = NSLocalizedString( @"NoConnection", nil );
     actionStr = [NSString stringWithFormat:actionStr, [self host], [server port]];
+        // cause can be either a localized string tag or the error string
+        // itself, in which case NSLocalizedString just returns cause
+    cause = NSLocalizedString(cause, nil);
     [self error:actionStr message:cause];
 }
 

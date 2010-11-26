@@ -29,6 +29,7 @@
 			NSMutableDictionary* d = [mProfileDicts objectForKey:key];
             Profile *p = [[Profile alloc] initWithDictionary:d name:key];
             [mProfiles setObject:p forKey:key];
+            [p release];
 		}
 
 		//[self updateAllProfiles]; // for the new EventFilter stuff

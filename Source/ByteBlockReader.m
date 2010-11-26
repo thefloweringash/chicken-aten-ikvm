@@ -56,7 +56,7 @@
         buffer = malloc(size);
 
         if (buffer == NULL) {
-            capacity = aSize = 0;
+            capacity = 0;
             NSLog(@"Memory allocation failed in setBufferSize:");
         }
     }

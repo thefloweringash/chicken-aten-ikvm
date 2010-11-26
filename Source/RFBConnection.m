@@ -374,7 +374,6 @@ extern const unsigned int pagef7[];
     BOOL usesFullscreenScrollers = [[PrefController sharedController] fullscreenHasScrollbars];
 
     horizontalScroll = verticalScroll = NO;
-    winframe = [window frame];
 
     maxviewsize = [NSScrollView frameSizeForContentSize:[rfbView frame].size
                                   hasHorizontalScroller:horizontalScroll

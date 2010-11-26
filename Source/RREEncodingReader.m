@@ -84,13 +84,15 @@
 
 - (void)setNumOfRects:(NSNumber*)aNumber
 {
+#if 0
     unsigned int totalSize = frame.size.width * frame.size.height;
     unsigned int avgSize;
+#endif
 
     numOfSubRects = [aNumber unsignedIntValue];
+#if 0
     avgSize = totalSize / (numOfSubRects + 1);
 
-#if 0
     if((numOfSubRects < maxPsRects) || (avgSize > psThreshold)) {
         useList = YES;
         [rectList startWithNumber:numOfSubRects + 1];

@@ -170,7 +170,6 @@
 - (void)writeRFBString:(NSString *)aString;
 - (void)writeBuffer;
 
-//- (id)connectionHandle;
 - (Profile*)profile;
 - (int) protocolMajorVersion;
 - (int) protocolMinorVersion;
@@ -178,8 +177,6 @@
 - (void)setPassword:(NSString *)aPassword;
 - (BOOL)connectShared;
 - (BOOL)viewOnly;
-//- (id)frameBuffer;
-//- (NSWindow *)window;
 - (BOOL)hasKeyWindow;
 - (EventFilter *)eventFilter;
 
@@ -214,12 +211,10 @@
 - (void)endFullscreenScrolling;
 - (void)scrollFullscreenView: (NSTimer *)timer;
 
-//- (float)frameBufferUpdateSeconds;
 - (void)setFrameBufferUpdateSeconds: (float)seconds;
 
 // For reconnect
 - (void)createReconnectSheet:(id)sender;
 - (IBAction)reconnectCancelled:(id)sender; // returnCode:(int)retCode
-    //contextInfo:(void *)contextInfo;
 
 @end

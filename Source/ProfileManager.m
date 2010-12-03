@@ -164,6 +164,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
     Profile *newProfile = [[Profile alloc] initWithProfile:current
                                                    andName:newName];
     [profiles setProfile:newProfile forKey: newName];
+    [newProfile release];
 	
 	[mProfileTable reloadData];
     [self _selectProfileNamed: newName];

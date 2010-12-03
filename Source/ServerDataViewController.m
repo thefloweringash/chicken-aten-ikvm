@@ -299,11 +299,12 @@
 - (IBAction)profileSelectionChanged:(id)sender
 {
     if ([sender indexOfSelectedItem] == [sender numberOfItems] - 1) {
+        NSString    *profile = [mServer lastProfile];
         // :TORESOLVE: this flickers the popup in the "Edit" state
         //          how to prevent this? some way to reject selection change?
-        [self setProfilePopupToProfile: [mServer lastProfile]];
+        [self setProfilePopupToProfile: profile];
         // open profile manager window
-        [[NSApp delegate] showProfileManager: nil];
+        [[ProfileManager sharedManager] showWindowWithProfile:profile];
     }
     else if( nil != mServer )
 	{

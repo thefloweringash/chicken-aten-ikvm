@@ -132,9 +132,11 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
 {
     if (sender == profilePopup
             && [sender indexOfSelectedItem] == [sender numberOfItems] - 1) {
-        [self setProfilePopupToProfile:[[NSUserDefaults standardUserDefaults]
-                                    stringForKey: kPrefs_ListenerProfile_Key]];
-        [[NSApp delegate] showProfileManager: nil];
+        NSString    *profile = [[NSUserDefaults standardUserDefaults]
+                                    stringForKey: kPrefs_ListenerProfile_Key];
+
+        [self setProfilePopupToProfile:profile];
+        [[ProfileManager sharedManager] showWindowWithProfile:profile];
     }
     [self savePrefs];
 }

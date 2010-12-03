@@ -123,6 +123,12 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 - (IBAction)showWindow: (id)sender
 {  [[self window] makeKeyAndOrderFront: nil];  }
 
+- (void)showWindowWithProfile: (NSString *)profileName
+{
+    [self _selectProfileNamed: profileName];
+    [[self window] makeKeyAndOrderFront:nil];
+}
+
 
 #pragma mark -
 #pragma mark Profile Access

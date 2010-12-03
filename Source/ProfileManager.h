@@ -109,6 +109,7 @@ typedef enum {
 
 	// Profile Manager Window
 - (IBAction)showWindow: (id)sender;
+- (void)showWindowWithProfile: (NSString *)profileName;
 
 	// Profile Access
 - (Profile *)defaultProfile;

@@ -21,8 +21,6 @@
 #import <AppKit/AppKit.h>
 #import "FrameBuffer.h"
 
-//#define COLLECT_STATS	
-
 @class FrameBufferUpdateReader;
 @class RFBConnection;
 
@@ -33,7 +31,6 @@
     RFBConnection           *connection;
     NSRect                  frame; // rectangle into which we should write
     FrameBuffer			    *frameBuffer;
-//    unsigned                bytesTransferred;
 }
 
 - (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater
@@ -42,9 +39,5 @@
 - (void)setRectangle:(NSRect)aRect;
 - (void)setFrameBuffer:(id)aBuffer;
 - (void)readEncoding;
-//- (id)rectangleList;
-//- (NSRect)rectangle;
-//- (FrameBuffer*)frameBuffer;
-//- (unsigned)bytesTransferred;
 
 @end

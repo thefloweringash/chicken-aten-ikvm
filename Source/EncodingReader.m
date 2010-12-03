@@ -49,30 +49,4 @@
     NSLog(@"Unimplemented readEncoding in EncodingReader");
 }
 
-#if 0
-- (id)rectangleList
-{
-    return nil;
-}
-
-- (NSRect)rectangle
-{
-    return frame;
-}
-#endif
-
-#if 0
-- (FrameBuffer*)frameBuffer
-{
-    return frameBuffer;
-}
-#endif
-
-#if 0
-- (unsigned)bytesTransferred
-{
-    return bytesTransferred;
-}
-#endif
-
 @end

@@ -509,13 +509,6 @@ extern const unsigned int pagef7[];
     handshaker = nil;
 }
 
-#if 0
-- (id)connectionHandle
-{
-    return socketHandler;
-}
-#endif
-
 - (void)setPassword:(NSString *)aPassword
 {
     [password release];
@@ -992,20 +985,6 @@ extern const unsigned int pagef7[];
 }
 
 /* --------------------------------------------------------------------------------- */
-#if 0
-- (id)frameBuffer
-{
-    return frameBuffer;
-}
-#endif
-
-#if 0
-- (NSWindow *)window;
-{
-	return window;
-}
-#endif
-
 - (BOOL)hasKeyWindow
 {
     return [window isKeyWindow];
@@ -1245,11 +1224,6 @@ static NSString* byteString(double d)
 	if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
 		NSLog( @"Couldn't release the main display!" );
 	}
-	/*window = [[NSWindow alloc] initWithContentRect:[NSWindow contentRectForFrameRect: _windowedFrame styleMask: _styleMask]
-										styleMask:_styleMask
-										backing:NSBackingStoreBuffered
-										defer:NO
-										screen:[NSScreen mainScreen]];*/
     window = windowedWindow;
     windowedWindow = nil;
     [window orderFront:nil];
@@ -1272,8 +1246,6 @@ static NSString* byteString(double d)
 	NSRect screenRect;
 
 	if (returnCode == NSAlertDefaultReturn) {
-		//_windowedFrame = [window frame];
-		//_styleMask = [window styleMask];
 		[[RFBConnectionManager sharedManager] makeAllConnectionsWindowed];
 		if (CGDisplayCapture( kCGDirectMainDisplay ) != kCGErrorSuccess) {
 			NSLog( @"Couldn't capture the main display!" );
@@ -1287,7 +1259,6 @@ static NSString* byteString(double d)
                 removeEquivalentForWindow:[window title]];
 		[window setDelegate: nil];
         windowedWindow = window;
-        //[window close];
 		window = [[FullscreenWindow alloc] initWithContentRect:screenRect
 											styleMask:NSBorderlessWindowMask
 											backing:NSBackingStoreBuffered
@@ -1539,12 +1510,6 @@ static NSString* byteString(double d)
     [contentView scrollToPoint: newOrigin];
     [scrollView reflectScrolledClipView: contentView];
 }
-
-#if 0
-- (float)frameBufferUpdateSeconds {
-	return _frameBufferUpdateSeconds;
-}
-#endif
 
 - (void)setFrameBufferUpdateSeconds: (float)seconds {
     int     hadManualUpdates = _hasManualFrameBufferUpdates;

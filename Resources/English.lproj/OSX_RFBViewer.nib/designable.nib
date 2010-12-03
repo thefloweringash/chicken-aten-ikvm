@@ -1095,14 +1095,6 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">showProfileManager:</string>
-						<reference key="source" ref="569964129"/>
-						<reference key="destination" ref="202870"/>
-					</object>
-					<int key="connectionID">1377</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">showHelp:</string>
 						<reference key="source" ref="569964129"/>
 						<reference key="destination" ref="538354072"/>
@@ -1212,6 +1204,14 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 						<reference key="destination" ref="121065899"/>
 					</object>
 					<int key="connectionID">1508</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">showProfileManager:</string>
+						<reference key="source" ref="518874856"/>
+						<reference key="destination" ref="202870"/>
+					</object>
+					<int key="connectionID">1510</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2228,7 +2228,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1509</int>
+			<int key="maxID">1510</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

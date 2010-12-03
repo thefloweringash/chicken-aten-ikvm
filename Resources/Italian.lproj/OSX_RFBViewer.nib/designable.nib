@@ -1092,14 +1092,6 @@ b3J0byBkaXNwb25pYmlsaSBzdSBodHRwOi8vY290dm5jLnNvdXJjZWZvcmdlLm5ldA</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">showProfileManager:</string>
-						<reference key="source" ref="462683081"/>
-						<reference key="destination" ref="192383446"/>
-					</object>
-					<int key="connectionID">1377</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">showHelp:</string>
 						<reference key="source" ref="462683081"/>
 						<reference key="destination" ref="884551454"/>
@@ -1217,6 +1209,14 @@ b3J0byBkaXNwb25pYmlsaSBzdSBodHRwOi8vY290dm5jLnNvdXJjZWZvcmdlLm5ldA</string>
 						<reference key="destination" ref="70780693"/>
 					</object>
 					<int key="connectionID">1522</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">showProfileManager:</string>
+						<reference key="source" ref="604453625"/>
+						<reference key="destination" ref="192383446"/>
+					</object>
+					<int key="connectionID">1524</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2183,7 +2183,7 @@ b3J0byBkaXNwb25pYmlsaSBzdSBodHRwOi8vY290dm5jLnNvdXJjZWZvcmdlLm5ldA</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{499, 341}, {370, 233}}</string>
+					<string>{{417, 341}, {370, 233}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2237,7 +2237,7 @@ b3J0byBkaXNwb25pYmlsaSBzdSBodHRwOi8vY290dm5jLnNvdXJjZWZvcmdlLm5ldA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1523</int>
+			<int key="maxID">1524</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

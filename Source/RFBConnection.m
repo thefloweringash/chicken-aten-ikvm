@@ -31,6 +31,7 @@
 #import "KeyEquivalentScenario.h"
 #import "PrefController.h"
 #import "Profile.h"
+#import "ProfileManager.h"
 #import "RFBConnectionManager.h"
 #import "RFBHandshaker.h"
 #import "RFBProtocol.h"
@@ -1571,6 +1572,12 @@ static NSString* byteString(double d)
     [_reconnectWaiter release];
     _reconnectWaiter = nil;
     [self connectionHasTerminated];
+}
+
+- (IBAction)showProfileManager:(id)sender
+{
+    [[ProfileManager sharedManager] showWindowWithProfile:
+        [_profile profileName]];
 }
 
 @end

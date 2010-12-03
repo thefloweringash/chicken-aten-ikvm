@@ -63,6 +63,14 @@
 									<reference key="NSOnImage" ref="686561877"/>
 									<reference key="NSMixedImage" ref="69521807"/>
 								</object>
+								<object class="NSMenuItem" id="629985993">
+									<reference key="NSMenu" ref="760284937"/>
+									<string key="NSTitle">Check for Updates</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="686561877"/>
+									<reference key="NSMixedImage" ref="69521807"/>
+								</object>
 								<object class="NSMenuItem" id="535888211">
 									<reference key="NSMenu" ref="760284937"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -1209,6 +1217,14 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 					</object>
 					<int key="connectionID">1511</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">checkForUpdates:</string>
+						<reference key="source" ref="740010600"/>
+						<reference key="destination" ref="629985993"/>
+					</object>
+					<int key="connectionID">1513</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1419,6 +1435,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 							<reference ref="808960289"/>
 							<reference ref="535888211"/>
 							<reference ref="81532722"/>
+							<reference ref="629985993"/>
 						</object>
 						<reference key="parent" ref="308718677"/>
 					</object>
@@ -1845,6 +1862,11 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 						<reference key="object" ref="740010600"/>
 						<reference key="parent" ref="0"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1512</int>
+						<reference key="object" ref="629985993"/>
+						<reference key="parent" ref="760284937"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1981,6 +2003,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 					<string>1505.IBPluginDependency</string>
 					<string>1505.ImportedFromIB2</string>
 					<string>1508.IBPluginDependency</string>
+					<string>1512.IBPluginDependency</string>
 					<string>165.IBPluginDependency</string>
 					<string>165.ImportedFromIB2</string>
 					<string>29.IBEditorWindowLastContentRect</string>
@@ -2158,6 +2181,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>{{333, 628}, {376, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2181,7 +2205,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{345, 425}, {246, 203}}</string>
+					<string>{{345, 405}, {246, 223}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2218,7 +2242,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1511</int>
+			<int key="maxID">1513</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

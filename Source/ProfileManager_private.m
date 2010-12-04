@@ -64,8 +64,10 @@
 {
 	NSArray *profileNames = [self _sortedProfileNames];
 	int index = [profileNames indexOfObject: aProfile];
-	NSParameterAssert( NSNotFound != index );
-	[self _selectProfileAtIndex: index];
+    if (index != NSNotFound)
+        [self _selectProfileAtIndex: index];
+    else
+        NSLog(@"Couldn't select profile with name %@", aProfile);
 }
 
 

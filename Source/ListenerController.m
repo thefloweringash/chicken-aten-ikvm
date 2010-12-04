@@ -201,7 +201,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
         
     [handle acceptConnectionInBackgroundAndNotify];
 
-    return handle;
+    return [handle autorelease];
 }
 
 - (void)stopListeningForNdx:(int)ndx
@@ -230,6 +230,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     listenAddress.sin_port = htons(port);
     listeningSockets[0] = [self listenAtAddress: (struct sockaddr *)&listenAddress
                                        ofLength:sizeof(listenAddress)];
+    [listeningSockets[0] retain];
     if (!listeningSockets[0])
         return NO;
 
@@ -239,6 +240,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     listenAddress6.sin6_port = htons(port);
     listeningSockets[1] = [self listenAtAddress:(struct sockaddr *)&listenAddress6
                                        ofLength:sizeof(listenAddress6)];
+    [listeningSockets[1] retain];
     if (!listeningSockets[1]) {
         [self stopListeningForNdx: 0];
         return NO;

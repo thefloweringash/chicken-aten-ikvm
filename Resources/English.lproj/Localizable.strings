@@ -21,7 +21,7 @@
 "UnknownAuthResult" = "Unknown authResult %@";
 //"AuthenticationFailed" = "Authentication Failed";
 "AuthenticationFailedTooMany" = "Too many failures";
-"UnknownMessageType" = "Unknown message type %@\n";
+"UnknownMessageType" = "Unknown message type %@";
 "ServerReports" = "Server Reports";
 "ARDAuthWarning" = "\nPlease configure Apple Remote Desktop to allow VNC Viewers to control the screen.\n";
 

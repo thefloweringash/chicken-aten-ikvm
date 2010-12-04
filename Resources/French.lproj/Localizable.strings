@@ -21,7 +21,7 @@
 "UnknownAuthResult" = "Resultat d'authentification inconnu %@";
 //"AuthenticationFailed" = "Echec de l'authentification";
 "AuthenticationFailedTooMany" = "Trop d'echecs";
-"UnknownMessageType" = "Message de type inconnu %@\n";
+"UnknownMessageType" = "Message de type inconnu %@";
 "ServerReports" = "Le serveur a répondu";
 "ARDAuthWarning" = "\nVeuillez configurer Apple Remote Desktop pour autoriser les clients VNC à contrôler l'écran\n";
 

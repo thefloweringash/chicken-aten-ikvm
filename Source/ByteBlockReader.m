@@ -48,18 +48,6 @@
 - (void)setBufferSize:(unsigned)aSize
 {
     size = aSize;
-    if(size > capacity) {
-        capacity = size;
-        if(buffer) {
-            free(buffer);
-        }
-        buffer = malloc(size);
-
-        if (buffer == NULL) {
-            capacity = 0;
-            NSLog(@"Memory allocation failed in setBufferSize:");
-        }
-    }
 }
 
 - (unsigned)bufferSize
@@ -84,6 +72,18 @@
         bytesRead = size;
         [target performSelector:action withObject:data];
     } else {
+        if (size > capacity) {
+            capacity = size;
+            if (buffer)
+                free(buffer);
+            buffer = malloc(size);
+            if (buffer == NULL) {
+                NSLog(@"Memory allocation failed in ByteBlockReader");
+                capacity = 0;
+                return 0;
+            }
+        }
+
         memcpy(buffer + bytesRead, theBytes, canConsume);
         if((bytesRead += canConsume) == size) {
             [target performSelector:action withObject:[NSData dataWithBytesNoCopy:buffer length:size freeWhenDone: NO]];

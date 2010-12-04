@@ -17,10 +17,8 @@
  */
 
 #import <AppKit/AppKit.h>
-//#import "ByteReader.h"
 #import "ConnectionWaiter.h"
 #import "rfbproto.h"
-//#import "RFBProtocol.h"
 
 @class ByteBlockReader;
 @class ByteReader;
@@ -98,8 +96,6 @@
 
         // instance variables for managing the fullscreen display
 	BOOL _isFullscreen;
-	//NSRect _windowedFrame;   // saved for return to windowed
-	//unsigned int _styleMask; // saved for return to windowed
     NSWindow *windowedWindow;
 	NSTrackingRectTag _leftTrackingTag;
 	NSTrackingRectTag _topTrackingTag;

@@ -362,5 +362,11 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     [lastProfile release];
 }
 
+- (IBAction)showProfileManager:(id)sender
+{
+    [[ProfileManager sharedManager] showWindowWithProfile:
+            [profilePopup titleOfSelectedItem]];
+}
+
 
 @end

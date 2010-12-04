@@ -287,6 +287,11 @@
 	[[self window] makeKeyAndOrderFront:self];
 }
 
+- (void)showProfileManager: (id)sender
+{
+    [mServerCtrler showProfileManager:sender];
+}
+
 #if 0
 - (void)dealloc
 {

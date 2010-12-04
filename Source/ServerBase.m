@@ -354,12 +354,4 @@
 	return NO;
 }
 
-#if 0
-- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect
-{
-	// Do nothing
-	assert(0);
-}
-#endif
-
 @end

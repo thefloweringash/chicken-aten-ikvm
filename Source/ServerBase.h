@@ -75,7 +75,6 @@
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setLastProfile: (NSString*)lastProfile;
-//- (void)setAddToServerListOnConnect: (bool)addToServerListOnConnect;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 

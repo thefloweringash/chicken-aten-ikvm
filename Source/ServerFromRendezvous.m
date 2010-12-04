@@ -115,19 +115,14 @@
 		case EDIT_ADDRESS:
 		case EDIT_PORT:
 		case EDIT_NAME:
-		//case DELETE:
-		//case SERVER_SAVE:
-		//case ADD_SERVER_ON_CONNECT:
 			return NO;
 		case EDIT_PASSWORD:
 		case SAVE_PASSWORD:
 		case CONNECT:
 			return (bHasResolved && bResloveSucceeded);
-		default:
-			// handle all cases
-			assert(0);
 	}
 	
+    // shouldn't get here, but just in case...
 	return NO;
 }
 

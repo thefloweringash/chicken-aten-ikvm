@@ -148,16 +148,10 @@
 		case EDIT_PASSWORD:
 		case SAVE_PASSWORD:
 		case CONNECT:
-		//case DELETE:
-		//case SERVER_SAVE:
 			return YES;
-		//case ADD_SERVER_ON_CONNECT:
-			//return NO;
-		default:
-			// handle all cases
-			assert(0);
 	}
 	
+    // shouldn't ever get here
 	return NO;
 }
 

@@ -85,8 +85,8 @@
 		return;
     }
     if(inflateResult < 0) {
-        NSString *err = [NSString stringWithFormat:@"ZlibInflateError",
-                                                    stream.msg];
+        NSString *fmt = NSLocalizedString(@"ZlibInflateError", nil);
+        NSString *err = [NSString stringWithFormat:fmt, stream.msg];
 		[connection terminateConnection:err];
 		return;
     }

@@ -51,12 +51,7 @@
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-
-#if 0
-	[self release];
-#else
 	[[NSUserDefaults standardUserDefaults] synchronize];
-#endif
 }
 
 - (void)reloadServerArray
@@ -292,19 +287,6 @@
     [mServerCtrler showProfileManager:sender];
 }
 
-#if 0
-- (void)dealloc
-{
-	[[NSUserDefaults standardUserDefaults] synchronize];
-    [connections release];
-	[mServerCtrler release];
-	[mOrderedServerNames release];
-	[serverListBox release];
-	[serverGroupBox release];
-    [super dealloc];
-}
-#endif
-
 - (id<IServerData>)selectedServer
 {
 	return [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:[serverList selectedRow]]];
@@ -455,7 +437,6 @@
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
-//jshprefs    [self savePrefs];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -631,7 +612,6 @@
 {
 	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
 	RFBConnection *thisConnection;
-	//NSWindow *keyWindow = [NSApp keyWindow];
 	
 	while (thisConnection = [connectionEnumerator nextObject]) {
 		if ([thisConnection hasKeyWindow]) {
@@ -645,7 +625,6 @@
 {
 	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
 	RFBConnection *thisConnection;
-	//NSWindow *keyWindow = [NSApp keyWindow];
 	
 	while (thisConnection = [connectionEnumerator nextObject]) {
 		if ([thisConnection hasKeyWindow]) {

@@ -59,7 +59,6 @@
 - (void)showConnectionDialog: (id)sender;
 
 - (void)removeConnection:(id)aConnection;
-//- (bool)connect:(id<IServerData>)server;
 - (void)cmdlineUsage;
 
 - (void)selectedHostChanged;
@@ -69,9 +68,6 @@
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
-#if 0
-- (BOOL)createConnectionWithServer:(id<IServerData>) server profile:(Profile *) someProfile;
-#endif
 - (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file 
     server:(id<IServerData>) server profile:(Profile *) someProfile;
 - (void)successfulConnection: (RFBConnection *)theConnection

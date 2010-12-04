@@ -173,7 +173,7 @@
                 NSString    *format;
                 NSString    *err;
 
-                format = NSLocalizedString(@"ZrleUnknownSubeconding", nil);
+                format = NSLocalizedString(@"ZrleUnknownSubencoding", nil);
                 err = [NSString stringWithFormat:format, subEncoding];
                 [connection terminateConnection:err];
                 return;

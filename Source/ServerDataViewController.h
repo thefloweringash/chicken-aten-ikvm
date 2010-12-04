@@ -70,6 +70,8 @@
 - (IBAction)connectToServer:(id)sender;
 - (IBAction)addServerChanged:(id)sender;
 
+- (IBAction)showProfileManager:(id)sender;
+
 - (IBAction)connectToServer:(id)sender;
 - (IBAction)cancelConnect: (id)sender;
 

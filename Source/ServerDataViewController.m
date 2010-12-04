@@ -336,6 +336,11 @@
 	}
 }
 
+- (IBAction)showProfileManager:(id)sender
+{
+    [[ProfileManager sharedManager] showWindowWithProfile:[mServer lastProfile]];
+}
+
 - (NSBox*)box
 {
 	return box;

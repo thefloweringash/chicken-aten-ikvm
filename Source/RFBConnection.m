@@ -212,7 +212,8 @@ extern const unsigned int pagef7[];
 
 - (void)setCursor: (NSCursor *)aCursor
 {
-    [rfbView setServerCursorTo: aCursor];
+    if (![server_ viewOnly])
+        [rfbView setServerCursorTo: aCursor];
 }
 
 - (void)connectionHasTerminated
@@ -687,7 +688,8 @@ extern const unsigned int pagef7[];
 /* The server has moved the cursor to pos in RFB coordinates */
 - (void)serverMovedMouseTo:(NSPoint)pos
 {
-    if ([window isKeyWindow] && -[lastMouseMovement timeIntervalSinceNow] > 0.5)
+    if ([window isKeyWindow] && -[lastMouseMovement timeIntervalSinceNow] > 0.5
+            && ![server_ viewOnly])
     {
         NSSize  size = [frameBuffer size];
         CGPoint screenCoords;

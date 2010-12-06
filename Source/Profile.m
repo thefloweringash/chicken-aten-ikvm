@@ -257,23 +257,24 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     [super dealloc];
 }
 
+#define NUM_INTERACTIVE_PSEUDOS 2
+
 /* Makes list of encodings and pseudo-encodings which gets sent to server */
 - (void)makeEnabledEncodings
 {
     int     i;
-    CARD32  pseudoEncodings[] = {rfbEncodingDesktopName,
-        rfbEncodingRichCursor, rfbEncodingLastRect, rfbEncodingPointerPos,
-        rfbEncodingDesktopSize};
+    CARD32  pseudoEncodings[] = {rfbEncodingDesktopName, rfbEncodingLastRect,
+        rfbEncodingDesktopSize,
+        // The last NUM_INTERACTIVE_PSEUDOS are not used for view-only
+        // connections.
+        rfbEncodingPointerPos, rfbEncodingRichCursor};
     int     numPseudos = sizeof(pseudoEncodings)/sizeof(*pseudoEncodings);
 
     if (enabledEncodings)
         free(enabledEncodings);
             // + 2 for CopyRect and Jpeg quality level
     enabledEncodings = (CARD32 *)malloc((numEncodings + numPseudos + 2) * sizeof(CARD32));
-
-    // Fixed pseudo-encodings, which we always support
-    memcpy(enabledEncodings, pseudoEncodings, numPseudos * sizeof(CARD32));
-    numberOfEnabledEncodings = numPseudos;
+    numberOfEnabledEncodings = 0;
 
     // User-specified list of encodings
     if (enableCopyRect) 
@@ -287,7 +288,13 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
                     = rfbEncodingQualityLevel0 + jpegLevel;
         }
     }
+
+    // Fixed pseudo-encodings, which we always support
+    memcpy(enabledEncodings + numberOfEnabledEncodings, pseudoEncodings,
+            numPseudos * sizeof(CARD32));
+    numberOfEnabledEncodings += numPseudos;
 }
+
 
 - (NSDictionary *)dictionary
 {
@@ -437,9 +444,12 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     return pixelFormatIndex;
 }
 
-- (CARD16)numberOfEnabledEncodings
+- (CARD16)numEnabledEncodingsIfViewOnly:(BOOL)viewOnly
 {
-    return numberOfEnabledEncodings;
+    if (viewOnly)
+        return numberOfEnabledEncodings - NUM_INTERACTIVE_PSEUDOS;
+    else
+        return numberOfEnabledEncodings;
 }
 
 - (CARD32)encodingAtIndex:(unsigned)index

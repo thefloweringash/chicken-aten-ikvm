@@ -498,8 +498,8 @@ extern const unsigned int pagef7[];
 - (void)start:(ServerInitMessage*)info
 {
     [rfbProtocol release];
-    rfbProtocol = [[RFBProtocol alloc] initWithConnection:self
-                                            andServerInfo:info];
+    rfbProtocol = [[RFBProtocol alloc] initWithConnection:self serverInfo:info
+                                                 viewOnly:[server_ viewOnly]];
 
     [self sizeDisplay:[info size] withPixelFormat:[info pixelFormatData]];
     [self setupWindow];

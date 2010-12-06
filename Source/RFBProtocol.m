@@ -34,15 +34,15 @@
  * supported encodings and the pixel format to the server. */
 @implementation RFBProtocol
 
-- (id)initWithConnection:(RFBConnection*)aConnection
-          andServerInfo:(id)info
+- (id)initWithConnection:(RFBConnection*)aConnection serverInfo:(id)info
+                viewOnly:(BOOL)viewOnly
 {
     if (self = [super init]) {
         connection = aConnection;
        
         [self setPixelFormat:[info pixelFormatData]];
 
-		[self setEncodings];
+        [self setEncodingsViewOnly:viewOnly];
 		typeReader = [[CARD8Reader alloc] initTarget:self action:@selector(receiveType:)];
         msgTypeReader[rfbFramebufferUpdate] = [[FrameBufferUpdateReader alloc]
                 initWithProtocol:self connection:connection];
@@ -86,10 +86,10 @@
     free(enc);
 }
 
-- (void)setEncodings
+- (void)setEncodingsViewOnly:(BOOL)viewOnly
 {
     Profile* profile = [connection profile];
-    CARD16 i, l = [profile numberOfEnabledEncodings];
+    CARD16 i, l = [profile numEnabledEncodingsIfViewOnly:viewOnly];
     CARD32	*enc = (CARD32 *)malloc(l * sizeof(CARD32));
 
     for(i=0; i<l; i++) {

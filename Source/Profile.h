@@ -80,7 +80,7 @@ struct encoding {
 - (int)shiftKeyPreference;
 - (int)controlKeyPreference;
 - (int)pixelFormatIndex;
-- (CARD16)numberOfEnabledEncodings;
+- (CARD16)numEnabledEncodingsIfViewOnly:(BOOL)viewOnly;
 - (CARD32)encodingAtIndex:(unsigned)index;
 - (BOOL)enableCopyRect;
 - (BOOL)enableJpegEncoding;

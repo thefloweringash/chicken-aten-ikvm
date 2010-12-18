@@ -143,6 +143,8 @@
     [mAltKey selectItemAtIndex:[profile altKeyPreference]];
     [mShiftKey selectItemAtIndex:[profile shiftKeyPreference]];
     //[mInterpretModifiersLocally setState:[profile interpretModifiersLocally]];
+
+    [mTintColorWell setColor:[profile tint]];
 	
     [mEncodingTableView reloadData];
 }

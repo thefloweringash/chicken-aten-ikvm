@@ -49,6 +49,7 @@ extern NSString *kProfile_TapAndClickButtonSpeedForButton3_Key;
 extern NSString *kProfile_TapAndClickTimeoutForButton2_Key;
 extern NSString *kProfile_TapAndClickTimeoutForButton3_Key;
 extern NSString *kProfile_IsDefault_Key;
+extern NSString *kProfile_Tint_Key;
 
 // Notifications
 extern NSString *ProfileAddDeleteNotification;
@@ -97,6 +98,7 @@ typedef enum {
 	IBOutlet NSButton *mEnableCopyRect;
     IBOutlet NSButton *mEnableJpegEncoding;
     IBOutlet NSMatrix *mPixelFormatMatrix;
+    IBOutlet NSColorWell *mTintColorWell;
 	int mEncodingDragRow;
 }
 
@@ -121,5 +123,6 @@ typedef enum {
 - (IBAction)deleteProfile:(id)sender;
 - (IBAction)formDidChange:(id)sender;
 - (IBAction)toggleSelectedEncodingEnabled: (id)sender;
+- (IBAction)tintDidChange:(id)sender;
 
 @end

@@ -65,6 +65,7 @@ NSString *kProfile_TapAndClickButtonSpeedForButton3_Key = @"TapAndClickButtonSpe
 NSString *kProfile_TapAndClickTimeoutForButton2_Key = @"TapAndClickTimeoutForButton2";
 NSString *kProfile_TapAndClickTimeoutForButton3_Key = @"TapAndClickTimeoutForButton3";
 NSString *kProfile_IsDefault_Key = @"IsDefault";
+NSString *kProfile_Tint_Key = @"Tint";
 
 // --- Notifications --- //
 NSString *ProfileAddDeleteNotification = @"ProfileAddedOrDeleted";
@@ -101,6 +102,8 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 
 	NSArray *dragTypes = [NSArray arrayWithObject: kProfileDragEntry];
 	[mEncodingTableView registerForDraggedTypes: dragTypes];
+
+    [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
 }
 
 
@@ -256,6 +259,19 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
     
     [[ProfileDataManager sharedInstance] saveProfile:profile];
     [mEncodingTableView reloadData];
+}
+
+
+- (IBAction)tintDidChange:(id)sender
+{
+    Profile     *profile = [self _currentProfile];
+
+    /* This causes a redraw of any currently open connections. We only want to
+     * do that when the color has really changed, which is why the tint triggers
+     * its own selector and is not clumped into formDidChange: */
+    [profile setTint: [mTintColorWell color]];
+    
+    [[ProfileDataManager sharedInstance] saveProfile:profile];
 }
 
 

@@ -17,6 +17,7 @@
  *
  */
 
+#import "Keymap.h"
 #define XK_3270
 #import "X11/keysym.h"
 
@@ -155,7 +156,7 @@ const unsigned int page3[128] = {
 };
 
 // U+0400 through U+047f: Cyrillic
-unsigned int page4[128] = {
+const unsigned int page4[128] = {
     0,              XK_Cyrillic_IO, XK_Serbian_DJE, XK_Macedonia_GJE, // U+040*
     XK_Ukrainian_IE,XK_Macedonia_DSE,XK_Ukrainian_I,XK_Ukrainian_YI,
     XK_Cyrillic_JE, XK_Cyrillic_LJE,XK_Cyrillic_NJE,XK_Serbian_TSHE,

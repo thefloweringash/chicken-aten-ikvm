@@ -123,6 +123,7 @@
 		7FFA8FEC062BA6330008D381 /* ServerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFA8FEA062BA6330008D381 /* ServerBase.m */; };
 		7FFA903D062BA74F0008D381 /* ServerDisplay.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7FFA903B062BA74F0008D381 /* ServerDisplay.nib */; };
 		DA21209212087A370060A5F9 /* jsimd_none.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305711E03BA600271F8F /* jsimd_none.c */; };
+		DA231DF612BD562100D3AD44 /* Keymap.h in Headers */ = {isa = PBXBuildFile; fileRef = DA231DF512BD562100D3AD44 /* Keymap.h */; };
 		DA3648F51293A26800FB8272 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3648F41293A26800FB8272 /* Sparkle.framework */; };
 		DA36490C1293A2AE00FB8272 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DA3648F41293A26800FB8272 /* Sparkle.framework */; };
 		DA60301611E03B5400271F8F /* bmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DA602FFD11E03B5400271F8F /* bmp.c */; };
@@ -326,6 +327,7 @@
 		7FFA8FE9062BA6330008D381 /* ServerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerBase.h; sourceTree = "<group>"; };
 		7FFA8FEA062BA6330008D381 /* ServerBase.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerBase.m; sourceTree = "<group>"; };
 		7FFA903C062BA74F0008D381 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ServerDisplay.nib; sourceTree = "<group>"; };
+		DA231DF512BD562100D3AD44 /* Keymap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keymap.h; sourceTree = "<group>"; };
 		DA3648F41293A26800FB8272 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		DA5B896B11E19395004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
 		DA5B896C11E193A6004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ListenDialog.nib; sourceTree = "<group>"; };
@@ -1052,6 +1054,7 @@
 				F5DC71BA033DB4A801A8010C /* GradientFilter.m */,
 				F5DC71BB033DB4A801A8010C /* GrayScaleFrameBuffer.h */,
 				F5DC71BC033DB4A801A8010C /* GrayScaleFrameBuffer.m */,
+				DA231DF512BD562100D3AD44 /* Keymap.h */,
 				F5DC71BD033DB4A801A8010C /* HextileEncodingReader.h */,
 				F5DC71BE033DB4A801A8010C /* HextileEncodingReader.m */,
 				F5DC71BF033DB4A801A8010C /* HighColorFrameBuffer.h */,
@@ -1207,6 +1210,7 @@
 				DA80A6EF11E27B430076CB0A /* CursorPseudoEncodingReader.h in Headers */,
 				DA68E53211E7867500F23347 /* ConnectionWaiter.h in Headers */,
 				DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */,
+				DA231DF612BD562100D3AD44 /* Keymap.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

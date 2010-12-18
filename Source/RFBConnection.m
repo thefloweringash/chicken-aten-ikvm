@@ -29,6 +29,7 @@
 #import "KeyEquivalent.h"
 #import "KeyEquivalentManager.h"
 #import "KeyEquivalentScenario.h"
+#import "Keymap.h"
 #import "PrefController.h"
 #import "Profile.h"
 #import "ProfileManager.h"
@@ -44,18 +45,6 @@
 // size of write buffer
 #define BUFFER_SIZE 2048
 #define READ_BUF_SIZE (1024*1024)
-
-// tables for mapping Unicode characters to X11 keysyms, defined in Keymap.m
-extern const unsigned int page0[];
-extern const unsigned int page1[];
-extern const unsigned int page3[];
-extern const unsigned int page4[];
-extern const unsigned int page5[];
-extern const unsigned int page6[];
-extern const unsigned int pagee[];
-extern const unsigned int page30[];
-extern const unsigned int pagef6[];
-extern const unsigned int pagef7[];
 
 @implementation RFBConnection
 

@@ -24,9 +24,6 @@
 #import "RFBConnection.h"
 #import "FrameBufferUpdateReader.h"
 
-#define PS_THRESHOLD	0x10000
-#define PS_MAXRECT	128
-
 @implementation RREEncodingReader
 
 - (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater connection: (RFBConnection *)aConnection

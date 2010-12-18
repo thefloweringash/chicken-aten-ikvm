@@ -14,8 +14,6 @@
 extern NSString *kPrefs_FullscreenWarning_Key;
 extern NSString *kPrefs_AutoscrollIncrement_Key;
 extern NSString *kPrefs_FullscreenScrollbars_Key;
-extern NSString *kPrefs_PSMaxRect_Key;
-extern NSString *kPrefs_PSThreshold_Key;
 extern NSString *kPrefs_UseRendezvous_Key;
 extern NSString *kPrefs_ConnectionProfiles_Key;
 extern NSString *kPrefs_FrontFrameBufferUpdateSeconds_Key;

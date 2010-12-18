@@ -15,8 +15,6 @@
 NSString *kPrefs_FullscreenWarning_Key = @"DisplayFullscreenWarning";
 NSString *kPrefs_AutoscrollIncrement_Key = @"FullscreenAutoscrollIncrement";
 NSString *kPrefs_FullscreenScrollbars_Key = @"FullscreenScrollbars";
-NSString *kPrefs_PSMaxRect_Key = @"PS_MAXRECTS";
-NSString *kPrefs_PSThreshold_Key = @"PS_THRESHOLD";
 NSString *kPrefs_UseRendezvous_Key = @"Rendezvous Setting";
 NSString *kPrefs_ConnectionProfiles_Key = @"ConnectProfiles";
 NSString *kPrefs_FrontFrameBufferUpdateSeconds_Key = @"FrontFrameBufferUpdateSeconds";

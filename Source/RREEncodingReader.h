@@ -27,8 +27,6 @@
     id			backPixReader;
     id			subRectReader;
     CARD32		numOfSubRects;
-    unsigned int	psThreshold;
-    unsigned int	maxPsRects;
 }
 
 @end

@@ -20,6 +20,7 @@
 #import "EventFilter.h"
 #import "RFBConnection.h"
 #import "FrameBuffer.h"
+#import "Profile.h"
 //#import "RectangleList.h"
 
 @implementation RFBView
@@ -58,6 +59,11 @@
 	return [sMapping objectForKey: name];
 }
 
+- (void)tintChanged:(NSNotification *)notif
+{
+    [self setNeedsDisplay:YES];
+}
+
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
     return NO;
@@ -83,6 +89,7 @@
     [fbuf release];
     [_serverCursor release];
     [_modifierCursor release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 
@@ -108,6 +115,11 @@
 {
     _delegate = delegate;
 	_eventFilter = [_delegate eventFilter];
+    _profile = [_delegate profile];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(tintChanged:)
+                                                 name:ProfileTintChangedMsg
+                                               object:_profile];
 	[self setCursorTo: nil];
 	[self setPostsFrameChangedNotifications: YES];
 	[[NSNotificationCenter defaultCenter] addObserver: _delegate selector: @selector(viewFrameDidChange:) name: NSViewFrameDidChangeNotification object: self];
@@ -124,18 +136,28 @@
     const NSRect    *rects;
     int             numRects;
     int             i;
+    NSColor         *tint = [_profile tint];
+    BOOL            useTint = [tint alphaComponent] != 0.0;
+
+    if (useTint)
+        [tint setFill];
 
     [self getRectsBeingDrawn:&rects count:&numRects];
     for (i = 0; i < numRects; i++) {
         NSRect      r = rects[i];
         r.origin.y = b.size.height - NSMaxY(r);
         [fbuf drawRect:r at:rects[i].origin];
+        if (useTint)
+            NSRectFillUsingOperation(rects[i], NSCompositeSourceOver);
     }
 }
 
 /* Called by system to set-up cursors for this view */
 - (void)resetCursorRects
 {
+    if ([_delegate viewOnly])
+        return;
+
     NSRect cursorRect;
     cursorRect = [self visibleRect];
     if (_modifierCursor)

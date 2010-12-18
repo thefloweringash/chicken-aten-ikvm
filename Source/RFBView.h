@@ -17,13 +17,14 @@
  */
 
 #import "FrameBuffer.h"
-@class EventFilter, RFBConnection;
+@class EventFilter, RFBConnection, Profile;
 
 
 @interface RFBView : NSView
 {
     RFBConnection   *_delegate;
     EventFilter     *_eventFilter;
+    Profile         *_profile;
     NSCursor        *_modifierCursor;
     NSCursor        *_serverCursor; // cursor sent by server, if any
     FrameBuffer     *fbuf;

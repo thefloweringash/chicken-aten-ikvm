@@ -168,12 +168,8 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
             _multiTapModifier[1] = [[info objectForKey: kProfile_MultiTapModifierForButton3_Key] unsignedIntValue];
             
             _multiTapDelay[0] = (NSTimeInterval)[[info objectForKey: kProfile_MultiTapDelayForButton2_Key] doubleValue];
-        //	if ( 0.0 == _multiTapDelay[0] )
-        //		_multiTapDelay[0] = DoubleClickInterval();
             
             _multiTapDelay[1] = (NSTimeInterval)[[info objectForKey: kProfile_MultiTapDelayForButton3_Key] doubleValue];
-    //		if ( 0.0 == _multiTapDelay[1] )
-    //			_multiTapDelay[1] = DoubleClickInterval();
             
             _multiTapCount[0] = [[info objectForKey: kProfile_MultiTapCountForButton2_Key] unsignedIntValue];
             
@@ -184,12 +180,8 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
             _tapAndClickModifier[1] = [[info objectForKey: kProfile_TapAndClickModifierForButton3_Key] unsignedIntValue];
             
             _tapAndClickButtonSpeed[0] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickButtonSpeedForButton2_Key] doubleValue];
-    //		if ( 0.0 == _tapAndClickButtonSpeed[0] )
-    //			_tapAndClickButtonSpeed[0] = DoubleClickInterval();
             
             _tapAndClickButtonSpeed[1] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickButtonSpeedForButton3_Key] doubleValue];
-    //		if ( 0.0 == _tapAndClickButtonSpeed[1] )
-    //			_tapAndClickButtonSpeed[1] = DoubleClickInterval();
             
             _tapAndClickTimeout[0] = (NSTimeInterval)[[info objectForKey: kProfile_TapAndClickTimeoutForButton2_Key] doubleValue];
             
@@ -198,8 +190,6 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
             [self defaultEmulationScenarios];
         }
 		
-        //_interpretModifiersLocally = [[info objectForKey: kProfile_InterpretModifiersLocally_Key] boolValue];
-
         // note that the default here is 0, so it doesn't matter if info is nil
         pixelFormatIndex = [[info objectForKey: kProfile_PixelFormat_Key]
                                 intValue];
@@ -246,7 +236,6 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
             _tapAndClickTimeout[i] = profile->_tapAndClickTimeout[i];
         }
 
-        //_interpretModifiersLocally = profile->_interpretModifiersLocally;
         tint = [profile->tint retain];
     }
     return self;
@@ -372,8 +361,6 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     [dict setObject:[NSNumber numberWithDouble:_tapAndClickTimeout[1]]
              forKey:kProfile_TapAndClickTimeoutForButton3_Key];
 
-    //[dict setObject:[NSNumber numberWithBool:_interpretModifiersLocally]
-     //        forKey:kProfile_InterpretModifiersLocally_Key];
     [dict setObject:[NSNumber numberWithInt:pixelFormatIndex]
              forKey:kProfile_PixelFormat_Key];
     [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tint]
@@ -685,13 +672,6 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     unsigned    index = ButtonNumberToArrayIndex(button);
     _tapAndClickTimeout[index] = timeout;
 }
-
-#if 0
-- (void)setInterpretModifiersLocally:(BOOL)interpretModifiersLocally
-{
-    //_interpretModifiersLocally = interpretModifiersLocally;
-}
-#endif
 
 - (void)setEncodingEnabled:(BOOL)enabled atIndex:(int)index
 {

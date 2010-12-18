@@ -63,7 +63,6 @@ struct encoding {
 	NSTimeInterval _tapAndClickTimeout[2];
 
     NSColor *tint;
-//	BOOL _interpretModifiersLocally;
 }
 
 - (id)init;
@@ -122,7 +121,6 @@ struct encoding {
                         forButton:(unsigned)button;
 - (void)setTapAndClickTimeout:(NSTimeInterval)timeout
                     forButton:(unsigned)button;
-//- (void)setInterpretModifiersLocally:(BOOL)interpretModifiersLocally;
 - (void)setEncodingEnabled:(BOOL)enabled atIndex:(int)index;
 - (void)moveEncodingFrom:(int)src to:(int)dst;
 - (void)setCopyRectEnabled:(BOOL)enabled;

@@ -22,6 +22,8 @@
 #import "EventFilter.h"
 #import "rfbproto.h"
 
+#define ProfileTintChangedMsg @"ProfileTintChangedMsg"
+
 // Encodings
 #define NUMENCODINGS					8
 extern const unsigned int gEncodingValues[];
@@ -60,6 +62,7 @@ struct encoding {
 	NSTimeInterval _tapAndClickButtonSpeed[2]; // 0 means double click interval
 	NSTimeInterval _tapAndClickTimeout[2];
 
+    NSColor *tint;
 //	BOOL _interpretModifiersLocally;
 }
 
@@ -100,6 +103,7 @@ struct encoding {
 - (int)numEncodings;
 - (NSString *)encodingNameAtIndex: (int)index;
 - (BOOL)encodingEnabledAtIndex: (int)index;
+- (NSColor *)tint;
 
 - (void)setCommandKeyPreference:(int)pref;
 - (void)setAltKeyPreference:(int)pref;
@@ -124,5 +128,6 @@ struct encoding {
 - (void)setCopyRectEnabled:(BOOL)enabled;
 - (void)setJpegEncodingEnabled:(BOOL)enabled;
 - (void)setJpegLevel:(int)level;
+- (void)setTint:(NSColor *)aTint;
 
 @end

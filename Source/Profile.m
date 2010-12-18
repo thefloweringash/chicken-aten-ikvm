@@ -82,56 +82,65 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 // create the default profile
 - (id)init
 {
-    if (self = [super init]) {
-        int     i;
-
-        name = [NSLocalizedString(@"defaultProfileName", nil) retain];
-        isDefault = YES;
-
-        commandKeyPreference = kRemoteAltModifier;
-        altKeyPreference =  kRemoteMetaModifier;
-        shiftKeyPreference = kRemoteShiftModifier;
-        controlKeyPreference = kRemoteControlModifier;
-        enableCopyRect = YES;
-        jpegLevel = 6;
-        numEncodings = NUMENCODINGS;
-        encodings = (struct encoding*)malloc(NUMENCODINGS * sizeof(*encodings));
-        for ( i = 0; i < NUMENCODINGS; ++i ) {
-            encodings[i].encoding = gEncodingValues[i];
-            encodings[i].enabled = YES;
-        }
-        [self makeEnabledEncodings];
-
-        [self defaultEmulationScenarios];
-
-        //_interpretModifiersLocally = NO;
-        pixelFormatIndex = 0;
-    }
-    return self;
+    return [self initWithDictionary:nil
+                    name:NSLocalizedString(@"defaultProfileName", nil)];
 }
 
 /* Initialize profile from saved dictionary */
 - (id)initWithDictionary:(NSDictionary*)info name: (NSString *)aName
 {
     if (self = [super init]) {
-		NSArray* enc;
-		int i;
+        int     i;
 
         name = [aName retain];
-        isDefault = [[info objectForKey:kProfile_IsDefault_Key] boolValue];
-		
-        commandKeyPreference = [[info objectForKey: kProfile_LocalCommandModifier_Key]
-                                intValue];
-        
-        altKeyPreference = [[info objectForKey: kProfile_LocalAltModifier_Key]
-                                intValue];
-        
-        shiftKeyPreference = [[info objectForKey: kProfile_LocalShiftModifier_Key]
-                                intValue];
-        
-        controlKeyPreference = [[info objectForKey: kProfile_LocalControlModifier_Key]
-                                intValue];
-		
+
+        if (info) {
+            NSArray* enc;
+
+            isDefault = [[info objectForKey:kProfile_IsDefault_Key] boolValue];
+            
+            commandKeyPreference = [[info objectForKey: kProfile_LocalCommandModifier_Key]
+                                    intValue];
+            
+            altKeyPreference = [[info objectForKey: kProfile_LocalAltModifier_Key]
+                                    intValue];
+            
+            shiftKeyPreference = [[info objectForKey: kProfile_LocalShiftModifier_Key]
+                                    intValue];
+            
+            controlKeyPreference = [[info objectForKey: kProfile_LocalControlModifier_Key]
+                                    intValue];
+            
+            enableCopyRect = [[info objectForKey: kProfile_EnableCopyrect_Key]
+                                        boolValue];
+
+            enc = [info objectForKey: kProfile_Encodings_Key];
+            numEncodings = [enc count];
+            encodings = (struct encoding*)malloc(numEncodings * sizeof(*encodings));
+            for (i = 0; i < numEncodings; i++) {
+                NSDictionary *e = [enc objectAtIndex:i];
+                encodings[i].encoding = [[e objectForKey:kProfile_EncodingValue_Key]
+                                                intValue];
+                encodings[i].enabled = [[e objectForKey:kProfile_EncodingEnabled_Key]
+                                                boolValue];
+            }
+        } else {
+            isDefault = YES;
+
+            commandKeyPreference = kRemoteAltModifier;
+            altKeyPreference =  kRemoteMetaModifier;
+            shiftKeyPreference = kRemoteShiftModifier;
+            controlKeyPreference = kRemoteControlModifier;
+            enableCopyRect = YES;
+            jpegLevel = 6;
+            numEncodings = NUMENCODINGS;
+            encodings = (struct encoding*)malloc(NUMENCODINGS * sizeof(*encodings));
+            for ( i = 0; i < NUMENCODINGS; ++i ) {
+                encodings[i].encoding = gEncodingValues[i];
+                encodings[i].enabled = YES;
+            }
+        }
+
         id obj = [info objectForKey: kProfile_JpegQualityLevel_Key];
         if (obj) {
             jpegLevel = [obj intValue];
@@ -141,19 +150,6 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
                 jpegLevel = 6;
             else
                 jpegLevel = -1;
-        }
-        enableCopyRect = [[info objectForKey: kProfile_EnableCopyrect_Key]
-                                    boolValue];
-
-		enc = [info objectForKey: kProfile_Encodings_Key];
-        numEncodings = [enc count];
-        encodings = (struct encoding*)malloc(numEncodings * sizeof(*encodings));
-        for (i = 0; i < numEncodings; i++) {
-            NSDictionary *e = [enc objectAtIndex:i];
-            encodings[i].encoding = [[e objectForKey:kProfile_EncodingValue_Key]
-                                            intValue];
-            encodings[i].enabled = [[e objectForKey:kProfile_EncodingEnabled_Key]
-                                            boolValue];
         }
 
         [self makeEnabledEncodings];
@@ -204,8 +200,15 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 		
         //_interpretModifiersLocally = [[info objectForKey: kProfile_InterpretModifiersLocally_Key] boolValue];
 
+        // note that the default here is 0, so it doesn't matter if info is nil
         pixelFormatIndex = [[info objectForKey: kProfile_PixelFormat_Key]
                                 intValue];
+
+        obj = [info objectForKey: kProfile_Tint_Key];
+        if (obj)
+            tint = [[NSKeyedUnarchiver unarchiveObjectWithData:obj] retain];
+        if (tint == nil)
+            tint = [[NSColor clearColor] retain];
 	}
     return self;
 }
@@ -244,6 +247,7 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
         }
 
         //_interpretModifiersLocally = profile->_interpretModifiersLocally;
+        tint = [profile->tint retain];
     }
     return self;
 }
@@ -254,6 +258,7 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     free(encodings);
     if (enabledEncodings)
         free(enabledEncodings);
+    [tint release];
     [super dealloc];
 }
 
@@ -371,6 +376,8 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
      //        forKey:kProfile_InterpretModifiersLocally_Key];
     [dict setObject:[NSNumber numberWithInt:pixelFormatIndex]
              forKey:kProfile_PixelFormat_Key];
+    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tint]
+             forKey:kProfile_Tint_Key];
 
     return [dict autorelease];
 }
@@ -602,6 +609,11 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     return encodings[index].enabled;
 }
 
+- (NSColor *)tint
+{
+    return tint;
+}
+
 - (void)setCommandKeyPreference:(int)pref
 {
     commandKeyPreference = pref;
@@ -726,6 +738,14 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 {
     jpegLevel = level;
     [self makeEnabledEncodings];
+}
+
+- (void)setTint:(NSColor *)aTint
+{
+    [tint autorelease];
+    tint = [aTint retain];
+    [[NSNotificationCenter defaultCenter]
+        postNotificationName:ProfileTintChangedMsg object:self];
 }
 
 @end

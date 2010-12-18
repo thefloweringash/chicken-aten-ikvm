@@ -35,6 +35,5 @@
 - (int)count;
 - (void)saveProfile:(Profile *)profile;
 - (NSArray*)sortedKeyArray;
-//- (void)updateAllProfiles;
 
 @end

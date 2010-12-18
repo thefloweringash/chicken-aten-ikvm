@@ -31,8 +31,6 @@
             [mProfiles setObject:p forKey:key];
             [p release];
 		}
-
-		//[self updateAllProfiles]; // for the new EventFilter stuff
 	}
 	
 	return self;
@@ -124,57 +122,5 @@
 {
 	return [[mProfiles allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
-
-#if 0
-- (void)updateAllProfiles
-{
-	NSString* key;
-	NSEnumerator* keys = [mProfiles keyEnumerator];
-	NSDictionary *defaultProfile = [[PrefController sharedController] defaultProfileDict];
-	
-	while( key = [keys nextObject] )
-	{
-		NSMutableDictionary* d = [mProfiles objectForKey:key];
-		id button2EmulationScenario = [d objectForKey: kProfile_Button2EmulationScenario_Key];
-		if ( ! button2EmulationScenario )
-		{
-			NSString *entryName;
-
-			entryName = kProfile_Button2EmulationScenario_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_Button3EmulationScenario_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_ClickWhileHoldingModifierForButton2_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_MultiTapModifierForButton2_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_MultiTapDelayForButton2_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_MultiTapCountForButton2_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_TapAndClickModifierForButton2_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_TapAndClickButtonSpeedForButton2_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_TapAndClickTimeoutForButton2_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_ClickWhileHoldingModifierForButton3_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_MultiTapModifierForButton3_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_MultiTapDelayForButton3_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_MultiTapCountForButton3_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_TapAndClickModifierForButton3_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_TapAndClickButtonSpeedForButton3_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-			entryName = kProfile_TapAndClickTimeoutForButton3_Key;
-			[d setObject: [[[defaultProfile objectForKey: entryName] copy] autorelease] forKey: entryName];
-		}
-	}
-}
-#endif
 
 @end

@@ -58,10 +58,12 @@
 
 - (void)setText:(NSString*)aText
 {
-    NSPasteboard* pb = [NSPasteboard generalPasteboard];
+    if (![connection viewOnly]) {
+        NSPasteboard* pb = [NSPasteboard generalPasteboard];
 
-    [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-    [pb setString:aText forType:NSStringPboardType];
+        [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+        [pb setString:aText forType:NSStringPboardType];
+    }
     [protocol messageReaderDone];
 }
 

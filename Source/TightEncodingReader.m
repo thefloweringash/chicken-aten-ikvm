@@ -111,9 +111,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 
 - (void)readEncoding
 {
-#ifdef COLLECT_STATS
-     bytesTransferred = 1;
-#endif
     [frameBuffer setCurrentReaderIsTight: YES];
     [connection setReader:controlReader];
 }
@@ -153,18 +150,12 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 
 - (void)setBackground:(NSData*)data
 {
-#ifdef COLLECT_STATS
-        bytesTransferred += [data length];
-#endif
     [frameBuffer fillRect:frame tightPixel:(unsigned char*)[data bytes]];
     [updater didRect:self];
 }
 
 - (void)setFilterId:(NSNumber*)aByte
 {
-#ifdef COLLECT_STATS
-    bytesTransferred += 1;
-#endif
     switch([aByte unsignedCharValue]) {
         case rfbTightFilterCopy:
             currentFilter = copyFilter;
@@ -190,9 +181,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 {
     int size;
 
-#ifdef COLLECT_STATS
-    bytesTransferred += [currentFilter bytesTransferred];
-#endif
     if((pixelBits = [currentFilter bitsPerPixel]) == 0) {
         NSString    *err = NSLocalizedString(@"TightZeroPalette", nil);
         [connection terminateConnection:err];
@@ -211,9 +199,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 
 - (void)setUnzippedData:(NSData*)data
 {
-#ifdef COLLECT_STATS
-    bytesTransferred += [data length];
-#endif
     data = [currentFilter filter:data rows:frame.size.height];
     [frameBuffer putRect:frame fromTightData:(unsigned char*)[data bytes]];
     [updater didRect:self];
@@ -224,16 +209,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     int 	streamId, error;
     z_stream*	stream;
 
-#ifdef COLLECT_STATS
-    unsigned l = [zl unsignedIntValue];
-    if(l < 0x80) {
-		bytesTransferred += 1;
-    } else if(l < 0x4000) {
-		bytesTransferred += 2;
-    } else {
-		bytesTransferred += 3;
-    }
-#endif
 	if(cntl == rfbTightJpeg) {
 		[zippedDataReader setBufferSize:[zl unsignedIntValue]];
 		[connection setReader:zippedDataReader];
@@ -282,9 +257,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 	fflush(debugFiles[cntl & 3]);
 #endif
 
-#ifdef COLLECT_STATS
-    bytesTransferred += [data length];
-#endif
 	if(cntl == rfbTightJpeg) {
 		struct jpeg_decompress_struct cinfo;
 		struct jpeg_error_mgr jerr;

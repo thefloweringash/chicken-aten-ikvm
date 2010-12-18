@@ -107,11 +107,6 @@
 - (unichar)character
 {  return _character;  }
 
-#if 0
-- (unichar)characterIgnoringModifiers
-{  return _characterIgnoringModifiers;  }
-#endif
-
 - (unsigned int)modifier
 {  return _modifier;  }
 

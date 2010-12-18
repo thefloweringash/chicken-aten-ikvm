@@ -289,13 +289,6 @@ static ServerDataManager* gInstance = nil;
     return count;
 }
 
-#if 0
-- (NSEnumerator*) getServerEnumerator
-{
-	return [mServers objectEnumerator];
-}
-#endif
-
 /* Returns an array of the server names, sorted alphabetically */
 - (NSArray *)sortedServerNames
 {

@@ -29,11 +29,6 @@
 {
     if (self = [super initWithUpdater: aUpdater connection: aConnection]) {
 		posReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setPosition:) size:4];
-#if 0
-#ifdef COLLECT_STATS
-		bytesTransferred = 4;
-#endif
-#endif
 	}
     return self;
 }

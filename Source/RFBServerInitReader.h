@@ -29,25 +29,7 @@
  * initiailization message. */
 @interface ServerInitMessage : NSObject
 {
-#if 0
-    struct {
-        CARD16	width;
-        CARD16	height;
-        CARD8	bpp;
-        CARD8	depth;
-        CARD8	big_endian;
-        CARD8	true_color;
-        CARD16	red_max;
-        CARD16	green_max;
-        CARD16	blue_max;
-        CARD8	red_shift;
-        CARD8	green_shift;
-        CARD8	blue_shift;
-        CARD8	padding[3];
-    } fixed;
-#else
     rfbServerInitMsg fixed;
-#endif
     NSString*	name;
 }
 

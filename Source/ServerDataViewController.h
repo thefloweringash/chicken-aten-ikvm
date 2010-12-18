@@ -93,12 +93,3 @@
 - (void)setSuperController:(RFBConnectionManager *)aSuperController;
 
 @end
-
-#if 0
-@protocol ConnectionDelegate
-
-- (void)successfulConnection: (RFBConnection *)connection
-                    toServer:(id<IServerData>)server;
-
-@end
-#endif

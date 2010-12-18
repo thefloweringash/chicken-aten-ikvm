@@ -737,22 +737,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)_synthesizeRemainingModifierUpEvents
 {
 	NSTimeInterval  now = [[NSDate date] timeIntervalSince1970];
-#if 0
-    unsigned int    masks[] = {NSShiftKeyMask, NSControlKeyMask,
-                                   NSAlternateKeyMask, NSCommandKeyMask};
-    int     i;
-	
-    for (i = 0; i < sizeof(masks) / sizeof(masks[0]); i++) {
-        if (masks[i] & _pressedModifiers) {
-            QueuedEvent *event;
-            event = [QueuedEvent modifierUpEventWithCharacter:masks[i]
-                                                    timestamp:now]; 
-            [_pendingEvents addObject:event];
-        }
-    }
-#else
     [self queueModifiers:0 timestamp:now];
-#endif
 }
 
 

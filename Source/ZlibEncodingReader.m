@@ -50,9 +50,6 @@
 
 - (void)setNumBytes:(NSNumber*)numBytes
 {
-#ifdef COLLECT_STATS
-	bytesTransferred = 4 + [numBytes unsignedIntValue];
-#endif
 	[pixelReader setBufferSize:[numBytes unsignedIntValue]];
 	[connection setReader:pixelReader];
 }

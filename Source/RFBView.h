@@ -34,8 +34,6 @@
 - (void)setDelegate:(RFBConnection *)delegate;
 - (RFBConnection *)delegate;
 - (void)drawRect:(NSRect)aRect;
-//- (void)displayFromBuffer:(NSRect)aRect;
-//- (void)drawRectList:(id)aList;
 
 - (void)setCursorTo: (NSString *)name;
 - (void)setServerCursorTo: (NSCursor *)aCursor;

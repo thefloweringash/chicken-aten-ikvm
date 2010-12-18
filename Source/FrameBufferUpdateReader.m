@@ -124,9 +124,6 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
 {
     rfbFramebufferUpdateMsg msg;
 
-#ifdef COLLECT_STATS
-    bytesTransferred += [header length];
-#endif
     memcpy(&msg.pad, [header bytes], sizeof(msg) - 1);
     numberOfRects = ntohs(msg.nRects);
     if (numberOfRects > 0)
@@ -145,9 +142,6 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     CARD32          e;
     rfbFramebufferUpdateRectHeader* msg = (rfbFramebufferUpdateRectHeader*)[rectInfo bytes];
 
-#ifdef COLLECT_STATS
-    bytesTransferred += [rectInfo length];
-#endif
     currentRect.origin.x = ntohs(msg->r.x);
     currentRect.origin.y = ntohs(msg->r.y);
     currentRect.size.width = ntohs(msg->r.w);
@@ -228,11 +222,6 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
  * next rectangle */
 - (void)didRect:(EncodingReader*)aReader
 {
-#ifdef COLLECT_STATS
-    bytesTransferred += [aReader bytesTransferred];
-    rectsTransferred++;
-#endif
-
     numberOfRects--;
     if(numberOfRects) {
         [connection setReader:rectHeaderReader];
@@ -241,24 +230,10 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     }
 }
 
-#if 0
-- (double)compressRatio
-{
-    return (bytesRepresented/bytesTransferred);
-}
-#endif
-
 - (double)rectanglesTransferred
 {
     return rectsTransferred;
 }
-
-#if 0
-- (double)bytesTransferred
-{
-    return bytesTransferred;
-}
-#endif
 
 - (double)bytesRepresented
 {

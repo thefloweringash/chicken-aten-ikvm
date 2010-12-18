@@ -94,9 +94,6 @@
 			[connection terminateConnection:[NSString stringWithFormat:fmt, rawStream.msg]];
 			return;
 		}
-#ifdef COLLECT_STATS
-		bytesTransferred += [data length];
-#endif
 		[frameBuffer putRect:currentTile fromData:buffer];
 		[self nextTile];
 	} else if(subEncodingMask & rfbHextileZlibHex) {
@@ -175,9 +172,6 @@
 
 - (void)setZLength:(NSNumber*)theLength
 {
-#ifdef COLLECT_STATS
-	bytesTransferred += 2;
-#endif
     // Note that here we're repurposing rawReader to read either a raw tile, a
     // ZlibRaw tile, or a Zlib tile
 	[rawReader setBufferSize:[theLength unsignedIntValue]];

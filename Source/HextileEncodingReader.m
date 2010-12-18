@@ -60,9 +60,6 @@
 
 - (void)readEncoding
 {
-#ifdef COLLECT_STATS
-    bytesTransferred = 0;
-#endif
     currentTile.origin = frame.origin;
     currentTile.size.width = MIN(frame.size.width, TILE_SIZE);
     currentTile.size.height = MIN(frame.size.height, TILE_SIZE);
@@ -118,9 +115,6 @@
 
 - (void)setSubEncoding:(NSNumber*)aNumber
 {
-#ifdef COLLECT_STATS
-    bytesTransferred += 1;
-#endif
     if((subEncodingMask = [aNumber unsignedCharValue]) == 0) {
         [self nextTile];
     } else {
@@ -130,18 +124,12 @@
 
 - (void)drawRawTile:(NSData*)data
 {
-#ifdef COLLECT_STATS
-	bytesTransferred += [data length];
-#endif
     [frameBuffer putRect:currentTile fromData:(unsigned char*)[data bytes]];
     [self nextTile];
 }
 
 - (void)setBackground:(NSData*)data
 {
-#ifdef COLLECT_STATS
-        bytesTransferred += [data length];
-#endif
     [frameBuffer fillColor:&background fromPixel:(unsigned char*)[data bytes]];
     [frameBuffer fillRect:currentTile withFbColor:&background];
     [self checkSubEncoding];
@@ -149,18 +137,12 @@
 
 - (void)setForeground:(NSData*)data
 {
-#ifdef COLLECT_STATS
-        bytesTransferred += [data length];
-#endif
     [frameBuffer fillColor:&foreground fromPixel:(unsigned char*)[data bytes]];
     [self checkSubEncoding];
 }
 
 - (void)setSubrects:(NSNumber*)aNumber
 {
-#ifdef COLLECT_STATS
-        bytesTransferred += 1;
-#endif
     numOfSubRects = [aNumber unsignedCharValue];
     if(subEncodingMask & rfbHextileSubrectsColoured) {
         [subColorRectReader setBufferSize:([frameBuffer bytesPerPixel] + 2) * numOfSubRects];
@@ -178,9 +160,6 @@
     unsigned char* pixptr;
     unsigned int bpp = [frameBuffer bytesPerPixel];
 
-#ifdef COLLECT_STATS
-        bytesTransferred += [data length];
-#endif
     while(numOfSubRects--) {
         pixptr = bytes;
         bytes += bpp;
@@ -200,9 +179,6 @@
     NSRect  r;
     unsigned char* bytes = (unsigned char*)[data bytes];
 
-#ifdef COLLECT_STATS
-        bytesTransferred += [data length];
-#endif
     while(numOfSubRects--) {
         r.origin.x = rfbHextileExtractX(*bytes) + currentTile.origin.x;
         r.origin.y = rfbHextileExtractY(*bytes) + currentTile.origin.y;

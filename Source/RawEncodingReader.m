@@ -42,9 +42,6 @@
 {
     unsigned s = [frameBuffer bytesPerPixel] * frame.size.width * frame.size.height;
 
-#ifdef COLLECT_STATS
-    bytesTransferred = s;
-#endif
     [pixelReader setBufferSize:s];
     [connection setReader:pixelReader];
 }

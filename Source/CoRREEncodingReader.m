@@ -30,11 +30,6 @@
     [frameBuffer fillRect:frame withPixel:(unsigned char*)[data bytes]];
     if(numOfSubRects) {
         int size = ([frameBuffer bytesPerPixel] + 4) * numOfSubRects;
-#if 0
-#ifdef COLLECT_STATS
-        bytesTransferred += size;
-#endif
-#endif
         [subRectReader setBufferSize:size];
         [connection setReader:subRectReader];
     } else {

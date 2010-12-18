@@ -22,38 +22,6 @@
 #import "ProfileDataManager.h"
 
 
-// --- Dictionary Keys --- //
-NSString *kProfile_PixelFormat_Key = @"PixelFormat";
-NSString *kProfile_EnableCopyrect_Key = @"EnableCopyRect";
-NSString *kProfile_EnableJpegEncoding_Key = @"EnableJpegEncoding";
-NSString *kProfile_JpegQualityLevel_Key = @"JpegQualityLevel";
-NSString *kProfile_Encodings_Key = @"Encodings";
-NSString *kProfile_EncodingValue_Key = @"ID";
-NSString *kProfile_EncodingEnabled_Key = @"Enabled";
-NSString *kProfile_LocalAltModifier_Key = @"NewAltKey";
-NSString *kProfile_LocalCommandModifier_Key = @"NewCommandKey";
-NSString *kProfile_LocalControlModifier_Key = @"NewControlKey";
-NSString *kProfile_LocalShiftModifier_Key = @"NewShiftKey";
-NSString *kProfile_InterpretModifiersLocally_Key = @"InterpretModifiersLocally";
-NSString *kProfile_Button2EmulationScenario_Key = @"Button2EmulationScenario";
-NSString *kProfile_Button3EmulationScenario_Key = @"Button3EmulationScenario";
-NSString *kProfile_ClickWhileHoldingModifierForButton2_Key = @"ClickWhileHoldingModifierForButton2";
-NSString *kProfile_ClickWhileHoldingModifierForButton3_Key = @"ClickWhileHoldingModifierForButton3";
-NSString *kProfile_MultiTapModifierForButton2_Key = @"MultiTapModifierForButton2";
-NSString *kProfile_MultiTapModifierForButton3_Key = @"MultiTapModifierForButton3";
-NSString *kProfile_MultiTapDelayForButton2_Key = @"MultiTapDelayForButton2";
-NSString *kProfile_MultiTapDelayForButton3_Key = @"MultiTapDelayForButton3";
-NSString *kProfile_MultiTapCountForButton2_Key = @"MultiTapCountForButton2";
-NSString *kProfile_MultiTapCountForButton3_Key = @"MultiTapCountForButton3";
-NSString *kProfile_TapAndClickModifierForButton2_Key = @"TapAndClickModifierForButton2";
-NSString *kProfile_TapAndClickModifierForButton3_Key = @"TapAndClickModifierForButton3";
-NSString *kProfile_TapAndClickButtonSpeedForButton2_Key = @"TapAndClickButtonSpeedForButton2";
-NSString *kProfile_TapAndClickButtonSpeedForButton3_Key = @"TapAndClickButtonSpeedForButton3";
-NSString *kProfile_TapAndClickTimeoutForButton2_Key = @"TapAndClickTimeoutForButton2";
-NSString *kProfile_TapAndClickTimeoutForButton3_Key = @"TapAndClickTimeoutForButton3";
-NSString *kProfile_IsDefault_Key = @"IsDefault";
-NSString *kProfile_Tint_Key = @"Tint";
-
 // --- Notifications --- //
 NSString *ProfileAddDeleteNotification = @"ProfileAddedOrDeleted";
 

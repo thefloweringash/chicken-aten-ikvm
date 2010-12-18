@@ -12,19 +12,6 @@
 
 @implementation ProfileManager (Private)
 
-#if 0
-+ (int)_indexForEncodingType: (CARD32)type
-{
-	int i;
-	
-	for ( i = 0; i < NUMENCODINGS; ++i )
-		if ( gEncodingValues[i] == type )
-			return i;
-	[NSException raise: NSInternalInconsistencyException format: @"Bad encoding type given, no corresponding index"];
-	return -1; // never executed
-}
-#endif
-
 
 - (Profile *)_currentProfile
 {
@@ -142,7 +129,6 @@
     [mControlKey selectItemAtIndex:[profile controlKeyPreference]];
     [mAltKey selectItemAtIndex:[profile altKeyPreference]];
     [mShiftKey selectItemAtIndex:[profile shiftKeyPreference]];
-    //[mInterpretModifiersLocally setState:[profile interpretModifiersLocally]];
 
     [mTintColorWell setColor:[profile tint]];
 	

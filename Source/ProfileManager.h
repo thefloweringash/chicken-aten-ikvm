@@ -93,7 +93,6 @@ typedef enum {
     IBOutlet NSPopUpButton *mCommandKey;
     IBOutlet NSPopUpButton *mControlKey;
     IBOutlet NSPopUpButton *mShiftKey;
-//    IBOutlet NSButton *mInterpretModifiersLocally;
     IBOutlet NSTableView *mEncodingTableView;
 	IBOutlet NSButton *mEnableCopyRect;
     IBOutlet NSButton *mEnableJpegEncoding;
@@ -105,9 +104,6 @@ typedef enum {
 	// Shared Instance
 + (id)sharedManager;
 - (void)wakeup;
-
-	// Utilities
-//+ (NSString *)nameForEncodingType: (CARD32)type;
 
 	// Profile Manager Window
 - (IBAction)showWindow: (id)sender;

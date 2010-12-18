@@ -21,19 +21,6 @@
 #import "ProfileManager_private.h"
 #import "ProfileDataManager.h"
 
-#if 0
-static const NSString* gEncodingNames[NUMENCODINGS] = {
-	@"ZRLE",
-    @"Tight",
-	@"Zlib",
-	@"ZlibHex",
-    @"Hextile",
-    @"CoRRE",
-    @"RRE",
-    @"Raw"
-};
-#endif
-
 
 // --- Dictionary Keys --- //
 NSString *kProfile_PixelFormat_Key = @"PixelFormat";
@@ -106,18 +93,6 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
     [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
 }
 
-
-#if 0
-#pragma mark -
-#pragma mark Utilities
-
-
-+ (NSString *)nameForEncodingType: (CARD32)type
-{
-	int index = [self _indexForEncodingType: type];
-	return (NSString *)gEncodingNames[index];
-}
-#endif
 
 #pragma mark -
 #pragma mark Profile Manager Window
@@ -242,7 +217,6 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
     [profile setControlKeyPreference: [mControlKey indexOfSelectedItem]];
     [profile setAltKeyPreference: [mAltKey indexOfSelectedItem]];
     [profile setShiftKeyPreference: [mShiftKey indexOfSelectedItem]];
-    //[profile setInterpretModifiersLocally: [mInterpretModifiersLocally state]];
     
     [[ProfileDataManager sharedInstance] saveProfile:profile];
 }

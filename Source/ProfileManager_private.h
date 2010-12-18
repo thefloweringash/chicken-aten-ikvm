@@ -11,9 +11,6 @@
 
 @interface ProfileManager (Private)
 
-//+ (int)_indexForEncodingType: (CARD32)type;
-//+ (NSNumber *)_tagForModifierIndex: (int)index;
-
 - (Profile *)_currentProfile;
 - (NSString *)_currentProfileName;
 - (void)_selectProfileAtIndex: (int)index;

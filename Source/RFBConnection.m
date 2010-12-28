@@ -994,7 +994,7 @@
     /* Seemingly, this loop is actually unnecessary: write will only do a
      * partial write if we were doing non-blocking IO, which we aren't */
     do {
-        result = write([socketHandler fileDescriptor], bytes + written, length - written);
+        result = write([socketHandler fileDescriptor], bytes + written, length);
         if(result >= 0) {
             length -= result;
             written += result;

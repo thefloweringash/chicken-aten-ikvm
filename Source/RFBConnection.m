@@ -725,13 +725,15 @@
         return;
 
     if (lastBufferedIsMouseMovement)
-        bufferLen -= sizeof(msg); // collapse successive mouse movements
+        bufferLen -= sizeof(msg); // coalesce successive mouse movements
 
     if (isReceivingUpdate) {
         [self writeBufferedBytes: (unsigned char *)&msg length:sizeof(msg)];
         lastBufferedIsMouseMovement = YES;
-    } else
+    } else {
         [self writeBytes: (unsigned char *)&msg length:sizeof(msg)];
+        lastBufferedIsMouseMovement = NO;
+    }
 
     lastMouseX = msg.x;
     lastMouseY = msg.y;

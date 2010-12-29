@@ -107,7 +107,7 @@ passwords are not copied. </p>
 		<li><span class="item">Encodings:</span>  The encoding to use for the connection.  Encodings are described above.  You can <strong>drag encodings</strong> to change your preferred encoding - the top one is tried first, and subsequent ones are tried until one is found that is supported by your server.  To disable an encoding, uncheck it.  <strong>CopyRect Encoding</strong> is an optimization that's useful in some situations.  If you're connecting to a very old server, you may wish to turn it off, but we haven't run across any situations where it isn't supported.</li>
 	</ul>
 
-	<div class="ss"><img src="profiles2.jpg" width="386" height="253" alt="Profile Dialog" /></div>
+	<div class="ss"><a name="emulation"><img src="profiles2.jpg" width="386" height="253" alt="Profile Dialog" /></a></div>
 
 	<p>If you are one of those cursed with a single button mouse, you have many mouse button emulation options.</p>
 	
@@ -150,13 +150,25 @@ passwords are not copied. </p>
     <p>Chicken tries hard to work with different keyboard layouts. However, not
     all servers will know how to handle all characters which might be on your
     keyboard, especially if the remote computer has a different keyboard layout
-    than your current computer. If you want to be able to use the option key to
-    enter special characters using OS X shortcuts, go to the
+    than your current computer.</p>
+    
+    <p>Note that, by default, Chicken will treat the Option key as Meta or
+    Option on the remote computer. If you instead want to use the option key
+    to enter special characters by OS X shortcuts, go to the
     <strong>Modifiers</strong> tab in <strong>Connection Profiles</strong> and
     change the setting for the option key to <strong>none (local
     keymap)</strong>. If you still have problems with the keyboard, file a bug
     report on the <a href="http://sourceforge.net/projects/chicken/">SourceForge
     page</a></p> </div>
+
+<div class="section">
+    <h1>Why Can't I Control Click?</h1>
+
+    <p>By default, Chicken interprets control-clicks as right clicks. If you
+    need to send a control-click, you can change the emulation for right mouse
+    button to something other than control-click, as described
+    <a href="#emulation">above</a>.</p>
+</div>
 
 <div class="section">
 	<h1>How 'Bout Command-Option-Escape, Control-Alt-Delete and Other Strange Combos?</h1>

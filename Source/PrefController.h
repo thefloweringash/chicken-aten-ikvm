@@ -35,7 +35,6 @@
 - (BOOL)usesRendezvous;
 - (NSDictionary *)hostInfo;
 - (void)setHostInfo: (NSDictionary *)hostInfo;
-- (NSString *)lastHostName;
 - (NSDictionary *)profileDict;
 - (NSDictionary *)defaultProfileDict;
 - (void)setProfileDict: (NSDictionary *)dict;

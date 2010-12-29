@@ -20,7 +20,6 @@ NSString *kPrefs_ConnectionProfiles_Key = @"ConnectProfiles";
 NSString *kPrefs_FrontFrameBufferUpdateSeconds_Key = @"FrontFrameBufferUpdateSeconds";
 NSString *kPrefs_OtherFrameBufferUpdateSeconds_Key = @"OtherFrameBufferUpdateSeconds";
 NSString *kPrefs_HostInfo_Key = @"HostPreferences";
-NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 NSString *kPrefs_Version_Key = @"Version";
 NSString *kPrefs_AutoReconnect_Key = @"AutoReconnect";
 NSString *kPrefs_IntervalBeforeReconnect_Key = @"IntervalBeforeReconnect";

@@ -30,6 +30,8 @@
 #import "ServerStandAlone.h"
 #import "ServerDataManager.h"
 
+static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
+
 @implementation RFBConnectionManager
 
 + (id)sharedManager
@@ -214,10 +216,10 @@
 
 - (void)runNormally
 {
-    NSString* lastHostName = [[PrefController sharedController] lastHostName];
+    NSString* lastHostName = [[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_LastHost_Key];
 
 	if( nil != lastHostName )
-	    [serverList setStringValue: lastHostName];
+        [self selectServerByName: lastHostName];
 	[self selectedHostChanged];
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -287,9 +289,14 @@
     [mServerCtrler showProfileManager:sender];
 }
 
+- (NSString *)selectedServerName
+{
+    return [mOrderedServerNames objectAtIndex:[serverList selectedRow]];
+}
+
 - (id<IServerData>)selectedServer
 {
-	return [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:[serverList selectedRow]]];
+	return [[ServerDataManager sharedInstance] getServerWithName:[self selectedServerName]];
 }
 
 // Selects a server by name. Returns whether or not it found the named server
@@ -339,6 +346,17 @@
                 // can only delete servers which can be saved
             && [server respondsToSelector:@selector(encodeWithCoder:)]];
     [serverAddBtn setEnabled: enabled];
+}
+
+// We're done with the connecting to a server with the dialog
+- (void)connectionDone
+{
+    NSString    *host;
+
+    host = [mOrderedServerNames objectAtIndex:[serverList selectedRow]];
+    [[NSUserDefaults standardUserDefaults] setObject:host
+                                              forKey:kPrefs_LastHost_Key];
+    [[self window] orderOut:self];
 }
 
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost
@@ -575,7 +593,7 @@
 
 - (void)serverListDidChange:(NSNotification*)notification
 {
-    NSString    *name = [[self selectedServer] name];
+    NSString    *name = [self selectedServerName];
 	[self reloadServerArray];
 	[serverList reloadData];
     if (![self selectServerByName:name])

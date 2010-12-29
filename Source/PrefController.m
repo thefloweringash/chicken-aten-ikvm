@@ -167,10 +167,6 @@ static int const kPrefsVersion = 0x00000002;
 {  [[NSUserDefaults standardUserDefaults] setObject: dict forKey: kPrefs_HostInfo_Key];  }
 
 
-- (NSString *)lastHostName
-{  return [[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_LastHost_Key];  }
-
-
 - (NSDictionary *)profileDict
 {  return [[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_ConnectionProfiles_Key];  }
 

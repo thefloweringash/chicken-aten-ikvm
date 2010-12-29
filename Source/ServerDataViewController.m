@@ -385,8 +385,7 @@
     [[RFBConnectionManager sharedManager] successfulConnection:theConnection
                                                       toServer:mServer];
 
-    if (superController)
-        [[superController window] orderOut:self];
+    [superController connectionDone];
     [self connectionAttemptEnded];
 
     if( [mServer addToServerListOnConnect] )

@@ -64,6 +64,7 @@
 - (void)selectedHostChanged;
 
 - (void)setControlsEnabled:(BOOL)enabled;
+- (void)connectionDone;
 
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;

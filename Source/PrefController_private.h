@@ -19,7 +19,6 @@ extern NSString *kPrefs_ConnectionProfiles_Key;
 extern NSString *kPrefs_FrontFrameBufferUpdateSeconds_Key;
 extern NSString *kPrefs_OtherFrameBufferUpdateSeconds_Key;
 extern NSString *kPrefs_HostInfo_Key;
-extern NSString *kPrefs_LastHost_Key;
 extern NSString *kPrefs_Version_Key;
 extern NSString *kPrefs_AutoReconnect_Key;
 extern NSString *kPrefs_IntervalBeforeReconnect_Key;

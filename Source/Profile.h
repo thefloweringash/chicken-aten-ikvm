@@ -55,6 +55,7 @@ extern NSString *kProfile_IsDefault_Key;
 extern NSString *kProfile_Tint_Key;
 
 #define ProfileTintChangedMsg @"ProfileTintChangedMsg"
+#define ProfileEncodingsChangedMsg @"ProfileEncodingsChangedMsg"
 
 // Encodings
 #define NUMENCODINGS					8

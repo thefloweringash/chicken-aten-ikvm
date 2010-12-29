@@ -319,6 +319,9 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     memcpy(enabledEncodings + numberOfEnabledEncodings, pseudoEncodings,
             numPseudos * sizeof(CARD32));
     numberOfEnabledEncodings += numPseudos;
+
+    [[NSNotificationCenter defaultCenter]
+        postNotificationName:ProfileEncodingsChangedMsg object:self];
 }
 
 

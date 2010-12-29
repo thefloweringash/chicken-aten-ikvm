@@ -41,6 +41,8 @@
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
 #include <libc.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
 
 // size of write buffer
 #define BUFFER_SIZE 2048

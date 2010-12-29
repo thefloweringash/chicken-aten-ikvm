@@ -81,6 +81,48 @@ passwords are not copied. </p>
 </div>
 
 <div class="section">
+	<h1>I Get Strange Characters When I Type</h1>
+	
+    <p>Chicken tries hard to work with different keyboard layouts. However, not
+    all servers will know how to handle all characters which might be on your
+    keyboard, especially if the remote computer has a different keyboard layout
+    than your current computer.</p>
+    
+    <p>Note that, by default, Chicken will treat the Option key as Meta or
+    Option on the remote computer. If you instead want to use the option key
+    to enter special characters by OS X shortcuts, go to the
+    <strong>Modifiers</strong> tab in <strong>Connection Profiles</strong> and
+    change the setting for the option key to <strong>none (local
+    keymap)</strong>. If you still have problems with the keyboard, file a bug
+    report on the <a href="http://sourceforge.net/projects/chicken/">SourceForge
+    page</a></p> </div>
+
+<div class="section">
+    <h1>Why Can't I Control Click?</h1>
+
+    <p>By default, Chicken interprets control-clicks as right clicks. If you
+    need to send a control-click, you can change the emulation for right mouse
+    button to something other than control-click, as described
+    <a href="#emulation">above</a>.</p>
+</div>
+
+<div class="section">
+	<h1>How 'Bout Command-Option-Escape, Control-Alt-Delete and Other Strange Combos?</h1>
+	
+	<p>You can force-quit applications on a remote Macintosh by sending the CMD-OPT-ESC keystroke from the <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu.</p>
+
+	<p>Likewise, Windows machines commonly use the CTRL-ALT-DEL keystroke.  You can send this keystroke by choosing <strong>Send Ctrl-Alt-Del</strong> from the <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu.  If you'd prefer to type the keystroke, you can do this by simply hitting the keys that map to it.  In the default configuration, this is CTRL-CMD-DEL (the CMD key is also referred to as the Apple key).</p>
+	
+	<p>On machines that don't have a DEL key (such as laptops), you can use the function key and the ordinary delete key.  In the default configuration, you would use CTRL-CMD-FN-DELETE.</p>
+
+	<p>Similarly, to send Alt-F4 on a laptop (where F4 is mapped to sound volume), you can use CMD-FN-F4.</p>
+
+	<p>You can see additional uses for the Function key on <a href="http://developer.apple.com/documentation/Hardware/Developer_Notes/Macintosh_CPUs-G4/17inchPowerBookG4/3Input-Output/chapter_4_section_11.html" target="_blank">Apple's Laptop Technical Pages</a>.</p>
+	
+	<p>The <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu has several other commonly used keystrokes that are not found on Macintosh keyboards.</p>
+</div>
+
+<div class="section">
 	<h1>Using Connection Profiles</h1>
 	
 	<p>You can use profiles to store settings for an individual VNC server or for a class of servers.  For example, you might want to use full-color display for a server that is on your local area network, but drop down to 8-bit display for a remote machine.</p>
@@ -144,48 +186,6 @@ passwords are not copied. </p>
 	<p>If this key combination interferes with your work, or is not convenient on international keyboards, it can be changed in the <strong>Keyboard tab of the Preferences</strong>.</p>
 
 	<p>While in full screen mode, you cannot interact with the Dock or with any other programs running locally on your Macintosh.  If the remote screen is larger than your local screen, the display will 'auto-scroll' when the mouse is close the edge of the screen.  The scrolling speed and the presence of scrollbars can be adjusted in the Fullscreen tab of the Preferences.</p>
-</div>
-
-<div class="section">
-	<h1>I Get Strange Characters When I Type</h1>
-	
-    <p>Chicken tries hard to work with different keyboard layouts. However, not
-    all servers will know how to handle all characters which might be on your
-    keyboard, especially if the remote computer has a different keyboard layout
-    than your current computer.</p>
-    
-    <p>Note that, by default, Chicken will treat the Option key as Meta or
-    Option on the remote computer. If you instead want to use the option key
-    to enter special characters by OS X shortcuts, go to the
-    <strong>Modifiers</strong> tab in <strong>Connection Profiles</strong> and
-    change the setting for the option key to <strong>none (local
-    keymap)</strong>. If you still have problems with the keyboard, file a bug
-    report on the <a href="http://sourceforge.net/projects/chicken/">SourceForge
-    page</a></p> </div>
-
-<div class="section">
-    <h1>Why Can't I Control Click?</h1>
-
-    <p>By default, Chicken interprets control-clicks as right clicks. If you
-    need to send a control-click, you can change the emulation for right mouse
-    button to something other than control-click, as described
-    <a href="#emulation">above</a>.</p>
-</div>
-
-<div class="section">
-	<h1>How 'Bout Command-Option-Escape, Control-Alt-Delete and Other Strange Combos?</h1>
-	
-	<p>You can force-quit applications on a remote Macintosh by sending the CMD-OPT-ESC keystroke from the <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu.</p>
-
-	<p>Likewise, Windows machines commonly use the CTRL-ALT-DEL keystroke.  You can send this keystroke by choosing <strong>Send Ctrl-Alt-Del</strong> from the <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu.  If you'd prefer to type the keystroke, you can do this by simply hitting the keys that map to it.  In the default configuration, this is CTRL-CMD-DEL (the CMD key is also referred to as the Apple key).</p>
-	
-	<p>On machines that don't have a DEL key (such as laptops), you can use the function key and the ordinary delete key.  In the default configuration, you would use CTRL-CMD-FN-DELETE.</p>
-
-	<p>Similarly, to send Alt-F4 on a laptop (where F4 is mapped to sound volume), you can use CMD-FN-F4.</p>
-
-	<p>You can see additional uses for the Function key on <a href="http://developer.apple.com/documentation/Hardware/Developer_Notes/Macintosh_CPUs-G4/17inchPowerBookG4/3Input-Output/chapter_4_section_11.html" target="_blank">Apple's Laptop Technical Pages</a>.</p>
-	
-	<p>The <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu has several other commonly used keystrokes that are not found on Macintosh keyboards.</p>
 </div>
 
 <div class="section">

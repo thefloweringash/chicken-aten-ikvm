@@ -67,10 +67,11 @@
     unsigned canConsume = MIN(aLength, (size - bytesRead));
 
     if (canConsume == size) {
-        NSData  *data = [NSData dataWithBytesNoCopy:theBytes length:size
+        NSData  *data = [[NSData alloc] initWithBytesNoCopy:theBytes length:size
                             freeWhenDone: NO];
         bytesRead = size;
         [target performSelector:action withObject:data];
+        [data release];
     } else {
         if (size > capacity) {
             capacity = size;
@@ -86,7 +87,11 @@
 
         memcpy(buffer + bytesRead, theBytes, canConsume);
         if((bytesRead += canConsume) == size) {
-            [target performSelector:action withObject:[NSData dataWithBytesNoCopy:buffer length:size freeWhenDone: NO]];
+            NSData  *data = [[NSData alloc] initWithBytesNoCopy:buffer
+                                                         length:size
+                                                   freeWhenDone:NO];
+            [target performSelector:action withObject:data];
+            [data release];
         }
     }
     return canConsume;

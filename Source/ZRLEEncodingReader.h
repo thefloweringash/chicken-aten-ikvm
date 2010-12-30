@@ -15,6 +15,6 @@
 	FrameBufferColor	palette[128];
 }
 
-- (void)setUncompressedData:(unsigned char*)data length:(int)length;
+- (void)setUncompressedData:(NSData *)data;
 
 @end

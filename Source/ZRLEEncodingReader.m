@@ -8,6 +8,7 @@
 
 #import "ZRLEEncodingReader.h"
 #import "RFBConnection.h"
+#import "FrameBufferUpdateReader.h"
 
 #define TILE_WIDTH		64
 #define TILE_HEIGHT		64
@@ -28,10 +29,12 @@
         + ([frameBuffer bytesPerPixel] + 1) * frame.size.width * frame.size.height;
 }
 
-- (void)setUncompressedData:(unsigned char*)data length:(int)length
+- (void)setUncompressedData:(NSData *)nsData
 {
 	int i, y, samples, samplesPerByte, shift;
 	unsigned cPixelSize = [frameBuffer tightBytesPerPixel];
+    const char  *data = [nsData bytes];
+    int         length = [nsData length];
 	
 	// hack around UltraVN‚ 1.0.1, Chicken Bug #1351494
 	if ( 4 == cPixelSize )
@@ -180,6 +183,8 @@
             }
 		}
 	}
+
+    [updater didRect:self];
 }
 
 @end

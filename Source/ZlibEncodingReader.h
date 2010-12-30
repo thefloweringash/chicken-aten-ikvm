@@ -10,16 +10,15 @@
 #import <zlib.h>
 #import "EncodingReader.h"
 
+@class ZlibStreamReader;
+
 @interface ZlibEncodingReader : EncodingReader
 {
-	unsigned char*	pixels;
-	unsigned int	capacity;
 	id				numBytesReader;
-	id				pixelReader;
-	z_stream		stream;
+    ZlibStreamReader    *zlibReader;
 }
 
 - (unsigned)maximumUncompressedSize;
-- (void)setUncompressedData:(unsigned char*)data length:(int)length;
+- (void)setUncompressedData:(NSData *)data;
 
 @end

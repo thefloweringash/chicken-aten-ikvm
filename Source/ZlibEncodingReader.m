@@ -11,6 +11,7 @@
 #import "ByteBlockReader.h"
 #import "FrameBufferUpdateReader.h"
 #import "RFBConnection.h"
+#import "ZlibStreamReader.h"
 
 
 @implementation ZlibEncodingReader
@@ -18,28 +19,18 @@
 - (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater connection: (RFBConnection *)aConnection
 {
     if (self = [super initWithUpdater: aUpdater connection: aConnection]) {
-		int inflateResult;
-	
-		capacity = 0;
-		pixels = NULL;
 		numBytesReader = [[CARD32Reader alloc] initTarget:self action:@selector(setNumBytes:)];
-		pixelReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setCompressedData:)];
-		inflateResult = inflateInit(&stream);
-		if (inflateResult != Z_OK) {
-            NSString *err = NSLocalizedString(@"ZlibInflateInitErr", nil);
-			[connection terminateConnection:[NSString stringWithFormat:err, stream.msg]];
-		}
+        zlibReader = [[ZlibStreamReader alloc] initTarget:self
+                                       action:@selector(setUncompressedData:)
+                                   connection:aConnection];
 	}
     return self;
 }
 
 - (void)dealloc
 {
-    if (pixels)
-        free(pixels);
 	[numBytesReader release];
-    [pixelReader release];
-	inflateEnd(&stream);
+    [zlibReader release];
     [super dealloc];
 }
 
@@ -50,8 +41,9 @@
 
 - (void)setNumBytes:(NSNumber*)numBytes
 {
-	[pixelReader setBufferSize:[numBytes unsignedIntValue]];
-	[connection setReader:pixelReader];
+    [zlibReader setCompressedSize:[numBytes unsignedIntValue]
+                  maxUncompressed:[self maximumUncompressedSize]];
+    [connection setReader:zlibReader];
 }
 
 /* Maximum possible size for uncompressed data from this rectangle. */
@@ -60,46 +52,16 @@
     return [frameBuffer bytesPerPixel] * frame.size.width * frame.size.height;
 }
 
-- (void)setCompressedData:(NSData*)data
-{
-	int inflateResult;
-	unsigned s = [self maximumUncompressedSize];
-	if(s > capacity) {
-		free(pixels);
-		pixels = malloc(s);
-		NSParameterAssert( pixels != NULL );
-		capacity = s;
-	}
-	stream.next_in   = (unsigned char*)[data bytes];
-	stream.avail_in  = [data length];
-	stream.next_out  = pixels;
-	stream.avail_out = capacity;
-	stream.data_type = Z_BINARY;
-	inflateResult = inflate(&stream, Z_SYNC_FLUSH);
-    if(inflateResult == Z_NEED_DICT ) {
-        NSString    *err = NSLocalizedString(@"ZlibNeedsDict", nil);
-		[connection terminateConnection:err];
-		return;
-    }
-    if(inflateResult < 0) {
-        NSString *fmt = NSLocalizedString(@"ZlibInflateError", nil);
-        NSString *err = [NSString stringWithFormat:fmt, stream.msg];
-		[connection terminateConnection:err];
-		return;
-    }
-	[self setUncompressedData:pixels length:capacity - stream.avail_out];
-    [updater didRect:self];
-}
-
-- (void)setUncompressedData:(unsigned char*)data length:(int)length
+- (void)setUncompressedData:(NSData *)data
 {
     int expectedLen = frame.size.width * frame.size.height
                                     * [frameBuffer bytesPerPixel];
 
-    if (length == expectedLen)
-        [frameBuffer putRect:frame fromData:pixels];
+    if ([data length] == expectedLen)
+        [frameBuffer putRect:frame fromData:[data bytes]];
     else
         NSLog(@"Uncompressed Zlib data was not of expected length");
+    [updater didRect:self];
 }
 
 @end

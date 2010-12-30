@@ -52,6 +52,11 @@
                 initWithProtocol:self connection:connection];
 
         [connection setReader: typeReader];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                 selector:@selector(encodingsChanged:)
+                     name:ProfileEncodingsChangedMsg
+                   object:[connection profile]];
 	}
     return self;
 }
@@ -64,6 +69,7 @@
     for(i=0; i<=MAX_MSGTYPE; i++) {
         [msgTypeReader[i] release];
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 
@@ -97,6 +103,12 @@
     }
     [self changeEncodingsTo:enc length:l];
     free(enc);
+}
+
+- (void)encodingsChanged:(NSNotification *)notif
+{
+    [self setEncodingsViewOnly:[connection viewOnly]];
+    [connection writeBuffer];
 }
 
 /* Sends the pixel format to the server. Note that it buffers without writing.
@@ -141,7 +153,7 @@
     return msgTypeReader[rfbFramebufferUpdate];
 }
 
-- (void)setFrameBuffer:(id)aBuffer
+- (void)setFrameBuffer:(FrameBuffer *)aBuffer
 {
     [msgTypeReader[rfbFramebufferUpdate] setFrameBuffer:aBuffer];
 }

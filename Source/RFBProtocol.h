@@ -24,6 +24,7 @@
 
 #define	MAX_MSGTYPE	rfbServerCutText
 
+@class FrameBuffer;
 @class RFBConnection;
 
 /* Handles processing data from the server once the connection is up and the
@@ -39,7 +40,7 @@
 
 - (id)initWithConnection:(RFBConnection *)aTarget serverInfo:(id)info
                 viewOnly:(BOOL)viewOnly;
-- (void)setFrameBuffer:(id)aBuffer;
+- (void)setFrameBuffer:(FrameBuffer *)aBuffer;
 - (void)messageReaderDone;
 
 - (void)setPixelFormat:(rfbPixelFormat*)aFormat;

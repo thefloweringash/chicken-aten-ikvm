@@ -55,6 +55,9 @@
 "TightInflateErr" = "Inflate error\n";
 "ZlibInflateInitErr" = "Zlib encoding: inflateInit: %s.\n";
 "ZlibHexInflateErr" = "ZlibHex inflate error: %s";
+"InflateInit" = "Inflate initialization error: %d, %s";
+"InflateError" = "Inflate error: %d, %s";
+"InflateMem" = "Inflate: couldn't allocate memory";
 
 /* Fullscreen */
 "FullscreenHeader" = "Vous allez passer en mode plein écran";

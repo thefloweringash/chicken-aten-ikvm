@@ -165,7 +165,7 @@ printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect
     int             rectPixels;
 
     if (NSMaxX(aRect) > size.width || NSMaxY(aRect) > size.height) {
-        NSLog(@"Ignoring too large rectangel in putRun:");
+        NSLog(@"Ignoring too large rectangle in putRun:");
         return;
     }
     rectPixels = ((int) aRect.size.width) * ((int) aRect.size.height);

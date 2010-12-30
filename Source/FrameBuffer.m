@@ -317,8 +317,11 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 	// it display correctly.
 	//
 	// The intent is to force bigEndianness only for that particular server.
-    if (flag && forceServerBigEndian)
-        serverIsBigEndian = YES;
+    if (flag) {
+        if (forceServerBigEndian)
+            serverIsBigEndian = YES;
+    } else
+        serverIsBigEndian = pixelFormat.bigEndian;
 }
 
 /* --------------------------------------------------------------------------------- */

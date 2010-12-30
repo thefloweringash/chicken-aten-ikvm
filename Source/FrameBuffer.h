@@ -86,16 +86,18 @@ typedef unsigned char	FrameBufferPaletteIndex;
 - (void)setPixelFormat:(rfbPixelFormat*)theFormat;
 - (rfbPixelFormat *)pixelFormat;
 
-- (void)fillColor:(FrameBufferColor*)fbc fromPixel:(unsigned char*)pixValue;
-- (void)fillRect:(NSRect)aRect withPixel:(unsigned char*)pixValue;
+- (void)fillColor:(FrameBufferColor*)fbc
+        fromPixel:(const unsigned char*)pixValue;
+- (void)fillRect:(NSRect)aRect withPixel:(const unsigned char*)pixValue;
 - (void)fillRect:(NSRect)aRect withFbColor:(FrameBufferColor*)fbc;
 - (void)copyRect:(NSRect)aRect to:(NSPoint)aPoint;
-- (void)putRect:(NSRect)aRect fromData:(unsigned char*)data;
+- (void)putRect:(NSRect)aRect fromData:(const unsigned char*)data;
 - (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint;
 
-- (void)fillColor:(FrameBufferColor*)fbc fromTightPixel:(unsigned char*)pixValue;
-- (void)fillRect:(NSRect)aRect tightPixel:(unsigned char*)pixValue;
-- (void)putRect:(NSRect)aRect fromTightData:(unsigned char*)data;
+- (void)fillColor:(FrameBufferColor*)fbc
+   fromTightPixel:(const unsigned char*)pixValue;
+- (void)fillRect:(NSRect)aRect tightPixel:(const unsigned char*)pixValue;
+- (void)putRect:(NSRect)aRect fromTightData:(const unsigned char*)data;
 - (void)getMaxValues:(int*)m;
 - (void)splitRGB:(unsigned char*)pixValue pixels:(unsigned)length into:(int*)rgb;
 - (void)combineRGB:(int*)rgb pixels:(unsigned)length into:(unsigned char*)pixValue;

@@ -27,7 +27,8 @@
 
 #undef PINFO
 
-static inline unsigned int cvt_pixel24(unsigned char* v, FrameBuffer* this)
+static inline unsigned int cvt_pixel24(const unsigned char* v,
+        FrameBuffer* this)
 {
     unsigned int pix = 0, col;
 	
@@ -42,7 +43,7 @@ static inline unsigned int cvt_pixel24(unsigned char* v, FrameBuffer* this)
     return col;
 }
 
-static inline unsigned int cvt_pixel(unsigned char* v, FrameBuffer *this)
+static inline unsigned int cvt_pixel(const unsigned char* v, FrameBuffer *this)
 {
     unsigned int pix = 0, col;
 
@@ -74,22 +75,24 @@ static inline unsigned int cvt_pixel(unsigned char* v, FrameBuffer *this)
 }
 
 /* --------------------------------------------------------------------------------- */
-- (FBColor)colorFromPixel:(unsigned char*)pixValue
+- (FBColor)colorFromPixel:(const unsigned char*)pixValue
 {
     return (FBColor)cvt_pixel(pixValue, self);
 }
 
-- (FBColor)colorFromPixel24:(unsigned char*)pixValue
+- (FBColor)colorFromPixel24:(const unsigned char*)pixValue
 {
     return (FBColor)cvt_pixel24(pixValue, self);
 }
 
-- (void)fillColor:(FrameBufferColor*)fbc fromPixel:(unsigned char*)pixValue
+- (void)fillColor:(FrameBufferColor*)fbc
+        fromPixel:(const unsigned char*)pixValue
 {
     *((FBColor*)fbc) = cvt_pixel(pixValue, self);
 }
 
-- (void)fillColor:(FrameBufferColor*)fbc fromTightPixel:(unsigned char*)pixValue
+- (void)fillColor:(FrameBufferColor*)fbc
+   fromTightPixel:(const unsigned char*)pixValue
 {
 	if([self tightBytesPerPixel] == 3) {
 		*((FBColor*)fbc) = cvt_pixel24(pixValue, self);
@@ -199,13 +202,13 @@ printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect
 }
 
 /* --------------------------------------------------------------------------------- */
-- (void)fillRect:(NSRect)aRect withPixel:(unsigned char*)pixValue;
+- (void)fillRect:(NSRect)aRect withPixel:(const unsigned char*)pixValue;
 {	
     [self fillRect:aRect withColor:[self colorFromPixel:pixValue]];
 }
 
 /* --------------------------------------------------------------------------------- */
-- (void)fillRect:(NSRect)aRect tightPixel:(unsigned char*)pixValue
+- (void)fillRect:(NSRect)aRect tightPixel:(const unsigned char*)pixValue
 {
     if([self tightBytesPerPixel] == 3) {
         [self fillRect:aRect withColor:[self colorFromPixel24:pixValue]];
@@ -270,7 +273,7 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
 }
 
 /* --------------------------------------------------------------------------------- */
-- (void)putRect:(NSRect)aRect fromTightData:(unsigned char*)data
+- (void)putRect:(NSRect)aRect fromTightData:(const unsigned char*)data
 {
     if([self tightBytesPerPixel] == 3) {
         FBColor* start;
@@ -341,7 +344,7 @@ c = redClut[(p >> pixelFormat.redShift) & pixelFormat.redMax];					\
 c |= greenClut[(p >> pixelFormat.greenShift) & pixelFormat.greenMax]; 			\
 c |= blueClut[(p >> pixelFormat.blueShift) & pixelFormat.blueMax]
 
-- (void)putRect:(NSRect)aRect fromData:(unsigned char*)data
+- (void)putRect:(NSRect)aRect fromData:(const unsigned char*)data
 {
     FBColor* start;
     unsigned int stride, i, lines, pix, col;

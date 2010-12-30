@@ -31,16 +31,19 @@
 #define Z_BUFSIZE		TIGHT_BUFSIZE
 #define TIGHT_MIN_TO_COMPRESS	12
 
+@class ByteBlockReader;
+@class CARD8Reader;
 @class FilterReader, PaletteFilter, GradientFilter;
+@class ZipLengthReader;
 
 @interface TightEncodingReader : EncodingReader
 {
-    id		controlReader;
-    id		backPixReader;
-    id		filterIdReader;
-    id		unzippedDataReader;
-    id		zipLengthReader;
-    id		zippedDataReader;
+    CARD8Reader     *controlReader;
+    ByteBlockReader *backPixReader;
+    CARD8Reader     *filterIdReader;
+    ByteBlockReader *unzippedDataReader;
+    ZipLengthReader *zipLengthReader;
+    ByteBlockReader *zippedDataReader;
     
     FilterReader    *currentFilter;
     FilterReader    *copyFilter;
@@ -56,7 +59,7 @@
     BOOL	zStreamActive[NUM_ZSTREAMS];
     z_stream	zStream[NUM_ZSTREAMS];
 
-    id		zBuffer;
+    NSMutableData   *zBuffer;
     int		zBufPos;
 
 	struct 	jpeg_source_mgr jpegSrcManager;

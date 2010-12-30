@@ -10,6 +10,7 @@
 #import "RFBConnection.h"
 #import "CARD16Reader.h"
 #import "ByteBlockReader.h"
+#import "ZlibStreamReader.h"
 
 @implementation ZlibHexEncodingReader
 
@@ -19,11 +20,9 @@
 		int inflateResult;
 	
 		zLengthReader = [[CARD16Reader alloc] initTarget:self action:@selector(setZLength:)];
-		inflateResult = inflateInit(&rawStream);
-		if(inflateResult != Z_OK) {
-            NSString *fmt = NSLocalizedString(@"ZlibInflateErr", nil);
-			[connection terminateConnection:[NSString stringWithFormat:fmt, rawStream.msg]];
-		}
+        rawStream = [[ZlibStreamReader alloc] initTarget:self
+                                                  action:@selector(setRawTile:)
+                                              connection:connection];
 		inflateResult = inflateInit(&encodedStream);
 		if(inflateResult != Z_OK) {
             NSString *fmt = NSLocalizedString(@"ZlibInflateErr", nil);
@@ -36,7 +35,7 @@
 - (void)dealloc
 {
 	[zLengthReader release];
-	inflateEnd(&rawStream);
+    [rawStream release];
 	inflateEnd(&encodedStream);
 	[super dealloc];
 }
@@ -73,6 +72,13 @@
 
 #define ZLIBHEX_MAX_RAW_TILE_SIZE 4096
 
+/* Decompressed data for a ZlibRaw tile. */
+- (void)setZlibRawTile:(NSData*)data
+{
+    [frameBuffer putRect:currentTile fromData:[data bytes]];
+    [self nextTile];
+}
+
 /* Read the data for a tile. This may be zlib-compressed, in which case we
  * inflate, or it may be an actual raw tile, in which case we pass it along
  * super to interpret. */
@@ -81,22 +87,7 @@
 	int inflateResult, bpp;
 	unsigned char* ptr;
 	
-	if(subEncodingMask & rfbHextileZlibRaw) {
-        unsigned char buffer[ZLIBHEX_MAX_RAW_TILE_SIZE];
-		rawStream.next_in = (unsigned char*)[data bytes];
-		rawStream.avail_in = [data length];
-		rawStream.next_out = buffer;
-		rawStream.avail_out = ZLIBHEX_MAX_RAW_TILE_SIZE;
-		rawStream.data_type = Z_BINARY;
-		inflateResult = inflate(&rawStream, Z_SYNC_FLUSH);
-		if(inflateResult < 0) {
-            NSString *fmt = NSLocalizedString(@"ZlibHexInflateErr", nil);
-			[connection terminateConnection:[NSString stringWithFormat:fmt, rawStream.msg]];
-			return;
-		}
-		[frameBuffer putRect:currentTile fromData:buffer];
-		[self nextTile];
-	} else if(subEncodingMask & rfbHextileZlibHex) {
+	if(subEncodingMask & rfbHextileZlibHex) {
         unsigned bufferSz = ZLIBHEX_MAX_RAW_TILE_SIZE;
         unsigned char *buffer = (unsigned char *)malloc(bufferSz);
         
@@ -172,10 +163,16 @@
 
 - (void)setZLength:(NSNumber*)theLength
 {
-    // Note that here we're repurposing rawReader to read either a raw tile, a
-    // ZlibRaw tile, or a Zlib tile
-	[rawReader setBufferSize:[theLength unsignedIntValue]];
-	[connection setReader:rawReader];
+    if (subEncodingMask & rfbHextileZlibRaw) {
+        [rawStream setCompressedSize:[theLength unsignedIntValue]
+                     maxUncompressed:ZLIBHEX_MAX_RAW_TILE_SIZE];
+        [connection setReader:rawStream];
+    } else {
+        // Note that here we're repurposing rawReader to read either a raw tile
+        // or a Zlib tile
+        [rawReader setBufferSize:[theLength unsignedIntValue]];
+        [connection setReader:rawReader];
+    }
 }
 
 @end

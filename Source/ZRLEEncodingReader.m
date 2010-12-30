@@ -33,8 +33,8 @@
 {
 	int i, y, samples, samplesPerByte, shift;
 	unsigned cPixelSize = [frameBuffer tightBytesPerPixel];
-    const char  *data = [nsData bytes];
-    int         length = [nsData length];
+    const unsigned char *data = [nsData bytes];
+    int                 length = [nsData length];
 	
 	// hack around UltraVN‚ 1.0.1, Chicken Bug #1351494
 	if ( 4 == cPixelSize )

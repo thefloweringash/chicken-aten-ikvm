@@ -25,15 +25,16 @@
     connection:(RFBConnection *)aConnection
 {
     if (self = [super initTarget:aTarget action:anAction]) {
+        connection = aConnection;
+        buffer = NULL;
+        capacity = 0;
+
         int result = inflateInit(&stream);
         if (result != Z_OK) {
             [self zlibError:result tag:@"InflateInit"];
             [self dealloc];
             return nil;
         }
-        connection = aConnection;
-        buffer = NULL;
-        capacity = 0;
     }
     return self;
 }

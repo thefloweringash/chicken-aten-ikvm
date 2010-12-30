@@ -19,8 +19,8 @@
 "NotVNC" = "Not a VNC server";
 "UnknownAuthType" = "Type d'authentification inconnu %@";
 "UnknownAuthResult" = "Resultat d'authentification inconnu %@";
-//"AuthenticationFailed" = "Echec de l'authentification";
-"AuthenticationFailedTooMany" = "Trop d'echecs";
+"AuthenticationFailed" = "Echec de l'authentification";
+"AuthenticationFailedTooMany" = "Echec de l'authentification (trop d'echecs)";
 "UnknownMessageType" = "Message de type inconnu %@";
 "ServerReports" = "Le serveur a répondu";
 "ARDAuthWarning" = "\nVeuillez configurer Apple Remote Desktop pour autoriser les clients VNC à contrôler l'écran\n";

@@ -38,15 +38,14 @@
     id			msgTypeReader[MAX_MSGTYPE + 1];
 }
 
-- (id)initWithConnection:(RFBConnection *)aTarget serverInfo:(id)info
-                viewOnly:(BOOL)viewOnly;
+- (id)initWithConnection:(RFBConnection *)aTarget serverInfo:(id)info;
 - (void)setFrameBuffer:(FrameBuffer *)aBuffer;
 - (void)messageReaderDone;
 
 - (void)setPixelFormat:(rfbPixelFormat*)aFormat;
 
 - (void)changeEncodingsTo:(CARD32*)newEncodings length:(CARD16)l;
-- (void)setEncodingsViewOnly:(BOOL)viewOnly;
+- (void)setEncodings;
 
 - (FrameBufferUpdateReader*)frameBufferUpdateReader;
 

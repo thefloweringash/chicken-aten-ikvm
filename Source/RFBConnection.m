@@ -489,8 +489,7 @@
 - (void)start:(ServerInitMessage*)info
 {
     [rfbProtocol release];
-    rfbProtocol = [[RFBProtocol alloc] initWithConnection:self serverInfo:info
-                                                 viewOnly:[server_ viewOnly]];
+    rfbProtocol = [[RFBProtocol alloc] initWithConnection:self serverInfo:info];
 
     [self sizeDisplay:[info size] withPixelFormat:[info pixelFormatData]];
     [self setupWindow];

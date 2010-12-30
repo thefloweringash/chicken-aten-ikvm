@@ -151,6 +151,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 - (void)setBackground:(NSData*)data
 {
     [frameBuffer fillRect:frame tightPixel:(unsigned char*)[data bytes]];
+    [frameBuffer setCurrentReaderIsTight:NO];
     [updater didRect:self];
 }
 
@@ -201,6 +202,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 {
     data = [currentFilter filter:data rows:frame.size.height];
     [frameBuffer putRect:frame fromTightData:(unsigned char*)[data bytes]];
+    [frameBuffer setCurrentReaderIsTight:NO];
     [updater didRect:self];
 }
 
@@ -289,6 +291,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
 		free(buffer);
 		jpeg_finish_decompress(&cinfo);
 		jpeg_destroy_decompress(&cinfo);
+        [frameBuffer setCurrentReaderIsTight:NO];
         [updater didRect:self];
 		return;
 	}
@@ -329,6 +332,7 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
         [zippedDataReader setBufferSize:MIN(compressedLength, Z_BUFSIZE)];
         [connection setReader:zippedDataReader];
     } else {
+        [frameBuffer setCurrentReaderIsTight:NO];
         [updater didRect:self];
     }
 }

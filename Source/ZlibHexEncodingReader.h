@@ -10,11 +10,12 @@
 #import "HextileEncodingReader.h"
 #import <zlib.h>
 
+@class CARD16Reader;
 @class ZlibStreamReader;
 
 @interface ZlibHexEncodingReader : HextileEncodingReader
 {
-	id				zLengthReader;
+	CARD16Reader        *zLengthReader;
     ZlibStreamReader    *rawStream;
 	z_stream		encodedStream;
 }

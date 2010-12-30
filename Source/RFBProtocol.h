@@ -24,6 +24,7 @@
 
 #define	MAX_MSGTYPE	rfbServerCutText
 
+@class CARD8Reader;
 @class FrameBuffer;
 @class RFBConnection;
 
@@ -34,7 +35,7 @@
 {
     RFBConnection   *connection;
 
-    id			typeReader;
+    CARD8Reader     *typeReader;
     id			msgTypeReader[MAX_MSGTYPE + 1];
 }
 

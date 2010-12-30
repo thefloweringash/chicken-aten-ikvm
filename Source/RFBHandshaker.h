@@ -31,6 +31,7 @@
     id	challengeReader;
     id	authResultReader;
     id	serverInitReader;
+    BOOL    triedPassword;
 }
 
 - (id)initWithConnection: (RFBConnection *)aConnection;

@@ -172,6 +172,7 @@
     vncEncryptBytes(bytes, (char*)[[connection password] UTF8String]);
     [connection writeBytes:bytes length:CHALLENGESIZE];
     [connection setReader:authResultReader];
+    triedPassword = YES;
 }
 
 - (void)setAuthResult:(NSNumber*)theResult
@@ -193,14 +194,22 @@
             }
             break;
         case rfbVncAuthTooMany:
+            /* According to the spec, this should never happen, because we don't
+             * specify the Tight security type. */
             errorStr = NSLocalizedString( @"AuthenticationFailedTooMany", nil );
-            break;
+            [connection terminateConnection:errorStr];
+            return;
         default:
             errorStr = NSLocalizedString( @"UnknownAuthResult", nil );
             errorStr = [NSString stringWithFormat:errorStr, theResult];
             break;
     }
-    [connection authenticationFailed:errorStr];
+    if (triedPassword)
+        [connection authenticationFailed:errorStr];
+    else {
+        errorStr = NSLocalizedString(@"AuthenticationFailed", nil);
+        [connection terminateConnection:errorStr];
+    }
 }
 
 - (void)setServerInit:(ServerInitMessage*)serverMsg
@@ -212,10 +221,13 @@
 {
     NSString *errorStr;
 
-    errorStr = [NSString stringWithFormat:@"%@:%@",
+    errorStr = [NSString stringWithFormat:@"%@: %@",
                         NSLocalizedString(@"ServerReports", nil),
                         theReason];
-    [connection authenticationFailed:errorStr];
+    if (triedPassword)
+        [connection authenticationFailed:errorStr];
+    else
+        [connection terminateConnection:errorStr];
 }
 
 @end

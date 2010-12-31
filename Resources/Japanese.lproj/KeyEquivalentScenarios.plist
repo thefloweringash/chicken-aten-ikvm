@@ -10,7 +10,7 @@
 			<key>Modifiers</key>
 			<integer>1835008</integer>
 			<key>Title</key>
-			<string>Fullscreen Mode</string>
+			<string>フルスクリーンモード</string>
 		</dict>
 	</array>
 	<key>ConnectionWindowFrontmostScenario</key>
@@ -21,7 +21,7 @@
 			<key>Modifiers</key>
 			<integer>1835008</integer>
 			<key>Title</key>
-			<string>Fullscreen Mode</string>
+			<string>フルスクリーンモード</string>
 		</dict>
 	</array>
 	<key>NonConnectionWindowFrontmostScenario</key>
@@ -32,7 +32,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Chicken</string>
+			<string>Chicken ヘルプ</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -40,7 +40,7 @@
 			<key>Modifiers</key>
 			<integer>1572864</integer>
 			<key>Title</key>
-			<string>Connection Profiles…</string>
+			<string>プロファイル…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -48,7 +48,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Minimize</string>
+			<string>しまう</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -56,7 +56,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Paste</string>
+			<string>ペースト</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -64,7 +64,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>New Connection…</string>
+			<string>新規接続...</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -72,7 +72,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Open Connection…</string>
+			<string>接続…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -80,7 +80,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Listen for Server…</string>
+			<string>リッスンモード...</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -88,7 +88,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Close Window</string>
+			<string>ウインドウを閉じる</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -104,7 +104,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Hide Chicken</string>
+			<string>Chicken を隠す</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -112,7 +112,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Cut</string>
+			<string>カット</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -120,7 +120,7 @@
 			<key>Modifiers</key>
 			<integer>1572864</integer>
 			<key>Title</key>
-			<string>Hide Others</string>
+			<string>ほかを隠す</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -128,7 +128,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Quit Chicken</string>
+			<string>Chicken を終了</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -136,7 +136,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Preferences…</string>
+			<string>環境設定…</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -144,7 +144,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Redo</string>
+			<string>やり直す</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -152,7 +152,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Select All</string>
+			<string>すべてを選択</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -160,7 +160,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Undo</string>
+			<string>取り消す</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -168,7 +168,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Copy</string>
+			<string>コピー</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -176,7 +176,7 @@
 			<key>Modifiers</key>
 			<integer>1835008</integer>
 			<key>Title</key>
-			<string>Fullscreen Mode</string>
+			<string>フルスクリーンモード</string>
 		</dict>
 	</array>
 </dict>

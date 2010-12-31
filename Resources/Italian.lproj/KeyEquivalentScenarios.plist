@@ -92,6 +92,14 @@
 		</dict>
 		<dict>
 			<key>Characters</key>
+			<string>w</string>
+			<key>Modifiers</key>
+			<integer>1572864</integer>
+			<key>Title</key>
+			<string>Chiudi tutto</string>
+		</dict>
+		<dict>
+			<key>Characters</key>
 			<string>h</string>
 			<key>Modifiers</key>
 			<integer>1048576</integer>

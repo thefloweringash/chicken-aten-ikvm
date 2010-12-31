@@ -90,6 +90,7 @@
         // for reconnection attempts
     IBOutlet NSPanel                *_reconnectPanel;
     IBOutlet NSProgressIndicator    *_reconnectIndicator;
+    IBOutlet NSTextField            *_reconnectReason;
     NSDate                          *_connectionStartDate;
     NSTimer                         *_reconnectSheetTimer;
     ConnectionWaiter                *_reconnectWaiter;

@@ -282,6 +282,7 @@
             NSTimeInterval timeout = [[PrefController sharedController] intervalBeforeReconnect];
             BOOL supportReconnect = [server_ doYouSupport:CONNECT];
 
+            [_reconnectReason setStringValue:aReason];
 			if (supportReconnect
                     && -[_connectionStartDate timeIntervalSinceNow] > timeout) {
                 NSLog(@"Automatically reconnecting to server.  The connection was closed because: \"%@\".", aReason);
@@ -326,6 +327,7 @@
         [server_ setPassword: password];
     [server_ setRememberPassword: [rememberNewPassword state]];
 
+    [_reconnectReason setStringValue:@""];
     [self connectionTerminatedSheetDidEnd:nil returnCode:NSAlertAlternateReturn
                               contextInfo:NULL];
     [NSApp endSheet:passwordSheet];
@@ -354,6 +356,7 @@
     [socketHandler closeFile];
     [socketHandler release];
     socketHandler = nil;
+    [_reconnectReason setStringValue:@""];
     [self connectionTerminatedSheetDidEnd:nil returnCode:NSAlertAlternateReturn
                               contextInfo:NULL];
 }

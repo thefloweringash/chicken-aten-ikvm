@@ -3070,6 +3070,22 @@ jOWwkeOBquOBj+OBquOCi+OBn+OCgeOBp+OBmeOAgg</string>
 					</object>
 					<int key="connectionID">570</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">tintDidChange:</string>
+						<reference key="source" ref="294203927"/>
+						<reference key="destination" ref="842000371"/>
+					</object>
+					<int key="connectionID">579</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">mTintColorWell</string>
+						<reference key="source" ref="294203927"/>
+						<reference key="destination" ref="842000371"/>
+					</object>
+					<int key="connectionID">580</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -5044,7 +5060,7 @@ jOWwkeOBquOBj+OBquOCi+OBn+OCgeOBp+OBmeOAgg</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">578</int>
+			<int key="maxID">580</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

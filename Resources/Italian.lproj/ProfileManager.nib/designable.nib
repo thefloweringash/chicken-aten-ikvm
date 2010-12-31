@@ -3109,6 +3109,22 @@ YXNzYSByaXNvbHV6aW9uZS9udW1lcm8gZGkgY29sb3JpLg</string>
 					</object>
 					<int key="connectionID">573</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">tintDidChange:</string>
+						<reference key="source" ref="528882156"/>
+						<reference key="destination" ref="273796250"/>
+					</object>
+					<int key="connectionID">582</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">mTintColorWell</string>
+						<reference key="source" ref="528882156"/>
+						<reference key="destination" ref="273796250"/>
+					</object>
+					<int key="connectionID">583</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -5086,7 +5102,7 @@ YXNzYSByaXNvbHV6aW9uZS9udW1lcm8gZGkgY29sb3JpLg</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">581</int>
+			<int key="maxID">583</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

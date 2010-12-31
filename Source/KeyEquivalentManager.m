@@ -104,6 +104,16 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 	Class NSScrollViewClass = [NSScrollView class];
 	
 	NSWindow *window = [aNotification object];
+    if ([[window className] isEqualToString: @"NSCarbonMenuWindow"]) {
+        /* Opening the help menu causes an NSCarbonMenuWindow to become key, but
+         * then when it closes, we don't get windowDidBecomeKey for the
+         * frontmost window. So, we ignore events for NSCarbonMenuWindow
+         * instances. Since NSCarbonMenuWindow is not part of the public API, we
+         * we can't do [NSCarbonMenuWindow class], so we have to a string
+         * compare. */
+        return;
+    }
+
 	NSView *contentView = [window contentView];
 	if ( [contentView isKindOfClass: NSScrollViewClass] )
 		contentView = [(NSScrollView *)contentView documentView];

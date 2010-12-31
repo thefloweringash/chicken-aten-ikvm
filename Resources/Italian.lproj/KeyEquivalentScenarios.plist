@@ -32,7 +32,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Aiuto Chicken of the VNC</string>
+			<string>Aiuto Chicken</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -96,7 +96,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Nascondi Chicken of the VNC</string>
+			<string>Nascondi Chicken</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -120,7 +120,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Esci da Chicken of the VNC</string>
+			<string>Esci da Chicken</string>
 		</dict>
 		<dict>
 			<key>Characters</key>

@@ -32,7 +32,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Aide Chicken of the VNC</string>
+			<string>Aide Chicken</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -96,7 +96,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Masquer Chicken of the VNC</string>
+			<string>Masquer Chicken</string>
 		</dict>
 		<dict>
 			<key>Characters</key>
@@ -120,7 +120,7 @@
 			<key>Modifiers</key>
 			<integer>1048576</integer>
 			<key>Title</key>
-			<string>Quitter Chicken of the VNC</string>
+			<string>Quitter Chicken</string>
 		</dict>
 		<dict>
 			<key>Characters</key>

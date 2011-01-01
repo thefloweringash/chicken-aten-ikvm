@@ -1239,11 +1239,19 @@ static NSString* byteString(double d)
                 name:NSApplicationWillHideNotification object:nil];
 }
 
-- (void)connectionWillGoFullscreen:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+- (void)connectionWillGoFullscreen:(NSAlert *)sheet
+                        returnCode:(int)returnCode
+                       contextInfo:(void *)contextInfo
+{
 	int windowLevel;
 	NSRect screenRect;
 
-	if (returnCode == NSAlertDefaultReturn) {
+    if ([sheet respondsToSelector:@selector(suppressionButton)]) {
+        if ([[sheet suppressionButton] state]) // only in 10.5+
+            [[PrefController sharedController] setDisplayFullScreenWarning:NO];
+    }
+
+	if (returnCode == NSAlertFirstButtonReturn) {
 		[[RFBConnectionManager sharedManager] makeAllConnectionsWindowed];
 		if (CGDisplayCapture( kCGDirectMainDisplay ) != kCGErrorSuccess) {
 			NSLog( @"Couldn't capture the main display!" );
@@ -1333,13 +1341,19 @@ static NSString* byteString(double d)
             [reason appendString: NSLocalizedString(@"FullscreenReason2", nil)];
         }
 
-        NSString *fullscreenButton = NSLocalizedString( @"Fullscreen", nil );
-        NSString *cancelButton = NSLocalizedString( @"Cancel", nil );
-        NSBeginAlertSheet(header, fullscreenButton, cancelButton, nil, window,
-                          self, nil, @selector(connectionWillGoFullscreen:returnCode:contextInfo:),
-                          nil, reason);
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:header];
+        [alert setInformativeText:reason];
+        if ([alert respondsToSelector:@selector(setShowsSuppressionButton:)])
+            [alert setShowsSuppressionButton:YES]; // only in 10.5+
+        [alert addButtonWithTitle:NSLocalizedString(@"Fullscreen", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+        [alert beginSheetModalForWindow:window modalDelegate:self
+                         didEndSelector:@selector(connectionWillGoFullscreen:returnCode:contextInfo:)
+                            contextInfo:NULL];
+        [alert release];
 	} else {
-		[self connectionWillGoFullscreen:nil returnCode:NSAlertDefaultReturn contextInfo:nil]; 
+		[self connectionWillGoFullscreen:nil returnCode:NSAlertFirstButtonReturn contextInfo:nil]; 
 	}
 }
 

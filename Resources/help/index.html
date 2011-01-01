@@ -81,6 +81,34 @@ passwords are not copied. </p>
 </div>
 
 <div class="section">
+    <h1>A Note About Security</h1>
+    <p>VNC is not a secure protocol. Unless otherwise encrypted, your keypresses
+    and screenshots can be captured by anyone on the same network as you.  If
+    you are using VNC over the Internet or other public network, you should
+    tunnel it through an encrypted connection. The easiest way to do this is
+    with <strong>SSH</strong>. Before using Chicken, open
+    <strong>Terminal</strong> and type:
+    <p style="margin-left:2em"><code>
+        ssh -L 5900:localhost:5900 -l <i>username</i> <i>hostname</i>
+    </code></p>
+    <p>where <code><i>hostname</i></code> and <code><i>username</i></code> are
+    the name of the server and your account on that server respectively. If the
+    VNC server is on port other than 5900 (i.e. display 0), replace 5900 with
+    the port. After hitting return, you will be prompted for a password. Once
+    SSH has connected, start the connection as usual in Chicken, except use
+    "localhost" as the host. When you're done, type <code>exit</code> in the
+    Terminal window to close the SSH connection.</p>
+
+    <p>If you have problems making the SSH connection, make sure that SSH is
+    enabled on the remote computer. If the remote computer is a Mac, this can be
+    done, by going to Sharing in System Preferences and checking the box next to
+    Remote Login. If you have established the SSH connection, but Chicken won't
+    connect, make sure that the port number of the remote server is the same as
+    the numbers in the <code>ssh</code> command. Remember that the port number
+    is always 5900 plus the display number.</p>
+</div>
+
+<div class="section">
 	<h1>I Get Strange Characters When I Type</h1>
 	
     <p>Chicken tries hard to work with different keyboard layouts. However, not
@@ -266,7 +294,8 @@ passwords are not copied. </p>
             invalid argument."</li>
             <li>- Option to tint remote display for visual
             distinguishability (feature request 1310836).</li>
-            <li>- Improvements to the password prompting panel.</li>
+            <li>- Improvements to the password prompting, reconnection, and
+            fullscreen warning panels.</li>
             <li>- Fixed pointer behavior when using view-only option.</li>
         </ul></dd>
         <dt>Version 2.1b3 (December 4, 2010)</dt>

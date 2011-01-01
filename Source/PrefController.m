@@ -101,6 +101,11 @@ static int const kPrefsVersion = 0x00000002;
 - (BOOL)displayFullScreenWarning
 {  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_FullscreenWarning_Key] boolValue];  }
 	
+- (void)setDisplayFullScreenWarning:(BOOL)warn
+{
+    [[NSUserDefaults standardUserDefaults] setBool:warn
+                                        forKey:kPrefs_FullscreenWarning_Key];
+}
 
 - (float)fullscreenAutoscrollIncrement
 {  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_AutoscrollIncrement_Key] floatValue];  }

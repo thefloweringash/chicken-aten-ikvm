@@ -24,6 +24,7 @@
 
 	// Settings
 - (BOOL)displayFullScreenWarning;
+- (void)setDisplayFullScreenWarning:(BOOL)warn;
 - (float)fullscreenAutoscrollIncrement;
 - (BOOL)fullscreenHasScrollbars;
 - (float)frontFrameBufferUpdateSeconds;

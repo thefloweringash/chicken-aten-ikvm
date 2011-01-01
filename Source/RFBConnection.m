@@ -542,6 +542,7 @@
 - (void)frameBufferUpdateComplete {
 	if (! _hasManualFrameBufferUpdates)
 		[self queueUpdateRequest];
+    [self writeBuffer]; // flush buffered mouse movement, if any
     [rfbView displayIfNeededIgnoringOpacity];
     if ([optionPanel isVisible])
         [self updateStatistics:nil];

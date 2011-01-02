@@ -88,7 +88,7 @@ passwords are not copied. </p>
 
     <p>If you have problems making the SSH connection, make sure that SSH is
     enabled on the remote computer. If the remote computer is a Mac, this can be
-    done, by going to Sharing in System Preferences and checking the box next to
+    done by going to Sharing in System Preferences and checking the box next to
     Remote Login. If you have established the SSH connection, but Chicken won't
     connect, make sure that the port number of the remote server is the same as
     the numbers in the <code>ssh</code> command. Remember that the port number
@@ -215,9 +215,8 @@ passwords are not copied. </p>
 		<li><span class="item">Color:</span>  You can use this section to select the color resolution you wish to use with your remote servers.  Since VNC is a bandwidth-intensive protocol, you may obtain better responsiveness by reducing your color resolution.  <strong>Let Server Decide</strong> uses the native color resolution of the server.</li>
 
         <p>The <strong>Tint remote display</strong> setting will cause the
-        remote displays to be tinted a given color. If the remote computer is
-        also a Mac, then tinting creates a visual distinction between the remote
-        and local windows.</p>
+        remote displays to be tinted a given color. Tinting creates a visual
+        distinction between the remote and local windows.</p>
 	</ul>
 </div>
 
@@ -261,12 +260,18 @@ passwords are not copied. </p>
 	</ul>
 </div>
 
-<!-- <div class="section">
+<div class="section">
 	<h1>Known Problems</h1>
 	
 	<ul>
+        <li>If Chicken encounters a connection problem, it will automatically
+        reconnect under some circumstances. In doing so, it closes and
+        reopens the connection window, possibly causing the window to jump
+        forward or appear in the current space.</li>
+        <li>The translations are incomplete. If you would like to help, contact
+        <a href="mailto:dustinac@users.sourceforge.net">dustinac@users.sourceforge.net</a>.</li>
 	</ul>
-</div> -->
+</div>
 
 <div class="section">
 	<h1>Source Code</h1>
@@ -544,8 +549,8 @@ passwords are not copied. </p>
 <p>Chicken incorporates code from the following projects:</p>
 <ul>
     <li><a href="http://libjpeg-turbo.virtualgl.org/">libjpeg-turbo</a> by
-    <span class="contributor">D. R. Commander</span> &mdash; optimized
-    decoding of JPEG images</li>
+    <span class="contributor">D. R. Commander</span> and others &mdash;
+    Optimized decoding of JPEG images</li>
     <li><a href="http://sparkle.andymatuschak.org/">Sparkle</a> by
     <span class="contributor">Andy Matuschak</span> &mdash; Automatic updating.</li>
 </div>

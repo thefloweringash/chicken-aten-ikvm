@@ -48,6 +48,13 @@
 #define BUFFER_SIZE 2048
 #define READ_BUF_SIZE (1024*1024)
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1050
+@interface NSAlert(AvailableInLeopard)
+    - (void)setShowsSuppressionButton:(BOOL)flag;
+    - (NSButton *)suppressionButton;
+@end
+#endif
+
 @implementation RFBConnection
 
 // jason added for Jaguar check

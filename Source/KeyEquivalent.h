@@ -20,5 +20,6 @@
 - (NSString *)characters;
 - (unsigned int)modifiers;
 - (NSAttributedString *)userString;
+- (NSString *)string;
 
 @end

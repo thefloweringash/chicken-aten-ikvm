@@ -137,4 +137,17 @@
 	return attrString;
 }
 
+- (NSString *)string
+{
+    /* Produces a string representation of the key equivalent. It's just a hack
+     * to cover the one case where we can't just use the underlying string of
+     * userString actually uses an attribute. */
+    if ([mCharacters length] > 0) {
+        unichar c = [mCharacters characterAtIndex:0];
+        if (c >= NSF1FunctionKey && c <= NSF15FunctionKey)
+            return [NSString stringWithFormat:@"F%d", c - NSF1FunctionKey + 1];
+    }
+    return [[self userString] string];
+}
+
 @end

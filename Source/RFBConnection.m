@@ -1332,7 +1332,7 @@ static NSString* byteString(double d)
         
         if (scen && menuItem) {
             KeyEquivalent *keyEquiv = [scen keyEquivalentForMenuItem: menuItem];
-            NSString      *keyStr = [[keyEquiv userString] string];
+            NSString      *keyStr = [keyEquiv string];
 
             if (keyStr) {
                 // If we can determine the fullscreen key combination, we include

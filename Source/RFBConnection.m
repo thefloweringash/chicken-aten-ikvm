@@ -316,13 +316,19 @@
     if (terminating)
         return;
 
+    if (![server_ doYouSupport:CONNECT])
+        [self terminateConnection:NSLocalizedString(@"AuthenticationFailed");
+
     [self connectionProblem];
     [authMessage setStringValue: aReason];
+    if ([server_ doYouSupport:SAVE_PASSWORD])
+        [rememberNewPassword setState: [server_ rememberPassword]];
+    else
+        [rememberNewPassword setHidden:YES];
     [NSApp beginSheet:passwordSheet modalForWindow:window
            modalDelegate:self
            didEndSelector:@selector(passwordEnteredFor:returnCode:contextInfo:)
            contextInfo:nil];
-    [rememberNewPassword setState: [server_ rememberPassword]];
 }
 
 /* User entered new password */

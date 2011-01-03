@@ -138,7 +138,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     id<IServerData> savedServ = nil;
 	Profile* profile = nil;
 	ProfileManager *profileManager = [ProfileManager sharedManager];
-    BOOL listen;
+    BOOL listen = NO;
 	
 	// Check our arguments.  Args start at 0, which is the application name
 	// so we start at 1.  arg count is the number of arguments, including

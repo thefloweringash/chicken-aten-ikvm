@@ -289,6 +289,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 /* Connection initiated from command-line failed */
 - (void)connectionFailed
 {
+    [NSApp terminate:self];
 }
 
 - (void)showNewConnectionDialog:(id)sender
@@ -424,12 +425,12 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     [aConnection retain];
     [connections removeObject:aConnection];
     [aConnection autorelease];
-    if ( NO && mRunningFromCommandLine ) 
-        // This breaks if the connection is trying to reconnect. Also, it seems
-        // like in many circumstances it would be best not to quit anyways.
-		[NSApp terminate:self];
-	else if ( 0 == [connections count] )
-		[self showConnectionDialog:nil];
+	if ( 0 == [connections count] ) {
+        if ( mRunningFromCommandLine ) 
+            [NSApp terminate:self];
+        else
+            [self showConnectionDialog:nil];
+    }
 }
 
 /* Creates a connection from an already connected file handle */

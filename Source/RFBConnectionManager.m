@@ -134,7 +134,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     int i, argCount = [args count];
     NSString *arg;
 	
-	ServerFromPrefs* cmdlineServer = [[[ServerFromPrefs alloc] init] autorelease];
+	ServerStandAlone* cmdlineServer = [[[ServerStandAlone alloc] init] autorelease];
     id<IServerData> savedServ = nil;
 	Profile* profile = nil;
 	ProfileManager *profileManager = [ProfileManager sharedManager];

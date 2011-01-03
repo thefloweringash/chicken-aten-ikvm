@@ -135,6 +135,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     NSString *arg;
 	
 	ServerFromPrefs* cmdlineServer = [[[ServerFromPrefs alloc] init] autorelease];
+    id<IServerData> savedServ = nil;
 	Profile* profile = nil;
 	ProfileManager *profileManager = [ProfileManager sharedManager];
     BOOL listen;
@@ -198,7 +199,10 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 			[self cmdlineUsage];
 		else
 		{
-			[cmdlineServer setHostAndPort: arg];
+            savedServ = [[ServerDataManager sharedInstance] getServerWithName:arg];
+
+            if (savedServ == nil)
+                [cmdlineServer setHostAndPort: arg];
 			
 			mRunningFromCommandLine = YES;
 		} 
@@ -217,11 +221,12 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
         } else {
             // :TORESOLVE: currently no way to cancel without killing program
             ConnectionWaiter    *cw;
+            id<IServerData> server = savedServ ? savedServ : cmdlineServer;
 
             if ( nil == profile )
                 profile = [profileManager defaultProfile];	
         
-            cw = [[ConnectionWaiter alloc] initWithServer:cmdlineServer
+            cw = [[ConnectionWaiter alloc] initWithServer:server
                     profile:profile delegate:self window:nil];
             [cw release];
         }

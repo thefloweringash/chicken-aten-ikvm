@@ -317,7 +317,7 @@
         return;
 
     if (![server_ doYouSupport:CONNECT])
-        [self terminateConnection:NSLocalizedString(@"AuthenticationFailed");
+        [self terminateConnection:NSLocalizedString(@"AuthenticationFailed", nil)];
 
     [self connectionProblem];
     [authMessage setStringValue: aReason];

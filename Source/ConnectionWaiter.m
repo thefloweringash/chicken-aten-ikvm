@@ -25,6 +25,13 @@
 #import <poll.h>
 #import <unistd.h>
 
+@interface ConnectionWaiter(Private)
+
+- (void)errorDidEnd:(NSWindow *)sheet returnCode:(int)returnCode
+        contextInfo:(void *)info;
+
+@end
+
 @implementation ConnectionWaiter
 
 - (id)initWithServer:(id<IServerData>)aServer profile:(Profile*)aProfile
@@ -141,7 +148,7 @@
              * example, if we're tunnelling over SSH, SSH will accept the
              * connection right away, but we want to wait for the handshake from
              * the VNC server, before we represent to the user that a connection
-             * ha been made. */
+             * has been made. */
             struct pollfd   pfd;
 
             freeaddrinfo(res0);
@@ -271,8 +278,11 @@
         NSBeginAlertSheet(theAction, ok, nil, nil, window, self,
                 @selector(errorDidEnd:returnCode:contextInfo:), NULL, NULL,
                 message);
-    else
-        NSRunAlertPanel(theAction, message, ok, NULL, NULL, NULL);
+    else {
+        int ret;
+        ret = NSRunAlertPanel(theAction, message, ok, NULL, NULL, NULL);
+        [self errorDidEnd:nil returnCode:ret contextInfo:nil];
+    }
 }
 
 - (void)errorDidEnd:(NSWindow *)sheet returnCode:(int)returnCode

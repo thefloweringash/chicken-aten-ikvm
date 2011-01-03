@@ -20,6 +20,7 @@
 #import "RFBConnectionManager.h"
 #import "RFBConnection.h"
 #import "ConnectionWaiter.h"
+#import "ListenerController.h"
 #import "PrefController.h"
 #import "ProfileManager.h"
 #import "Profile.h"
@@ -136,6 +137,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	ServerFromPrefs* cmdlineServer = [[[ServerFromPrefs alloc] init] autorelease];
 	Profile* profile = nil;
 	ProfileManager *profileManager = [ProfileManager sharedManager];
+    BOOL listen;
 	
 	// Check our arguments.  Args start at 0, which is the application name
 	// so we start at 1.  arg count is the number of arguments, including
@@ -186,6 +188,10 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 			}
 			profile = [profileManager profileNamed: profileName];
 		}
+        else if ([arg isEqualToString:@"--Shared"])
+            [cmdlineServer setShared:YES];
+        else if ([arg isEqualToString:@"--Listen"])
+            mRunningFromCommandLine = listen = YES;
 		else if ([arg hasPrefix:@"-"])
 			[self cmdlineUsage];
 		else if ([arg hasPrefix:@"-?"] || [arg hasPrefix:@"-help"] || [arg hasPrefix:@"--help"])
@@ -200,15 +206,25 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	
 	if ( mRunningFromCommandLine )
 	{
-        // :TORESOLVE: currently no way to cancel without killing program
-        ConnectionWaiter    *cw;
+        if (listen) {
+            ListenerController *l = [ListenerController sharedController];
+            [l showWindow:nil];
+            if (profile)
+                [l changeProfileTo:profile];
+            if ([cmdlineServer fullscreen])
+                [l setDisplaysFullscreen:YES];
+            [l actionPressed:nil];
+        } else {
+            // :TORESOLVE: currently no way to cancel without killing program
+            ConnectionWaiter    *cw;
 
-		if ( nil == profile )
-			profile = [profileManager defaultProfile];	
+            if ( nil == profile )
+                profile = [profileManager defaultProfile];	
         
-        cw = [[ConnectionWaiter alloc] initWithServer:cmdlineServer
-                profile:profile delegate:self window:nil];
-        [cw release];
+            cw = [[ConnectionWaiter alloc] initWithServer:cmdlineServer
+                    profile:profile delegate:self window:nil];
+            [cw release];
+        }
         return YES;
 	}
 	return NO;
@@ -253,7 +269,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     fprintf(stderr, "--Profile <profile-name>\n");
     fprintf(stderr, "--Display <display-number>\n");
     fprintf(stderr, "--FullScreen\n");
+    fprintf(stderr, "--Shared\n");
 	fprintf(stderr, "--ViewOnly\n");
+    fprintf(stderr, "--Listen\n");
     exit(1);
 }
 

@@ -159,6 +159,11 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     [fullscreen   setEnabled: !active];
 }
 
+- (void)setDisplaysFullscreen:(BOOL)aFullscreen
+{
+    [fullscreen setState:aFullscreen];
+    [self savePrefs];
+}
 
 #pragma mark -
 #pragma mark Socket Listener
@@ -340,6 +345,8 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
 }
 
 
+/* Selects a given profile from the popup. In order to save the connection, use
+ * changeProfileTo: instead. */
 - (void)setProfilePopupToProfile: (NSString *)profileName
 {
 	ProfileManager *pm = [ProfileManager sharedManager];
@@ -350,6 +357,15 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
 }
 
 
+// Changes the current listener profile and saves the selection to Preferences.
+- (void)changeProfileTo:(Profile *)profile
+{
+    [self setProfilePopupToProfile:[profile profileName]];
+    [self savePrefs];
+}
+
+
+// Loads the list of profiles into the popup
 - (void)loadProfileIntoView
 {
     NSString* lastProfile = [[profilePopup titleOfSelectedItem] retain];

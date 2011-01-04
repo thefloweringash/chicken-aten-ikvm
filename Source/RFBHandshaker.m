@@ -136,7 +136,7 @@
 
 
 	// No valid auth type found
-	NSLog(@"%s", errorStr);
+	NSLog(@"%@", errorStr);
 	availableAuthType= 0;
 	[connection writeBytes:&availableAuthType length:1];
 	[connection terminateConnection:errorStr];

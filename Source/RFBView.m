@@ -61,7 +61,10 @@
 
 - (void)tintChanged:(NSNotification *)notif
 {
-    [self setNeedsDisplay:YES];
+    if (useTint) {
+        drawTint = [[_profile tint] alphaComponent] != 0.0;
+        [self setNeedsDisplay:YES];
+    }
 }
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
@@ -111,11 +114,18 @@
         [[self window] invalidateCursorRectsForView: self];
 }
 
+- (void)setUseTint: (BOOL)aUseTint
+{
+    useTint = aUseTint;
+    drawTint = useTint && [[_profile tint] alphaComponent] != 0.0;
+}
+
 - (void)setDelegate:(RFBConnection *)delegate
 {
     _delegate = delegate;
 	_eventFilter = [_delegate eventFilter];
     _profile = [_delegate profile];
+    [self setUseTint:YES];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(tintChanged:)
                                                  name:ProfileTintChangedMsg
@@ -136,18 +146,16 @@
     const NSRect    *rects;
     int             numRects;
     int             i;
-    NSColor         *tint = [_profile tint];
-    BOOL            useTint = [tint alphaComponent] != 0.0;
 
-    if (useTint)
-        [tint setFill];
+    if (drawTint)
+        [[_profile tint] setFill];
 
     [self getRectsBeingDrawn:&rects count:&numRects];
     for (i = 0; i < numRects; i++) {
         NSRect      r = rects[i];
         r.origin.y = b.size.height - NSMaxY(r);
         [fbuf drawRect:r at:rects[i].origin];
-        if (useTint)
+        if (drawTint)
             NSRectFillUsingOperation(rects[i], NSCompositeSourceOver);
     }
 }

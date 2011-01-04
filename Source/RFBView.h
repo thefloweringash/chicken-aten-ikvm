@@ -28,6 +28,8 @@
     NSCursor        *_modifierCursor;
     NSCursor        *_serverCursor; // cursor sent by server, if any
     FrameBuffer     *fbuf;
+    BOOL            useTint;
+    BOOL            drawTint;
 }
 
 - (void)setFrameBuffer:(id)aBuffer;
@@ -37,6 +39,7 @@
 
 - (void)setCursorTo: (NSString *)name;
 - (void)setServerCursorTo: (NSCursor *)aCursor;
+- (void)setUseTint: (BOOL)aUseTint;
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender;
 - (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender;

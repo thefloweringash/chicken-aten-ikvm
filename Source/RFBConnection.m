@@ -1248,6 +1248,7 @@ static NSString* byteString(double d)
 	[self windowDidResize: nil];
 	[window makeKeyAndOrderFront:nil];
 	[self viewFrameDidChange: nil];
+    [rfbView setUseTint:YES];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                 name:NSApplicationWillHideNotification object:nil];
@@ -1304,6 +1305,8 @@ static NSString* byteString(double d)
             [contentView scrollToPoint:scrollPt];
             [scrollView reflectScrolledClipView:contentView];
         }
+
+        [rfbView setUseTint:NO];
 
 		[self installFullscreenTrackingRects];
 		[self windowDidResize: nil];

@@ -231,6 +231,12 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 }
 
 
+- (void)windowWillClose:(NSNotification *)notif
+{
+    [[NSColorPanel sharedColorPanel] close];
+}
+
+
 #pragma mark -
 #pragma mark NSTableView Data Source
 

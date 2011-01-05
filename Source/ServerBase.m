@@ -147,9 +147,6 @@
 	{
 		_name = [[NSString stringWithString:@"localhost"] retain];
 	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setHost: (NSString*)host
@@ -163,9 +160,6 @@
 	{
 		_host = [[NSString stringWithString:@"new server"] retain];
 	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setHostAndPort: (NSString*)hostAndPort
@@ -223,9 +217,6 @@
 	{
 		_hostAndPort = [_host copy];
 	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setPassword: (NSString*)password
@@ -240,17 +231,11 @@
 	{
 		_password = [[NSString stringWithString:@""] retain];
 	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setRememberPassword: (bool)rememberPassword
 {
 	_rememberPassword = rememberPassword;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setDisplay: (int)display
@@ -260,41 +245,26 @@
         [self setPort: _display + PORT_BASE];
     else
         [self setPort: _display];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setShared: (bool)shared
 {
 	_shared = shared;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setPort: (int)port
 {
 	_port = port;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setFullscreen: (bool)fullscreen
 {
 	_fullscreen =  fullscreen;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setViewOnly: (bool)viewOnly
 {
 	_viewOnly = viewOnly;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setLastProfile: (NSString*)lastProfile
@@ -312,9 +282,6 @@
 		[_lastProfile autorelease];
 		[self setLastProfile:[NSString stringWithString:[profileManager defaultProfileName]]];
 	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate

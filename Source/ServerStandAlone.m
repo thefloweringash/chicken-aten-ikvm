@@ -69,9 +69,6 @@
 	{
 		[self setRememberPassword:NO];
 	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-														object:self];
 }
 
 @end

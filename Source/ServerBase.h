@@ -49,7 +49,7 @@
 - (NSString*)name;
 - (NSString*)host;
 - (NSString*)password;
-- (bool)rememberPassword;
+- (BOOL)rememberPassword;
 - (int)port;
 - (bool)shared;
 - (bool)fullscreen;

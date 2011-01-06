@@ -85,7 +85,7 @@
     return _password ? _password : @"";
 }
 
-- (bool)rememberPassword
+- (BOOL)rememberPassword
 {
     return NO;
 }

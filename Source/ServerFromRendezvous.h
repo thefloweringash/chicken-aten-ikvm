@@ -36,8 +36,6 @@
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type;
 
-- (void)setDelegate: (id<IServerDataDelegate>)delegate;
-
 - (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict;
 - (void)netServiceDidResolveAddress:(NSNetService *)sender;
 

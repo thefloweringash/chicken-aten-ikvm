@@ -34,7 +34,6 @@
 	bool      _fullscreen;
 	bool      _viewOnly;	
     Profile   *_profile;
-	id<IServerDataDelegate> _delegate;
 }
 
 - (id)init;
@@ -67,8 +66,6 @@
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setProfile: (Profile *)profile;
 - (void)setProfileName: (NSString *)profileName;
-
-- (void)setDelegate: (id<IServerDataDelegate>)delegate;
 
 - (void)copyServer: (id<IServerData>)server;
 

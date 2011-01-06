@@ -18,6 +18,7 @@
  */
 
 #import "PersistentServer.h"
+#import "ServerDataManager.h"
 
 @implementation PersistentServer
 
@@ -50,7 +51,12 @@
 	[_name autorelease];
 	if( nil != name )
 	{
-		_name = [name retain];
+		NSMutableString *nameHelper = [NSMutableString stringWithString:name];
+		
+		[[ServerDataManager sharedInstance] validateNameChange:nameHelper
+                                                     forServer:self];
+		
+		_name = [nameHelper retain];
 	}
 	else
 	{

@@ -236,11 +236,6 @@
 	}
 }
 
-- (void)setDelegate: (id<IServerDataDelegate>)delegate
-{
-	_delegate = delegate;
-}
-
 - (void)copyServer: (id<IServerData>)server
 {
     [self setHost:[server host]];

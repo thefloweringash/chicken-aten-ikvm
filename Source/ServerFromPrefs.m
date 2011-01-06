@@ -52,7 +52,7 @@
 {
     if( self = [super init] )
 	{
-        [self setName: host];
+        _name = [host retain];
         [self setHost: host];
 		[self setPassword: [NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]]];
 		/* super instead of self here because we don't need to save the
@@ -117,7 +117,7 @@
 	if( self = [super init] )
 	{
         BOOL    havePort; // port's been specified in hostAndPort
-		[self setName:            [coder decodeObjectForKey:RFB_NAME]];
+        _name =                  [[coder decodeObjectForKey:RFB_NAME] retain];
         NSString *host =          [coder decodeObjectForKey:RFB_HOST];
 		havePort = [self setHostAndPort:[coder decodeObjectForKey:RFB_HOSTANDPORT]];
         [self setHost: host];
@@ -168,17 +168,13 @@
 {
 	if( NSOrderedSame != [name compare:_name] )
 	{
-		NSMutableString *nameHelper = [NSMutableString stringWithString:name];
-		
-		[_delegate validateNameChange:nameHelper forServer:self];
-		
 		// if the password is saved, destroy the one off the old name key
 		if( YES == _rememberPassword)
 		{
 			[[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name];
 		}
 		
-		[super setName:nameHelper];
+		[super setName:name];
 		
 		// if the password should be saved, save it with the new name key
 		if( YES == _rememberPassword)

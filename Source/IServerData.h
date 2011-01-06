@@ -33,8 +33,6 @@ typedef enum
 	CONNECT,
 } SUPPORT_TYPE;
 
-@protocol IServerDataDelegate;
-
 @class Profile;
 
 @protocol IServerData <NSObject>
@@ -64,17 +62,8 @@ typedef enum
 
 - (void)copyServer: (id<IServerData>)server;
 
-- (void)setDelegate: (id<IServerDataDelegate>)delegate;
-
 @optional
 - (BOOL)rememberPassword;
 - (void)setRememberPassword: (BOOL)rememberPassword;
-
-@end
-
-
-@protocol IServerDataDelegate
-
-- (void)validateNameChange:(NSString *)name forServer:(id<IServerData>)server;
 
 @end

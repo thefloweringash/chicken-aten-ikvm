@@ -82,7 +82,6 @@ static ServerDataManager* gInstance = nil;
 			id<IServerData> server = [ServerFromPrefs createWithHost:host preferenceDictionary:obj];
 			if( nil != server )
 			{
-				[server setDelegate:self];
 				[mServers setObject:server forKey:[server name]];
 			}
 		}
@@ -252,13 +251,6 @@ static ServerDataManager* gInstance = nil;
 				bContinueOuter = NO;
 			}
 		}while( bContinueOuter );
-		
-		id<IServerData> server;
-		NSEnumerator* objEnumerator = [mServers objectEnumerator];
-		while( server = [objEnumerator nextObject] )
-		{
-			[server setDelegate:self];
-		}
 	}
 	
     return self;
@@ -377,8 +369,6 @@ static ServerDataManager* gInstance = nil;
 	
 	NSParameterAssert( nil != [mServers objectForKey:nameHelper] );
 	NSParameterAssert( newServer == [mServers objectForKey:nameHelper] );
-	
-	[newServer setDelegate:self];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 														object:self];
@@ -537,10 +527,6 @@ static ServerDataManager* gInstance = nil;
 	// store a quick lookup list that connects the rendezvous name to the server class
 	// because the server name will not necessarily match that of the service published
 	[mRendezvousNameToServer setObject:newServer forKey:[aNetService name]];
-	
-	// Set delegate before adding to the server lists so that the server has a chance
-	// to appropriately validate the name as defined by the service
-	[newServer setDelegate:self];
 	
 	[mServers setObject:newServer forKey:[newServer name]];
 	[[mGroups objectForKey:@"Rendezvous"] setObject:newServer forKey:[newServer name]];

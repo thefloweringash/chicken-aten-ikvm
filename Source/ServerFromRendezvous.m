@@ -24,6 +24,7 @@
 #import "netinet/in.h"
 #import "arpa/inet.h"
 #import "KeyChain.h"
+#import "Profile.h"
 
 #define RFB_SAVED_RENDEZVOUS_SERVERS @"RFB_SAVED_RENDEZVOUS_SERVERS"
 
@@ -42,6 +43,7 @@
 	{
 		bHasResolved      = NO;
 		bResloveSucceeded = NO;
+        [self setHost: NSLocalizedString( @"Resolving", nil )];
 		
 		[service retain];
 		service_ = service;
@@ -60,11 +62,10 @@
 		if ( propertyDict )
 		{
 			[self setRememberPassword: [[propertyDict objectForKey:@"rememberPassword"] boolValue]];
-			[self setDisplay:          [[propertyDict objectForKey:@"display"] intValue]];
 			[self setShared:           [[propertyDict objectForKey:@"shared"] boolValue]];
 			[self setFullscreen:       [[propertyDict objectForKey:@"fullscreen"] boolValue]];
 			[self setViewOnly:         [[propertyDict objectForKey:@"viewOnly"] boolValue]];
-			[self setLastProfile:       [propertyDict objectForKey:@"lastProfile"]];
+            [self setProfileName:       [propertyDict objectForKey:@"lastProfile"]];
 		}
 	}
 	
@@ -85,11 +86,11 @@
 	
 	NSMutableDictionary* propertyDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithBool:_rememberPassword],	[NSString stringWithString:@"rememberPassword"],
-		[NSNumber numberWithInt:_display],				[NSString stringWithString:@"display"],
+		[NSNumber numberWithInt:_port - PORT_BASE],		[NSString stringWithString:@"display"],
 		[NSNumber numberWithBool:_shared],				[NSString stringWithString:@"shared"],
 		[NSNumber numberWithBool:_fullscreen],			[NSString stringWithString:@"fullscreen"],
-		[NSNumber numberWithBool:_viewOnly],          [NSString stringWithString:@"viewOnly"], 
-		_lastProfile,									[NSString stringWithString:@"lastProfile"],
+		[NSNumber numberWithBool:_viewOnly],            [NSString stringWithString:@"viewOnly"], 
+		[_profile profileName],							[NSString stringWithString:@"lastProfile"],
 		nil,											nil];
 
 	NSDictionary* defaultServerDict = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
@@ -126,42 +127,6 @@
 	return NO;
 }
 
-- (NSString *)host
-{
-	return [self hostAndPort];
-}
-
-- (NSString*)hostAndPort
-{
-	if( bHasResolved && bResloveSucceeded )
-	{
-		int i;
-		
-		for (i=0;i<[[service_ addresses] count];i++) {
-            struct sockaddr_in *sockAddr = (struct sockaddr_in*)[[[service_ addresses] objectAtIndex:i] bytes];
-			struct in_addr sinAddr = sockAddr->sin_addr;
-			if (sinAddr.s_addr != 0)
-            {
-                _port = ntohs(sockAddr->sin_port);
-                if ( _port >= 5900 && _port <= 5909 )
-                    _display = _port - 5900;
-                else
-                    _display = 0;
-				return [NSString stringWithUTF8String:inet_ntoa(sinAddr)];
-            }
-		}
-		return NSLocalizedString( @"AddressResolveFailed", nil );
-	}
-	else if( bHasResolved && !bResloveSucceeded )
-	{
-		return NSLocalizedString( @"AddressResolveFailed", nil );
-	}
-	else
-	{
-		return NSLocalizedString( @"Resolving", nil );
-	}
-}
-
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 {
 	[super setDelegate:delegate];
@@ -179,15 +144,34 @@
 {
 	bHasResolved = YES;
 	bResloveSucceeded = NO;
+	[self setHost: NSLocalizedString( @"AddressResolveFailed", nil )];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
+}
+
+- (void)extractAddress
+{
+    int i;
+    
+    for (i=0;i<[[service_ addresses] count];i++) {
+        struct sockaddr_in *sockAddr = (struct sockaddr_in*)[[[service_ addresses] objectAtIndex:i] bytes];
+        struct in_addr sinAddr = sockAddr->sin_addr;
+        if (sinAddr.s_addr != 0)
+        {
+            _port = ntohs(sockAddr->sin_port);
+            [self setHost:[NSString stringWithUTF8String:inet_ntoa(sinAddr)]];
+            return;
+        }
+    }
+    [self setHost: NSLocalizedString( @"AddressResolveFailed", nil )];
 }
 
 - (void)netServiceDidResolveAddress:(NSNetService *)sender
 {
 	bHasResolved = YES;
 	bResloveSucceeded = YES;
+    [self extractAddress];
 	
 	[service_ stop];
 	

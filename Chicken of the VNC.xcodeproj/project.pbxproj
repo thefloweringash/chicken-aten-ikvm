@@ -124,6 +124,8 @@
 		7FFA903D062BA74F0008D381 /* ServerDisplay.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7FFA903B062BA74F0008D381 /* ServerDisplay.nib */; };
 		DA00481512CCF82E004E2C70 /* ZlibStreamReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */; };
 		DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */; };
+		DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1FD8C312D5100400632D78 /* PersistentServer.h */; };
+		DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1FD8C412D5100400632D78 /* PersistentServer.m */; };
 		DA21209212087A370060A5F9 /* jsimd_none.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305711E03BA600271F8F /* jsimd_none.c */; };
 		DA231DF612BD562100D3AD44 /* Keymap.h in Headers */ = {isa = PBXBuildFile; fileRef = DA231DF512BD562100D3AD44 /* Keymap.h */; };
 		DA3648F51293A26800FB8272 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3648F41293A26800FB8272 /* Sparkle.framework */; };
@@ -331,6 +333,8 @@
 		7FFA903C062BA74F0008D381 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ServerDisplay.nib; sourceTree = "<group>"; };
 		DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZlibStreamReader.h; sourceTree = "<group>"; };
 		DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZlibStreamReader.m; sourceTree = "<group>"; };
+		DA1FD8C312D5100400632D78 /* PersistentServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentServer.h; sourceTree = "<group>"; };
+		DA1FD8C412D5100400632D78 /* PersistentServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentServer.m; sourceTree = "<group>"; };
 		DA231DF512BD562100D3AD44 /* Keymap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keymap.h; sourceTree = "<group>"; };
 		DA3648F41293A26800FB8272 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		DA5B896B11E19395004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
@@ -805,6 +809,8 @@
 			isa = PBXGroup;
 			children = (
 				7FC6DF2705C315C20028A970 /* IServerData.h */,
+				DA1FD8C312D5100400632D78 /* PersistentServer.h */,
+				DA1FD8C412D5100400632D78 /* PersistentServer.m */,
 				7FFA8FE9062BA6330008D381 /* ServerBase.h */,
 				7FFA8FEA062BA6330008D381 /* ServerBase.m */,
 				E2B083E10763AA7D00CE24C1 /* ServerFromConnection.h */,
@@ -1218,6 +1224,7 @@
 				DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */,
 				DA231DF612BD562100D3AD44 /* Keymap.h in Headers */,
 				DA00481512CCF82E004E2C70 /* ZlibStreamReader.h in Headers */,
+				DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1468,6 +1475,7 @@
 				DAEB76F21232AE3500002E6A /* Keymap.m in Sources */,
 				DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */,
 				DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */,
+				DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

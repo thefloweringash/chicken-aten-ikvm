@@ -20,10 +20,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ServerBase.h"
+#import "PersistentServer.h"
 #import "IServerData.h"
 
-@interface ServerFromRendezvous : ServerBase {
+@interface ServerFromRendezvous : PersistentServer {
 	NSNetService* service_;
 	bool bHasResolved;
 	bool bResloveSucceeded;
@@ -35,9 +35,6 @@
 - (void)dealloc;
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type;
-
-- (NSString*)host;
-- (NSString*)hostAndPort;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 

@@ -23,6 +23,8 @@
 #import <Foundation/Foundation.h>
 #import "IServerData.h"
 
+@class ServerFromPrefs;
+
 /**
  *  ServerDataManager manages all known accessible servers in Chicken of the VNC
  *  including saved server from preferences, rendezvous servers, etc. Servers will
@@ -127,7 +129,7 @@
  *  @param name The name to create the server as.
  *  @return The created server.
  */
-- (id<IServerData>)createServerByName:(NSString*)name;
+- (ServerFromPrefs *)createServerByName:(NSString*)name;
 
 /*
  *  Adds an existing server to the server list. A new server will be created in the

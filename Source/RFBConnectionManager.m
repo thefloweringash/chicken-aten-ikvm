@@ -21,6 +21,7 @@
 #import "RFBConnection.h"
 #import "ConnectionWaiter.h"
 #import "ListenerController.h"
+#import "PersistentServer.h"
 #import "PrefController.h"
 #import "ProfileManager.h"
 #import "Profile.h"
@@ -584,7 +585,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	if( serverList == aTableView )
 	{
 		NSString* serverName = object;
-		id<IServerData> server = [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:row]];
+		PersistentServer *server = [[ServerDataManager sharedInstance] getServerWithName:[mOrderedServerNames objectAtIndex:row]];
 		
 		if( NO == [serverName isEqualToString:[server name]] )
 		{

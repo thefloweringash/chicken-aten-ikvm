@@ -26,29 +26,31 @@
 
 #import <Foundation/Foundation.h>
 
+@interface ServerBase (Private)
+
+- (void)profileListUpdate:(NSNotification *)notification;
+
+@end
+
+
 @implementation ServerBase
 
 - (id)init
 {
 	if( self = [super init] )
 	{
-		// The order of remember password setting and password is critical, or we risk loosing
-		// saved passwords.
-		[self setName:            [NSString stringWithString:@"new server"]];
-		[self setHostAndPort:     [NSString stringWithString:@"localhost"]];
-		[self setRememberPassword:NO];
-		[self setPassword:        [NSString stringWithString:@""]];
-		[self setDisplay:         0];
-		[self setPort:            5900];
-		[self setLastProfile:     [NSString stringWithString:[[ProfileDataManager sharedInstance] defaultProfileName]]];
-		[self setShared:          NO];
-		[self setFullscreen:      NO];
-		[self setViewOnly:      NO];
+        _host = @"localhost";
+        _password = nil;
+        _port = 5900;
+        _shared = NO;
+        _fullscreen = NO;
+        _viewOnly = NO;
+        _profile = [[[ProfileDataManager sharedInstance] defaultProfile]retain];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(profileListUpdate:)
 													 name:ProfileListChangeMsg
-												   object:(id)[ProfileDataManager sharedInstance]];
+												   object:[ProfileDataManager sharedInstance]];
 	}
 	
 	return self;
@@ -56,29 +58,21 @@
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:ProfileListChangeMsg
-												  object:(id)[ProfileDataManager sharedInstance]];
-												  
-	[_name release];
 	[_host release];
-	[_hostAndPort release];
 	[_password release];
-	[_lastProfile release];
+    [_profile release];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type
 {
-	// subclasses are fully responsible for implementing this
-	assert(0);
-	
 	return NO;
 }
 
 - (NSString*)name
 {
-	return _name;
+    return NSLocalizedString(@"RFBUntitledServerName", nil);
 }
 
 - (NSString*)host
@@ -86,29 +80,14 @@
 	return _host;
 }
 
-- (NSString *)hostAndPort
-{
-	return _hostAndPort;
-}
-
 - (NSString*)password
 {
-	return _password;
+    return _password ? _password : @"";
 }
 
 - (bool)rememberPassword
 {
-	return _rememberPassword;
-}
-
-- (int)display
-{
-	return _display;
-}
-
-- (bool)isPortSpecifiedInHost
-{
-    return _isPortSpecifiedInHost;
+    return NO;
 }
 
 - (int)port
@@ -121,6 +100,11 @@
 	return _shared;
 }
 
+- (Profile *)profile
+{
+    return _profile;
+}
+
 - (bool)fullscreen
 {
 	return _fullscreen;
@@ -131,49 +115,27 @@
 	return _viewOnly;
 }
 
-- (NSString*)lastProfile
-{
-	return _lastProfile;
-}
-
-- (void)setName: (NSString*)name
-{
-	[_name release];
-	if( nil != name )
-	{
-		_name = [name retain];
-	}
-	else
-	{
-		_name = [[NSString stringWithString:@"localhost"] retain];
-	}
-}
-
 - (void)setHost: (NSString*)host
 {
-	[_host release];
+	[_host autorelease];
 	if( nil != host )
 	{
         _host = [host retain];
 	}
 	else
 	{
-		_host = [[NSString stringWithString:@"new server"] retain];
+		_host = @"new server";
 	}
 }
 
-- (void)setHostAndPort: (NSString*)hostAndPort
+- (BOOL)setHostAndPort: (NSString*)hostAndPort
 {
-	BOOL portWasSpecifiedInHost = [self isPortSpecifiedInHost];
-    NSString *strippedHost = [hostAndPort stringByTrimmingCharactersInSet:
+    NSString    *strippedHost = [hostAndPort stringByTrimmingCharactersInSet:
                                     [NSCharacterSet whitespaceCharacterSet]];
 	
-	[_hostAndPort release];
-	if( nil != hostAndPort )
-	{
-		_hostAndPort = [hostAndPort retain];
-		
-        if ([hostAndPort hasPrefix: @"["]) {
+    if( nil != hostAndPort )
+    {
+        if ([strippedHost hasPrefix: @"["]) {
             // IPv6 escaped notation, in which the host is surrounded by []
             NSRange endBracket = [strippedHost rangeOfString: @"]"];
             NSRange hostRange;
@@ -192,9 +154,9 @@
                 NSString    *portStr;
                 portStr = [strippedHost substringFromIndex: hostRange.length + 3];
                 [self setPort: [portStr intValue]];
-                _isPortSpecifiedInHost = YES;
+                return YES;
             } else
-                _isPortSpecifiedInHost = NO;
+                return NO;
         } else {
             NSArray *items = [strippedHost componentsSeparatedByString:@":"];
 
@@ -202,49 +164,26 @@
                 // host:port format
                 [self setHost: [items objectAtIndex: 0]];
                 [self setPort: [[items objectAtIndex: 1] intValue]];
-                _isPortSpecifiedInHost = YES;
+                return YES;
             } else {
                 // Either no colons or IPv6 notation
                 [self setHost: strippedHost];
-                _isPortSpecifiedInHost = NO;
+                return NO;
             }
         }
-
-        if (portWasSpecifiedInHost && !_isPortSpecifiedInHost)
-            [self setDisplay: [self display]];
-	}
-	else
-	{
-		_hostAndPort = [_host copy];
-	}
+    } else
+        return NO;
 }
 
 - (void)setPassword: (NSString*)password
 {
-	[_password release];
-	
-	if( nil != password )
-	{
-		_password = [password retain];
-	}
-	else
-	{
-		_password = [[NSString stringWithString:@""] retain];
-	}
-}
-
-- (void)setRememberPassword: (bool)rememberPassword
-{
-	_rememberPassword = rememberPassword;
+    [_password autorelease];
+    _password = [password retain];
 }
 
 - (void)setDisplay: (int)display
 {
-	_display = display;
-    if (_display < DISPLAY_MAX)
-        [self setPort: _display + PORT_BASE];
-    else
-        [self setPort: _display];
+    _port = display + PORT_BASE;
 }
 
 - (void)setShared: (bool)shared
@@ -267,20 +206,33 @@
 	_viewOnly = viewOnly;
 }
 
-- (void)setLastProfile: (NSString*)lastProfile
+- (void)setProfile: (Profile *)profile
+{
+    [_profile autorelease];
+    _profile = [profile retain];
+}
+
+- (void)setProfileName: (NSString*)profileName
+{
+	ProfileDataManager* profileManager = [ProfileDataManager sharedInstance];
+    Profile *prof = [profileManager profileForKey:profileName];
+	
+    if (prof)
+	{
+		[_profile autorelease];
+		_profile = [prof retain];
+	}
+}
+
+- (void)profileListUpdate:(NSNotification *)notification
 {
 	ProfileDataManager* profileManager = [ProfileDataManager sharedInstance];
 	
-	if( [profileManager profileWithNameExists: lastProfile] )
+	if( ![profileManager profileWithNameExists: [_profile profileName]] )
 	{
-		[_lastProfile autorelease];
-		_lastProfile = [lastProfile retain];
-	}
-	else if( ![profileManager profileWithNameExists: _lastProfile] )
-	{
-		// This can actually happen at load, and this is a good place to catch it
-		[_lastProfile autorelease];
-		[self setLastProfile:[NSString stringWithString:[profileManager defaultProfileName]]];
+		[self setProfile:[profileManager defaultProfile]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
+                                                            object:self];
 	}
 }
 
@@ -289,31 +241,15 @@
 	_delegate = delegate;
 }
 
-- (void)profileListUpdate:(id)notification
-{
-	ProfileDataManager* profileManager = [ProfileDataManager sharedInstance];
-	
-	NSString *lastProfile = [self lastProfile];
-	if( !lastProfile || ![profileManager profileWithNameExists: lastProfile] )
-	{
-		[self setLastProfile:[NSString stringWithString:[profileManager defaultProfileName]]];
-	}
-}
-
 - (void)copyServer: (id<IServerData>)server
 {
-	
-	[self setHostAndPort:[server hostAndPort]];
-	// remember password must come before setting the password (in case a root class
-	// needs to do appropriate save logic
-	[self setRememberPassword:[server rememberPassword]];
+    [self setHost:[server host]];
+    [self setPort:[server port]];
 	[self setPassword:[server password]];
-	[self setDisplay:[server display]];
-	[self setPort:[server port]];
-	[self setShared:[server shared]];
-	[self setFullscreen:[server fullscreen]];
-	[self setViewOnly:[server viewOnly]];
-	[self setLastProfile:[server lastProfile]];
+    _shared = [server shared];
+    _fullscreen = [server fullscreen];
+    _viewOnly = [server viewOnly];
+    [self setProfile:[server profile]];
 }
 
 - (bool)addToServerListOnConnect

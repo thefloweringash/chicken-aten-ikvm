@@ -36,39 +36,40 @@ typedef enum
 
 @protocol IServerDataDelegate;
 
+@class Profile;
+
 @protocol IServerData <NSObject>
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type;
 
 - (NSString*)name;
 - (NSString*)host;
-- (NSString*)hostAndPort;
 - (NSString*)password;
 - (bool)rememberPassword;
-- (int)display;
-- (bool)isPortSpecifiedInHost;
 - (int)port;
 - (bool)shared;
 - (bool)fullscreen;
 - (bool)viewOnly;
-- (NSString*)lastProfile;
+- (Profile *)profile;
 - (bool)addToServerListOnConnect;
 
-- (void)setName: (NSString*)name;
 - (void)setHost: (NSString*)host;
-- (void)setHostAndPort: (NSString*)host;
+- (BOOL)setHostAndPort: (NSString*)host;
 - (void)setPassword: (NSString*)password;
-- (void)setRememberPassword: (bool)rememberPassword;
 - (void)setDisplay: (int)display;
 - (void)setPort: (int)port;
 - (void)setShared: (bool)shared;
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setViewOnly: (bool)viewOnly;
-- (void)setLastProfile: (NSString*)lastProfile;
+- (void)setProfile: (Profile *)profile;
 
 - (void)copyServer: (id<IServerData>)server;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
+
+@optional
+- (BOOL)rememberPassword;
+- (void)setRememberPassword: (BOOL)rememberPassword;
 
 @end
 

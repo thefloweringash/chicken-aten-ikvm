@@ -23,21 +23,17 @@
 #import "IServerData.h"
 
 #define PORT_BASE 5900
-#define DISPLAY_MAX 50 // numbers >= this are interpreted as a port
+
+@class Profile;
 
 @interface ServerBase : NSObject <IServerData> {
-	NSString* _name;
 	NSString* _host;
-	NSString* _hostAndPort;
 	NSString* _password;
-	bool      _rememberPassword;
-	int       _display; // value entered in "Display or port" box
 	int       _port;
 	bool      _shared;
 	bool      _fullscreen;
 	bool      _viewOnly;	
-	NSString* _lastProfile;
-    bool      _isPortSpecifiedInHost;
+    Profile   *_profile;
 	id<IServerDataDelegate> _delegate;
 }
 
@@ -52,33 +48,30 @@
 
 - (NSString*)name;
 - (NSString*)host;
-- (NSString*)hostAndPort;
 - (NSString*)password;
 - (bool)rememberPassword;
-- (int)display;
-- (bool)isPortSpecifiedInHost;
 - (int)port;
 - (bool)shared;
 - (bool)fullscreen;
 - (bool)viewOnly;
-- (NSString*)lastProfile;
+- (Profile *)profile;
 - (bool)addToServerListOnConnect;
 
-- (void)setName: (NSString*)name;
 - (void)setHost: (NSString*)host;
-- (void)setHostAndPort: (NSString*)host;
+- (BOOL)setHostAndPort: (NSString*)host;
 - (void)setPassword: (NSString*)password;
-- (void)setRememberPassword: (bool)rememberPassword;
 - (void)setDisplay: (int)display;
 - (void)setShared: (bool)shared;
 - (void)setPort: (int)port;
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setViewOnly: (bool)viewOnly;
-- (void)setLastProfile: (NSString*)lastProfile;
+- (void)setProfile: (Profile *)profile;
+- (void)setProfileName: (NSString *)profileName;
 
 - (void)setDelegate: (id<IServerDataDelegate>)delegate;
 
-- (void)profileListUpdate:(id)notification;
+- (void)copyServer: (id<IServerData>)server;
+
 //@}
 
 @end

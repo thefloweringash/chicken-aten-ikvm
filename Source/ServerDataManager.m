@@ -365,7 +365,7 @@ static ServerDataManager* gInstance = nil;
 	}
 }
 
-- (id<IServerData>)createServerByName:(NSString*)name
+- (ServerFromPrefs *)createServerByName:(NSString*)name
 {
 	NSMutableString *nameHelper = [NSMutableString stringWithString:name];
 	
@@ -388,7 +388,7 @@ static ServerDataManager* gInstance = nil;
 
 - (id<IServerData>)addServer:(id<IServerData>)server
 {
-	id<IServerData> newServer = [self createServerByName:[server name]];
+	ServerFromPrefs *newServer = [self createServerByName:[server name]];
 	NSString* nameHolder = [newServer name];
 	
 	[newServer copyServer: server];

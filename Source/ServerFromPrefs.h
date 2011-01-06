@@ -20,12 +20,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ServerBase.h"
+#import "PersistentServer.h"
 #import "IServerData.h"
 @class ServerDataManager;
 
 /* A server which is or can be stored in our preferences */
-@interface ServerFromPrefs : ServerBase {
+@interface ServerFromPrefs : PersistentServer {
 }
 
 + (id<IServerData>)createWithName:(NSString*)name;

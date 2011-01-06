@@ -180,7 +180,7 @@
 		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
 		[display     setEditable:[mServer doYouSupport:EDIT_PORT]];
 		[password    setEnabled: [mServer doYouSupport:EDIT_PASSWORD]];
-		[rememberPwd setEnabled: [mServer doYouSupport:SAVE_PASSWORD]];
+		[rememberPwd setEnabled: [mServer respondsToSelector:@selector(setRememberPassword:)]];
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];
 
         [viewOnly setEnabled: YES];

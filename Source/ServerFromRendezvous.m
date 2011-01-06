@@ -118,7 +118,6 @@
 		case EDIT_NAME:
 			return NO;
 		case EDIT_PASSWORD:
-		case SAVE_PASSWORD:
 		case CONNECT:
 			return (bHasResolved && bResloveSucceeded);
 	}

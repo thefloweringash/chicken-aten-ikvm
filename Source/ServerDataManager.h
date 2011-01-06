@@ -138,7 +138,7 @@
  *  @param server The server to add.
  *  @return The new server (the one that is stored).
  */
-- (id<IServerData>)addServer:(id<IServerData>)server;
+- (ServerFromPrefs *)addServer:(id<IServerData>)server;
 
 /* @name Archiving and Unarchiving
  * Implements the NSCoding protocol for serialization

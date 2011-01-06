@@ -30,6 +30,7 @@
 #import "ServerBase.h"
 #import "ServerDataManager.h"
 #import "ServerStandAlone.h"
+#import "ServerFromPrefs.h"
 
 #define DISPLAY_MAX 50 // numbers >= this are interpreted as a port
 
@@ -373,10 +374,12 @@
 
 - (IBAction)addServerChanged:(id)sender
 {
-	if( nil != mServer )
-	{
-		[(id)mServer setAddToServerListOnConnect:![mServer addToServerListOnConnect]];
-	}
+    if ([sender state]) {
+        [rememberPwd setEnabled:YES];
+    } else {
+        [rememberPwd setState:NSOffState];
+        [rememberPwd setEnabled:NO];
+    }
 }
 
 - (IBAction)showProfileManager:(id)sender
@@ -393,6 +396,7 @@
 - (IBAction)connectToServer:(id)sender
 {
     NSWindow *window;
+    ServerBase  *server;
 
     saveCheckboxWasVisible = !removedSaveCheckbox;
     [self setSaveCheckboxIsVisible: NO];
@@ -405,10 +409,18 @@
     [connectBtn setAction: @selector(cancelConnect:)];
     [connectBtn setKeyEquivalent:@"."];
     [connectBtn setKeyEquivalentModifierMask:NSCommandKeyMask];
+
+    if( [save state] )
+    {
+        ServerFromPrefs *s = [[ServerDataManager sharedInstance] addServer:mServer];
+        [s setRememberPassword:[rememberPwd state]];
+        server = s;
+    } else
+        server = mServer;
 	
     // Asynchronously creates a connection to the server
     window = superController ? [superController window] : [self window];
-    connectionWaiter = [[ConnectionWaiter alloc] initWithServer:mServer
+    connectionWaiter = [[ConnectionWaiter alloc] initWithServer:server
                             profile:[mServer profile] delegate:self window:window];
     if (connectionWaiter == nil)
         [self connectionFailed];
@@ -429,11 +441,6 @@
 
     [superController connectionDone];
     [self connectionAttemptEnded];
-
-    if( [mServer addToServerListOnConnect] )
-    {
-        [[ServerDataManager sharedInstance] addServer:mServer];
-    }
 
     if( YES == selfTerminate )
     {

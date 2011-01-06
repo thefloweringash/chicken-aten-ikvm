@@ -386,7 +386,7 @@ static ServerDataManager* gInstance = nil;
 	return newServer;
 }
 
-- (id<IServerData>)addServer:(id<IServerData>)server
+- (ServerFromPrefs *)addServer:(id<IServerData>)server
 {
 	ServerFromPrefs *newServer = [self createServerByName:[server name]];
 	NSString* nameHolder = [newServer name];

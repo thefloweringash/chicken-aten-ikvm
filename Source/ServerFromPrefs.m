@@ -20,7 +20,6 @@
 //
 
 #import "ServerFromPrefs.h"
-#import "KeyChain.h"
 #import "IServerData.h"
 #import "Profile.h"
 #import "ServerDataManager.h"
@@ -39,8 +38,6 @@
 #define RFB_LAST_PROFILE  @"Profile"
 #define RFB_PORT		  5900
 
-#define KEYCHAIN_SERVICE_NAME	@"Chicken"
-
 @implementation ServerFromPrefs
 
 + (void)initialize
@@ -54,11 +51,7 @@
 	{
         _name = [host retain];
         [self setHost: host];
-		[self setPassword: [NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]]];
-		/* super instead of self here because we don't need to save the
-		 * password. Moreover, if we couldn't get access to the keychain, then
-		 * we don't want to clobber the keychain password. */
-		[super setRememberPassword:[[prefDict objectForKey:RFB_REMEMBER] intValue] == 0 ? NO : YES];
+        _rememberPassword =       [[prefDict objectForKey:RFB_REMEMBER] boolValue];
 		[self setDisplay:         [[prefDict objectForKey:RFB_DISPLAY] intValue]];
 		[self setProfileName:      [prefDict objectForKey:RFB_LAST_PROFILE]];
 		[self setShared:          [[prefDict objectForKey:RFB_SHARED] intValue]];
@@ -121,9 +114,7 @@
         NSString *host =          [coder decodeObjectForKey:RFB_HOST];
 		havePort = [self setHostAndPort:[coder decodeObjectForKey:RFB_HOSTANDPORT]];
         [self setHost: host];
-		[self setPassword:        [NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name]]];
-        // Note the super instead of self here. See comment in initWithHost.
-		[super setRememberPassword:[coder decodeBoolForKey:RFB_REMEMBER]];
+        _rememberPassword =       [coder decodeBoolForKey:RFB_REMEMBER];
 
 		int displayMax; // what DISPLAY_MAX was used by whoever encoded this
 		if ([coder containsValueForKey: RFB_DISPLAYMAX])
@@ -162,52 +153,6 @@
 	
     // shouldn't ever get here
 	return NO;
-}
-
-- (void)setName: (NSString*)name
-{
-	if( NSOrderedSame != [name compare:_name] )
-	{
-		// if the password is saved, destroy the one off the old name key
-		if( YES == _rememberPassword)
-		{
-			[[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name];
-		}
-		
-		[super setName:name];
-		
-		// if the password should be saved, save it with the new name key
-		if( YES == _rememberPassword)
-		{
-			[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_SERVICE_NAME account:_name];
-		}
-	}
-}
-
-- (void)setPassword: (NSString*)password
-{
-	[super setPassword:password];
-	
-	// only save if set to do so
-	if( YES == _rememberPassword )
-	{
-		[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_SERVICE_NAME account:_name];
-	}
-}
-
-- (void)setRememberPassword: (bool)rememberPassword
-{
-	[super setRememberPassword:rememberPassword];
-	
-	// make sure that the saved password reflects the new remember password setting
-	if( YES == _rememberPassword )
-	{
-		[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_SERVICE_NAME account:_name];
-	}
-	else
-	{
-		[[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_SERVICE_NAME account:_name];
-	}
 }
 
 @end

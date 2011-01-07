@@ -23,14 +23,11 @@
 #import "sys/socket.h"
 #import "netinet/in.h"
 #import "arpa/inet.h"
-#import "KeyChain.h"
 #import "Profile.h"
 
 #define RFB_SAVED_RENDEZVOUS_SERVERS @"RFB_SAVED_RENDEZVOUS_SERVERS"
 
 @implementation ServerFromRendezvous
-
-#define KEYCHAIN_ZEROCONF_SERVICE_NAME	@"Chicken-zeroconf"
 
 + (id<IServerData>)createWithNetService:(NSNetService*)service
 {
@@ -59,7 +56,7 @@
 		NSMutableDictionary* propertyDict = [rendServerDict objectForKey:[service_ name]];
 		if ( propertyDict )
 		{
-			[self setRememberPassword: [[propertyDict objectForKey:@"rememberPassword"] boolValue]];
+            _rememberPassword =        [[propertyDict objectForKey:@"rememberPassword"] boolValue];
 			[self setShared:           [[propertyDict objectForKey:@"shared"] boolValue]];
 			[self setFullscreen:       [[propertyDict objectForKey:@"fullscreen"] boolValue]];
 			[self setViewOnly:         [[propertyDict objectForKey:@"viewOnly"] boolValue]];
@@ -161,41 +158,16 @@
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
-														
-	// Finally, load the password
-	if( YES == _rememberPassword )
-	{
-		[self setPassword:[NSString stringWithString:[[KeyChain defaultKeyChain] genericPasswordForService:KEYCHAIN_ZEROCONF_SERVICE_NAME account:[service_ name]]]];
-	}
 }
 
-- (void)setPassword: (NSString*)password
+- (NSString *)keychainServiceName
 {
-	[super setPassword:password];
-	
-	// only save if set to do so
-	if( YES == _rememberPassword && YES == bHasResolved && YES == bResloveSucceeded)
-	{
-		[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_ZEROCONF_SERVICE_NAME account:[service_ name]];
-	}
+    return @"Chicken-zeroconf";
 }
 
-- (void)setRememberPassword: (bool)rememberPassword
+- (NSString *)keychainAccount
 {
-	[super setRememberPassword:rememberPassword];
-	
-	// make sure that the saved password reflects the new remember password setting
-	if( YES == bHasResolved && YES == bResloveSucceeded)
-	{
-		if( YES == _rememberPassword )
-		{
-			[[KeyChain defaultKeyChain] setGenericPassword:_password forService:KEYCHAIN_ZEROCONF_SERVICE_NAME account:[service_ name]];
-		}
-		else
-		{
-			[[KeyChain defaultKeyChain] removeGenericPasswordForService:KEYCHAIN_ZEROCONF_SERVICE_NAME account:[service_ name]];
-		}
-	}
+    return [service_ name];
 }
 
 @end

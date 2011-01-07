@@ -46,10 +46,6 @@
  */
 //@{
 - (bool)doYouSupport: (SUPPORT_TYPE)type;
-
-- (void)setName: (NSString*)name;
-- (void)setPassword: (NSString*)password;
-- (void)setRememberPassword: (bool)rememberPassword;
 //@}
 
 @end

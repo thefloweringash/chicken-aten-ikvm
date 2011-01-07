@@ -35,4 +35,7 @@
 - (void)setName: (NSString *)name;
 - (void)setRememberPassword: (BOOL)rememberPassword;
 
+- (NSString *)keychainServiceName;
+- (NSString *)keychainAccount;
+
 @end

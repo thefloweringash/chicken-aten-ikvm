@@ -18,6 +18,7 @@
  */
 
 #import "PersistentServer.h"
+#import "KeyChain.h"
 #import "ServerDataManager.h"
 
 @implementation PersistentServer
@@ -41,6 +42,17 @@
 	return _name;
 }
 
+- (NSString *)password
+{
+    if (_rememberPassword) {
+        NSString    *service = [self keychainServiceName];
+        return [[KeyChain defaultKeyChain] genericPasswordForService:service
+                                                account:[self keychainAccount]];
+    } else
+        return [super password];
+}
+
+
 - (BOOL)rememberPassword
 {
 	return _rememberPassword;
@@ -48,33 +60,72 @@
 
 - (void)setName: (NSString*)name
 {
+    if ([name isEqualToString:_name])
+        return;
+
+    // we do this so that the password gets deleted from the old name and
+    // created at the new name
+    BOOL    rememberPassword = _rememberPassword;
+    [self setRememberPassword:NO];
+
 	[_name autorelease];
-	if( nil != name )
-	{
+
+	if (name) {
 		NSMutableString *nameHelper = [NSMutableString stringWithString:name];
 		
 		[[ServerDataManager sharedInstance] validateNameChange:nameHelper
                                                      forServer:self];
 		
 		_name = [nameHelper retain];
-	}
-	else
-	{
+	} else {
 		_name = @"localhost";
 	}
+
+    [self setRememberPassword:rememberPassword];
+}
+- (void)setPassword: (NSString*)password
+{
+	if (_rememberPassword) {
+		[[KeyChain defaultKeyChain] setGenericPassword:password
+                                        forService:[self keychainServiceName]
+                                           account:[self keychainAccount]];
+    } else
+        [super setPassword:password];
 }
 
 - (void)setRememberPassword: (BOOL)rememberPassword
 {
-	_rememberPassword = rememberPassword;
+	if (rememberPassword && !_rememberPassword) {
+        [[KeyChain defaultKeyChain] setGenericPassword:_password
+                                        forService:[self keychainServiceName]
+                                           account:[self keychainAccount]];
+        [_password release];
+        _password = nil;
+        _rememberPassword = YES;
+	} else if (!rememberPassword && _rememberPassword) {
+        _password = [[self password] retain];
+		[[KeyChain defaultKeyChain] removeGenericPasswordForService:[self keychainServiceName]
+                            account:[self keychainAccount]];
+        _rememberPassword = NO;
+	}
 }
 
 - (void)copyServer:(PersistentServer *)server
 {
-	// remember password must come before setting the password so that the
+	// remember password must come after setting the password so that the
     // appropriate save logic works
-	[self setRememberPassword:[server rememberPassword]];
     [super copyServer:server];
+	[self setRememberPassword:[server rememberPassword]];
+}
+
+- (NSString *)keychainServiceName
+{
+    return @"Chicken";
+}
+
+- (NSString *)keychainAccount
+{
+    return _name;
 }
 
 @end

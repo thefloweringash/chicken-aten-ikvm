@@ -8,20 +8,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreServices/CoreServices.h>
-#import <Carbon/Carbon.h>
 
 @interface KeyChain : NSObject {
-    unsigned	maxPasswordLength ;
 }
 
 + (KeyChain*)defaultKeyChain;
 
-- (void)setGenericPassword:(NSString*)password forService:(NSString*)service account:(NSString*)account;
+- (BOOL)setGenericPassword:(NSString*)password forService:(NSString*)service account:(NSString*)account;
 - (NSString*)genericPasswordForService:(NSString*)service account:(NSString*)account;
 - (void)removeGenericPasswordForService:(NSString *)service account:(NSString*)account;
-
-- (void)setMaxPasswordLength:(unsigned)length;
-- (unsigned)maxPasswordLength;
 
 @end

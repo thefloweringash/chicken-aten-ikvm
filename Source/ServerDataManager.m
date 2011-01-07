@@ -330,13 +330,17 @@ static ServerDataManager* gInstance = nil;
 {	
 	NSString* name;
 	NSEnumerator* groupKeys = [mGroups keyEnumerator];
+
+    // deletes keychain password, if there is one
+    [server setRememberPassword:NO];
+	
 	while( name = [groupKeys nextObject] )
 	{
 		[[mGroups objectForKey:name] removeObjectForKey:[server name]];
 	}
 	
 	assert( nil == [mServers objectForKey:[server name]] );
-	
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 														object:self];
 }

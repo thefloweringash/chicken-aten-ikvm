@@ -301,7 +301,7 @@ static ServerDataManager* gInstance = nil;
     NSMutableDictionary *servers;
 
     immutServers = [defaults objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
-    servers = [NSMutableDictionary dictionaryWithDictionary:servers];
+    servers = [NSMutableDictionary dictionaryWithDictionary:immutServers];
 
     [servers setObject:[server propertyDict] forKey:[server saveName]];
 	[defaults setObject:servers forKey:RFB_SAVED_RENDEZVOUS_SERVERS];
@@ -606,6 +606,7 @@ static ServerDataManager* gInstance = nil;
 	
 	[serverToRemove retain];
 	
+    [mRendezvousNameToServer removeObjectForKey:[aNetService name]];
 	[[mGroups objectForKey:@"Rendezvous"] removeObjectForKey:[serverToRemove name]];
     [mServers removeObjectForKey:[serverToRemove name]];
 

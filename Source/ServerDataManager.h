@@ -36,7 +36,7 @@
  *  This is a singleton class. Always access the class through the sharedInstance
  *  function. Do not create an instance yourself.
  */
-@interface ServerDataManager : NSObject <NSCoding> {
+@interface ServerDataManager : NSObject {
 	
 	NSMutableDictionary* mServers;
 	NSMutableDictionary* mGroups;
@@ -144,7 +144,6 @@
  * Implements the NSCoding protocol for serialization
  */
 //@{
-- (void)encodeWithCoder:(NSCoder*)coder;
 - (id)initWithCoder:(NSCoder*)coder;
 //@}
 

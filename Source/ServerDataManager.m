@@ -189,46 +189,6 @@ static ServerDataManager* gInstance = nil;
 	return gInstance;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder
-{
-    NSParameterAssert( [coder allowsKeyedCoding] );
-
-	// make a mutable copy of our server groups so we can remove unsavable servers
-	NSMutableDictionary *savableGroups = [NSMutableDictionary dictionary];
-	NSEnumerator *groupNameEnumerator = [mGroups keyEnumerator];
-	NSString *groupName;
-	
-	while ( groupName = [groupNameEnumerator nextObject] )
-	{
-		NSDictionary *originalServers = [mGroups objectForKey: groupName];
-		NSMutableDictionary *newServers = [NSMutableDictionary dictionaryWithDictionary: originalServers];
-		[savableGroups setObject: newServers forKey: groupName];
-	}
-	
-	// and remove the unsavable servers
-	NSMutableDictionary *savableServers = [NSMutableDictionary dictionaryWithDictionary: mServers];
-	NSEnumerator *serverNameEnumerator = [mServers keyEnumerator];
-	NSString *serverName;
-	
-	while ( serverName = [serverNameEnumerator nextObject] )
-	{
-		id<IServerData> server = [self getServerWithName: serverName];
-		NSParameterAssert( server != nil );
-        if ( ! [server respondsToSelector: @selector(encodeWithCoder:)] )
-		{
-			[savableServers removeObjectForKey: serverName];
-			
-			NSEnumerator *groupEnumerator = [savableGroups objectEnumerator];
-			NSMutableDictionary *group;
-			while ( group = [groupEnumerator nextObject] )
-				[group removeObjectForKey: serverName];
-		}
-	}
-	
-	[coder encodeObject: savableServers forKey: RFB_SERVER_LIST];
-	[coder encodeObject: savableGroups forKey: RFB_GROUP_LIST];
-}
-
 /* This is called when loading servers saved by version 2.1 and earlier. */
 - (id)initWithCoder:(NSCoder *)coder
 {
@@ -334,16 +294,17 @@ static ServerDataManager* gInstance = nil;
     [self saveRendezvousServers];
 }
 
-- (void)saveServer: (PersistentServer *)server withinDefaultKey: (NSString *)key
+- (void)saveRendezvousServer: (PersistentServer *)server
 {
-    NSDictionary* immutServers;
-    NSMutableDictionary* servers;
+    NSUserDefaults      *defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary        *immutServers;
+    NSMutableDictionary *servers;
 
-    immutServers = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    immutServers = [defaults objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
     servers = [NSMutableDictionary dictionaryWithDictionary:servers];
 
     [servers setObject:[server propertyDict] forKey:[server saveName]];
-	[[NSUserDefaults standardUserDefaults] setObject:servers forKey:key];
+	[defaults setObject:servers forKey:RFB_SAVED_RENDEZVOUS_SERVERS];
 }
 
 - (unsigned) serverCount
@@ -556,6 +517,8 @@ static ServerDataManager* gInstance = nil;
 		}
 		else
 		{
+            [self saveRendezvousServers];
+
 			[mServiceBrowser_VNC release];
 			[mServiceBrowser_RFB release];
 			mServiceBrowser_VNC = nil;
@@ -645,6 +608,8 @@ static ServerDataManager* gInstance = nil;
 	
 	[[mGroups objectForKey:@"Rendezvous"] removeObjectForKey:[serverToRemove name]];
     [mServers removeObjectForKey:[serverToRemove name]];
+
+    [self saveRendezvousServer:serverToRemove];
 	
 	[serverToRemove release];
     

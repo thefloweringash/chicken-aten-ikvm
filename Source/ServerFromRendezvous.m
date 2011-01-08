@@ -65,6 +65,7 @@
 
 - (void)dealloc
 {
+    [service_ setDelegate:nil];
 	[service_ release];
 	[super dealloc];
 }

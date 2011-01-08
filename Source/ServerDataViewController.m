@@ -171,6 +171,9 @@
         }
         [displayDescription setStringValue:str];
 
+            /* It's important to do password before rememberPwd so that
+             * the latter will reflect a failure to retrieve the
+             * passsword from the key chain. */
 		[password setStringValue:[mServer password]];
         [rememberPwd setIntValue:[mServer rememberPassword]];
         [shared setIntValue:[mServer shared]];
@@ -327,7 +330,7 @@
 	if( nil != mServer )
 	{
         if ([mServer respondsToSelector:@selector(setRememberPassword:)])
-            [mServer setRememberPassword:![mServer rememberPassword]];
+            [mServer setRememberPassword:[sender state]];
 	}
 }
 

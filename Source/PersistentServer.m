@@ -76,8 +76,16 @@
 {
     if (_rememberPassword) {
         NSString    *service = [self keychainServiceName];
-        return [[KeyChain defaultKeyChain] genericPasswordForService:service
+        NSString    *pass;
+        pass = [[KeyChain defaultKeyChain] genericPasswordForService:service
                                                 account:[self saveName]];
+        if (pass)
+            return pass
+        else {
+            _rememberPassword = NO;
+            [super setPassword:nil];
+            return [super password];
+        }
     } else
         return [super password];
 }
@@ -116,9 +124,15 @@
 - (void)setPassword: (NSString*)password
 {
 	if (_rememberPassword) {
-		[[KeyChain defaultKeyChain] setGenericPassword:password
+        BOOL    saved;
+
+		saved = [[KeyChain defaultKeyChain] setGenericPassword:password
                                         forService:[self keychainServiceName]
                                            account:[self saveName]];
+        if (!saved) {
+            _rememberPassword = NO;
+            [super setPassword:password];
+        }
     } else
         [super setPassword:password];
 }
@@ -126,12 +140,13 @@
 - (void)setRememberPassword: (BOOL)rememberPassword
 {
 	if (rememberPassword && !_rememberPassword) {
-        [[KeyChain defaultKeyChain] setGenericPassword:_password
+        if ([[KeyChain defaultKeyChain] setGenericPassword:_password
                                         forService:[self keychainServiceName]
-                                           account:[self saveName]];
-        [_password release];
-        _password = nil;
-        _rememberPassword = YES;
+                                           account:[self saveName]]) {
+            [_password release];
+            _password = nil;
+            _rememberPassword = YES;
+        }
 	} else if (!rememberPassword && _rememberPassword) {
         _password = [[self password] retain];
 		[[KeyChain defaultKeyChain] removeGenericPasswordForService:[self keychainServiceName]

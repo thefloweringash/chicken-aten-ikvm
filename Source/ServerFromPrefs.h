@@ -32,6 +32,7 @@
 + (id<IServerData>)createWithHost:(NSString*)hostName preferenceDictionary:(NSDictionary*)prefDict;
 
 - (id)initWithHost:(NSString*)host preferenceDictionary:(NSDictionary*)prefDict;
+- (id)initWithName:(NSString *)name andDictionary:(NSDictionary *)dict;
 
 /* @name Archiving and Unarchiving
  * Implements the NSCoding protocol for serialization

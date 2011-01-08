@@ -29,6 +29,9 @@
 }
 
 - (id)init;
+- (id)initFromDictionary: (NSDictionary *)dict;
+
+- (NSMutableDictionary *)propertyDict;
 
 - (BOOL)rememberPassword;
 
@@ -36,6 +39,6 @@
 - (void)setRememberPassword: (BOOL)rememberPassword;
 
 - (NSString *)keychainServiceName;
-- (NSString *)keychainAccount;
+- (NSString *)saveName;
 
 @end

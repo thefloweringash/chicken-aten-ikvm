@@ -25,8 +25,6 @@
 #import "arpa/inet.h"
 #import "Profile.h"
 
-#define RFB_SAVED_RENDEZVOUS_SERVERS @"RFB_SAVED_RENDEZVOUS_SERVERS"
-
 @implementation ServerFromRendezvous
 
 + (id<IServerData>)createWithNetService:(NSNetService*)service
@@ -36,32 +34,30 @@
 
 - (id)initWithNetService:(NSNetService*)service
 {
-	if( self = [super init] )
+    NSDictionary* rendServerDict = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
+    NSDictionary* propertyDict = [rendServerDict objectForKey:[service name]];
+
+    if (propertyDict)
+        self = [super initFromDictionary:propertyDict];
+    else
+        self = [super init];
+
+	if (self)
 	{
 		bHasResolved      = NO;
 		bResloveSucceeded = NO;
-        [self setHost: NSLocalizedString( @"Resolving", nil )];
+        [_host autorelease];
+        _host = [NSLocalizedString(@"Resolving", nil) retain];
 		
-		[service retain];
-		service_ = service;
+		service_ = [service retain];
 		[service_ setDelegate:self];
-		if ( [service respondsToSelector: @selector(resolveWithTimeout:)] )
+		if ( [service_ respondsToSelector: @selector(resolveWithTimeout:)] )
 			[service_ resolveWithTimeout: 5.0]; // Tiger only API
 		else
 			[service_ resolve];
 		
-		[self setName:[service_ name]];
-		
-		NSMutableDictionary* rendServerDict = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
-		NSMutableDictionary* propertyDict = [rendServerDict objectForKey:[service_ name]];
-		if ( propertyDict )
-		{
-            _rememberPassword =        [[propertyDict objectForKey:@"rememberPassword"] boolValue];
-			[self setShared:           [[propertyDict objectForKey:@"shared"] boolValue]];
-			[self setFullscreen:       [[propertyDict objectForKey:@"fullscreen"] boolValue]];
-			[self setViewOnly:         [[propertyDict objectForKey:@"viewOnly"] boolValue]];
-            [self setProfileName:       [propertyDict objectForKey:@"lastProfile"]];
-		}
+        [_name release];
+        _name = [[service_ name] retain];
 	}
 	
 	return self;
@@ -69,39 +65,8 @@
 
 - (void)dealloc
 {
-	[self save];
 	[service_ release];
 	[super dealloc];
-}
-
-- (void)save
-{
-	// This code is extremely inefficient since we are rebuilding the dictionary of rendezvous servers
-	// for each rendezvous server saved.
-	
-	NSMutableDictionary* propertyDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithBool:_rememberPassword],	[NSString stringWithString:@"rememberPassword"],
-		[NSNumber numberWithInt:_port - PORT_BASE],		[NSString stringWithString:@"display"],
-		[NSNumber numberWithBool:_shared],				[NSString stringWithString:@"shared"],
-		[NSNumber numberWithBool:_fullscreen],			[NSString stringWithString:@"fullscreen"],
-		[NSNumber numberWithBool:_viewOnly],            [NSString stringWithString:@"viewOnly"], 
-		[_profile profileName],							[NSString stringWithString:@"lastProfile"],
-		nil,											nil];
-
-	NSDictionary* defaultServerDict = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
-	NSMutableDictionary* rendServerDict = [NSMutableDictionary dictionaryWithDictionary:defaultServerDict];
-	
-	if( nil == rendServerDict )
-	{
-		[[NSUserDefaults standardUserDefaults] setObject:[NSMutableDictionary dictionary] forKey:RFB_SAVED_RENDEZVOUS_SERVERS];
-		
-		defaultServerDict = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
-		assert( nil != defaultServerDict );
-		rendServerDict = [NSMutableDictionary dictionaryWithDictionary:defaultServerDict];
-	}
-	
-	[rendServerDict setObject:propertyDict forKey:[service_ name]];
-	[[NSUserDefaults standardUserDefaults] setObject:rendServerDict forKey:RFB_SAVED_RENDEZVOUS_SERVERS];
 }
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type
@@ -125,7 +90,8 @@
 {
 	bHasResolved = YES;
 	bResloveSucceeded = NO;
-	[self setHost: NSLocalizedString( @"AddressResolveFailed", nil )];
+    [_host autorelease];
+	_host = [NSLocalizedString(@"AddressResolveFailed", nil) retain];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];
@@ -165,7 +131,7 @@
     return @"Chicken-zeroconf";
 }
 
-- (NSString *)keychainAccount
+- (NSString *)saveName
 {
     return [service_ name];
 }

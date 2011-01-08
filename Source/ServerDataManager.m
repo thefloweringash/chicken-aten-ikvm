@@ -29,6 +29,7 @@
 #define RFB_SERVER_LIST     @"ServerList"
 #define RFB_GROUP_LIST		@"GroupList"
 #define RFB_SAVED_SERVERS   @"SavedServers"
+#define RFB_SAVED_SERVERS2  @"SavedServers2"
 
 @implementation ServerDataManager
 
@@ -39,6 +40,7 @@ static ServerDataManager* gInstance = nil;
 	[ServerDataManager setVersion:1];
 }
 
+/* Initialize an empty server list */
 - (id)init
 {
 	if( self = [super init] )
@@ -67,6 +69,8 @@ static ServerDataManager* gInstance = nil;
 	return self;
 }
 
+/* Initialize from some old format for the preferences. Not sure when this was
+ * used, but it pre-dates version 2.0b4. */
 - (id)initWithOriginalPrefs
 {
 	if( self = [self init] )
@@ -88,6 +92,29 @@ static ServerDataManager* gInstance = nil;
 	}
 	
 	return self;
+}
+
+/* Initialize from servers as stored by versions 2.2 and later */
+- (id)initFromDictionary:(NSDictionary *)servers
+{
+    if (self = [self init]) {
+        NSEnumerator    *e = [servers keyEnumerator];
+        NSString        *name;
+        NSMutableDictionary    *standServers = [mGroups objectForKey:@"Standard"];
+
+        while (name = [e nextObject]) {
+            NSDictionary    *dict = [servers objectForKey:name];
+            ServerFromPrefs *server;
+
+            server = [[ServerFromPrefs alloc] initWithName:name
+                                             andDictionary:dict];
+            [mServers setObject:server forKey:name];
+            [standServers setObject:server forKey:name];
+            [server release];
+        }
+    }
+
+    return self;
 }
 
 - (void)dealloc
@@ -114,22 +141,26 @@ static ServerDataManager* gInstance = nil;
 	gInstance = nil;
 }
 
-- (void)save
-{
-	NSData *data = [NSKeyedArchiver archivedDataWithRootObject: gInstance];
-	[[NSUserDefaults standardUserDefaults] setObject: data forKey: RFB_SAVED_SERVERS];
-}
-
 + (ServerDataManager*) sharedInstance
 {
 	if( nil == gInstance )
 	{
-		NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:RFB_SAVED_SERVERS];
-		if ( data )
-		{
-			gInstance = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-			[gInstance retain];
-		}
+        NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary    *servers = [defaults objectForKey:RFB_SAVED_SERVERS2];
+
+        // server list format in 2.2 and later
+        if (servers)
+            gInstance = [[ServerDataManager alloc] initFromDictionary:servers];
+
+        if (nil == gInstance) {
+            // servers saved by 2.1 or earlier
+            NSData *data = [defaults objectForKey:RFB_SAVED_SERVERS];
+            if ( data )
+            {
+                gInstance = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                [gInstance retain];
+            }
+        }
 		
 		if( nil == gInstance )
 		{
@@ -151,6 +182,8 @@ static ServerDataManager* gInstance = nil;
 		{
 			[gInstance createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
 		}
+        
+        [gInstance useRendezvous:[[PrefController sharedController] usesRendezvous]];
 	}
 	
 	return gInstance;
@@ -196,6 +229,7 @@ static ServerDataManager* gInstance = nil;
 	[coder encodeObject: savableGroups forKey: RFB_GROUP_LIST];
 }
 
+/* This is called when loading servers saved by version 2.1 and earlier. */
 - (id)initWithCoder:(NSCoder *)coder
 {
 	[self autorelease];
@@ -259,7 +293,57 @@ static ServerDataManager* gInstance = nil;
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-	[self release];
+	[self save];
+    [self release];
+}
+
+- (void)putServers:(NSArray *)servers inDictionary:(NSMutableDictionary *)dict
+{
+    NSEnumerator        *en = [servers objectEnumerator];
+    PersistentServer    *server;
+
+    while ((server = [en nextObject]) != nil)
+        [dict setObject:[server propertyDict] forKey:[server saveName]];
+}
+
+- (void)saveStandardServers
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    
+    [self putServers:[mGroups objectForKey:@"Standard"] inDictionary:dict];
+    [[NSUserDefaults standardUserDefaults] setObject:dict
+                                              forKey:RFB_SAVED_SERVERS2];
+}
+
+- (void)saveRendezvousServers
+{
+    NSDictionary            *stored;
+    NSMutableDictionary     *dict;
+
+    stored = [[NSUserDefaults standardUserDefaults]
+                                objectForKey:RFB_SAVED_RENDEZVOUS_SERVERS];
+    dict = [NSMutableDictionary dictionaryWithDictionary:stored];
+    [self putServers:[mGroups objectForKey:@"Rendezvous"] inDictionary:dict];
+    [[NSUserDefaults standardUserDefaults] setObject:dict
+                                         forKey:RFB_SAVED_RENDEZVOUS_SERVERS];
+}
+
+- (void)save
+{
+    [self saveStandardServers];
+    [self saveRendezvousServers];
+}
+
+- (void)saveServer: (PersistentServer *)server withinDefaultKey: (NSString *)key
+{
+    NSDictionary* immutServers;
+    NSMutableDictionary* servers;
+
+    immutServers = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    servers = [NSMutableDictionary dictionaryWithDictionary:servers];
+
+    [servers setObject:[server propertyDict] forKey:[server saveName]];
+	[[NSUserDefaults standardUserDefaults] setObject:servers forKey:key];
 }
 
 - (unsigned) serverCount

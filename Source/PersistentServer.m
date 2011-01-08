@@ -19,6 +19,8 @@
 
 #import "PersistentServer.h"
 #import "KeyChain.h"
+#import "Profile.h"
+#import "ProfileDataManager.h"
 #import "ServerDataManager.h"
 
 @implementation PersistentServer
@@ -31,10 +33,38 @@
     return self;
 }
 
+- (id)initFromDictionary: (NSDictionary *)dict
+{
+    if (self = [super init]) {
+        _rememberPassword = [[dict objectForKey:@"rememberPassword"] boolValue];
+        _shared = [[dict objectForKey:@"shared"] boolValue];
+        _fullscreen = [[dict objectForKey:@"fullscreen"] boolValue];
+        _viewOnly = [[dict objectForKey:@"viewOnly"] boolValue];
+        [_profile autorelease];
+        _profile = [[ProfileDataManager sharedInstance]
+                            profileForKey:[dict objectForKey:@"lastProfile"]];
+        [_profile retain];
+    }
+    return self;
+}
+
 - (void)dealloc
 {
     [_name release];
     [super dealloc];
+}
+
+- (NSMutableDictionary *)propertyDict
+{
+	NSMutableDictionary* propertyDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithBool:_rememberPassword],	[NSString stringWithString:@"rememberPassword"],
+		[NSNumber numberWithBool:_shared],				[NSString stringWithString:@"shared"],
+		[NSNumber numberWithBool:_fullscreen],			[NSString stringWithString:@"fullscreen"],
+		[NSNumber numberWithBool:_viewOnly],            [NSString stringWithString:@"viewOnly"], 
+		[_profile profileName],							[NSString stringWithString:@"lastProfile"],
+		nil,											nil];
+    
+    return propertyDict;
 }
 
 - (NSString*)name
@@ -47,7 +77,7 @@
     if (_rememberPassword) {
         NSString    *service = [self keychainServiceName];
         return [[KeyChain defaultKeyChain] genericPasswordForService:service
-                                                account:[self keychainAccount]];
+                                                account:[self saveName]];
     } else
         return [super password];
 }
@@ -88,7 +118,7 @@
 	if (_rememberPassword) {
 		[[KeyChain defaultKeyChain] setGenericPassword:password
                                         forService:[self keychainServiceName]
-                                           account:[self keychainAccount]];
+                                           account:[self saveName]];
     } else
         [super setPassword:password];
 }
@@ -98,14 +128,14 @@
 	if (rememberPassword && !_rememberPassword) {
         [[KeyChain defaultKeyChain] setGenericPassword:_password
                                         forService:[self keychainServiceName]
-                                           account:[self keychainAccount]];
+                                           account:[self saveName]];
         [_password release];
         _password = nil;
         _rememberPassword = YES;
 	} else if (!rememberPassword && _rememberPassword) {
         _password = [[self password] retain];
 		[[KeyChain defaultKeyChain] removeGenericPasswordForService:[self keychainServiceName]
-                            account:[self keychainAccount]];
+                            account:[self saveName]];
         _rememberPassword = NO;
 	}
 }
@@ -123,7 +153,8 @@
     return @"Chicken";
 }
 
-- (NSString *)keychainAccount
+/* Name under which the keychain password and the server settings are stored. */
+- (NSString *)saveName
 {
     return _name;
 }

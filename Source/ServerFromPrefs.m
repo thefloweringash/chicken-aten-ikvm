@@ -45,6 +45,8 @@
 	[ServerFromPrefs setVersion:1];
 }
 
+/* This is used for loading the servers under some old preference scheme (before
+ * 2.0b4. */
 - (id)initWithHost:(NSString*)host preferenceDictionary:(NSDictionary*)prefDict
 {
     if( self = [super init] )
@@ -60,6 +62,19 @@
 	}
 	
 	return self;
+}
+
+/* Loading from preferences in 2.2 and later. */
+- (id)initWithName: (NSString *)name andDictionary:(NSDictionary *)dict
+{
+    if (self = [super initFromDictionary:dict]) {
+        [_name autorelease];
+        _name = [name retain];
+        [_host release];
+        _host = [[dict objectForKey:@"host"] retain];
+        _port = [[dict objectForKey:@"port"] intValue];
+    }
+    return self;
 }
 
 - (void)dealloc
@@ -101,6 +116,7 @@
 	[coder encodeBool:_viewOnly          forKey:RFB_VIEWONLY];
 }
 
+/* For loading servers saved by 2.1 and earlier versions. */
 - (id)initWithCoder:(NSCoder *)coder
 {
 	[self autorelease];
@@ -137,6 +153,15 @@
 	}
 	
     return self;
+}
+
+- (NSMutableDictionary *)propertyDict
+{
+    NSMutableDictionary *dict = [super propertyDict];
+
+    [dict setObject:[NSNumber numberWithInt:_port] forKey:@"port"];
+    [dict setObject:_host forKey:@"host"];
+    return dict;
 }
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type

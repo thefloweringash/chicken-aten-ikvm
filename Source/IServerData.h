@@ -63,7 +63,6 @@ typedef enum
 - (void)copyServer: (id<IServerData>)server;
 
 @optional
-- (BOOL)rememberPassword;
 - (void)setRememberPassword: (BOOL)rememberPassword;
 
 @end

@@ -422,6 +422,7 @@
     window = superController ? [superController window] : [self window];
     connectionWaiter = [[ConnectionWaiter alloc] initWithServer:server
                             profile:[mServer profile] delegate:self window:window];
+    [[ServerDataManager sharedInstance] save]; // just in case we crash
     if (connectionWaiter == nil)
         [self connectionFailed];
 }

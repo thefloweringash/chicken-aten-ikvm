@@ -618,11 +618,12 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)serverListDidChange:(NSNotification*)notification
 {
-    NSString    *name = [self selectedServerName];
+    NSString    *name = [[self selectedServerName] retain];
 	[self reloadServerArray];
 	[serverList reloadData];
     if (![self selectServerByName:name])
         [self selectedHostChanged];
+    [name release];
 }
 
 - (void)useRendezvous:(BOOL)useRendezvous

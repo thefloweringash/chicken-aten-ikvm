@@ -322,7 +322,7 @@
 
     [self connectionProblem];
     [authMessage setStringValue: aReason];
-    if ([server_ respondsToSelector:@selector(rememberPassword)])
+    if ([server_ respondsToSelector:@selector(setRememberPassword:)])
         [rememberNewPassword setState: [server_ rememberPassword]];
     else
         [rememberNewPassword setHidden:YES];

@@ -95,28 +95,6 @@
 	return newServer;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder
-{
-    NSParameterAssert( [coder allowsKeyedCoding] );
-
-	[coder encodeObject:_name			 forKey:RFB_NAME];
-	[coder encodeObject:_host			 forKey:RFB_HOST];
-	[coder encodeObject:_host            forKey:RFB_HOSTANDPORT];
-	[coder encodeBool:_rememberPassword  forKey:RFB_REMEMBER];
-    if (_port >= PORT_BASE) {
-        [coder encodeInt:SHRT_MAX       forKey:RFB_DISPLAYMAX];
-        [coder encodeInt:_port-PORT_BASE forKey:RFB_DISPLAY];
-    } else {
-        [coder encodeInt:0               forKey:RFB_DISPLAYMAX];
-        [coder encodeInt:_port           forKey:RFB_DISPLAY];
-    }
-	[coder encodeObject:[_profile profileName]	forKey:RFB_LAST_PROFILE];
-	[coder encodeBool:_shared			 forKey:RFB_SHARED];
-	[coder encodeBool:_fullscreen		 forKey:RFB_FULLSCREEN];
-	[coder encodeBool:_viewOnly          forKey:RFB_VIEWONLY];
-}
-
-/* For loading servers saved by 2.1 and earlier versions. */
 - (id)initWithCoder:(NSCoder *)coder
 {
 	[self autorelease];

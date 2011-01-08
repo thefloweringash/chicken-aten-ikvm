@@ -38,7 +38,6 @@
  * Implements the NSCoding protocol for serialization
  */
 //@{
-- (void)encodeWithCoder:(NSCoder*)coder;
 - (id)initWithCoder:(NSCoder*)coder;
 //@}
 

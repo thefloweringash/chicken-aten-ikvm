@@ -65,7 +65,6 @@ static KeyChain* defaultKeyChain = nil;
     const char  *acc = [account UTF8String];
     
     if ([service length] == 0 || [account length] == 0) {
-        free(p);
         return @"";
     }
     

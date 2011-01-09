@@ -80,7 +80,7 @@
         pass = [[KeyChain defaultKeyChain] genericPasswordForService:service
                                                 account:[self saveName]];
         if (pass)
-            return pass
+            return pass;
         else {
             _rememberPassword = NO;
             [super setPassword:nil];

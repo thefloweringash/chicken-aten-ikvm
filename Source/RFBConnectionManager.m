@@ -31,6 +31,7 @@
 #import "ServerFromPrefs.h"
 #import "ServerStandAlone.h"
 #import "ServerDataManager.h"
+#import "Session.h"
 
 static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
@@ -442,7 +443,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
     theConnection = [[RFBConnection alloc] initWithFileHandle:file server:server profile:someProfile];
     if(theConnection) {
-        [connections addObject:theConnection];
+        [self successfulConnection:theConnection toServer:nil];
         [theConnection release];
         return YES;
     }
@@ -456,7 +457,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 - (void)successfulConnection: (RFBConnection *)theConnection
         toServer: (id<IServerData>)server
 {
-    [connections addObject:theConnection];
+    Session *sess = [[Session alloc] initWithConnection:theConnection];
+    [connections addObject:sess];
+    [sess release];
 }
 
 - (IBAction)addServer:(id)sender
@@ -500,12 +503,12 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 // Jason added the following for full-screen windows
 - (void)makeAllConnectionsWindowed {
-	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
-	RFBConnection *thisConnection;
+	NSEnumerator *enumerator = [connections objectEnumerator];
+    Session      *session;
 
-	while (thisConnection = [connectionEnumerator nextObject]) {
-		if ([thisConnection connectionIsFullscreen])
-			[thisConnection makeConnectionWindowed: self];
+	while (session = [enumerator nextObject]) {
+		if ([session connectionIsFullscreen])
+			[session makeConnectionWindowed: self];
 	}
 }
 
@@ -654,12 +657,12 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)setFrontWindowUpdateInterval: (NSTimeInterval)interval
 {
-	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
-	RFBConnection *thisConnection;
+	NSEnumerator *enumerator = [connections objectEnumerator];
+    Session      *session;
 	
-	while (thisConnection = [connectionEnumerator nextObject]) {
-		if ([thisConnection hasKeyWindow]) {
-			[thisConnection setFrameBufferUpdateSeconds: interval];
+	while (session = [enumerator nextObject]) {
+		if ([session hasKeyWindow]) {
+			[session setFrameBufferUpdateSeconds: interval];
 			break;
 		}
 	}
@@ -667,12 +670,12 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)setOtherWindowUpdateInterval: (NSTimeInterval)interval
 {
-	NSEnumerator *connectionEnumerator = [connections objectEnumerator];
-	RFBConnection *thisConnection;
+	NSEnumerator *enumerator = [connections objectEnumerator];
+    Session      *session;
 	
-	while (thisConnection = [connectionEnumerator nextObject]) {
-		if ([thisConnection hasKeyWindow]) {
-			[thisConnection setFrameBufferUpdateSeconds: interval];
+	while (session = [enumerator nextObject]) {
+		if ([session hasKeyWindow]) {
+			[session setFrameBufferUpdateSeconds: interval];
 		}
 	}
 }

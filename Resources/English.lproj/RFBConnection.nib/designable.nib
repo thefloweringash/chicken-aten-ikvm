@@ -20,7 +20,7 @@
 		</object>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="851336882">
 			<object class="NSCustomObject" id="501034350">
-				<string key="NSClassName">RFBConnection</string>
+				<string key="NSClassName">Session</string>
 			</object>
 			<object class="NSCustomObject" id="92439959">
 				<string key="NSClassName">FirstResponder</string>
@@ -826,7 +826,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="158543921">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSButton" id="637147310">
@@ -834,7 +834,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{288, 12}, {105, 32}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="932273967">
 								<int key="NSCellFlags">67239424</int>
@@ -855,7 +854,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 82}, {238, 17}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="70973106">
 								<int key="NSCellFlags">68288064</int>
@@ -1157,7 +1155,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<object class="NSPSMatrix" key="NSDrawMatrix"/>
 							<string key="NSFrame">{{371, 83}, {16, 16}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<int key="NSpiFlags">20746</int>
 							<double key="NSMaxValue">100</double>
 						</object>
@@ -1166,7 +1163,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 57}, {373, 17}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="572435265">
 								<int key="NSCellFlags">68288064</int>
@@ -1180,8 +1176,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						</object>
 					</array>
 					<string key="NSFrameSize">{407, 119}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -1189,14 +1183,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<array class="NSMutableArray" key="connectionRecords">
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">window</string>
-						<reference key="source" ref="501034350"/>
-						<reference key="destination" ref="882652889"/>
-					</object>
-					<int key="connectionID">9</int>
-				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
@@ -1372,6 +1358,14 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						<reference key="destination" ref="277863923"/>
 					</object>
 					<int key="connectionID">146</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">window</string>
+						<reference key="source" ref="501034350"/>
+						<reference key="destination" ref="882652889"/>
+					</object>
+					<int key="connectionID">147</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1873,7 +1867,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">146</int>
+			<int key="maxID">147</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1893,7 +1887,37 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">RFBConnection</string>
+					<string key="className">RFBView</string>
+					<string key="superclassName">NSView</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="concludeDragOperation:">id</string>
+						<string key="draggingExited:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="concludeDragOperation:">
+							<string key="name">concludeDragOperation:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="draggingExited:">
+							<string key="name">draggingExited:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Source/RFBView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">RFBView</string>
+					<string key="superclassName">NSView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBUserSource</string>
+						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">Session</string>
 					<string key="superclassName">NSObject</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="createReconnectSheet:">id</string>
@@ -1909,7 +1933,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						<string key="requestFrameBufferUpdate:">id</string>
 						<string key="setNewTitle:">id</string>
 						<string key="toggleFullscreenMode:">id</string>
-						<string key="updateStatistics:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="createReconnectSheet:">
@@ -1964,10 +1987,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string key="name">toggleFullscreenMode:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="updateStatistics:">
-							<string key="name">updateStatistics:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="_reconnectIndicator">NSProgressIndicator</string>
@@ -1976,6 +1995,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						<string key="authMessage">NSTextField</string>
 						<string key="infoField">id</string>
 						<string key="newTitleField">id</string>
+						<string key="newTitlePanel">NSPanel</string>
 						<string key="optionPanel">id</string>
 						<string key="passwordField">NSTextField</string>
 						<string key="passwordSheet">NSPanel</string>
@@ -1984,6 +2004,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						<string key="scrollView">id</string>
 						<string key="server_">id</string>
 						<string key="statisticField">id</string>
+						<string key="window">NSWindow</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="_reconnectIndicator">
@@ -2009,6 +2030,10 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						<object class="IBToOneOutletInfo" key="newTitleField">
 							<string key="name">newTitleField</string>
 							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="newTitlePanel">
+							<string key="name">newTitlePanel</string>
+							<string key="candidateClassName">NSPanel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="optionPanel">
 							<string key="name">optionPanel</string>
@@ -2042,116 +2067,14 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string key="name">statisticField</string>
 							<string key="candidateClassName">id</string>
 						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Source/RFBConnection.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">RFBConnection</string>
-					<string key="superclassName">NSObject</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="pasteViaKeypress:">id</string>
-						<string key="setDisplayName:">id</string>
-						<string key="updateEncodings:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="pasteViaKeypress:">
-							<string key="name">pasteViaKeypress:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="setDisplayName:">
-							<string key="name">setDisplayName:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="updateEncodings:">
-							<string key="name">updateEncodings:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="dictionary">id</string>
-						<string key="emulate3ButtonTimer">id</string>
-						<string key="frameBuffer">id</string>
-						<string key="handshaker">id</string>
-						<string key="mouseLocationTimer">id</string>
-						<string key="newTitlePanel">id</string>
-						<string key="rfbProtocol">id</string>
-						<string key="serverVersion">id</string>
-						<string key="window">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="dictionary">
-							<string key="name">dictionary</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="emulate3ButtonTimer">
-							<string key="name">emulate3ButtonTimer</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="frameBuffer">
-							<string key="name">frameBuffer</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="handshaker">
-							<string key="name">handshaker</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="mouseLocationTimer">
-							<string key="name">mouseLocationTimer</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="newTitlePanel">
-							<string key="name">newTitlePanel</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="rfbProtocol">
-							<string key="name">rfbProtocol</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="serverVersion">
-							<string key="name">serverVersion</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="window">
 							<string key="name">window</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBUserSource</string>
-						<string key="minorKey"/>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">RFBView</string>
-					<string key="superclassName">NSView</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="concludeDragOperation:">id</string>
-						<string key="draggingExited:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="concludeDragOperation:">
-							<string key="name">concludeDragOperation:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="draggingExited:">
-							<string key="name">draggingExited:</string>
-							<string key="candidateClassName">id</string>
+							<string key="candidateClassName">NSWindow</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Source/RFBView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">RFBView</string>
-					<string key="superclassName">NSView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBUserSource</string>
-						<string key="minorKey"/>
+						<string key="minorKey">Source/Session.h</string>
 					</object>
 				</object>
 			</array>

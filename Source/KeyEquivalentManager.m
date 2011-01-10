@@ -13,6 +13,7 @@
 #import "KeyEquivalentScenario.h"
 #import "RFBConnection.h"
 #import "RFBView.h"
+#import "Session.h"
 
 
 // Scenarios
@@ -85,12 +86,12 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 - (void)rfbViewDidBecomeKey: (RFBView *)view
 {
 	mKeyRFBView = view;
-	RFBConnection *connection = [view delegate];
-	if (connection)
+	Session *session = [[view delegate] session];
+	if (session)
 	{
-        if ([connection viewOnly])
+        if ([session viewOnly])
             [self setCurrentScenarioToName: kNonConnectionWindowFrontmostScenario];
-        else if ( [connection connectionIsFullscreen] )
+        else if ( [session connectionIsFullscreen] )
 			[self setCurrentScenarioToName: kConnectionFullscreenScenario];
 		else
 			[self setCurrentScenarioToName: kConnectionWindowFrontmostScenario];

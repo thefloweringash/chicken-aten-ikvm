@@ -26,7 +26,7 @@
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1016480448">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSCustomObject" id="40618062">
-				<string key="NSClassName">RFBConnection</string>
+				<string key="NSClassName">Session</string>
 			</object>
 			<object class="NSCustomObject" id="551633343">
 				<string key="NSClassName">FirstResponder</string>
@@ -393,7 +393,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="984601910">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -402,7 +402,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 91}, {156, 17}}</string>
 							<reference key="NSSuperview" ref="984601910"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="836647648">
 								<int key="NSCellFlags">68288064</int>
@@ -419,7 +418,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{278, 16}, {118, 32}}</string>
 							<reference key="NSSuperview" ref="984601910"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="453590226">
 								<int key="NSCellFlags">67239424</int>
@@ -440,7 +438,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{182, 16}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="984601910"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="153587837">
 								<int key="NSCellFlags">67239424</int>
@@ -461,7 +458,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{185, 86}, {205, 22}}</string>
 							<reference key="NSSuperview" ref="984601910"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSecureTextFieldCell" key="NSCell" id="808373116">
 								<int key="NSCellFlags">343014976</int>
@@ -483,7 +479,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{19, 126}, {318, 22}}</string>
 							<reference key="NSSuperview" ref="984601910"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="926453072">
 								<int key="NSCellFlags">-2079195584</int>
@@ -507,7 +502,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 156}, {376, 17}}</string>
 							<reference key="NSSuperview" ref="984601910"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="419976081">
 								<int key="NSCellFlags">68288064</int>
@@ -813,7 +807,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{183, 62}, {195, 18}}</string>
 							<reference key="NSSuperview" ref="984601910"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="984424054">
 								<int key="NSCellFlags">67239424</int>
@@ -838,8 +831,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						</object>
 					</object>
 					<string key="NSFrameSize">{410, 193}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -2167,7 +2158,55 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">RFBConnection</string>
+					<string key="className">RFBView</string>
+					<string key="superclassName">NSView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>concludeDragOperation:</string>
+							<string>draggingExited:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>concludeDragOperation:</string>
+							<string>draggingExited:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">concludeDragOperation:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">draggingExited:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Source/RFBView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">RFBView</string>
+					<string key="superclassName">NSView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBUserSource</string>
+						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">Session</string>
 					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2186,11 +2225,9 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>requestFrameBufferUpdate:</string>
 							<string>setNewTitle:</string>
 							<string>toggleFullscreenMode:</string>
-							<string>updateStatistics:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2223,7 +2260,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>requestFrameBufferUpdate:</string>
 							<string>setNewTitle:</string>
 							<string>toggleFullscreenMode:</string>
-							<string>updateStatistics:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2279,10 +2315,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 								<string key="name">toggleFullscreenMode:</string>
 								<string key="candidateClassName">id</string>
 							</object>
-							<object class="IBActionInfo">
-								<string key="name">updateStatistics:</string>
-								<string key="candidateClassName">id</string>
-							</object>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -2295,6 +2327,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>authMessage</string>
 							<string>infoField</string>
 							<string>newTitleField</string>
+							<string>newTitlePanel</string>
 							<string>optionPanel</string>
 							<string>passwordField</string>
 							<string>passwordSheet</string>
@@ -2303,6 +2336,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>scrollView</string>
 							<string>server_</string>
 							<string>statisticField</string>
+							<string>window</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2312,6 +2346,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>NSTextField</string>
 							<string>id</string>
 							<string>id</string>
+							<string>NSPanel</string>
 							<string>id</string>
 							<string>NSTextField</string>
 							<string>NSPanel</string>
@@ -2320,6 +2355,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>NSWindow</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -2332,6 +2368,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>authMessage</string>
 							<string>infoField</string>
 							<string>newTitleField</string>
+							<string>newTitlePanel</string>
 							<string>optionPanel</string>
 							<string>passwordField</string>
 							<string>passwordSheet</string>
@@ -2340,6 +2377,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>scrollView</string>
 							<string>server_</string>
 							<string>statisticField</string>
+							<string>window</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2366,6 +2404,10 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<object class="IBToOneOutletInfo">
 								<string key="name">newTitleField</string>
 								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">newTitlePanel</string>
+								<string key="candidateClassName">NSPanel</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">optionPanel</string>
@@ -2399,187 +2441,15 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 								<string key="name">statisticField</string>
 								<string key="candidateClassName">id</string>
 							</object>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Source/RFBConnection.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">RFBConnection</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>pasteViaKeypress:</string>
-							<string>setDisplayName:</string>
-							<string>updateEncodings:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>pasteViaKeypress:</string>
-							<string>setDisplayName:</string>
-							<string>updateEncodings:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">pasteViaKeypress:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">setDisplayName:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">updateEncodings:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>dictionary</string>
-							<string>emulate3ButtonTimer</string>
-							<string>frameBuffer</string>
-							<string>handshaker</string>
-							<string>mouseLocationTimer</string>
-							<string>newTitlePanel</string>
-							<string>rfbProtocol</string>
-							<string>serverVersion</string>
-							<string>window</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>dictionary</string>
-							<string>emulate3ButtonTimer</string>
-							<string>frameBuffer</string>
-							<string>handshaker</string>
-							<string>mouseLocationTimer</string>
-							<string>newTitlePanel</string>
-							<string>rfbProtocol</string>
-							<string>serverVersion</string>
-							<string>window</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">dictionary</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">emulate3ButtonTimer</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">frameBuffer</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">handshaker</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">mouseLocationTimer</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">newTitlePanel</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">rfbProtocol</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">serverVersion</string>
-								<string key="candidateClassName">id</string>
-							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">window</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBUserSource</string>
-						<string key="minorKey"/>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">RFBView</string>
-					<string key="superclassName">NSView</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>concludeDragOperation:</string>
-							<string>draggingExited:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>concludeDragOperation:</string>
-							<string>draggingExited:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">concludeDragOperation:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">draggingExited:</string>
-								<string key="candidateClassName">id</string>
+								<string key="candidateClassName">NSWindow</string>
 							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Source/RFBView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">RFBView</string>
-					<string key="superclassName">NSView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBUserSource</string>
-						<string key="minorKey"/>
+						<string key="minorKey">Source/Session.h</string>
 					</object>
 				</object>
 			</object>

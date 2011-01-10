@@ -129,6 +129,8 @@
 		DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1FDD9112D6B1A000632D78 /* Security.framework */; };
 		DA21209212087A370060A5F9 /* jsimd_none.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305711E03BA600271F8F /* jsimd_none.c */; };
 		DA231DF612BD562100D3AD44 /* Keymap.h in Headers */ = {isa = PBXBuildFile; fileRef = DA231DF512BD562100D3AD44 /* Keymap.h */; };
+		DA335CCF12DA4A6C00C70987 /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = DA335CCD12DA4A6C00C70987 /* Session.h */; };
+		DA335CD012DA4A6C00C70987 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = DA335CCE12DA4A6C00C70987 /* Session.m */; };
 		DA3648F51293A26800FB8272 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3648F41293A26800FB8272 /* Sparkle.framework */; };
 		DA36490C1293A2AE00FB8272 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DA3648F41293A26800FB8272 /* Sparkle.framework */; };
 		DA60301611E03B5400271F8F /* bmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DA602FFD11E03B5400271F8F /* bmp.c */; };
@@ -338,6 +340,8 @@
 		DA1FD8C412D5100400632D78 /* PersistentServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentServer.m; sourceTree = "<group>"; };
 		DA1FDD9112D6B1A000632D78 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		DA231DF512BD562100D3AD44 /* Keymap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keymap.h; sourceTree = "<group>"; };
+		DA335CCD12DA4A6C00C70987 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		DA335CCE12DA4A6C00C70987 /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
 		DA3648F41293A26800FB8272 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		DA5B896B11E19395004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
 		DA5B896C11E193A6004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ListenDialog.nib; sourceTree = "<group>"; };
@@ -1018,6 +1022,8 @@
 		F5DC7198033DB4A801A8010C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				DA335CCD12DA4A6C00C70987 /* Session.h */,
+				DA335CCE12DA4A6C00C70987 /* Session.m */,
 				DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */,
 				DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */,
 				DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */,
@@ -1229,6 +1235,7 @@
 				DA231DF612BD562100D3AD44 /* Keymap.h in Headers */,
 				DA00481512CCF82E004E2C70 /* ZlibStreamReader.h in Headers */,
 				DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */,
+				DA335CCF12DA4A6C00C70987 /* Session.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1480,6 +1487,7 @@
 				DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */,
 				DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */,
 				DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */,
+				DA335CD012DA4A6C00C70987 /* Session.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

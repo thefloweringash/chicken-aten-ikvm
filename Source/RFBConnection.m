@@ -39,6 +39,7 @@
 #import "RFBProtocol.h"
 #import "RFBServerInitReader.h"
 #import "RFBView.h"
+#import "Session.h"
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
 #include <libc.h>
@@ -48,13 +49,6 @@
 // size of write buffer
 #define BUFFER_SIZE 2048
 #define READ_BUF_SIZE (1024*1024)
-
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 1050
-@interface NSAlert(AvailableInLeopard)
-    - (void)setShowsSuppressionButton:(BOOL)flag;
-    - (NSButton *)suppressionButton;
-@end
-#endif
 
 @implementation RFBConnection
 
@@ -71,13 +65,6 @@
 - (void)_prepareWithServer:(id<IServerData>)server profile:(Profile*)p
 {
     _profile = [p retain];
-    _isFullscreen = NO; // jason added for fullscreen display
-
-    if((host = [server host]) == nil) {
-        host = [DEFAULT_HOST retain];
-    } else {
-        [host retain];
-    }
 
     currentReader = nil;
 }
@@ -86,8 +73,8 @@
 {
     ByteBlockReader *versionReader;
 
-    [NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
     server_ = [(id)server retain];
+    password = [[server password] retain];
 	
 	_eventFilter = [[EventFilter alloc] init];
 	[_eventFilter setConnection: self];
@@ -100,20 +87,10 @@
     socketHandler = [file retain];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleDataAvailableNotification object:socketHandler];
     [socketHandler waitForDataInBackgroundAndNotify];
-    [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil]];
-
-    password = [[server password] retain];
 
     lastMouseX = -1;
     lastMouseY = -1;
     lastMouseMovement = [[NSDate alloc] init];
-
-    _horizScrollFactor = 0;
-    _vertScrollFactor = 0;
-
-    _connectionStartDate = [[NSDate alloc] init];
-    _reconnectWaiter = nil;
-    _reconnectSheetTimer = nil;
 
     _mouseMovedTrackingTag = 0;
     _lastUpdateRequestDate = nil;
@@ -151,15 +128,52 @@
 
 - (void)dealloc
 {
-	[newTitlePanel orderOut:self];
-	[optionPanel orderOut:self];
-	
-	[window close];
-    [windowedWindow close];
-	[self terminateConnection: nil]; // just in case it didn't already get called somehow
-    [_connectionStartDate release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self removeMouseMovedTrackingRect];
+
+    [rfbView setDelegate:nil];
+
+    [socketHandler closeFile]; // release is not sufficient because the
+                               // asynchronous reading seems to keep a retain
+	[socketHandler release];
+    [currentReader release];
+	[_eventFilter release];
+    [rfbView release];
+	[handshaker release];
+    [password release];
+	[rfbProtocol release];
+	[frameBuffer release];
+    [lastMouseMovement release];
+    [_lastUpdateRequestDate release];
     free(writeBuffer);
+
     [super dealloc];
+}
+
+- (void)setRfbView:(RFBView *)view
+{
+    [rfbView release];
+    rfbView = [view retain];
+    window = [rfbView window];
+	[_eventFilter setView: rfbView];
+    if (frameBuffer)
+        [rfbView setFrameBuffer:frameBuffer];
+}
+
+- (void)setSession:(Session *)aSession
+{
+    session = aSession;
+}
+
+- (void)setPassword:(NSString *)aPassword
+{
+    [password release];
+    password = [aPassword retain];
+}
+
+- (id<IServerData>)server
+{
+    return server_;
 }
 
 - (Profile*)profile
@@ -193,7 +207,7 @@
     [aVersion getBytes: cStr length: 12];
     cStr[12] = '\0';
 	if (sscanf(cStr, rfbProtocolVersionFormat, &serverMajorVersion, &serverMinorVersion) < 2) {
-        [self terminateConnection: NSLocalizedString(@"NotVNC", nil)];
+        [session terminateConnection: NSLocalizedString(@"NotVNC", nil)];
         return;
     }
 	
@@ -215,200 +229,15 @@
         [rfbView setServerCursorTo: aCursor];
 }
 
-- (void)connectionHasTerminated
+- (void)terminateConnection:(NSString *)reason
 {
-	[[RFBConnectionManager sharedManager] removeConnection:self];
-
-    [socketHandler closeFile]; // release is not sufficient because the
-                               // asynchronous reading seems to keep a retain
-	[socketHandler release];	socketHandler = nil;
-    [currentReader release];    currentReader = nil;
-	[_eventFilter release];		_eventFilter = nil;
-	[titleString release];		titleString = nil;
-	[handshaker release];		handshaker = nil;
-	[(id)server_ release];		server_ = nil;
-    [password release];         password = nil;
-	[rfbProtocol release];		rfbProtocol = nil;
-	[frameBuffer release];		frameBuffer = nil;
-    [lastMouseMovement release]; lastMouseMovement = nil;
-	[_profile release];			_profile = nil;
-	[host release];				host = nil;
-	[realDisplayName release];	realDisplayName = nil;
-    [_reconnectSheetTimer invalidate];
-    [_reconnectSheetTimer release]; _reconnectSheetTimer = nil;
-    [_reconnectWaiter cancel];
-    [_reconnectWaiter release]; _reconnectWaiter = nil;
-    [_lastUpdateRequestDate release]; _lastUpdateRequestDate = nil;
+    [self setReader:nil]; // causes readData to stop
+    [session terminateConnection:reason];
 }
 
-- (void)connectionTerminatedSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)authenticationFailed:(NSString *)reason
 {
-	/* One might reasonably argue that this should be handled by the connection manager. */
-	switch (returnCode) {
-		case NSAlertDefaultReturn:
-			break;
-		case NSAlertAlternateReturn:
-            _reconnectWaiter = [[ConnectionWaiter alloc] initWithServer:server_
-                        profile:_profile delegate:self window:window];
-            NSString *templ = NSLocalizedString(@"NoReconnection", nil);
-            NSString *err = [NSString stringWithFormat:templ, host];
-            [_reconnectWaiter setErrorStr:err];
-            _reconnectSheetTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
-                    target:self selector:@selector(createReconnectSheet:)
-                    userInfo:nil repeats:NO] retain];
-            return;
-		default:
-			NSLog(@"Unknown alert returnvalue: %d", returnCode);
-			break;
-	}
-	[self connectionHasTerminated];
-}
-
-// Problem with connection: make windowed and stop reading from socket
-- (void)connectionProblem
-{
-    terminating = YES;
-	
-    if (_isFullscreen)
-        [self makeConnectionWindowed: self];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self cancelFrameBufferUpdateTimer];
-}
-
-/* Some kind of connection failure. Decide whether to try to reconnect. */
-- (void)terminateConnection:(NSString*)aReason
-{
-    if(!terminating) {		
-        [self connectionProblem];
-		[self endFullscreenScrolling];
-		[_eventFilter clearAllEmulationStates];
-		[_eventFilter synthesizeRemainingEvents];
-		[_eventFilter sendAllPendingQueueEntriesNow];
-
-        if(aReason) {
-            NSTimeInterval timeout = [[PrefController sharedController] intervalBeforeReconnect];
-            BOOL supportReconnect = [server_ doYouSupport:CONNECT];
-
-            [_reconnectReason setStringValue:aReason];
-			if (supportReconnect
-                    && -[_connectionStartDate timeIntervalSinceNow] > timeout) {
-                NSLog(@"Automatically reconnecting to server.  The connection was closed because: \"%@\".", aReason);
-				// begin reconnect
-                [self connectionTerminatedSheetDidEnd:nil returnCode:0
-                    contextInfo:NULL];
-			}
-			else {
-				// Ask what to do
-				NSString *header = NSLocalizedString( @"ConnectionTerminated", nil );
-				NSString *okayButton = NSLocalizedString( @"Okay", nil );
-				NSString *reconnectButton =  NSLocalizedString( @"Reconnect", nil );
-				NSBeginAlertSheet(header, okayButton, supportReconnect ? reconnectButton : nil, nil, window, self, @selector(connectionTerminatedSheetDidEnd:returnCode:contextInfo:), nil, nil, aReason);
-			}
-        } else {
-            [self connectionHasTerminated];
-        }
-    }
-}
-
-/* Authentication failed: give the user a chance to re-enter password. */
-- (void)authenticationFailed:(NSString *)aReason
-{
-    if (terminating)
-        return;
-
-    if (![server_ doYouSupport:CONNECT])
-        [self terminateConnection:NSLocalizedString(@"AuthenticationFailed", nil)];
-
-    [self connectionProblem];
-    [authMessage setStringValue: aReason];
-    if ([server_ respondsToSelector:@selector(setRememberPassword:)])
-        [rememberNewPassword setState: [server_ rememberPassword]];
-    else
-        [rememberNewPassword setHidden:YES];
-    [NSApp beginSheet:passwordSheet modalForWindow:window
-           modalDelegate:self
-           didEndSelector:@selector(passwordEnteredFor:returnCode:contextInfo:)
-           contextInfo:nil];
-}
-
-/* User entered new password */
-- (IBAction)reconnectWithNewPassword:(id)sender
-{
-    [password release];
-    password = [[passwordField stringValue] retain];
-    if ([rememberNewPassword state])
-        [server_ setPassword: password];
-    if ([server_ respondsToSelector:@selector(setRememberPassword:)]) {
-        [server_ setRememberPassword: [rememberNewPassword state]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
-                                                            object:server_];
-    }
-
-    [_reconnectReason setStringValue:@""];
-    [self connectionTerminatedSheetDidEnd:nil returnCode:NSAlertAlternateReturn
-                              contextInfo:NULL];
-    [NSApp endSheet:passwordSheet];
-}
-
-/* User cancelled chance to enter new password */
-- (IBAction)dontReconnect:(id)sender
-{
-    [NSApp endSheet:passwordSheet];
-    [self connectionHasTerminated];
-}
-
-- (void)passwordEnteredFor:(NSWindow *)wind returnCode:(int)retCode
-            contextInfo:(void *)info
-{
-    [passwordSheet orderOut:self];
-}
-
-/* Close the connection and then reconnect */
-- (IBAction)forceReconnect:(id)sender
-{
-    if (terminating)
-        return;
-
-    [self connectionProblem];
-    [socketHandler closeFile];
-    [socketHandler release];
-    socketHandler = nil;
-    [_reconnectReason setStringValue:@""];
-    [self connectionTerminatedSheetDidEnd:nil returnCode:NSAlertAlternateReturn
-                              contextInfo:NULL];
-}
-
-/* Returns the maximum possible size for the window. Also, determines whether or
- * not the scrollbars are necessary. */
-- (NSSize)_maxSizeForWindowSize:(NSSize)aSize;
-{
-    NSRect  winframe;
-    NSSize	maxviewsize;
-    BOOL usesFullscreenScrollers = [[PrefController sharedController] fullscreenHasScrollbars];
-
-    horizontalScroll = verticalScroll = NO;
-
-    maxviewsize = [NSScrollView frameSizeForContentSize:[rfbView frame].size
-                                  hasHorizontalScroller:horizontalScroll
-                                    hasVerticalScroller:verticalScroll
-                                             borderType:NSNoBorder];
-    if (!_isFullscreen || usesFullscreenScrollers) {
-        if(aSize.width < maxviewsize.width) {
-            horizontalScroll = YES;
-        }
-        if(aSize.height < maxviewsize.height) {
-            verticalScroll = YES;
-        }
-    }
-    maxviewsize = [NSScrollView frameSizeForContentSize:[rfbView frame].size
-                                  hasHorizontalScroller:horizontalScroll
-                                    hasVerticalScroller:verticalScroll
-                                             borderType:NSNoBorder];
-    winframe = [window frame];
-    winframe.size = maxviewsize;
-    winframe = [NSWindow frameRectForContentRect:winframe styleMask:[window styleMask]];
-    return winframe.size;
+    [session authenticationFailed:reason];
 }
 
 /* Creates a framebuffer and sets up rfbView for a given display size */
@@ -422,89 +251,11 @@
 	[frameBuffer setServerMajorVersion: serverMajorVersion minorVersion: serverMinorVersion];
 	
     [rfbView setFrameBuffer:frameBuffer];
-    _maxSize = aSize;
-}
-
-/* Sets up window. */
-- (void)setupWindow
-{
-    NSRect wf;
-	NSRect screenRect;
-	NSClipView *contentView;
-	NSString *serverName;
-
-    [rfbView setDelegate:self];
-	[_eventFilter setView: rfbView];
-
-	screenRect = [[NSScreen mainScreen] visibleFrame];
-    wf.origin.x = wf.origin.y = 0;
-    wf.size = [NSScrollView frameSizeForContentSize:_maxSize hasHorizontalScroller:NO hasVerticalScroller:NO borderType:NSNoBorder];
-    wf = [NSWindow frameRectForContentRect:wf styleMask:[window styleMask]];
-	if (NSWidth(wf) > NSWidth(screenRect)) {
-		horizontalScroll = YES;
-		wf.size.width = NSWidth(screenRect);
-	}
-	if (NSHeight(wf) > NSHeight(screenRect)) {
-		verticalScroll = YES;
-		wf.size.height = NSHeight(screenRect);
-	}
-	
-	// According to the Human Interace Guidelines, new windows should be "visually centered"
-	// If screenRect is X1,Y1-X2,Y2, and wf is x1,y1 -x2,y2, then
-	// the origin (bottom left point of the rect) for wf should be
-	// Ox = ((X2-X1)-(x2-x1)) * (1/2)    [I.e., one half screen width less window width]
-	// Oy = ((Y2-Y1)-(y2-y1)) * (2/3)    [I.e., two thirds screen height less window height]
-	// Then the origin must be offset by the "origin" of the screen rect.
-	// Note that while Rects are floats, we seem to have an issue if the origin is
-	// not an integer, so we use the floor() function.
-	wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf))/2 + NSMinX(screenRect));
-	wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf))*2/3 + NSMinY(screenRect));
-	
-    // :TOFIX: this doesn't work for unnamed servers
-	serverName = [server_ name];
-	if(![window setFrameUsingName:serverName]) {
-		// NSLog(@"Window did NOT have an entry: %@\n", serverName);
-		[window setFrame:wf display:NO];
-	}
-	[window setFrameAutosaveName:serverName];
-
-    if ([server_ fullscreen]) {
-        [self makeConnectionFullscreen:self];
-        return;
-    }
-
-	contentView = [scrollView contentView];
-    [contentView scrollToPoint: [contentView constrainScrollPoint: NSMakePoint(0.0, _maxSize.height - [scrollView contentSize].height)]];
-    [scrollView reflectScrolledClipView: contentView];
-
-    [window makeFirstResponder:rfbView];
-	[self windowDidResize: nil];
-    [window makeKeyAndOrderFront:self];
-    [window display];
-}
-
-- (void)setNewTitle:(id)sender
-{
-    [titleString release];
-    titleString = [[newTitleField stringValue] retain];
-
-    [[RFBConnectionManager sharedManager] setDisplayNameTranslation:titleString forName:realDisplayName forHost:host];
-    [window setTitle:titleString];
-    [newTitlePanel orderOut:self];
 }
 
 - (void)setDisplayName:(NSString*)aName
 {
-	[realDisplayName release];
-    realDisplayName = [aName retain];
-    [titleString release];
-    titleString = [[[RFBConnectionManager sharedManager] translateDisplayName:realDisplayName forHost:host] retain];
-    [window setTitle:titleString];
-}
-
-- (NSSize)displaySize
-{
-    return [frameBuffer size];
+    [session setDisplayName:aName];
 }
 
 /* Handshaking has been completed */
@@ -514,19 +265,16 @@
     rfbProtocol = [[RFBProtocol alloc] initWithConnection:self serverInfo:info];
 
     [self sizeDisplay:[info size] withPixelFormat:[info pixelFormatData]];
-    [self setupWindow];
-    [self setDisplayName: [info name]];
+    [session setSize:[info size]];
+    [rfbView setFrameBuffer:frameBuffer];
+    [rfbView setDelegate:self];
+    [session setupWindow];
+    [session setDisplayName: [info name]];
     [self requestUpdate:[rfbView bounds] incremental:NO];
     [rfbProtocol setFrameBuffer:frameBuffer];
 
     [handshaker release];
     handshaker = nil;
-}
-
-- (void)setPassword:(NSString *)aPassword
-{
-    [password release];
-    password = [aPassword retain];
 }
 
 - (NSString*)password
@@ -563,8 +311,7 @@
 		[self queueUpdateRequest];
     [self writeBuffer]; // flush buffered mouse movement, if any
     [rfbView displayIfNeededIgnoringOpacity];
-    if ([optionPanel isVisible])
-        [self updateStatistics:nil];
+    [session frameBufferUpdateComplete];
     isReceivingUpdate = NO;
 }
 
@@ -572,26 +319,13 @@
  * here. */
 - (void)frameBufferUpdateCompleteWithResize:(NSSize)newSize
 {
-    NSSize  maxSize;
-    NSRect  frame;
-
     [self sizeDisplay:newSize withPixelFormat:[frameBuffer pixelFormat]];
     [rfbProtocol setFrameBuffer:frameBuffer];
     [self requestUpdate:[rfbView bounds] incremental:NO];
     isReceivingUpdate = NO;
-    if ([optionPanel isVisible])
-        [self updateInfoField];
+    [session frameBufferUpdateComplete];
 
-    // resize window, if necessary
-    maxSize = [self _maxSizeForWindowSize:[[window contentView] frame].size];
-    frame = [window frame];
-    if (frame.size.width > maxSize.width)
-        frame.size.width = maxSize.width;
-    if (frame.size.height > maxSize.height)
-        frame.size.height = maxSize.height;
-    [window setFrame:frame display:YES];
-
-    [self windowDidResize:nil]; // setup scroll bars if necessary
+    [session resize:newSize];
 }
 
 - (void)readData:(NSNotification*)aNotification
@@ -625,14 +359,16 @@
         bytes += consumed;
         if (isReceivingUpdate)
             bytesReceived += consumed;
-        if(terminating) {
+        if (currentReader == nil) {
 			[pool release];
             free(buf);
             return;
         }
     }
     [socketHandler waitForDataInBackgroundAndNotify];
+    [self retain];
 	[pool release];
+    [self autorelease];
     free(buf);
 }
 
@@ -664,8 +400,6 @@
 /* Send incremental update request for whole framebuffer */
 - (void)requestFrameBufferUpdate:(id)sender {
     [self cancelFrameBufferUpdateTimer];
-
-	if (terminating) return;
 
     if(isStopped) {
         shouldUpdate = YES;
@@ -701,8 +435,8 @@
 /* The server has moved the cursor to pos in RFB coordinates */
 - (void)serverMovedMouseTo:(NSPoint)pos
 {
-    if ([window isKeyWindow] && -[lastMouseMovement timeIntervalSinceNow] > 0.5
-            && ![server_ viewOnly])
+    if ([session hasKeyWindow] && -[lastMouseMovement timeIntervalSinceNow] > 0.5
+            && ![session viewOnly])
     {
         NSSize  size = [frameBuffer size];
         CGPoint screenCoords;
@@ -907,70 +641,6 @@
     [self writeBufferedBytes: (unsigned char*)&msg length:sizeof(msg)];
 }
 
-- (void)sendCmdOptEsc: (id)sender
-{
-    [self sendKeyCode: XK_Alt_L pressed: YES];
-    [self sendKeyCode: XK_Meta_L pressed: YES];
-    [self sendKeyCode: XK_Escape pressed: YES];
-    [self sendKeyCode: XK_Escape pressed: NO];
-    [self sendKeyCode: XK_Meta_L pressed: NO];
-    [self sendKeyCode: XK_Alt_L pressed: NO];
-    [self writeBuffer];
-}
-
-- (void)sendCtrlAltDel: (id)sender
-{
-    [self sendKeyCode: XK_Control_L pressed: YES];
-    [self sendKeyCode: XK_Alt_L pressed: YES];
-    [self sendKeyCode: XK_Delete pressed: YES];
-    [self sendKeyCode: XK_Delete pressed: NO];
-    [self sendKeyCode: XK_Alt_L pressed: NO];
-    [self sendKeyCode: XK_Control_L pressed: NO];
-    [self writeBuffer];
-}
-
-- (void)sendPauseKeyCode: (id)sender
-{
-    [self sendKeyCode: XK_Pause pressed: YES];
-    [self sendKeyCode: XK_Pause pressed: NO];
-    [self writeBuffer];
-}
-
-- (void)sendBreakKeyCode: (id)sender
-{
-    [self sendKeyCode: XK_Break pressed: YES];
-    [self sendKeyCode: XK_Break pressed: NO];
-    [self writeBuffer];
-}
-
-- (void)sendPrintKeyCode: (id)sender
-{
-    [self sendKeyCode: XK_Print pressed: YES];
-    [self sendKeyCode: XK_Print pressed: NO];
-    [self writeBuffer];
-}
-
-- (void)sendExecuteKeyCode: (id)sender
-{
-    [self sendKeyCode: XK_Execute pressed: YES];
-    [self sendKeyCode: XK_Execute pressed: NO];
-    [self writeBuffer];
-}
-
-- (void)sendInsertKeyCode: (id)sender
-{
-    [self sendKeyCode: XK_Insert pressed: YES];
-    [self sendKeyCode: XK_Insert pressed: NO];
-    [self writeBuffer];
-}
-
-- (void)sendDeleteKeyCode: (id)sender
-{
-    [self sendKeyCode: XK_Delete pressed: YES];
-    [self sendKeyCode: XK_Delete pressed: NO];
-    [self writeBuffer];
-}
-
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb
 {
     id types, theType;
@@ -990,27 +660,13 @@
     return YES;
 }
 
-- (void)paste:(id)sender
-{
-    [self pasteFromPasteboard:[NSPasteboard generalPasteboard]];
-}
-
-/* --------------------------------------------------------------------------------- */
-- (void)openNewTitlePanel:(id)sender
-{
-    [newTitleField setStringValue:titleString];
-    [newTitlePanel makeKeyAndOrderFront:self];
-}
-
-/* --------------------------------------------------------------------------------- */
-- (BOOL)hasKeyWindow
-{
-    return [window isKeyWindow];
-}
-
 - (EventFilter *)eventFilter
 {  return _eventFilter;  }
 
+- (Session *)session
+{
+    return session;
+}
 
 - (void)reallyWriteBytes:(unsigned char*)bytes length:(unsigned int)length
 {
@@ -1084,79 +740,18 @@
 	[self writeBufferedBytes:(unsigned char *)str length:len];
 }
 
-/* Window delegate methods */
-
-- (void)windowDidDeminiaturize:(NSNotification *)aNotification
+- (void)restartUpdates
 {
     isStopped = NO;
     if(shouldUpdate) {
         [self requestFrameBufferUpdate: nil];
         shouldUpdate = NO;
     }
-
-	[self installMouseMovedTrackingRect];
 }
 
-- (void)windowDidMiniaturize:(NSNotification *)aNotification
+- (void)stopUpdates
 {
     isStopped = YES;
-	[self removeMouseMovedTrackingRect];
-}
-
-- (void)windowWillClose:(NSNotification *)aNotification
-{
-    // terminateConnection closes the window, so we have to null it out here
-    // The window will autorelease itself when closed.  If we allow terminateConnection
-    // to close it again, it will get double-autoreleased.  Bummer.
-    window = NULL;
-    [self terminateConnection:nil];
-}
-
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
-{
-    NSSize max = [self _maxSizeForWindowSize:proposedFrameSize];
-
-    max.width = (proposedFrameSize.width > max.width) ? max.width : proposedFrameSize.width;
-    max.height = (proposedFrameSize.height > max.height) ? max.height : proposedFrameSize.height;
-    return max;
-}
-
-- (void)windowDidResize:(NSNotification *)aNotification
-{
-	[scrollView setHasHorizontalScroller:horizontalScroll];
-	[scrollView setHasVerticalScroller:verticalScroll];
-	if (_isFullscreen) {
-		[self removeFullscreenTrackingRects];
-		[self installFullscreenTrackingRects];
-	}
-}
-
-- (void)windowDidBecomeKey:(NSNotification *)aNotification
-{
-    if (!_isFullscreen) {
-        /* If the user sets and uses a keyboard shortcut, then they can make us
-         * key while another window is in fullscreen mode. Because of this
-         * possibility, we need to make the other connections windowed. */
-        [[RFBConnectionManager sharedManager] makeAllConnectionsWindowed];
-        if (![window isKeyWindow]) {
-            /* If some other window was in fullscreen mode, it will become key,
-             * so we need to make our own window key again. Then this method
-             * will be called again, so we can return from this invocation. */
-            [window makeKeyWindow];
-            return;
-        }
-    }
-	[self installMouseMovedTrackingRect];
-	[self setFrameBufferUpdateSeconds: [[PrefController sharedController] frontFrameBufferUpdateSeconds]];
-}
-
-- (void)windowDidResignKey:(NSNotification *)aNotification
-{
-	[self removeMouseMovedTrackingRect];
-	[self setFrameBufferUpdateSeconds: [[PrefController sharedController] otherFrameBufferUpdateSeconds]];
-	
-	//Reset keyboard state on remote end
-	[_eventFilter clearAllEmulationStates];
 }
 
 - (void)viewFrameDidChange:(NSNotification *)aNotification
@@ -1166,15 +761,7 @@
     [window invalidateCursorRectsForView: rfbView];
 }
 
-- (void)openOptions:(id)sender
-{
-    [self updateInfoField];
-    [self updateStatistics:self];
-    [optionPanel setTitle:titleString];
-    [optionPanel makeKeyAndOrderFront:self];
-}
-
-- (void)updateInfoField
+- (NSString *)infoString
 {
     NSString    *endian;
     NSString    *trueColor;
@@ -1182,7 +769,7 @@
     endian = NSLocalizedString([frameBuffer serverIsBigEndian] ?  @"big-endian" : @"little-endian", nil);
     trueColor = NSLocalizedString(frameBuffer->pixelFormat.trueColour ? @"yes" : @"no", nil);
 
-    [infoField setStringValue:
+    return
         [NSString stringWithFormat: NSLocalizedString(@"ServerInfo", nil),
                 serverMajorVersion, serverMinorVersion,
                 (int)[frameBuffer size].width, (int)[frameBuffer size].height,
@@ -1193,7 +780,7 @@
                 frameBuffer->pixelFormat.blueMax,
                 frameBuffer->pixelFormat.redShift,
                 frameBuffer->pixelFormat.greenShift,
-                frameBuffer->pixelFormat.blueShift]];
+                frameBuffer->pixelFormat.blueShift];
 }
 
 static NSString* byteString(double d)
@@ -1209,180 +796,17 @@ static NSString* byteString(double d)
     }
 }
 
-- (void)updateStatistics:(id)sender
+- (NSString *)statisticsString
 {
     FrameBufferUpdateReader* reader = [rfbProtocol frameBufferUpdateReader];
     double  represented = [reader bytesRepresented];
 
-    [statisticField setStringValue:
+    return
         [NSString stringWithFormat: NSLocalizedString(@"ConnectionStatistics", nil),
             byteString(bytesReceived), byteString(represented),
             represented/bytesReceived, (unsigned)[reader rectanglesTransferred],
             [reader rectsByTypeString]
-    	]
-    ];
-}
-
-- (BOOL)connectionIsFullscreen {
-	return _isFullscreen;
-}
-
-- (IBAction)toggleFullscreenMode: (id)sender
-{
-	_isFullscreen ? [self makeConnectionWindowed: self] : [self makeConnectionFullscreen: self];
-}
-
-- (IBAction)makeConnectionWindowed: (id)sender {
-	_isFullscreen = NO;
-	[self removeFullscreenTrackingRects];
-	[scrollView retain];
-	[scrollView removeFromSuperview];
-	[window setDelegate: nil];
-	[window close];
-	if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
-		NSLog( @"Couldn't release the main display!" );
-	}
-    window = windowedWindow;
-    windowedWindow = nil;
-    [window orderFront:nil];
-	[window setDelegate: self];
-	[window setContentView: scrollView];
-	[scrollView release];
-	[self _maxSizeForWindowSize: [[window contentView] frame].size];
-	[window setTitle:titleString];
-	[window makeFirstResponder: rfbView];
-	[self windowDidResize: nil];
-	[window makeKeyAndOrderFront:nil];
-	[self viewFrameDidChange: nil];
-    [rfbView setUseTint:YES];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                name:NSApplicationWillHideNotification object:nil];
-}
-
-- (void)connectionWillGoFullscreen:(NSAlert *)sheet
-                        returnCode:(int)returnCode
-                       contextInfo:(void *)contextInfo
-{
-	int windowLevel;
-	NSRect screenRect;
-
-    if ([sheet respondsToSelector:@selector(suppressionButton)]) {
-        if ([[sheet suppressionButton] state]) // only in 10.5+
-            [[PrefController sharedController] setDisplayFullScreenWarning:NO];
-    }
-
-	if (returnCode == NSAlertFirstButtonReturn) {
-		[[RFBConnectionManager sharedManager] makeAllConnectionsWindowed];
-		if (CGDisplayCapture( kCGDirectMainDisplay ) != kCGErrorSuccess) {
-			NSLog( @"Couldn't capture the main display!" );
-		}
-		windowLevel = CGShieldingWindowLevel();
-		screenRect = [[NSScreen mainScreen] frame];
-	
-		[scrollView retain];
-		[scrollView removeFromSuperview];
-        [[KeyEquivalentManager defaultManager]
-                removeEquivalentForWindow:[window title]];
-		[window setDelegate: nil];
-        windowedWindow = window;
-		window = [[FullscreenWindow alloc] initWithContentRect:screenRect
-											styleMask:NSBorderlessWindowMask
-											backing:NSBackingStoreBuffered
-											defer:NO
-											screen:[NSScreen mainScreen]];
-		[window setDelegate: self];
-		[window setContentView: scrollView];
-		[scrollView release];
-		[window setLevel:windowLevel];
-		_isFullscreen = YES;
-		[self _maxSizeForWindowSize: screenRect.size];
-		[scrollView setHasHorizontalScroller:horizontalScroll];
-		[scrollView setHasVerticalScroller:verticalScroll];
-
-        if (_maxSize.width < screenRect.size.width
-                || _maxSize.height < screenRect.size.height) {
-            // center in screen
-            NSClipView *contentView = [scrollView contentView];
-            NSPoint     scrollPt;
-
-            scrollPt = NSMakePoint((_maxSize.width - screenRect.size.width) / 2,
-                               (_maxSize.height - screenRect.size.height) / 2);
-            [contentView scrollToPoint:scrollPt];
-            [scrollView reflectScrolledClipView:contentView];
-        }
-
-        [rfbView setUseTint:NO];
-
-		[self installFullscreenTrackingRects];
-		[self windowDidResize: nil];
-		[window makeFirstResponder: rfbView];
-		[window makeKeyAndOrderFront:nil];
-        [windowedWindow orderOut:nil];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                selector:@selector(applicationWillHide:)
-                    name:NSApplicationWillHideNotification
-                  object:nil];
-	}
-}
-
-- (IBAction)makeConnectionFullscreen: (id)sender {
-	BOOL displayFullscreenWarning = [[PrefController sharedController] displayFullScreenWarning];
-
-	if (displayFullscreenWarning) {
-        NSMutableString         *reason = [NSMutableString string];
-        KeyEquivalentScenario   *scen;
-        NSMenuItem              *menuItem;
-        NSString *header = NSLocalizedString( @"FullscreenHeader", nil );
-
-        [_eventFilter synthesizeRemainingEvents];
-
-        [reason appendString: NSLocalizedString( @"FullscreenReason1", nil )];
-
-            // Use the default KeyEquivalentManager to get the key equivalents
-            // for the fullscreen scenario
-        scen = [[KeyEquivalentManager defaultManager] keyEquivalentsForScenarioName: kConnectionFullscreenScenario]; 
-        menuItem = [[[NSApplication sharedApplication] delegate] getFullScreenMenuItem];
-        
-        if (scen && menuItem) {
-            KeyEquivalent *keyEquiv = [scen keyEquivalentForMenuItem: menuItem];
-            NSString      *keyStr = [keyEquiv string];
-
-            if (keyStr) {
-                // If we can determine the fullscreen key combination, we include
-                // it in the message
-                [reason appendString: @"("];
-                [reason appendString: keyStr];
-                [reason appendString: @") "];
-                [reason appendString: NSLocalizedString(@"FullscreenReason2", nil)];
-            } else {
-                reason = [NSMutableString stringWithString:NSLocalizedString(@"FullscreenNoKey", nil)];
-                header = NSLocalizedString(@"FullscreenNoKeyHeader", nil);
-            }
-        } else {
-            [reason appendString: NSLocalizedString(@"FullscreenReason2", nil)];
-        }
-
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setMessageText:header];
-        [alert setInformativeText:reason];
-        if ([alert respondsToSelector:@selector(setShowsSuppressionButton:)])
-            [alert setShowsSuppressionButton:YES]; // only in 10.5+
-        [alert addButtonWithTitle:NSLocalizedString(@"Fullscreen", nil)];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
-        [alert beginSheetModalForWindow:window modalDelegate:self
-                         didEndSelector:@selector(connectionWillGoFullscreen:returnCode:contextInfo:)
-                            contextInfo:NULL];
-        [alert release];
-	} else {
-		[self connectionWillGoFullscreen:nil returnCode:NSAlertFirstButtonReturn contextInfo:nil]; 
-	}
-}
-
-- (void)applicationWillHide:(NSNotification *)notif
-{
-    [self makeConnectionWindowed:self];
+    	];
 }
 
 - (void)installMouseMovedTrackingRect
@@ -1397,34 +821,6 @@ static NSString* byteString(double d)
 		[window setAcceptsMouseMovedEvents: YES];
 }
 
-- (void)installFullscreenTrackingRects {
-	NSRect scrollRect = [scrollView bounds];
-	const float minX = NSMinX(scrollRect);
-	const float minY = NSMinY(scrollRect);
-	const float maxX = NSMaxX(scrollRect);
-	const float maxY = NSMaxY(scrollRect);
-	const float width = NSWidth(scrollRect);
-	const float height = NSHeight(scrollRect);
-	float scrollWidth = [NSScroller scrollerWidth];
-	NSRect aRect;
-
-	if ( ! [[PrefController sharedController] fullscreenHasScrollbars] )
-		scrollWidth = 0.0;
-    if (_maxSize.width > width) {
-        aRect = NSMakeRect(minX, minY, kTrackingRectThickness, height);
-        _leftTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
-        aRect = NSMakeRect(maxX - kTrackingRectThickness - (horizontalScroll ? scrollWidth : 0.0), minY, kTrackingRectThickness, height);
-        _rightTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
-    }
-
-    if (_maxSize.height > height) {
-        aRect = NSMakeRect(minX, minY, width, kTrackingRectThickness);
-        _topTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
-        aRect = NSMakeRect(minX, maxY - kTrackingRectThickness - (verticalScroll ? scrollWidth : 0.0), width, kTrackingRectThickness);
-        _bottomTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
-    }
-}
-
 - (void)removeMouseMovedTrackingRect
 {
 	[rfbView removeTrackingRect: _mouseMovedTrackingTag];
@@ -1432,118 +828,17 @@ static NSString* byteString(double d)
     _mouseMovedTrackingTag = 0;
 }
 
-- (void)removeFullscreenTrackingRects {
-	[self endFullscreenScrolling];
-	[scrollView removeTrackingRect: _leftTrackingTag];
-	[scrollView removeTrackingRect: _topTrackingTag];
-	[scrollView removeTrackingRect: _rightTrackingTag];
-	[scrollView removeTrackingRect: _bottomTrackingTag];
-    _vertScrollFactor = _horizScrollFactor = 0;
-}
-
 - (void)mouseEntered:(NSEvent *)theEvent {
-	NSTrackingRectTag trackingNumber = [theEvent trackingNumber];
-	
-	if (trackingNumber == _mouseMovedTrackingTag)
-		[window setAcceptsMouseMovedEvents: YES];
-	else {
-        if (trackingNumber == _leftTrackingTag)
-            _horizScrollFactor = -1;
-        else if (trackingNumber == _topTrackingTag)
-            _vertScrollFactor = +1;
-        else if (trackingNumber == _rightTrackingTag)
-            _horizScrollFactor = +1;
-        else if (trackingNumber == _bottomTrackingTag)
-            _vertScrollFactor = -1;
-        else
-            NSLog(@"Unknown trackingNumber %d", trackingNumber);
-
-        if ([self connectionIsFullscreen])
-            [self beginFullscreenScrolling];
-    }
+    [window setAcceptsMouseMovedEvents: YES];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-	NSTrackingRectTag trackingNumber = [theEvent trackingNumber];
-
-	if (trackingNumber == _mouseMovedTrackingTag)
-		[window setAcceptsMouseMovedEvents: NO];
-	else {
-        if (trackingNumber == _leftTrackingTag
-                || trackingNumber == _rightTrackingTag) {
-            _horizScrollFactor = 0;
-            if (_vertScrollFactor == 0)
-                [self endFullscreenScrolling];
-        } else {
-            _vertScrollFactor = 0;
-            if (_horizScrollFactor == 0)
-                [self endFullscreenScrolling];
-        }
-    }
+    [window setAcceptsMouseMovedEvents: NO];
 }
 
-/* The tracking rectangles don't apply to mouse movement when the button is
- * down. So this method tests mouse drags to see if it should trigger fullscreen
- * scrolling. */
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    if (!_isFullscreen)
-        return;
-    
-    NSPoint pt = [scrollView convertPoint: [theEvent locationInWindow]
-                                 fromView:nil];
-    NSRect  scrollRect = [scrollView bounds];
-
-    if (pt.x - NSMinX(scrollRect) < kTrackingRectThickness)
-        _horizScrollFactor = -1;
-    else if (NSMaxX(scrollRect) - pt.x < kTrackingRectThickness)
-        _horizScrollFactor = 1;
-    else
-        _horizScrollFactor = 0;
-
-    if (pt.y - NSMinY(scrollRect) < kTrackingRectThickness)
-        _vertScrollFactor = 1;
-    else if (NSMaxY(scrollRect) - pt.y < kTrackingRectThickness)
-        _vertScrollFactor = -1;
-    else
-        _vertScrollFactor = 0;
-
-    if (_horizScrollFactor || _vertScrollFactor)
-        [self beginFullscreenScrolling];
-    else
-        [self endFullscreenScrolling];
-}
-
-- (void)beginFullscreenScrolling {
-    if (_autoscrollTimer)
-        return;
-	_autoscrollTimer = [[NSTimer scheduledTimerWithTimeInterval: kAutoscrollInterval
-											target: self
-										  selector: @selector(scrollFullscreenView:)
-										  userInfo: nil repeats: YES] retain];
-}
-
-- (void)endFullscreenScrolling {
-	[_autoscrollTimer invalidate];
-	[_autoscrollTimer release];
-	_autoscrollTimer = nil;
-}
-
-- (void)scrollFullscreenView: (NSTimer *)timer {
-	NSClipView *contentView = [scrollView contentView];
-	NSPoint origin = [contentView bounds].origin;
-	float autoscrollIncrement = [[PrefController sharedController] fullscreenAutoscrollIncrement];
-    NSPoint newOrigin = NSMakePoint(origin.x + _horizScrollFactor * autoscrollIncrement, origin.y + _vertScrollFactor * autoscrollIncrement);
-
-    newOrigin = [contentView constrainScrollPoint: newOrigin];
-    // don't let constrainScrollPoint screw up centering
-    if (_horizScrollFactor == 0)
-        newOrigin.x = origin.x;
-    if (_vertScrollFactor == 0)
-        newOrigin.y = origin.y;
-
-    [contentView scrollToPoint: newOrigin];
-    [scrollView reflectScrolledClipView: contentView];
+    [session mouseDragged:theEvent];
 }
 
 - (void)setFrameBufferUpdateSeconds: (float)seconds {
@@ -1554,64 +849,6 @@ static NSString* byteString(double d)
 
     if (hadManualUpdates && !_hasManualFrameBufferUpdates)
         [self requestFrameBufferUpdate:nil];
-}
-
-/* Reconnection attempts */
-
-- (void)createReconnectSheet:(id)sender
-{
-    [NSApp beginSheet:_reconnectPanel modalForWindow:window
-           modalDelegate:self
-           didEndSelector:@selector(reconnectEnded:returnCode:contextInfo:)
-           contextInfo:nil];
-    [_reconnectIndicator startAnimation:self];
-
-    [_reconnectSheetTimer release];
-    _reconnectSheetTimer = nil;
-}
-
-- (void)reconnectCancelled:(id)sender
-{
-    [_reconnectWaiter cancel];
-    [_reconnectWaiter release];
-    _reconnectWaiter = nil;
-    [NSApp endSheet:_reconnectPanel];
-    [self connectionHasTerminated];
-}
-
-- (void)reconnectEnded:(id)sender returnCode:(int)retCode
-           contextInfo:(void *)info
-{
-    [_reconnectPanel orderOut:self];
-}
-
-- (void)connectionPrepareForSheet
-{
-    [NSApp endSheet:_reconnectPanel];
-}
-
-/* Reconnect attempt has failed */
-- (void)connectionFailed
-{
-    [self connectionHasTerminated];
-}
-
-/* Reconnect attempt has succeeded */
-- (void)connectionSucceeded:(RFBConnection *)newConnection
-{
-    [newConnection setPassword: password];
-    [[RFBConnectionManager sharedManager] successfulConnection:newConnection
-            toServer:server_];
-
-    [_reconnectWaiter release];
-    _reconnectWaiter = nil;
-    [self connectionHasTerminated];
-}
-
-- (IBAction)showProfileManager:(id)sender
-{
-    [[ProfileManager sharedManager] showWindowWithProfile:
-        [_profile profileName]];
 }
 
 @end

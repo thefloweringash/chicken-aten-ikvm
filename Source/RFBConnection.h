@@ -29,6 +29,7 @@
 @class RFBProtocol;
 @class RFBView;
 @class ServerInitMessage;
+@class Session;
 @protocol IServerData;
 
 #define RFB_HOST		@"Host"
@@ -47,8 +48,9 @@
 #define kTrackingRectThickness		10.0
 #define kAutoscrollInterval			0.05
 
-@interface RFBConnection : NSObject <ConnectionWaiterDelegate>
+@interface RFBConnection : NSObject
 {
+    Session     *session;
     IBOutlet RFBView *rfbView;
     NSWindow    *window;
     FrameBuffer *frameBuffer;
@@ -59,52 +61,12 @@
     id<IServerData> server_;
     NSString        *password;
     RFBProtocol     *rfbProtocol;
-    id      scrollView;
-    id      newTitleField;
-    NSPanel *newTitlePanel;
-    NSString    *titleString;
-    id      statisticField;
-    BOOL    terminating;
     CARD16  lastMouseX; // location of last mouse position we sent
     CARD16  lastMouseY;
     NSDate  *lastMouseMovement;
     unichar highSurrogate[2];
 
-    NSSize _maxSize;
-
-    BOOL	horizontalScroll;
-    BOOL	verticalScroll;
-
-    id optionPanel;
-    id infoField;
     Profile *_profile;
-		
-    NSString *realDisplayName;
-    NSString *host;
-
-    IBOutlet NSPanel *passwordSheet;
-    IBOutlet NSTextField *passwordField;
-    IBOutlet NSTextField *authMessage;
-    IBOutlet NSButton *rememberNewPassword;
-
-        // for reconnection attempts
-    IBOutlet NSPanel                *_reconnectPanel;
-    IBOutlet NSProgressIndicator    *_reconnectIndicator;
-    IBOutlet NSTextField            *_reconnectReason;
-    NSDate                          *_connectionStartDate;
-    NSTimer                         *_reconnectSheetTimer;
-    ConnectionWaiter                *_reconnectWaiter;
-
-        // instance variables for managing the fullscreen display
-	BOOL _isFullscreen;
-    NSWindow *windowedWindow;
-	NSTrackingRectTag _leftTrackingTag;
-	NSTrackingRectTag _topTrackingTag;
-	NSTrackingRectTag _rightTrackingTag;
-	NSTrackingRectTag _bottomTrackingTag;
-    int         _horizScrollFactor;
-    int         _vertScrollFactor;
-	NSTimer *_autoscrollTimer;
 
 	NSTrackingRectTag _mouseMovedTrackingTag;
 	float _frameBufferUpdateSeconds; // how much to delay update requests
@@ -129,21 +91,19 @@
 
 - (void)dealloc;
 
+- (id<IServerData>)server;
+
+- (void)setRfbView:(RFBView *)view;
+- (void)setSession:(Session *)aSession;
+- (void)setPassword:(NSString *)password;
 - (void)setReader:(ByteReader*)aReader;
 
-- (void)paste:(id)sender;
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb;
 - (void)setServerVersion:(NSData*)aVersion;
 - (void)setCursor: (NSCursor *)aCursor;
 - (void)terminateConnection:(NSString*)aReason;
 - (void)authenticationFailed:(NSString *)aReason;
-- (IBAction)reconnectWithNewPassword:(id)sender;
-- (IBAction)dontReconnect:(id)sender;
-- (IBAction)forceReconnect:(id)sender;
 - (void)sizeDisplay:(NSSize)aSize withPixelFormat:(rfbPixelFormat*)pixf;
-- (void)setupWindow;
-- (void)openNewTitlePanel:(id)sender;
-- (void)setNewTitle:(id)sender;
 - (void)setDisplayName:(NSString*)aName;
 
 - (void)start:(ServerInitMessage*)info;
@@ -162,6 +122,7 @@
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask;
 - (void)sendKey:(unichar)key pressed:(BOOL)pressed;
 - (void)sendModifier:(unsigned int)m pressed:(BOOL)pressed;
+- (void)sendKeyCode:(CARD32)key pressed:(BOOL)pressed;
 - (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length;
 - (void)writeBufferedBytes:(unsigned char*)bytes length:(unsigned int)length;
 - (void)writeRFBString:(NSString *)aString;
@@ -171,47 +132,21 @@
 - (int) protocolMajorVersion;
 - (int) protocolMinorVersion;
 - (NSString*)password;
-- (void)setPassword:(NSString *)aPassword;
 - (BOOL)connectShared;
 - (BOOL)viewOnly;
-- (BOOL)hasKeyWindow;
 - (EventFilter *)eventFilter;
+- (Session *)session;
 
-    //window delegate messages
-- (void)windowDidBecomeKey:(NSNotification *)aNotification;
-- (void)windowDidResignKey:(NSNotification *)aNotification;
-- (void)windowDidDeminiaturize:(NSNotification *)aNotification;
-- (void)windowDidMiniaturize:(NSNotification *)aNotification;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)windowDidResize:(NSNotification *)aNotification;
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize;
-
-- (void)openOptions:(id)sender;
-- (void)updateInfoField;
-- (void)updateStatistics:(id)sender;
-
-// Full-screen mode
-- (BOOL)connectionIsFullscreen;
-- (IBAction)toggleFullscreenMode: (id)sender;
-- (IBAction)makeConnectionWindowed: (id)sender;
-- (IBAction)makeConnectionFullscreen: (id)sender;
-- (void)applicationWillHide:(NSNotification*)notif;
+- (void)stopUpdates;
+- (void)restartUpdates;
+- (void)viewFrameDidChange:(NSNotification *)aNotification;
+- (NSString *)statisticsString;
+- (NSString *)infoString;
 
 - (void)installMouseMovedTrackingRect;
-- (void)installFullscreenTrackingRects;
-- (void)removeFullscreenTrackingRects;
 - (void)removeMouseMovedTrackingRect;
-- (void)mouseEntered:(NSEvent *)theEvent;
-- (void)mouseExited:(NSEvent *)theEvent;
 - (void)mouseDragged:(NSEvent *)theEvent;
-- (void)beginFullscreenScrolling;
-- (void)endFullscreenScrolling;
-- (void)scrollFullscreenView: (NSTimer *)timer;
 
 - (void)setFrameBufferUpdateSeconds: (float)seconds;
-
-// For reconnect
-- (void)createReconnectSheet:(id)sender;
-- (IBAction)reconnectCancelled:(id)sender; // returnCode:(int)retCode
 
 @end

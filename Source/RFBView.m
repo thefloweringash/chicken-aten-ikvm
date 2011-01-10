@@ -124,7 +124,8 @@
 {
     _delegate = delegate;
 	_eventFilter = [_delegate eventFilter];
-    _profile = [_delegate profile];
+    if (_delegate)
+        _profile = [_delegate profile];
     [self setUseTint:YES];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(tintChanged:)

@@ -454,13 +454,17 @@
 
 - (void)windowDidDeminiaturize:(NSNotification *)aNotification
 {
-    [connection restartUpdates];
+    float s = [[PrefController sharedController] frontFrameBufferUpdateSeconds];
+
+    [connection setFrameBufferUpdateSeconds:s];
 	[connection installMouseMovedTrackingRect];
 }
 
 - (void)windowDidMiniaturize:(NSNotification *)aNotification
 {
-    [connection stopUpdates];
+    float s = [[PrefController sharedController] maxPossibleFrameBufferUpdateSeconds];
+
+    [connection setFrameBufferUpdateSeconds:s];
 	[connection removeMouseMovedTrackingRect];
 }
 
@@ -794,7 +798,9 @@
 
 - (void)setFrameBufferUpdateSeconds: (float)seconds
 {
-    [connection setFrameBufferUpdateSeconds:seconds];
+    // miniaturized windows should keep update seconds set at maximum
+    if (![window isMiniaturized])
+        [connection setFrameBufferUpdateSeconds:seconds];
 }
 
 - (void)beginFullscreenScrolling {

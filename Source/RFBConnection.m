@@ -96,8 +96,6 @@
     _lastUpdateRequestDate = nil;
 
     isReceivingUpdate = NO;
-    isStopped = NO;
-    shouldUpdate = NO;
     bytesReceived = 0;
 
     int     keepAliveTime = 5 * 60; // 5 minutes
@@ -403,11 +401,7 @@
 	[_frameUpdateTimer release];
 	_frameUpdateTimer = nil;
 
-    if(isStopped) {
-        shouldUpdate = YES;
-    } else {
-		[self requestUpdate:[rfbView bounds] incremental:YES];
-	}
+    [self requestUpdate:[rfbView bounds] incremental:YES];
 }
 
 - (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag
@@ -733,20 +727,6 @@
 	CARD32      len=htonl(strlen(str));
 	[self writeBufferedBytes:(unsigned char *)&len length:4];
 	[self writeBufferedBytes:(unsigned char *)str length:len];
-}
-
-- (void)restartUpdates
-{
-    isStopped = NO;
-    if(shouldUpdate) {
-        [self requestFrameBufferUpdate: nil];
-        shouldUpdate = NO;
-    }
-}
-
-- (void)stopUpdates
-{
-    isStopped = YES;
 }
 
 - (void)viewFrameDidChange:(NSNotification *)aNotification

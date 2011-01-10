@@ -74,8 +74,6 @@
     NSDate  *_lastUpdateRequestDate; // time of last update request
 
     BOOL isReceivingUpdate; // middle of receiving frame buffer update?
-    BOOL isStopped;
-    BOOL shouldUpdate;
 	BOOL _hasManualFrameBufferUpdates;
     double    bytesReceived; // number of framebuffer update bytes received
 	
@@ -136,8 +134,6 @@
 - (EventFilter *)eventFilter;
 - (Session *)session;
 
-- (void)stopUpdates;
-- (void)restartUpdates;
 - (void)viewFrameDidChange:(NSNotification *)aNotification;
 - (NSString *)statisticsString;
 - (NSString *)infoString;

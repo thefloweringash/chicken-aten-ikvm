@@ -114,12 +114,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)dealloc
 {
-	[self _resetMultiTapTimer: nil];
-	[self _resetTapModifierAndClick: nil];
-	[self sendAllPendingQueueEntriesNow];
-	[self synthesizeRemainingEvents];
-	[self sendAllPendingQueueEntriesNow];
-    [_connection writeBuffer];
+    [_multiTapTimer invalidate];
+    [_multiTapTimer release];
+    [_tapAndClickTimer invalidate];
+    [_tapAndClickTimer release];
 
 	[_pendingEvents release];
 	[_pressedKeys release];

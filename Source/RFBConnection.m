@@ -110,6 +110,11 @@
         NSLog(@"Error with setsockopt TCP_NODELAY: %d", errno);
 #endif
 
+    if (fcntl([socketHandler fileDescriptor], F_SETFL, O_NONBLOCK) == -1) {
+        NSLog(@"Error setting non-blocking I/O: %d", errno);
+        // :TODO: should bail here
+    }
+
     writeBuffer = (unsigned char *)malloc(BUFFER_SIZE);
     bufferLen = 0;
     lastBufferedIsMouseMovement = NO;
@@ -328,41 +333,49 @@
 
 - (void)readData:(NSNotification*)aNotification
 {
-    unsigned        consumed;
-    ssize_t         length;
     unsigned char   *buf = malloc(READ_BUF_SIZE);
-    unsigned char   *bytes = buf;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; // if we process slower than our requests, we don't autorelease until we get a break, which could be never.
+    NSDate          *startTime = [NSDate date];
 
-    length = read([socketHandler fileDescriptor], buf, READ_BUF_SIZE);
+    do {
+        unsigned char   *bytes = buf;
+        unsigned        consumed;
+        ssize_t         length;
 
-    if(length <= 0) {	// server closed socket
-		NSString *reason = NSLocalizedString( @"ServerClosed", nil );
-        [self terminateConnection:reason];
-		[pool release];
-        free(buf);
-        return;
-    }
-    
-    while(length) {
-        consumed = [currentReader readBytes:bytes length:length];
+        length = read([socketHandler fileDescriptor], buf, READ_BUF_SIZE);
 
-        if (consumed == 0) {
-            [self terminateConnection: NSLocalizedString(@"ProtocolError", nil)];
+        if (length == -1 && errno == EAGAIN)
+            break; // no data
+
+        if(length <= 0) {	// server closed socket
+            NSString *reason = NSLocalizedString( @"ServerClosed", nil );
+            [self terminateConnection:reason];
             [pool release];
-            return;
-        }
-
-        length -= consumed;
-        bytes += consumed;
-        if (isReceivingUpdate)
-            bytesReceived += consumed;
-        if (currentReader == nil) {
-			[pool release];
             free(buf);
             return;
         }
-    }
+        
+        while(length) {
+            consumed = [currentReader readBytes:bytes length:length];
+
+            if (consumed == 0) {
+                [self terminateConnection: NSLocalizedString(@"ProtocolError", nil)];
+                [pool release];
+                return;
+            }
+
+            length -= consumed;
+            bytes += consumed;
+            if (isReceivingUpdate)
+                bytesReceived += consumed;
+            if (currentReader == nil) {
+                [pool release];
+                free(buf);
+                return;
+            }
+        }
+    } while (-[startTime timeIntervalSinceNow] < 0.05);
+
     [socketHandler waitForDataInBackgroundAndNotify];
     [self retain];
 	[pool release];
@@ -662,8 +675,6 @@
     int result;
     int written = 0;
 
-    /* Seemingly, this loop is actually unnecessary: write will only do a
-     * partial write if we were doing non-blocking IO, which we aren't */
     do {
         result = write([socketHandler fileDescriptor], bytes + written, length);
         if(result >= 0) {

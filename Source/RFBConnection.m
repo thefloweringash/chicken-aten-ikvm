@@ -132,11 +132,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self removeMouseMovedTrackingRect];
 
-    [rfbView setDelegate:nil];
-
-    [_frameUpdateTimer invalidate];
     [_frameUpdateTimer release];
     [socketHandler closeFile]; // release is not sufficient because the
                                // asynchronous reading seems to keep a retain
@@ -152,6 +148,17 @@
     free(writeBuffer);
 
     [super dealloc];
+}
+
+- (void)closeConnection
+{
+    [_frameUpdateTimer invalidate];
+    [_frameUpdateTimer release];
+    _frameUpdateTimer = nil;
+    [self removeMouseMovedTrackingRect];
+    [rfbView setDelegate:nil];
+    rfbView = nil;
+    session = nil;
 }
 
 - (void)setRfbView:(RFBView *)view
@@ -334,8 +341,11 @@
 - (void)readData:(NSNotification*)aNotification
 {
     unsigned char   *buf = malloc(READ_BUF_SIZE);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; // if we process slower than our requests, we don't autorelease until we get a break, which could be never.
+	NSAutoreleasePool *pool;
     NSDate          *startTime = [NSDate date];
+
+    [[self retain] autorelease];
+    pool = [[NSAutoreleasePool alloc] init]; // if we process slower than our requests, we don't autorelease until we get a break, which could be never.
 
     do {
         unsigned char   *bytes = buf;
@@ -377,9 +387,7 @@
     } while (-[startTime timeIntervalSinceNow] < 0.05);
 
     [socketHandler waitForDataInBackgroundAndNotify];
-    [self retain];
 	[pool release];
-    [self autorelease];
     free(buf);
 }
 

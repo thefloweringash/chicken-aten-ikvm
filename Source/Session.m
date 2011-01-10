@@ -126,6 +126,7 @@
     if (_isFullscreen)
         [self makeConnectionWindowed: self];
     
+    [connection closeConnection];
     [connection release];
     connection = nil;
 }

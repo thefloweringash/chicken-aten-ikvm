@@ -89,6 +89,7 @@
 
 - (void)dealloc;
 
+- (void)closeConnection;
 - (id<IServerData>)server;
 
 - (void)setRfbView:(RFBView *)view;

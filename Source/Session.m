@@ -123,8 +123,6 @@
 // Problem with connection: make windowed and stop reading from socket
 - (void)connectionProblem
 {
-    terminating = YES;
-	
     if (_isFullscreen)
         [self makeConnectionWindowed: self];
     
@@ -135,7 +133,7 @@
 /* Some kind of connection failure. Decide whether to try to reconnect. */
 - (void)terminateConnection:(NSString*)aReason
 {
-    if(!terminating) {		
+    if(connection) {		
         [self connectionProblem];
 		[self endFullscreenScrolling];
 
@@ -167,7 +165,7 @@
 /* Authentication failed: give the user a chance to re-enter password. */
 - (void)authenticationFailed:(NSString *)aReason
 {
-    if (terminating)
+    if (connection == nil)
         return;
 
     if (![server_ doYouSupport:CONNECT])
@@ -220,7 +218,7 @@
 /* Close the connection and then reconnect */
 - (IBAction)forceReconnect:(id)sender
 {
-    if (terminating)
+    if (connection == nil)
         return;
 
     [self connectionProblem];
@@ -893,8 +891,6 @@
 
     [_reconnectWaiter release];
     _reconnectWaiter = nil;
-
-    terminating = NO;
 }
 
 - (IBAction)showProfileManager:(id)sender

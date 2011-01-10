@@ -37,7 +37,6 @@
     IBOutlet NSPanel *newTitlePanel;
     NSString    *titleString;
     id      statisticField;
-    BOOL    terminating;
 
     NSSize _maxSize;
 

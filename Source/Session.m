@@ -128,7 +128,6 @@
     if (_isFullscreen)
         [self makeConnectionWindowed: self];
     
-    [connection cancelFrameBufferUpdateTimer];
     [connection release];
     connection = nil;
 }

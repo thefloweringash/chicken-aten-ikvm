@@ -114,7 +114,6 @@
 - (void)queueUpdateRequest;
 - (IBAction)requestFrameBufferUpdate:(id)sender;
 - (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag;
-- (void)cancelFrameBufferUpdateTimer;
 - (void)serverMovedMouseTo:(NSPoint)pos;
 
     // events sent to server

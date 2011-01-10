@@ -133,6 +133,8 @@
 
     [rfbView setDelegate:nil];
 
+    [_frameUpdateTimer invalidate];
+    [_frameUpdateTimer release];
     [socketHandler closeFile]; // release is not sufficient because the
                                // asynchronous reading seems to keep a retain
 	[socketHandler release];
@@ -397,7 +399,9 @@
 
 /* Send incremental update request for whole framebuffer */
 - (void)requestFrameBufferUpdate:(id)sender {
-    [self cancelFrameBufferUpdateTimer];
+	[_frameUpdateTimer invalidate];
+	[_frameUpdateTimer release];
+	_frameUpdateTimer = nil;
 
     if(isStopped) {
         shouldUpdate = YES;
@@ -421,13 +425,6 @@
 
     [_lastUpdateRequestDate release];
     _lastUpdateRequestDate = [[NSDate alloc] init];
-}
-
-- (void)cancelFrameBufferUpdateTimer
-{
-	[_frameUpdateTimer invalidate];
-	[_frameUpdateTimer release];
-	_frameUpdateTimer = nil;
 }
 
 /* The server has moved the cursor to pos in RFB coordinates */

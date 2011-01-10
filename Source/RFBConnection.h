@@ -52,7 +52,6 @@
 {
     Session     *session;
     IBOutlet RFBView *rfbView;
-    NSWindow    *window;
     FrameBuffer *frameBuffer;
     NSFileHandle    *socketHandler;
 	EventFilter     *_eventFilter;

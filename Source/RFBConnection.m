@@ -164,7 +164,6 @@
 - (void)setRfbView:(RFBView *)view
 {
     rfbView = view;
-    window = [rfbView window];
 	[_eventFilter setView: rfbView];
     if (frameBuffer)
         [rfbView setFrameBuffer:frameBuffer];
@@ -450,6 +449,7 @@
     {
         NSSize  size = [frameBuffer size];
         CGPoint screenCoords;
+        NSWindow *window = [rfbView window];
 
         pos.y = size.height - pos.y;
         pos = [rfbView convertPoint:pos toView:nil];
@@ -752,7 +752,7 @@
 {
 	[self removeMouseMovedTrackingRect];
 	[self installMouseMovedTrackingRect];
-    [window invalidateCursorRectsForView: rfbView];
+    [[rfbView window] invalidateCursorRectsForView: rfbView];
 }
 
 - (NSString *)infoString
@@ -805,6 +805,7 @@ static NSString* byteString(double d)
 
 - (void)installMouseMovedTrackingRect
 {
+    NSWindow *window = [rfbView window];
 	NSPoint mousePoint = [rfbView convertPoint: [window convertScreenToBase: [NSEvent mouseLocation]] fromView: nil];
 	BOOL mouseInVisibleRect = [rfbView mouse: mousePoint inRect: [rfbView visibleRect]];
 
@@ -818,16 +819,16 @@ static NSString* byteString(double d)
 - (void)removeMouseMovedTrackingRect
 {
 	[rfbView removeTrackingRect: _mouseMovedTrackingTag];
-	[window setAcceptsMouseMovedEvents: NO];
+	[[rfbView window] setAcceptsMouseMovedEvents: NO];
     _mouseMovedTrackingTag = 0;
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-    [window setAcceptsMouseMovedEvents: YES];
+    [[rfbView window] setAcceptsMouseMovedEvents: YES];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    [window setAcceptsMouseMovedEvents: NO];
+    [[rfbView window] setAcceptsMouseMovedEvents: NO];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent

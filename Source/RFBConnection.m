@@ -434,7 +434,7 @@
 - (void)serverMovedMouseTo:(NSPoint)pos
 {
     if ([session hasKeyWindow] && -[lastMouseMovement timeIntervalSinceNow] > 0.5
-            && ![session viewOnly])
+            && ![server_ viewOnly])
     {
         NSSize  size = [frameBuffer size];
         CGPoint screenCoords;

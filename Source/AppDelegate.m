@@ -55,7 +55,7 @@
 {
     [self copyCotvncPrefs];
 	// make sure our singleton key equivalent manager is initialized, otherwise, it won't watch the frontmost window
-	[[KeyEquivalentManager defaultManager] loadScenarios];
+	[KeyEquivalentManager defaultManager];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification

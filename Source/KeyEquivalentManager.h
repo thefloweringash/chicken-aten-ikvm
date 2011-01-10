@@ -27,7 +27,6 @@ extern NSString *kConnectionFullscreenScenario;
 + (id)defaultManager;
 
 // Persistent Scenarios
-- (void)loadScenarios;
 - (void)loadScenariosFromPreferences;
 - (void)loadScenariosFromDefaults;
 - (void)makeScenariosPersistant;

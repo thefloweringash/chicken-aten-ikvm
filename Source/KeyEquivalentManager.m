@@ -188,6 +188,7 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 {
 	if ( self = [super init] )
 	{
+        [self loadScenarios];
 		NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 		[notificationCenter addObserver: self selector: @selector(windowDidBecomeKey:) name: NSWindowDidBecomeKeyNotification object: nil];
 		[notificationCenter addObserver: self selector: @selector(windowWillClose:) name: NSWindowWillCloseNotification object: nil];

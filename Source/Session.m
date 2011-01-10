@@ -465,13 +465,13 @@
 
 - (void)windowDidDeminiaturize:(NSNotification *)aNotification
 {
-    [connection stopUpdates];
+    [connection restartUpdates];
 	[connection installMouseMovedTrackingRect];
 }
 
 - (void)windowDidMiniaturize:(NSNotification *)aNotification
 {
-    [connection restartUpdates];
+    [connection stopUpdates];
 	[connection removeMouseMovedTrackingRect];
 }
 

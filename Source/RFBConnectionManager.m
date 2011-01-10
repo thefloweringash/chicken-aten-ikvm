@@ -674,7 +674,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     Session      *session;
 	
 	while (session = [enumerator nextObject]) {
-		if ([session hasKeyWindow]) {
+		if (![session hasKeyWindow]) {
 			[session setFrameBufferUpdateSeconds: interval];
 		}
 	}

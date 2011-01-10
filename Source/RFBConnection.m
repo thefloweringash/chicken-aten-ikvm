@@ -138,7 +138,6 @@
 	[socketHandler release];
     [currentReader release];
 	[_eventFilter release];
-    [rfbView release];
 	[handshaker release];
     [password release];
 	[rfbProtocol release];
@@ -152,8 +151,7 @@
 
 - (void)setRfbView:(RFBView *)view
 {
-    [rfbView release];
-    rfbView = [view retain];
+    rfbView = view;
     window = [rfbView window];
 	[_eventFilter setView: rfbView];
     if (frameBuffer)

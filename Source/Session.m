@@ -92,16 +92,6 @@
     [super dealloc];
 }
 
-- (NSString *)password
-{
-    return password;
-}
-
-- (BOOL)connectShared
-{
-    return [server_ shared];
-}
-
 - (BOOL)viewOnly
 {
     return [server_ viewOnly];

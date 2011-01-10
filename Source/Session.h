@@ -78,10 +78,7 @@
 - (id)initWithConnection:(RFBConnection*)conn;
 - (void)dealloc;
 
-- (NSString *)password;
-- (BOOL)connectShared;
 - (BOOL)viewOnly;
-- (BOOL)connectShared;
 
 - (void)setSize:(NSSize)size;
 - (void)setDisplayName:(NSString *)aName;
@@ -110,7 +107,6 @@
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize;
 
 - (void)openOptions:(id)sender;
-//- (void)updateStatistics:(id)sender;
 
 - (BOOL)hasKeyWindow;
 

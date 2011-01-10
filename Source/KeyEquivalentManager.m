@@ -21,6 +21,12 @@ NSString *kNonConnectionWindowFrontmostScenario = @"NonConnectionWindowFrontmost
 NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenario";
 NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 
+@interface KeyEquivalentManager(Private)
+
+- (void)loadScenarios;
+
+@end
+
 
 @implementation KeyEquivalentManager
 

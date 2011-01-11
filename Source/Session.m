@@ -69,6 +69,15 @@
 
 - (void)dealloc
 {
+    if (_isFullscreen) {
+        if (CGDisplayRelease(kCGDirectMainDisplay) != kCGErrorSuccess) {
+            NSLog( @"Couldn't release the main display!" );
+            /* If we can't release the main display, then we're probably about
+             * to leave the computer in an unusable state. */
+            [NSApp terminate:self];
+        }
+    }
+
     [connection setSession:nil];
     [connection release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -123,9 +132,6 @@
 // Problem with connection: make windowed and stop reading from socket
 - (void)connectionProblem
 {
-    if (_isFullscreen)
-        [self makeConnectionWindowed: self];
-    
     [connection closeConnection];
     [connection release];
     connection = nil;
@@ -881,6 +887,9 @@
     [_reconnectSheetTimer invalidate];
     [_reconnectSheetTimer release];
     _reconnectSheetTimer = nil;
+
+    if (_isFullscreen)
+        [self makeConnectionWindowed:self];
 
     connection = [newConnection retain];
     [connection setSession:self];

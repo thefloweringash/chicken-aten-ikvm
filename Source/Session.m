@@ -76,6 +76,7 @@
              * to leave the computer in an unusable state. */
             [NSApp terminate:self];
         }
+        [self endFullscreenScrolling];
     }
 
     [connection setSession:nil];

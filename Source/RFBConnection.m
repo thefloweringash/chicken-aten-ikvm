@@ -129,6 +129,7 @@
     [currentReader release];
 	[_eventFilter release];
 	[handshaker release];
+    [server_ release];
     [password release];
 	[rfbProtocol release];
 	[frameBuffer release];

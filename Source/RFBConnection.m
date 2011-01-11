@@ -60,71 +60,60 @@
 	[standardUserDefaults registerDefaults: dict];
 }
 
-
-// mark refactored init methods
-- (void)_prepareWithServer:(id<IServerData>)server profile:(Profile*)p
-{
-    _profile = [p retain];
-
-    currentReader = nil;
-}
-
-- (void)_finishInitWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server
-{
-    ByteBlockReader *versionReader;
-
-    server_ = [(id)server retain];
-    password = [[server password] retain];
-	
-	_eventFilter = [[EventFilter alloc] init];
-	[_eventFilter setConnection: self];
-
-    versionReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setServerVersion:)];
-    [versionReader setBufferSize: 12];
-    [self setReader:versionReader];
-    [versionReader release];
-
-    socketHandler = [file retain];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleDataAvailableNotification object:socketHandler];
-    [socketHandler waitForDataInBackgroundAndNotify];
-
-    lastMouseX = -1;
-    lastMouseY = -1;
-    lastMouseMovement = [[NSDate alloc] init];
-
-    _mouseMovedTrackingTag = 0;
-    _lastUpdateRequestDate = nil;
-
-    isReceivingUpdate = NO;
-    bytesReceived = 0;
-
-    int     keepAliveTime = 5 * 60; // 5 minutes
-    if (setsockopt([socketHandler fileDescriptor], IPPROTO_TCP, TCP_KEEPALIVE,
-                (char *)&keepAliveTime, sizeof(int)) < 0)
-        NSLog(@"Error with setsockopt TCP_KEEPALIVE: %d", errno);
-
-#if 1
-    int     nodelay = 1;
-    if (setsockopt([socketHandler fileDescriptor], IPPROTO_TCP, TCP_NODELAY,
-                    (char *)&nodelay, sizeof(int)) < 0)
-        NSLog(@"Error with setsockopt TCP_NODELAY: %d", errno);
-#endif
-
-    if (fcntl([socketHandler fileDescriptor], F_SETFL, O_NONBLOCK) == -1) {
-        NSLog(@"Error setting non-blocking I/O: %d", errno);
-        // :TODO: should bail here
-    }
-
-    writeBuffer = (unsigned char *)malloc(BUFFER_SIZE);
-    bufferLen = 0;
-    lastBufferedIsMouseMovement = NO;
-}
-
 - (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server profile:(Profile*)p
 {
     if (self = [super init]) {
-        [self _prepareWithServer:server profile:p];
-        [self _finishInitWithFileHandle:(NSFileHandle*)file server:server];
+        ByteBlockReader *versionReader;
+
+        _profile = [p retain];
+
+        currentReader = nil;
+
+        server_ = [(id)server retain];
+        password = [[server password] retain];
+        
+        _eventFilter = [[EventFilter alloc] init];
+        [_eventFilter setConnection: self];
+
+        versionReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setServerVersion:)];
+        [versionReader setBufferSize: 12];
+        [self setReader:versionReader];
+        [versionReader release];
+
+        socketHandler = [file retain];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleDataAvailableNotification object:socketHandler];
+        [socketHandler waitForDataInBackgroundAndNotify];
+
+        lastMouseX = -1;
+        lastMouseY = -1;
+        lastMouseMovement = [[NSDate alloc] init];
+
+        _mouseMovedTrackingTag = 0;
+        _lastUpdateRequestDate = nil;
+
+        isReceivingUpdate = NO;
+        bytesReceived = 0;
+
+        int     keepAliveTime = 5 * 60; // 5 minutes
+        if (setsockopt([socketHandler fileDescriptor], IPPROTO_TCP,
+                    TCP_KEEPALIVE, (char *)&keepAliveTime, sizeof(int)) < 0)
+            NSLog(@"Error with setsockopt TCP_KEEPALIVE: %d", errno);
+
+#if 1
+        int     nodelay = 1;
+        if (setsockopt([socketHandler fileDescriptor], IPPROTO_TCP, TCP_NODELAY,
+                        (char *)&nodelay, sizeof(int)) < 0)
+            NSLog(@"Error with setsockopt TCP_NODELAY: %d", errno);
+#endif
+
+        if (fcntl([socketHandler fileDescriptor], F_SETFL, O_NONBLOCK) == -1) {
+            NSLog(@"Error setting non-blocking I/O: %d", errno);
+            // :TODO: should bail here
+        }
+
+        writeBuffer = (unsigned char *)malloc(BUFFER_SIZE);
+        bufferLen = 0;
+        lastBufferedIsMouseMovement = NO;
 	}
     return self;
 }

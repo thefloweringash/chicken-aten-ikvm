@@ -130,12 +130,17 @@
     [[RFBConnectionManager sharedManager] removeConnection:self];
 }
 
-// Problem with connection: make windowed and stop reading from socket
 - (void)connectionProblem
 {
     [connection closeConnection];
     [connection release];
     connection = nil;
+}
+
+- (void)endSession
+{
+    [self endFullscreenScrolling];
+    [[RFBConnectionManager sharedManager] removeConnection:self];
 }
 
 /* Some kind of connection failure. Decide whether to try to reconnect. */
@@ -214,7 +219,7 @@
 - (IBAction)dontReconnect:(id)sender
 {
     [NSApp endSheet:passwordSheet];
-    [[RFBConnectionManager sharedManager] removeConnection:self];
+    [self endSession];
 }
 
 - (void)passwordEnteredFor:(NSWindow *)wind returnCode:(int)retCode
@@ -480,7 +485,7 @@
     // The window will autorelease itself when closed.  If we allow terminateConnection
     // to close it again, it will get double-autoreleased.  Bummer.
     window = NULL;
-    [self terminateConnection:nil];
+    [self endSession];
 }
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
@@ -861,7 +866,7 @@
     [_reconnectWaiter release];
     _reconnectWaiter = nil;
     [NSApp endSheet:_reconnectPanel];
-    [[RFBConnectionManager sharedManager] removeConnection:self];
+    [self endSession];
 }
 
 - (void)reconnectEnded:(id)sender returnCode:(int)retCode
@@ -878,7 +883,7 @@
 /* Reconnect attempt has failed */
 - (void)connectionFailed
 {
-    [[RFBConnectionManager sharedManager] removeConnection:self];
+    [self endSession];
 }
 
 /* Reconnect attempt has succeeded */

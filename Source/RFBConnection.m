@@ -40,6 +40,7 @@
 #import "RFBServerInitReader.h"
 #import "RFBView.h"
 #import "Session.h"
+#import "SshTunnel.h"
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
 #include <libc.h>
@@ -126,6 +127,8 @@
     [socketHandler closeFile]; // release is not sufficient because the
                                // asynchronous reading seems to keep a retain
 	[socketHandler release];
+    [sshTunnel close];
+    [sshTunnel release];
     [currentReader release];
 	[_eventFilter release];
 	[handshaker release];
@@ -168,6 +171,12 @@
 {
     [password release];
     password = [aPassword retain];
+}
+
+- (void)setSshTunnel:(SshTunnel *)tunnel
+{
+    [sshTunnel autorelease];
+    sshTunnel = [tunnel retain];
 }
 
 - (id<IServerData>)server

@@ -44,6 +44,8 @@
         _profile = [[ProfileDataManager sharedInstance]
                             profileForKey:[dict objectForKey:@"lastProfile"]];
         [_profile retain];
+
+        _sshHost = [[dict objectForKey:@"sshHost"] retain];
     }
     return self;
 }
@@ -62,6 +64,8 @@
 		[NSNumber numberWithBool:_fullscreen],			[NSString stringWithString:@"fullscreen"],
 		[NSNumber numberWithBool:_viewOnly],            [NSString stringWithString:@"viewOnly"], 
 		[_profile profileName],							[NSString stringWithString:@"lastProfile"],
+            // note that _sshHost might be nil, thus marking the end of the list
+        _sshHost,                                       [NSString stringWithString:@"sshHost"],
 		nil,											nil];
     
     return propertyDict;

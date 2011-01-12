@@ -250,10 +250,17 @@
 		DA60315911E0401E00271F8F /* jsimdcpu.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA60311C11E0401E00271F8F /* jsimdcpu.asm */; };
 		DA68E53211E7867500F23347 /* ConnectionWaiter.h in Headers */ = {isa = PBXBuildFile; fileRef = DA68E53011E7867500F23347 /* ConnectionWaiter.h */; };
 		DA68E53311E7867500F23347 /* ConnectionWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = DA68E53111E7867500F23347 /* ConnectionWaiter.m */; };
+		DA78379912DE159800F1893E /* SshWaiter.h in Headers */ = {isa = PBXBuildFile; fileRef = DA78379712DE159800F1893E /* SshWaiter.h */; };
+		DA78379A12DE159800F1893E /* SshWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = DA78379812DE159800F1893E /* SshWaiter.m */; };
 		DA80A6EF11E27B430076CB0A /* CursorPseudoEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DA80A6ED11E27B430076CB0A /* CursorPseudoEncodingReader.h */; };
 		DA80A6F011E27B430076CB0A /* CursorPseudoEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA80A6EE11E27B430076CB0A /* CursorPseudoEncodingReader.m */; };
 		DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */; };
 		DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */; };
+		DAD6DEE112DCF37A001FD9D6 /* AuthPrompt.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */; };
+		DAD6DEE212DCF37A001FD9D6 /* AuthPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */; };
+		DAD6DEEA12DCF4A3001FD9D6 /* AuthPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = DAD6DEE812DCF4A3001FD9D6 /* AuthPrompt.nib */; };
+		DAD6DEFE12DCF583001FD9D6 /* SshTunnel.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD6DEFC12DCF583001FD9D6 /* SshTunnel.h */; };
+		DAD6DEFF12DCF583001FD9D6 /* SshTunnel.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD6DEFD12DCF583001FD9D6 /* SshTunnel.m */; };
 		DAEB76F21232AE3500002E6A /* Keymap.m in Sources */ = {isa = PBXBuildFile; fileRef = DAEB76F11232AE3400002E6A /* Keymap.m */; };
 		DAFB492212944331008C6FC4 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = DAFB492112944331008C6FC4 /* dsa_pub.pem */; };
 		E21FE263062B6D310059585C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E21FE261062B6D310059585C /* Localizable.strings */; };
@@ -489,6 +496,8 @@
 		DA60311C11E0401E00271F8F /* jsimdcpu.asm */ = {isa = PBXFileReference; explicitFileType = sourcecode.nasm; fileEncoding = 4; name = jsimdcpu.asm; path = "libjpeg-turbo/simd/jsimdcpu.asm"; sourceTree = "<group>"; };
 		DA68E53011E7867500F23347 /* ConnectionWaiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionWaiter.h; sourceTree = "<group>"; };
 		DA68E53111E7867500F23347 /* ConnectionWaiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionWaiter.m; sourceTree = "<group>"; };
+		DA78379712DE159800F1893E /* SshWaiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SshWaiter.h; sourceTree = "<group>"; };
+		DA78379812DE159800F1893E /* SshWaiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SshWaiter.m; sourceTree = "<group>"; };
 		DA80A6ED11E27B430076CB0A /* CursorPseudoEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CursorPseudoEncodingReader.h; sourceTree = "<group>"; };
 		DA80A6EE11E27B430076CB0A /* CursorPseudoEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CursorPseudoEncodingReader.m; sourceTree = "<group>"; };
 		DA80B68311E1041400C536FF /* jcclrmmx.asm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm.asm; name = jcclrmmx.asm; path = "libjpeg-turbo/simd/jcclrmmx.asm"; sourceTree = "<group>"; };
@@ -504,6 +513,11 @@
 		DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesktopNameEncodingReader.h; sourceTree = "<group>"; };
 		DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesktopNameEncodingReader.m; sourceTree = "<group>"; };
 		DACD08DF1274C284001F6B72 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
+		DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthPrompt.h; sourceTree = "<group>"; };
+		DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthPrompt.m; sourceTree = "<group>"; };
+		DAD6DEE912DCF4A3001FD9D6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/AuthPrompt.nib; sourceTree = "<group>"; };
+		DAD6DEFC12DCF583001FD9D6 /* SshTunnel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SshTunnel.h; sourceTree = "<group>"; };
+		DAD6DEFD12DCF583001FD9D6 /* SshTunnel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SshTunnel.m; sourceTree = "<group>"; };
 		DAEB76F11232AE3400002E6A /* Keymap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Keymap.m; sourceTree = "<group>"; };
 		DAFB492112944331008C6FC4 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
 		E21FE256062B6C8D0059585C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
@@ -726,6 +740,7 @@
 				F5DC717C033DB40D01A8010C /* rfbCursor.tiff */,
 				F5DC717B033DB40D01A8010C /* rfbCursor2.tiff */,
 				F5DC7178033DB40D01A8010C /* rfbCursor3.tiff */,
+				DAD6DEE812DCF4A3001FD9D6 /* AuthPrompt.nib */,
 				E2F3A7E606D4A687005EB917 /* ConnectionDialog.nib */,
 				E2B083F70763AAC200CE24C1 /* ListenDialog.nib */,
 				E2F3A33E06D44E0E005EB917 /* Preferences.nib */,
@@ -1022,6 +1037,12 @@
 		F5DC7198033DB4A801A8010C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				DA78379712DE159800F1893E /* SshWaiter.h */,
+				DA78379812DE159800F1893E /* SshWaiter.m */,
+				DAD6DEFC12DCF583001FD9D6 /* SshTunnel.h */,
+				DAD6DEFD12DCF583001FD9D6 /* SshTunnel.m */,
+				DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */,
+				DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */,
 				DA335CCD12DA4A6C00C70987 /* Session.h */,
 				DA335CCE12DA4A6C00C70987 /* Session.m */,
 				DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */,
@@ -1236,6 +1257,9 @@
 				DA00481512CCF82E004E2C70 /* ZlibStreamReader.h in Headers */,
 				DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */,
 				DA335CCF12DA4A6C00C70987 /* Session.h in Headers */,
+				DAD6DEE112DCF37A001FD9D6 /* AuthPrompt.h in Headers */,
+				DAD6DEFE12DCF583001FD9D6 /* SshTunnel.h in Headers */,
+				DA78379912DE159800F1893E /* SshWaiter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1310,6 +1334,7 @@
 				7FB3EA8E0804ECE0003757C9 /* CotVNC.scriptSuite in Resources */,
 				E291FAD5088161DA0061216E /* cursors.plist in Resources */,
 				DAFB492212944331008C6FC4 /* dsa_pub.pem in Resources */,
+				DAD6DEEA12DCF4A3001FD9D6 /* AuthPrompt.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1488,6 +1513,9 @@
 				DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */,
 				DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */,
 				DA335CD012DA4A6C00C70987 /* Session.m in Sources */,
+				DAD6DEE212DCF37A001FD9D6 /* AuthPrompt.m in Sources */,
+				DAD6DEFF12DCF583001FD9D6 /* SshTunnel.m in Sources */,
+				DA78379A12DE159800F1893E /* SshWaiter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1503,6 +1531,14 @@
 				DA5B897111E193E4004F9B7B /* Japanese */,
 			);
 			name = ServerDisplay.nib;
+			sourceTree = "<group>";
+		};
+		DAD6DEE812DCF4A3001FD9D6 /* AuthPrompt.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DAD6DEE912DCF4A3001FD9D6 /* English */,
+			);
+			name = AuthPrompt.nib;
 			sourceTree = "<group>";
 		};
 		E21FE261062B6D310059585C /* Localizable.strings */ = {

@@ -31,6 +31,7 @@
 #import "ServerDataManager.h"
 #import "ServerStandAlone.h"
 #import "ServerFromPrefs.h"
+#import "SshWaiter.h"
 
 #define DISPLAY_MAX 50 // numbers >= this are interpreted as a port
 
@@ -423,8 +424,9 @@
 	
     // Asynchronously creates a connection to the server
     window = superController ? [superController window] : [self window];
-    connectionWaiter = [[ConnectionWaiter alloc] initWithServer:server
-                            profile:[mServer profile] delegate:self window:window];
+    connectionWaiter = [[ConnectionWaiter waiterForServer:server
+                            profile:[mServer profile] delegate:self
+                             window:window] retain];
     [[ServerDataManager sharedInstance] save]; // just in case we crash
     if (connectionWaiter == nil)
         [self connectionFailed];

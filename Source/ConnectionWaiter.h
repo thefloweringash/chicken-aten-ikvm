@@ -24,6 +24,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "SshTunnel.h"
 
 @protocol IServerData;
 @class Profile;
@@ -52,6 +53,8 @@
 @interface ConnectionWaiter : NSObject {
         // variables used for initializing RFBConnection
     id<IServerData>     server;
+    NSString            *host;
+    in_port_t           port;
     Profile             *profile;
 
     NSLock              *lock; // protects currentSock and delegate
@@ -65,6 +68,10 @@
     NSString            *errorStr; // error header, if not the default
 };
 
++ (ConnectionWaiter *)waiterForServer:(id<IServerData>)aServer
+                              profile:(Profile*)aProfile
+                             delegate:(id<ConnectionWaiterDelegate>)aDelegate
+                               window:(NSWindow *)aWind;
 - (id)initWithServer:(id<IServerData>)aServer profile:(Profile*)aProfile
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWind;
 - (void)dealloc;

@@ -30,6 +30,7 @@
 @class RFBView;
 @class ServerInitMessage;
 @class Session;
+@class SshTunnel;
 @protocol IServerData;
 
 #define RFB_HOST		@"Host"
@@ -65,6 +66,7 @@
     NSDate  *lastMouseMovement;
     unichar highSurrogate[2];
 
+    SshTunnel   *sshTunnel;
     Profile *_profile;
 
 	NSTrackingRectTag _mouseMovedTrackingTag;
@@ -94,6 +96,7 @@
 - (void)setRfbView:(RFBView *)view;
 - (void)setSession:(Session *)aSession;
 - (void)setPassword:(NSString *)password;
+- (void)setSshTunnel:(SshTunnel *)tunnel;
 - (void)setReader:(ByteReader*)aReader;
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb;

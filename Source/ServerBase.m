@@ -61,6 +61,7 @@
 	[_host release];
 	[_password release];
     [_profile release];
+    [_sshHost release];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }
@@ -113,6 +114,11 @@
 - (bool)viewOnly
 {
 	return _viewOnly;
+}
+
+- (NSString *)sshHost
+{
+    return _sshHost;
 }
 
 - (void)setHost: (NSString*)host

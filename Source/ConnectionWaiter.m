@@ -21,6 +21,7 @@
 #import "IServerData.h"
 #import "RFBConnection.h"
 #import "RFBConnectionManager.h"
+#import "SshWaiter.h"
 
 #import <poll.h>
 #import <unistd.h>
@@ -34,11 +35,26 @@
 
 @implementation ConnectionWaiter
 
++ (ConnectionWaiter *)waiterForServer:(id<IServerData>)aServer
+                              profile:(Profile*)aProfile
+                             delegate:(id<ConnectionWaiterDelegate>)aDelegate
+                               window:(NSWindow *)aWind
+{
+    Class class = [aServer sshHost] ? [SshWaiter class] : [ConnectionWaiter class];
+
+    return [[[class alloc] initWithServer:aServer profile:aProfile
+                                 delegate:aDelegate window:aWind] autorelease];
+}
+
 - (id)initWithServer:(id<IServerData>)aServer profile:(Profile*)aProfile
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWindow
 {
     if (self = [super init]) {
         server = [aServer retain];
+        host = [[server host] copy];
+        if (host == nil)
+            host = [DEFAULT_HOST retain];
+        port = [server port];
         profile = [aProfile retain];
         lock = [[NSLock alloc] init];
         currentSock = -1;
@@ -48,7 +64,6 @@
 
         [NSThread detachNewThreadSelector: @selector(connect:) toTarget: self
                                withObject: nil];
-            
     }
     return self;
 }
@@ -56,6 +71,7 @@
 - (void)dealloc
 {
     [server release];
+    [host release];
     [profile release];
     [lock release];
     [window release];
@@ -84,12 +100,6 @@
     window = nil;
 }
 
-- (NSString *)host
-{
-    NSString	*host = [server host];
-    return host ? host : DEFAULT_HOST;
-}
-
 /* Attempts to connect to the server. */
 - (void)connect: (id)unused
 {
@@ -100,8 +110,7 @@
     int             causeErr = 0;
     NSString        *errMsg = nil;
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-    NSString    *host = [self host];
-    NSString    *port = [NSString stringWithFormat:@"%d", [server port]];
+    NSString    *portStr = [NSString stringWithFormat:@"%d", port];
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = PF_UNSPEC;
@@ -111,7 +120,7 @@
     hints.ai_flags = 0;
     hints.ai_protocol = IPPROTO_TCP;
 
-    error = getaddrinfo([host UTF8String], [port UTF8String], &hints, &res0);
+    error = getaddrinfo([host UTF8String], [portStr UTF8String], &hints, &res0);
     [pool release];
 
     if (error) {
@@ -221,7 +230,7 @@
     int      errNum = [error intValue];
     NSString *actionStr = NSLocalizedString( @"NoNamedServer", nil );
     NSString *message;
-    NSString *title = [NSString stringWithFormat:actionStr, [self host]];
+    NSString *title = [NSString stringWithFormat:actionStr, host];
 
     if (errNum == EAI_NONAME)
         message = @"";
@@ -238,7 +247,7 @@
     NSString *actionStr;
 
     actionStr = NSLocalizedString( @"NoConnection", nil );
-    actionStr = [NSString stringWithFormat:actionStr, [self host], [server port]];
+    actionStr = [NSString stringWithFormat:actionStr, host, port];
         // cause can be either a localized string tag or the error string
         // itself, in which case NSLocalizedString just returns cause
     cause = NSLocalizedString(cause, nil);
@@ -250,7 +259,7 @@
     NSString    *templ = NSLocalizedString(@"NoConnection", nil);
     NSString    *actionStr;
 
-    actionStr = [NSString stringWithFormat:templ, [self host], [server port]];
+    actionStr = [NSString stringWithFormat:templ, host, port];
     [self error:actionStr message:NSLocalizedString(@"ServerClosed", nil)];
 }
 

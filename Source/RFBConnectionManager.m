@@ -222,15 +222,15 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
             [l actionPressed:nil];
         } else {
             // :TORESOLVE: currently no way to cancel without killing program
-            ConnectionWaiter    *cw;
             id<IServerData> server = savedServ ? savedServ : cmdlineServer;
 
             if ( nil == profile )
                 profile = [profileManager defaultProfile];	
         
-            cw = [[ConnectionWaiter alloc] initWithServer:server
-                    profile:profile delegate:self window:nil];
-            [cw release];
+            /* This will leak memory, but it's at most one instance per run, so
+             * it's not a practical problem. */
+            [[ConnectionWaiter waiterForServer:server profile:profile
+                                     delegate:self window:nil] retain];
         }
         return YES;
 	}

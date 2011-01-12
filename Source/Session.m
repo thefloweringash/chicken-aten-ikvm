@@ -114,8 +114,10 @@
 		case NSAlertDefaultReturn:
 			break;
 		case NSAlertAlternateReturn:
-            _reconnectWaiter = [[ConnectionWaiter alloc] initWithServer:server_
-                        profile:[server_ profile] delegate:self window:window];
+            _reconnectWaiter = [[ConnectionWaiter waiterForServer:server_
+                                                    profile:[server_ profile]
+                                                   delegate:self
+                                                     window:window] retain];
             NSString *templ = NSLocalizedString(@"NoReconnection", nil);
             NSString *err = [NSString stringWithFormat:templ, host];
             [_reconnectWaiter setErrorStr:err];

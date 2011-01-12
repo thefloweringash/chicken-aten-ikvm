@@ -103,6 +103,8 @@
 
 - (void)dataAvailable:(NSNotification *)notif
 {
+    /* We've received data, which means that the remote ssh has made the
+     * connection. */
     RFBConnection   *conn;
 
     conn = [[RFBConnection alloc] initWithFileHandle:fh server:server

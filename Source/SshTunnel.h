@@ -30,7 +30,7 @@
     NSPipe  *sshOut;
     NSPipe  *sshErr;
 
-    SshWaiter   *delegate;
+    SshWaiter   *delegate; // only used while in the process of connecting
     in_port_t   localPort;
     int         state;
 }

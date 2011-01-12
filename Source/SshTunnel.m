@@ -124,7 +124,8 @@
 
     [[sshIn fileHandleForWriting] closeFile];
     state = SSH_STATE_CLOSING;
-    [self retain];
+    [self retain]; // we want to wait for ssh to terminate cleanly even if
+                   // no one else cates.
     delegate = nil;
 }
 
@@ -135,6 +136,8 @@
 
 - (void)findPortForTunnel
 {
+    // initializes localPort to an unused port by finding a port we can bind to
+
     in_port_t   port;
 
     for (port = TUNNEL_PORT_START; port < TUNNEL_PORT_END; port++) {
@@ -181,6 +184,7 @@
     str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
     if ([notif object] == [sshOut fileHandleForReading]) {
+        // data from ssh's standard out
         if ([str isEqualToString:@"\n"]) {
             state = SSH_STATE_OPEN;
             [delegate tunnelEstablishedAtPort:localPort];
@@ -188,6 +192,7 @@
         } else
             NSLog(@"Unknown message from ssh stdout: %@", str);
     } else if ([notif object] == [sshErr fileHandleForReading]) {
+        // data from ssh's standard error
         if ([str isEqualToString:@"Password:"]) {
             state = SSH_STATE_PASSWORD_PROMPT;
             [self getPassword];
@@ -210,7 +215,7 @@
     else if (state == SSH_STATE_CLOSING) {
         [[sshOut fileHandleForReading] closeFile];
         [[sshErr fileHandleForReading] closeFile];
-        [self release];
+        [self release]; // balances the retain in the close method
     }
 }
 

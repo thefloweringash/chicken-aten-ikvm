@@ -26,6 +26,8 @@
 @class ServerBase;
 @class SshTunnel;
 
+/* This class waits for ssh to connect to a remote host and for a connection to
+ * be made through the remote tunnel. */
 @interface SshWaiter : ConnectionWaiter
 {
     NSFileHandle    *fh;

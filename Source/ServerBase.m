@@ -121,6 +121,16 @@
     return _sshHost;
 }
 
+- (int)sshPort
+{
+    return _sshPort;
+}
+
+- (NSString *)sshUser
+{
+    return _sshUser;
+}
+
 - (void)setHost: (NSString*)host
 {
 	[_host autorelease];
@@ -228,6 +238,37 @@
 		[_profile autorelease];
 		_profile = [prof retain];
 	}
+}
+
+- (void)setSshString:(NSString *)str
+{
+    NSRange sep;
+
+    [_sshHost release];
+    [_sshUser release];
+
+    if (str == nil) {
+        _sshHost = nil;
+        _sshPort = 0;
+        _sshUser = nil;
+        return;
+    }
+
+    sep = [str rangeOfString:@"@"];
+    if (sep.location != NSNotFound) {
+        _sshUser = [[str substringToIndex:sep.location] retain];
+        str = [str substringFromIndex:sep.location + 1];
+    } else
+        _sshUser = nil;
+
+    sep = [str rangeOfString:@":"];
+    if (sep.location != NSNotFound) {
+        _sshPort = [[str substringFromIndex: sep.location + 1] intValue];
+        str = [str substringToIndex:sep.location];
+    } else
+        _sshPort = 0;
+
+    _sshHost = [str retain];
 }
 
 - (void)profileListUpdate:(NSNotification *)notification

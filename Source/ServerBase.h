@@ -26,6 +26,7 @@
 
 @class Profile;
 
+// This represents all the data and settings needed to connect to a VNC server.
 @interface ServerBase : NSObject <IServerData> {
 	NSString* _host;
 	NSString* _password;
@@ -36,6 +37,8 @@
     Profile   *_profile;
 
     NSString  *_sshHost;
+    int       _sshPort; // 0 means use default port
+    NSString  *_sshUser;
 }
 
 - (id)init;
@@ -59,6 +62,8 @@
 - (bool)addToServerListOnConnect;
 
 - (NSString *)sshHost;
+- (int)sshPort;
+- (NSString *)sshUser;
 
 - (void)setHost: (NSString*)host;
 - (BOOL)setHostAndPort: (NSString*)host;
@@ -70,6 +75,7 @@
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setProfile: (Profile *)profile;
 - (void)setProfileName: (NSString *)profileName;
+- (void)setSshString:(NSString *)str;
 
 - (void)copyServer: (id<IServerData>)server;
 

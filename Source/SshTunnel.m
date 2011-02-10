@@ -22,6 +22,8 @@
 #import "SshWaiter.h"
 
 #import <sys/socket.h>
+#import <sys/stat.h>
+#import <sys/types.h>
 #import <unistd.h>
 
 #define SSH_STATE_OPENING 0
@@ -33,10 +35,18 @@
 #define TUNNEL_PORT_START 5910
 #define TUNNEL_PORT_END 5950
 
+static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
+
 @interface SshTunnel (Private)
 
 - (void)findPortForTunnel;
+- (BOOL)setupFifos;
+- (void)cleanupFifos;
+
+- (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh;
+
 - (void)getPassword;
+- (void)writePassword:(NSString *)password;
 
 @end
 
@@ -45,11 +55,12 @@
 - (id)initWithServer:(id<IServerData>)aServer delegate:(SshWaiter *)aDelegate
 {
     if (self = [super init]) {
-        NSMutableArray  *args = [[NSMutableArray alloc] init];
+        NSMutableArray  *args;
         NSString        *tunnel;
         NSString        *sshHost = [aServer sshHost];
         NSString        *tunnelledHost = [aServer host];
         NSNotificationCenter    *notifs = [NSNotificationCenter defaultCenter];
+        NSMutableDictionary     *env;
 
         delegate = aDelegate;
 
@@ -66,7 +77,11 @@
         [self findPortForTunnel];
         if (localPort == 0) {
             NSLog(@"Couldn't find port for tunnelling");
-            [args release];
+            [self dealloc];
+            return nil;
+        }
+
+        if (![self setupFifos]) {
             [self dealloc];
             return nil;
         }
@@ -76,11 +91,21 @@
         tunnel = [NSString stringWithFormat:@"%d/%@/%d", localPort, sshHost,
                                                 [aServer port]];
 
+        args = [[NSMutableArray alloc] init];
         [args addObject:@"-L"];
         [args addObject:tunnel];
         [args addObject:sshHost];
-        [args addObject:@"echo;sleep 10;cat"];
+        [args addObject:@"echo;cat"];
         [task setArguments:args];
+
+        env = [NSMutableDictionary dictionaryWithDictionary:
+                                    [[NSProcessInfo processInfo] environment]];
+        [env setObject:[[NSBundle mainBundle] pathForResource:@"ssh-helper"
+                                                       ofType:@"sh"]
+                forKey:@"SSH_ASKPASS"];
+        [env setObject:@"dummy" forKey:@"DISPLAY"];
+        [env setObject:fifo forKey:@"CHICKEN_NAMED"];
+        [task setEnvironment:env];
 
         [notifs addObserver:self selector:@selector(sshTerminated:)
                 name:NSTaskDidTerminateNotification object:task];
@@ -95,19 +120,22 @@
         [[sshOut fileHandleForReading] readInBackgroundAndNotify];
         [[sshErr fileHandleForReading] readInBackgroundAndNotify];
 
+        [notifs addObserver:self selector:@selector(applicationTerminating:)
+                       name:NSApplicationWillTerminateNotification
+                     object:NSApp];
+
         [args release];
     }
 
     return self;
 }
 
-
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
+    [self cleanupFifos];
     [task release];
-    [[sshIn fileHandleForReading] closeFile];
     [[sshOut fileHandleForWriting] closeFile];
     [[sshErr fileHandleForWriting] closeFile];
     [sshIn release];
@@ -123,10 +151,19 @@
         return;
 
     [[sshIn fileHandleForWriting] closeFile];
+    [self cleanupFifos];
     state = SSH_STATE_CLOSING;
+
     [self retain]; // we want to wait for ssh to terminate cleanly even if
-                   // no one else cates.
+                   // no one else cares.
     delegate = nil;
+}
+
+- (void)applicationTerminating:(NSNotification *)notif
+{
+    // make sure that the FIFOs and the ssh instance get cleaned up
+    [self cleanupFifos];
+    [task terminate];
 }
 
 - (in_port_t)localPort
@@ -137,13 +174,15 @@
 - (void)findPortForTunnel
 {
     // initializes localPort to an unused port by finding a port we can bind to
-
     in_port_t   port;
 
     for (port = TUNNEL_PORT_START; port < TUNNEL_PORT_END; port++) {
         struct sockaddr_in  addr;
         int                 fd;
         int                 reuse = 1;
+
+        if(portUsed[port - TUNNEL_PORT_START])
+            continue;
 
         memset(&addr, 0, sizeof(addr));
         addr.sin_family = AF_INET;
@@ -163,6 +202,7 @@
         if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) == 0) {
             close(fd);
             localPort = port;
+            portUsed[port - TUNNEL_PORT_START] = YES;
             return;
         } else {
             NSLog(@"Couldn't bind: %s", strerror(errno));
@@ -171,10 +211,37 @@
     }
 }
 
+// Create FIFOs which we'll use to communicate the password to our helper script
+- (BOOL)setupFifos
+{
+    fifo = [[NSString stringWithFormat:@"/tmp/chicken-%d-%d", getpid(),
+                                       localPort] retain];
+    if (mkfifo([fifo fileSystemRepresentation], S_IRUSR | S_IWUSR) != 0) {
+        NSLog(@"Couldn't make fifo: %d", errno);
+        return NO;
+    }
+
+    return YES;
+}
+
+- (void)cleanupFifos
+{
+    if (fifo) {
+        if (state == SSH_STATE_PASSWORD_PROMPT)
+            [self writePassword:@""];
+        if (unlink([fifo fileSystemRepresentation]) != 0)
+            NSLog(@"Error unlinking %@: %d", fifo, errno);
+        [fifo release];
+        fifo = nil;
+    }
+}
+
 - (void)readFromSsh:(NSNotification *)notif
 {
-    NSData		*data;
-	NSString	*str;
+    NSData		    *data;
+	NSString	    *str;
+    NSEnumerator    *en;
+    NSString        *line;
 
     data = [[notif userInfo] objectForKey:NSFileHandleNotificationDataItem];
     if ([data length] == 0) {
@@ -182,34 +249,58 @@
     }
 
     str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    en = [[str componentsSeparatedByString:@"\n"] objectEnumerator];
 
-    if ([notif object] == [sshOut fileHandleForReading]) {
-        // data from ssh's standard out
-        if ([str isEqualToString:@"\n"]) {
-            state = SSH_STATE_OPEN;
-            [delegate tunnelEstablishedAtPort:localPort];
-            delegate = nil;
-        } else
-            NSLog(@"Unknown message from ssh stdout: %@", str);
-    } else if ([notif object] == [sshErr fileHandleForReading]) {
-        // data from ssh's standard error
-        if ([str isEqualToString:@"Password:"]) {
-            state = SSH_STATE_PASSWORD_PROMPT;
-            [self getPassword];
-        } else
-            NSLog(@"Unknown message from ssh error: %@", str);
-    } else {
-        NSLog(@"Read notification from unknown object");
-        [str release];
-        return;
+    while (line = [en nextObject]) {
+        [self processString:line fromFileHandle:[notif object]];
     }
 
     [str release];
     [[notif object] readInBackgroundAndNotify];
 }
 
+- (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh
+{
+    if (fh == [sshOut fileHandleForReading]) {
+        // data from ssh's standard out
+        if ([str isEqualToString:@""]) {
+            // blank lines means that we've connected
+            state = SSH_STATE_OPEN;
+            [self cleanupFifos];
+            [delegate tunnelEstablishedAtPort:localPort];
+            delegate = nil;
+        } else
+            NSLog(@"Unknown message from ssh stdout: %@", str);
+    } else if (fh == [sshErr fileHandleForReading]) {
+        // data from ssh's standard error
+        if ([str hasPrefix:@"Chicken ssh-helper: "]) {
+            if (state != SSH_STATE_CLOSING) {
+                state = SSH_STATE_PASSWORD_PROMPT;
+                [self getPassword];
+            }
+        } else if ([str isEqualToString:@"Password:"]) {
+            state = SSH_STATE_PASSWORD_PROMPT;
+            [self getPassword];
+        } else if ([str hasPrefix:@"Identity added:"]) {
+            NSLog(@"Added identity");
+        } else if ([str hasPrefix:@"cat: "]) {
+            NSLog(@"Error with cat: %@", str);
+        } else if ([str hasPrefix:@"Permission denied"]) {
+            NSLog(@"permission denied");
+            [delegate sshFailed];
+            [self close];
+        } else if ([str hasPrefix:@"channel "]) {
+            NSLog(@"probably open failure: %@", str);
+        } else if ([str length] > 0)
+            NSLog(@"Unknown message from ssh error: %@", str);
+    } else
+        NSLog(@"Read notification from unknown object");
+}
+
 - (void)sshTerminated:(NSNotification *)notif
 {
+    portUsed[localPort - TUNNEL_PORT_START] = NO;
+
     if (state != SSH_STATE_OPEN)
         [delegate sshFailed];
     else if (state == SSH_STATE_CLOSING) {
@@ -230,15 +321,23 @@
 - (void)authCancelled
 {
     [delegate sshFailed];
+    [self close];
 }
 
 - (void)authPasswordEntered:(NSString *)password
 {
-    NSFileHandle    *fh = [sshIn fileHandleForWriting];
+    [self writePassword:password];
+
+    state = SSH_STATE_PASSWORD_ENTERED;
+}
+
+- (void)writePassword:(NSString *)password
+{
+    NSFileHandle    *fh = [NSFileHandle fileHandleForWritingAtPath:fifo];
 
     [fh writeData: [password dataUsingEncoding:NSUTF8StringEncoding]];
     [fh writeData: [NSData dataWithBytes: "\n" length:1]];
-    state = SSH_STATE_PASSWORD_ENTERED;
+    [fh closeFile];
 }
 
 @end

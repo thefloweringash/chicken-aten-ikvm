@@ -30,7 +30,6 @@
  * be made through the remote tunnel. */
 @interface SshWaiter : ConnectionWaiter
 {
-    NSFileHandle    *fh;
     SshTunnel       *tunnel;
 }
 

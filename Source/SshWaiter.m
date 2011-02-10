@@ -48,18 +48,13 @@
 
     [tunnel close];
     [tunnel release];
-    [fh closeFile];
-    [fh release];
 
     [super dealloc];
 }
 
 - (void)cancel
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                    name:NSFileHandleDataAvailableNotification
-                                  object:fh];
-    [fh closeFile];
+    [super cancel];
     [tunnel close];
 }
 
@@ -72,52 +67,35 @@
 
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort
 {
-    struct sockaddr_in  addr;
-    int                 sock = socket(AF_INET, SOCK_STREAM, 0);
-    
-    if (sock < 0) {
-        NSString *msg = [NSString stringWithFormat:@"socket() - %d", errno];
-        [tunnel close];
-        [self error:@"Couldn't connect to tunnel" message:msg];
-    }
+    host = @"localhost";
+    port = aPort;
+    lock = [[NSLock alloc] init];
+    currentSock = -1;
 
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    addr.sin_port = htons(aPort);
-
-    if (connect(sock, (struct sockaddr *)&addr, sizeof(addr)) == 0) {
-        fh = [[NSFileHandle alloc] initWithFileDescriptor:sock
-                                           closeOnDealloc:YES];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                 selector:@selector(dataAvailable:)
-                                     name:NSFileHandleDataAvailableNotification
-                                   object:fh];
-        [fh waitForDataInBackgroundAndNotify];
-    } else {
-        NSString *msg = [NSString stringWithFormat:@"connect() - %d", errno];
-        [tunnel close];
-        [self error:@"Couldn't connect to tunnel" message:msg];
-    }
+    [NSThread detachNewThreadSelector: @selector(connect:) toTarget: self
+                           withObject: nil];
 }
 
-- (void)dataAvailable:(NSNotification *)notif
+- (void)finishConnection
 {
-    /* We've received data, which means that the remote ssh has made the
-     * connection. */
+    NSFileHandle    *fh;
     RFBConnection   *conn;
+    
+    if (delegate == nil)
+        return;
 
+    fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
+                                       closeOnDealloc: YES];
     conn = [[RFBConnection alloc] initWithFileHandle:fh server:server
                                              profile:profile];
     [conn setSshTunnel:tunnel];
+    [delegate connectionSucceeded:conn];
 
     [fh release];
-    fh = nil;
     [tunnel release];
     tunnel = nil;
-
-    [delegate connectionSucceeded:conn];
     [conn release];
+    currentSock = -1;
 }
 
 - (void)sshFailed

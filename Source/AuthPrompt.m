@@ -25,7 +25,7 @@
 {
     if (self = [super init]) {
         delegate = aDelegate;
-        [NSBundle loadNibNamed:@"AuthPrompt.xib" owner:self];
+        [NSBundle loadNibNamed:@"AuthPrompt" owner:self];
     }
     return self;
 }
@@ -54,7 +54,7 @@
     contextInfo:(void *)info
 {
     [panel orderOut:self];
-    [self release];
+    [self autorelease];
 }
 
 @end

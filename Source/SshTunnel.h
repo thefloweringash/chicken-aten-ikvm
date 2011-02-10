@@ -24,11 +24,15 @@
 @class SshWaiter;
 @protocol IServerData;
 
+/* This class manages an ssh connection establishing a tunnel to the remote
+ * host. */
 @interface SshTunnel : NSObject <AuthPromptDelegate> {
     NSTask  *task;
     NSPipe  *sshIn;
     NSPipe  *sshOut;
     NSPipe  *sshErr;
+
+    NSString    *fifo; // path of fifo where helper will read
 
     SshWaiter   *delegate; // only used while in the process of connecting
     in_port_t   localPort;

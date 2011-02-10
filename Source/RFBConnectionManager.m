@@ -370,7 +370,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     [serverDeleteBtn setEnabled: enabled
             && [[ServerDataManager sharedInstance] saveableCount] > 1
                 // can only delete servers which can be saved
-            && [server respondsToSelector:@selector(encodeWithCoder:)]];
+            && [server isKindOfClass:[PersistentServer class]]];
     [serverAddBtn setEnabled: enabled];
 }
 

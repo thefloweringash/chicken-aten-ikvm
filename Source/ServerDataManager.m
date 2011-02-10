@@ -320,7 +320,7 @@ static ServerDataManager* gInstance = nil;
     unsigned        count = 0;
     
     while (server = [servers nextObject]) {
-        if ([server respondsToSelector:@selector(encodeWithCoder:)])
+        if ([server isKindOfClass:[PersistentServer class]])
             count++;
     }
     return count;

@@ -53,6 +53,28 @@ enum {TJ_444=0, TJ_422, TJ_420, TJ_GRAYSCALE};
 #define TJ_FASTUPSAMPLE  256
   /* Use fast, inaccurate 4:2:2 and 4:2:0 YUV upsampling routines
      (libjpeg version only) */
+#define TJ_YUV           512
+  /* If passed to tjCompress(), this causes TurboJPEG/OSS to use the
+     accelerated color conversion routines in libjpeg-turbo to produce a planar
+     YUV image that is suitable for X Video.  Specifically, if the chrominance
+     components are subsampled along the horizontal dimension, then the width
+     of the luminance plane is padded to 2 in the output image (same goes for
+     the height of the luminance plane, if the chrominance components are
+     subsampled along the vertical dimension.)  Also, each line of each plane
+     in the output image is padded to 4 bytes.  Although this will work with
+     any subsampling option, it is really only useful in combination with
+     TJ_420, which produces an image compatible with the I420 (AKA "YUV420P")
+     format.
+
+     If passed to tjDecompress(), this tells TurboJPEG/OSS to perform JPEG
+     decompression but to leave out the color conversion step, so a planar YUV
+     image is generated instead of an RGB image.  The padding of the planes in
+     this image is the same as in the above case.  Note that, if the width or
+     height of the output image is not a multiple of 8 (or a multiple of 16
+     along any dimension in which chrominance subsampling is used), then an
+     intermediate buffer copy will be performed within TurboJPEG/OSS.
+  */
+
 typedef void* tjhandle;
 
 #define TJPAD(p) (((p)+3)&(~3))
@@ -99,7 +121,7 @@ DLLEXPORT tjhandle DLLCALL tjInitCompress(void);
      as long as the pitch is greater than 0.)
   [INPUT] height = height (in pixels) of the source image
   [INPUT] pixelsize = size (in bytes) of each pixel in the source image
-     RGBA and BGRA: 4, RGB and BGR: 3
+     RGBA and BGRA: 4, RGB and BGR: 3, Grayscale: 1
   [INPUT] dstbuf = pointer to user-allocated image buffer which will receive
      the JPEG image.  Use the macro TJBUFSIZE(width, height) to determine
      the appropriate size for this buffer based on the image width and height.
@@ -147,9 +169,9 @@ DLLEXPORT tjhandle DLLCALL tjInitDecompress(void);
 
 
 /*
-  int tjDecompressHeader(tjhandle j,
+  int tjDecompressHeader2(tjhandle j,
      unsigned char *srcbuf, unsigned long size,
-     int *width, int *height)
+     int *width, int *height, int *jpegsub)
 
   [INPUT] j = instance handle previously returned from a call to
      tjInitDecompress()
@@ -158,8 +180,17 @@ DLLEXPORT tjhandle DLLCALL tjInitDecompress(void);
   [INPUT] size = size of the JPEG image buffer (in bytes)
   [OUTPUT] width = width (in pixels) of the JPEG image
   [OUTPUT] height = height (in pixels) of the JPEG image
+  [OUTPUT] jpegsub = type of chrominance subsampling used when compressing the
+     JPEG image
 
   RETURNS: 0 on success, -1 on error
+*/
+DLLEXPORT int DLLCALL tjDecompressHeader2(tjhandle j,
+	unsigned char *srcbuf, unsigned long size,
+	int *width, int *height, int *jpegsub);
+
+/*
+  Deprecated version of the above function
 */
 DLLEXPORT int DLLCALL tjDecompressHeader(tjhandle j,
 	unsigned char *srcbuf, unsigned long size,
@@ -189,7 +220,7 @@ DLLEXPORT int DLLCALL tjDecompressHeader(tjhandle j,
      as long as the pitch is greater than 0.)
   [INPUT] height = height (in pixels) of the destination image
   [INPUT] pixelsize = size (in bytes) of each pixel in the destination image
-     RGBA/RGBx and BGRA/BGRx: 4, RGB and BGR: 3
+     RGBA/RGBx and BGRA/BGRx: 4, RGB and BGR: 3, Grayscale: 1
   [INPUT] flags = the bitwise OR of one or more of the flags described in the
      "Flags" section above.
 

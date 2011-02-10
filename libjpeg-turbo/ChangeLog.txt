@@ -1,3 +1,35 @@
+Significant changes since 1.0.1
+===============================
+
+[1] Added emulation of the libjpeg v7 and v8b APIs and ABIs.  See
+README-turbo.txt for more details.  This feature was sponsored by CamTrace SAS.
+
+[2] Created a new CMake-based build system for the Visual C++ and MinGW builds.
+
+[3] TurboJPEG/OSS can now compress from/decompress to grayscale bitmaps.
+
+[4] jpgtest can now be used to test decompression performance only.
+
+[5] If the default install prefix (/opt/libjpeg-turbo) is used, then
+'make install' now creates /opt/libjpeg-turbo/lib32 and
+/opt/libjpeg-turbo/lib64 sym links to duplicate the behavior of the binary
+packages.
+
+[6] All symbols in the libjpeg-turbo dynamic library are now versioned, even
+when the library is built with libjpeg v6b emulation.
+
+[7] Added arithmetic encoding and decoding support (can be disabled via
+configure or CMake options)
+
+[8] Added a TJ_YUV flag to TurboJPEG/OSS which causes both the compressor and
+decompressor to output planar YUV images.
+
+[9] Added an extended version of tjDecompressHeader() to TurboJPEG/OSS which
+allows the caller to determine the type of subsampling used in a JPEG image.
+
+[10] Added further protections against invalid Huffman codes.
+
+
 Significant changes since 1.0.0
 ===============================
 

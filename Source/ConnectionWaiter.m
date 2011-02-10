@@ -144,6 +144,7 @@
         [lock lock];
         if (delegate == nil) {
             [lock unlock];
+            close(sock);
             break;
         }
         currentSock = sock;

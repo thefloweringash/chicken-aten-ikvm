@@ -46,6 +46,8 @@
         [_profile retain];
 
         _sshHost = [[dict objectForKey:@"sshHost"] retain];
+        _sshPort = [[dict objectForKey:@"sshPort"] intValue];
+        _sshUser = [[dict objectForKey:@"sshUser"] retain];
     }
     return self;
 }
@@ -64,10 +66,16 @@
 		[NSNumber numberWithBool:_fullscreen],			[NSString stringWithString:@"fullscreen"],
 		[NSNumber numberWithBool:_viewOnly],            [NSString stringWithString:@"viewOnly"], 
 		[_profile profileName],							[NSString stringWithString:@"lastProfile"],
-            // note that _sshHost might be nil, thus marking the end of the list
+            // note that _sshHost or _sshUser might be nil, thus marking the end
+            // of the list
         _sshHost,                                       [NSString stringWithString:@"sshHost"],
+        _sshUser,                                       @"sshUser",
 		nil,											nil];
     
+    if (_sshHost && _sshPort)
+        [propertyDict setObject:[NSNumber numberWithInt:_sshPort]
+                         forKey:@"sshPort"];
+
     return propertyDict;
 }
 

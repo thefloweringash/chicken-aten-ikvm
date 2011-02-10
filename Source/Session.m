@@ -903,6 +903,7 @@
     [connection setSession:self];
     [connection setRfbView:rfbView];
     [connection setPassword:password];
+    [connection installMouseMovedTrackingRect];
 
     [_connectionStartDate release];
     _connectionStartDate = [[NSDate alloc] init];

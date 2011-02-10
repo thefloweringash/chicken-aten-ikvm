@@ -46,10 +46,7 @@
  *
  * Note that it maintains a retain for the connecting thread. Thus, the
  * initializing object need not even maintain a pointer to the ConnectionWaiter
- * instance.
- *
- * Thread-safety: retain/release messages should only be sent from the main
- * thread. */
+ * instance. */
 @interface ConnectionWaiter : NSObject {
         // variables used for initializing RFBConnection
     id<IServerData>     server;

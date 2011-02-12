@@ -64,6 +64,7 @@
 - (NSString *)sshHost;
 - (int)sshPort;
 - (NSString *)sshUser;
+- (NSString *)sshString;
 
 - (void)setHost: (NSString*)host;
 - (BOOL)setHostAndPort: (NSString*)host;

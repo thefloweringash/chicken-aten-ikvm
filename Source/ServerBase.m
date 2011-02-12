@@ -131,6 +131,19 @@
     return _sshUser;
 }
 
+- (NSString *)sshString
+{
+    NSString    *str = _sshHost;
+
+    if (_sshUser)
+        str = [NSString stringWithFormat:@"%@@%@", _sshUser, str];
+
+    if (_sshPort)
+        str = [NSString stringWithFormat:@"%@:%d", str, _sshPort];
+
+    return str;
+}
+
 - (void)setHost: (NSString*)host
 {
 	[_host autorelease];

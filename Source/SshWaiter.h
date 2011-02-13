@@ -35,6 +35,9 @@
 
 - (id)initWithServer:(id<IServerData>)aServer profile:(Profile*)aProfile
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWind;
+- (id)initWithServer:(id<IServerData>)aServer
+            delegate:(id<ConnectionWaiterDelegate>)aDelegate
+              window:(NSWindow *)aWind sshTunnel:(SshTunnel *)aTunnel;
 - (void)dealloc;
 
 - (void)cancel;

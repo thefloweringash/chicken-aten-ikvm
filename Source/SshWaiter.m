@@ -42,6 +42,24 @@
     return self;
 }
 
+/* Starts a connection attempt, reusing an existing tunnel. */
+- (id)initWithServer:(id<IServerData>)aServer
+            delegate:(id<ConnectionWaiterDelegate>)aDelegate
+              window:(NSWindow *)aWind sshTunnel:(SshTunnel *)aTunnel
+{
+    if (self = [super init]) {
+        server = [aServer retain];
+        profile = [[server profile] retain];
+        delegate = aDelegate;
+        window = [aWind retain];
+        tunnel = [aTunnel retain];
+
+        [self tunnelEstablishedAtPort:[tunnel localPort]];
+    }
+
+    return self;
+}
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];

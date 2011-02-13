@@ -136,6 +136,7 @@
 - (BOOL)viewOnly;
 - (EventFilter *)eventFilter;
 - (Session *)session;
+- (SshTunnel *)sshTunnel;
 
 - (void)viewFrameDidChange:(NSNotification *)aNotification;
 - (NSString *)statisticsString;

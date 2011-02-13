@@ -127,7 +127,6 @@
     [socketHandler closeFile]; // release is not sufficient because the
                                // asynchronous reading seems to keep a retain
 	[socketHandler release];
-    [sshTunnel close];
     [sshTunnel release];
     [currentReader release];
 	[_eventFilter release];
@@ -675,6 +674,11 @@
 - (Session *)session
 {
     return session;
+}
+
+- (SshTunnel *)sshTunnel
+{
+    return sshTunnel;
 }
 
 - (void)reallyWriteBytes:(unsigned char*)bytes length:(unsigned int)length

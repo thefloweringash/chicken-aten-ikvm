@@ -28,6 +28,7 @@
 #import "RFBConnection.h"
 #import "RFBConnectionManager.h"
 #import "RFBView.h"
+#import "SshWaiter.h"
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
 
@@ -45,6 +46,7 @@
     connection = [aConnection retain];
     server_ = [[connection server] retain];
     host = [[server_ host] retain];
+    sshTunnel = [[connection sshTunnel] retain];
 
     _isFullscreen = NO; // jason added for fullscreen display
 
@@ -87,6 +89,8 @@
 	[(id)server_ release];
 	[host release];
     [password release];
+    [sshTunnel close];
+    [sshTunnel release];
 	[realDisplayName release];
     [_reconnectSheetTimer invalidate];
     [_reconnectSheetTimer release];
@@ -114,10 +118,17 @@
 		case NSAlertDefaultReturn:
 			break;
 		case NSAlertAlternateReturn:
-            _reconnectWaiter = [[ConnectionWaiter waiterForServer:server_
+            if (sshTunnel) {
+                _reconnectWaiter = [[SshWaiter alloc] initWithServer:server_
+                                                            delegate:self
+                                                              window:window
+                                                           sshTunnel:sshTunnel];
+            } else {
+                _reconnectWaiter = [[ConnectionWaiter waiterForServer:server_
                                                     profile:[server_ profile]
                                                    delegate:self
                                                      window:window] retain];
+            }
             NSString *templ = NSLocalizedString(@"NoReconnection", nil);
             NSString *err = [NSString stringWithFormat:templ, host];
             [_reconnectWaiter setErrorStr:err];
@@ -142,6 +153,7 @@
 - (void)endSession
 {
     [self endFullscreenScrolling];
+    [sshTunnel close];
     [[RFBConnectionManager sharedManager] removeConnection:self];
 }
 

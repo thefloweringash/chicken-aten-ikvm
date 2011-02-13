@@ -24,6 +24,7 @@
 
 @class RFBConnection;
 @class RFBView;
+@class SshTunnel;
 
 @interface Session : NSObject <ConnectionWaiterDelegate>
 {
@@ -32,6 +33,8 @@
     IBOutlet NSWindow    *window;
     id<IServerData> server_;
     NSString        *password;
+    SshTunnel       *sshTunnel;
+
     id      scrollView;
     id      newTitleField;
     IBOutlet NSPanel *newTitlePanel;

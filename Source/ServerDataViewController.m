@@ -316,6 +316,7 @@
 	{
 		if( nil != mServer && [mServer doYouSupport:EDIT_ADDRESS] )
 		{
+            BOOL setSsh = [[sshHost stringValue] isEqualToString:[mServer host]];
 			BOOL portSpec = [mServer setHostAndPort:[sender stringValue]];
 
             [display setEnabled:!portSpec];
@@ -327,6 +328,11 @@
                 [displayDescription setStringValue:str];
             } else
                 [self takePortFromDisplay];
+
+            if (setSsh) {
+                [mServer setSshHost:[mServer host]];
+                [sshHost setStringValue:[mServer host]];
+            }
 		}
 	}
 	else if( password == sender )

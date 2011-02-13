@@ -76,6 +76,7 @@
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setProfile: (Profile *)profile;
 - (void)setProfileName: (NSString *)profileName;
+- (void)setSshHost:(NSString *)sshHost;
 - (void)setSshString:(NSString *)str;
 - (void)setSshTunnel:(BOOL)enable;
 

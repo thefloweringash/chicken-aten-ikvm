@@ -253,6 +253,12 @@
 	}
 }
 
+- (void)setSshHost:(NSString *)sshHost
+{
+    [_sshHost autorelease];
+    _sshHost = [sshHost retain];
+}
+
 - (void)setSshString:(NSString *)str
 {
     NSRange sep;

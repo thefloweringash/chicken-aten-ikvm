@@ -218,11 +218,9 @@
         return;
     }
 	
-    NSLog(@"Server reports Version %d.%d\n", serverMajorVersion, serverMinorVersion);
     // ARD sends this bogus 889 version#, at least for ARD 2.2 they actually
     // comply with version 003.007 so we'll force that
 	if (serverMinorVersion == 889) {
-		NSLog(@"\tBogus RFB Protocol Version Number from AppleRemoteDesktop, switching to protocol 003.007\n");
 		serverMinorVersion = 7;
 	}
 	

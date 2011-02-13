@@ -304,8 +304,6 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
                              && 0 == pixelFormat.blueShift
                              && 3 == major
                              && (3 == minor || 7 == minor || 8 == minor));
-    if (forceServerBigEndian)
-        NSLog(@"stupid compatibility hack - forcing server to be bigEndian if Tight Encoding is used");
 }
 
 /* --------------------------------------------------------------------------------- */

@@ -131,6 +131,7 @@
         aFormat->bigEndian = [FrameBuffer bigEndian];
     }
 
+#if 0
     NSLog(@"Transport Pixelformat:");
     NSLog(@"\ttrueColor = %s", aFormat->trueColour ? "YES" : "NO");
     NSLog(@"\tbigEndian = %s", aFormat->bigEndian ? "YES" : "NO");
@@ -138,6 +139,7 @@
     NSLog(@"\tdepth = %d", aFormat->depth);
     NSLog(@"\tmaxValue(r/g/b) = (%d/%d/%d)", aFormat->redMax, aFormat->greenMax, aFormat->blueMax);
     NSLog(@"\tshift(r/g/b) = (%d/%d/%d)", aFormat->redShift, aFormat->greenShift, aFormat->blueShift);
+#endif
     
     memcpy(&msg.format, aFormat, sizeof(rfbPixelFormat));
     msg.format.redMax = htons(msg.format.redMax);

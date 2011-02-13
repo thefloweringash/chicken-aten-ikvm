@@ -16,7 +16,11 @@
 }
 
 // Creation
+- (id)init;
 - (id)initWithPropertyList: (NSArray *)array;
+- (id)initFromMainMenu;
+
+- (KeyEquivalentScenario *)copy;
 
 // Persistance
 - (NSArray *)propertyList;

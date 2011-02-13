@@ -17,6 +17,7 @@ extern NSString *kConnectionFullscreenScenario;
 
 
 @interface KeyEquivalentManager : NSObject {
+    KeyEquivalentScenario *standardKeyEquivalents;
 	NSMutableDictionary *mScenarioDict;		// Scenario -> KeyEquivalentScenario
 	NSString *mCurrentScenarioName;
 	KeyEquivalentScenario *mCurrentScenario;

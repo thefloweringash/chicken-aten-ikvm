@@ -53,10 +53,59 @@
 }
 
 
+/* Recursive loads the key equivalents from a menu and its submenus. */
+- (void)loadKeyEquivalentsFromMenu: (NSMenu *)menu
+{
+	NSEnumerator *menuEnumerator;
+	NSMenuItem *menuItem;
+	
+	menuEnumerator = [[menu itemArray] objectEnumerator];
+	while ( menuItem = [menuEnumerator nextObject] )
+	{
+		NSString *characters = [menuItem keyEquivalent];
+		if ( characters && [characters length] )
+		{
+			volatile BOOL IReallyWantToLoadThisItem = YES;
+			if ( IReallyWantToLoadThisItem )
+			{
+				unsigned int modifiers = [menuItem keyEquivalentModifierMask];
+				KeyEquivalent *equivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
+				KeyEquivalentEntry *entry = [[KeyEquivalentEntry alloc] initWithMenuItem: menuItem];
+				[mEquivalentToEntryMapping setObject: entry forKey: equivalent];
+				[equivalent release];
+				[entry release];
+			}
+		}
+		if ( [menuItem hasSubmenu] )
+			[self loadKeyEquivalentsFromMenu: [menuItem submenu]];
+	}
+}
+
+
+/* Creates a scenario by loading the key equivalents from the current main menu,
+ * i.e. from the NIB file. */
+- (id)initFromMainMenu
+{
+    if ([self init] != nil) {
+        NSMenu *mainMenu = [NSApp mainMenu];
+        [self loadKeyEquivalentsFromMenu: mainMenu];
+    }
+    return self;
+}
+
+
 - (void)dealloc
 {
 	[mEquivalentToEntryMapping release];
 	[super dealloc];
+}
+
+
+- (KeyEquivalentScenario *)copy
+{
+    KeyEquivalentScenario *copy = [[[self class] alloc] init];
+    [copy->mEquivalentToEntryMapping setDictionary:mEquivalentToEntryMapping];
+    return copy;
 }
 
 

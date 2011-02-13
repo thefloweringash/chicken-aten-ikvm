@@ -7,6 +7,7 @@
 //
 
 #import "KeyEquivalentManager.h"
+#import "AppDelegate.h"
 #import "KeyEquivalent.h"
 #import "KeyEquivalentEntry.h"
 #import "KeyEquivalentPrefsController.h"
@@ -29,48 +30,6 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 
 
 @implementation KeyEquivalentManager
-
-#pragma mark Debug Methods
-
-- (void)loadKeyEquivalentsFromMenu: (NSMenu *)menu intoScenario: (KeyEquivalentScenario *)scenario
-{
-	NSEnumerator *menuEnumerator;
-	NSMenuItem *menuItem;
-	
-	menuEnumerator = [[menu itemArray] objectEnumerator];
-	while ( menuItem = [menuEnumerator nextObject] )
-	{
-		NSString *characters = [menuItem keyEquivalent];
-		if ( characters && [characters length] )
-		{
-			volatile BOOL IReallyWantToLoadThisItem = YES;
-			if ( IReallyWantToLoadThisItem )
-			{
-				unsigned int modifiers = [menuItem keyEquivalentModifierMask];
-				KeyEquivalent *equivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
-				KeyEquivalentEntry *entry = [[KeyEquivalentEntry alloc] initWithMenuItem: menuItem];
-				[scenario setEntry: entry forEquivalent: equivalent];
-				[equivalent release];
-				[entry release];
-			}
-		}
-		if ( [menuItem hasSubmenu] )
-			[self loadKeyEquivalentsFromMenu: [menuItem submenu] intoScenario: scenario];
-	}
-}
-
-
-- (void)loadFromMainMenuIntoScenarioNamed: (NSString *)scenarioName
-{
-	if ( ! mScenarioDict )
-		mScenarioDict = [[NSMutableDictionary alloc] init];
-	KeyEquivalentScenario *scenario = [[KeyEquivalentScenario alloc] init];
-	NSMenu *mainMenu = [NSApp mainMenu];
-	[self loadKeyEquivalentsFromMenu: mainMenu intoScenario: scenario];
-	[mScenarioDict setObject: scenario forKey: scenarioName];
-	[scenario release];
-}
-
 
 #pragma mark -
 #pragma mark Private
@@ -194,7 +153,11 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 {
 	if ( self = [super init] )
 	{
+        /* Get the unaltered key equivalents, which form the basis for our
+         * defaults. */
+        standardKeyEquivalents = [[KeyEquivalentScenario alloc] initFromMainMenu];
         [self loadScenarios];
+
 		NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 		[notificationCenter addObserver: self selector: @selector(windowDidBecomeKey:) name: NSWindowDidBecomeKeyNotification object: nil];
 		[notificationCenter addObserver: self selector: @selector(windowWillClose:) name: NSWindowWillCloseNotification object: nil];
@@ -238,11 +201,32 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 }
 
 
+/* Load default settings for key equivalent scenarios. */
 - (void)loadScenariosFromDefaults
 {
-	NSDictionary *foundDict = [NSDictionary dictionaryWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @"KeyEquivalentScenarios" ofType: @"plist"]];
-	if ( foundDict )
-		[self takeScenariosFromPropertyList: foundDict];
+    KeyEquivalentScenario   *minimal;
+    NSMenuItem              *fullscreen;
+    KeyEquivalentEntry      *entry;
+    
+    /* For connection window and fullscreen scenarios, use only a single
+     * equivalent: for entering and exiting fullscreen mode. */
+    fullscreen = [[NSApp delegate] getFullScreenMenuItem];
+    entry = [[KeyEquivalentEntry alloc] initWithMenuItem:fullscreen];
+    minimal = [[KeyEquivalentScenario alloc] init];
+    [minimal setEntry:entry
+        forEquivalent:[standardKeyEquivalents
+                                        keyEquivalentForMenuItem:fullscreen]];
+
+    [mScenarioDict release];
+    mScenarioDict = [[NSMutableDictionary alloc] init];
+    [mScenarioDict setObject:[[standardKeyEquivalents copy] autorelease]
+                      forKey:kNonConnectionWindowFrontmostScenario];
+    [mScenarioDict setObject:minimal forKey:kConnectionWindowFrontmostScenario];
+    [mScenarioDict setObject:[[minimal copy] autorelease]
+                      forKey:kConnectionFullscreenScenario];
+
+    [entry release];
+    [minimal release];
 }
 
 

@@ -2,22 +2,24 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10F569</string>
-		<string key="IBDocument.InterfaceBuilderVersion">762</string>
-		<string key="IBDocument.AppKitVersion">1038.29</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">10J567</string>
+		<string key="IBDocument.InterfaceBuilderVersion">823</string>
+		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.HIToolboxVersion">462.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">762</string>
+			<string key="NS.object.0">823</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="6"/>
 			<integer value="13"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 		</array>
-		<dictionary class="NSMutableDictionary" key="IBDocument.Metadata"/>
+		<object class="NSMutableDictionary" key="IBDocument.Metadata">
+			<string key="NS.key.0">PluginDependencyRecalculationVersion</string>
+			<integer value="1" key="NS.object.0"/>
+		</object>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="788941615">
 			<object class="NSCustomObject" id="56656335">
 				<string key="NSClassName">RFBConnectionManager</string>
@@ -31,7 +33,7 @@
 			<object class="NSWindowTemplate" id="456560569">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{124, 474}, {614, 302}}</string>
+				<string key="NSWindowRect">{{124, 411}, {614, 365}}</string>
 				<int key="NSWTFlags">1618477056</int>
 				<string key="NSWindowTitle">VNC ログイン</string>
 				<string key="NSWindowClass">NSPanel</string>
@@ -49,12 +51,14 @@
 								<object class="NSView" id="406259594">
 									<reference key="NSNextResponder" ref="369959191"/>
 									<int key="NSvFlags">256</int>
-									<string key="NSFrame">{{1, 1}, {396, 265}}</string>
+									<string key="NSFrame">{{1, 1}, {396, 328}}</string>
 									<reference key="NSSuperview" ref="369959191"/>
+									<reference key="NSWindow"/>
 								</object>
 							</array>
-							<string key="NSFrame">{{196, 20}, {398, 267}}</string>
+							<string key="NSFrame">{{196, 20}, {398, 330}}</string>
 							<reference key="NSSuperview" ref="298461565"/>
+							<reference key="NSWindow"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
@@ -88,13 +92,15 @@
 						<object class="NSSplitView" id="76521665">
 							<reference key="NSNextResponder" ref="298461565"/>
 							<int key="NSvFlags">274</int>
-							<string key="NSFrame">{{20, 20}, {161, 267}}</string>
+							<string key="NSFrame">{{20, 20}, {161, 330}}</string>
 							<reference key="NSSuperview" ref="298461565"/>
+							<reference key="NSWindow"/>
 							<bool key="NSIsVertical">YES</bool>
 						</object>
 					</array>
-					<string key="NSFrameSize">{614, 302}</string>
+					<string key="NSFrameSize">{614, 365}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 832}}</string>
 				<string key="NSMinSize">{509, 314}</string>
@@ -722,8 +728,8 @@
 						<int key="objectID">6</int>
 						<reference key="object" ref="298461565"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="369959191"/>
 							<reference ref="76521665"/>
+							<reference ref="369959191"/>
 						</array>
 						<reference key="parent" ref="456560569"/>
 					</object>
@@ -980,9 +986,9 @@
 				<boolean value="YES" key="23.ImportedFromIB2"/>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="24.ImportedFromIB2"/>
-				<string key="25.IBEditorWindowLastContentRect">{{329, 793}, {392, 306}}</string>
+				<string key="25.IBEditorWindowLastContentRect">{{329, 700}, {392, 306}}</string>
 				<string key="25.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="25.IBWindowTemplateEditedContentRect">{{329, 793}, {392, 306}}</string>
+				<string key="25.IBWindowTemplateEditedContentRect">{{329, 700}, {392, 306}}</string>
 				<boolean value="YES" key="25.ImportedFromIB2"/>
 				<boolean value="YES" key="25.windowTemplate.hasMinSize"/>
 				<string key="25.windowTemplate.minSize">{213, 107}</string>
@@ -1002,6 +1008,9 @@
 				<boolean value="YES" key="28.ImportedFromIB2"/>
 				<string key="49.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSAffineTransform" key="5.IBViewBoundsToFrameTransform">
+					<bytes key="NSTransformStruct">AUNEAABBoAAAA</bytes>
+				</object>
 				<boolean value="YES" key="5.ImportedFromIB2"/>
 				<string key="50.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="51.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1022,9 +1031,9 @@
 				<boolean value="YES" key="6.ImportedFromIB2"/>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="8.ImportedFromIB2"/>
-				<string key="9.IBEditorWindowLastContentRect">{{329, 832}, {614, 302}}</string>
+				<string key="9.IBEditorWindowLastContentRect">{{328, 641}, {614, 365}}</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="9.IBWindowTemplateEditedContentRect">{{329, 832}, {614, 302}}</string>
+				<string key="9.IBWindowTemplateEditedContentRect">{{328, 641}, {614, 365}}</string>
 				<boolean value="YES" key="9.ImportedFromIB2"/>
 				<boolean value="YES" key="9.windowTemplate.hasMinSize"/>
 				<string key="9.windowTemplate.minSize">{509, 292}</string>
@@ -1043,6 +1052,13 @@
 					<object class="NSMutableDictionary" key="actions">
 						<string key="NS.key.0">:</string>
 						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
@@ -1065,6 +1081,24 @@
 						<string key="showConnectionDialog:">id</string>
 						<string key="showNewConnectionDialog:">id</string>
 					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="addServer:">
+							<string key="name">addServer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="deleteSelectedServer:">
+							<string key="name">deleteSelectedServer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showConnectionDialog:">
+							<string key="name">showConnectionDialog:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showNewConnectionDialog:">
+							<string key="name">showNewConnectionDialog:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="groupList">NSTableView</string>
 						<string key="serverAddBtn">NSButton</string>
@@ -1074,6 +1108,40 @@
 						<string key="serverList">NSTableView</string>
 						<string key="serverListBox">NSBox</string>
 						<string key="splitView">NSSplitView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="groupList">
+							<string key="name">groupList</string>
+							<string key="candidateClassName">NSTableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="serverAddBtn">
+							<string key="name">serverAddBtn</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="serverDataBoxLocal">
+							<string key="name">serverDataBoxLocal</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="serverDeleteBtn">
+							<string key="name">serverDeleteBtn</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="serverGroupBox">
+							<string key="name">serverGroupBox</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="serverList">
+							<string key="name">serverList</string>
+							<string key="candidateClassName">NSTableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="serverListBox">
+							<string key="name">serverListBox</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="splitView">
+							<string key="name">splitView</string>
+							<string key="candidateClassName">NSSplitView</string>
+						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -1086,6 +1154,22 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
+					</object>
+				</object>
+			</array>
+			<array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Sparkle.framework/Headers/SUAppcast.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Sparkle.framework/Headers/SUUpdater.h</string>
 					</object>
 				</object>
 			</array>

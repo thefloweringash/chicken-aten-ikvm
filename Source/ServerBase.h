@@ -77,6 +77,7 @@
 - (void)setProfile: (Profile *)profile;
 - (void)setProfileName: (NSString *)profileName;
 - (void)setSshString:(NSString *)str;
+- (void)setSshTunnel:(BOOL)enable;
 
 - (void)copyServer: (id<IServerData>)server;
 

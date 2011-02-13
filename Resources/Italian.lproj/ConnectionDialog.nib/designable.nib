@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10F569</string>
-		<string key="IBDocument.InterfaceBuilderVersion">804</string>
-		<string key="IBDocument.AppKitVersion">1038.29</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">10J567</string>
+		<string key="IBDocument.InterfaceBuilderVersion">823</string>
+		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.HIToolboxVersion">462.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">804</string>
+			<string key="NS.object.0">823</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<integer value="13"/>
@@ -33,7 +33,7 @@
 			<object class="NSWindowTemplate" id="849901360">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{386, 483}, {537, 294}}</string>
+				<string key="NSWindowRect">{{386, 461}, {537, 370}}</string>
 				<int key="NSWTFlags">1618477056</int>
 				<string key="NSWindowTitle">Accesso VNC</string>
 				<string key="NSWindowClass">NSPanel</string>
@@ -41,7 +41,7 @@
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{509, 292}</string>
 				<object class="NSView" key="NSWindowView" id="818143754">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSBox" id="698913204">
@@ -51,12 +51,14 @@
 								<object class="NSView" id="332377559">
 									<reference key="NSNextResponder" ref="698913204"/>
 									<int key="NSvFlags">256</int>
-									<string key="NSFrame">{{1, 1}, {319, 265}}</string>
+									<string key="NSFrame">{{1, 1}, {319, 326}}</string>
 									<reference key="NSSuperview" ref="698913204"/>
+									<reference key="NSWindow"/>
 								</object>
 							</array>
-							<string key="NSFrame">{{196, 8}, {321, 267}}</string>
+							<string key="NSFrame">{{196, 22}, {321, 328}}</string>
 							<reference key="NSSuperview" ref="818143754"/>
+							<reference key="NSWindow"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
@@ -90,12 +92,15 @@
 						<object class="NSSplitView" id="87618164">
 							<reference key="NSNextResponder" ref="818143754"/>
 							<int key="NSvFlags">274</int>
-							<string key="NSFrame">{{20, 12}, {161, 267}}</string>
+							<string key="NSFrame">{{20, 20}, {161, 328}}</string>
 							<reference key="NSSuperview" ref="818143754"/>
+							<reference key="NSWindow"/>
 							<bool key="NSIsVertical">YES</bool>
 						</object>
 					</array>
-					<string key="NSFrameSize">{537, 294}</string>
+					<string key="NSFrameSize">{537, 370}</string>
+					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 832}}</string>
 				<string key="NSMinSize">{509, 314}</string>
@@ -723,8 +728,8 @@
 						<int key="objectID">6</int>
 						<reference key="object" ref="818143754"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="698913204"/>
 							<reference ref="87618164"/>
+							<reference ref="698913204"/>
 						</array>
 						<reference key="parent" ref="849901360"/>
 					</object>
@@ -1003,6 +1008,9 @@
 				<boolean value="YES" key="28.ImportedFromIB2"/>
 				<string key="49.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSAffineTransform" key="5.IBViewBoundsToFrameTransform">
+					<bytes key="NSTransformStruct">AUNEAABCkAAAA</bytes>
+				</object>
 				<boolean value="YES" key="5.ImportedFromIB2"/>
 				<string key="50.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="51.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1023,9 +1031,9 @@
 				<boolean value="YES" key="6.ImportedFromIB2"/>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="8.ImportedFromIB2"/>
-				<string key="9.IBEditorWindowLastContentRect">{{329, 817}, {537, 294}}</string>
+				<string key="9.IBEditorWindowLastContentRect">{{329, 636}, {537, 370}}</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="9.IBWindowTemplateEditedContentRect">{{329, 817}, {537, 294}}</string>
+				<string key="9.IBWindowTemplateEditedContentRect">{{329, 636}, {537, 370}}</string>
 				<boolean value="YES" key="9.ImportedFromIB2"/>
 				<boolean value="YES" key="9.windowTemplate.hasMinSize"/>
 				<string key="9.windowTemplate.minSize">{509, 292}</string>
@@ -1146,6 +1154,22 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
+					</object>
+				</object>
+			</array>
+			<array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Sparkle.framework/Headers/SUAppcast.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Sparkle.framework/Headers/SUUpdater.h</string>
 					</object>
 				</object>
 			</array>

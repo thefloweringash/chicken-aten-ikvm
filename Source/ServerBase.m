@@ -284,6 +284,20 @@
     _sshHost = [str retain];
 }
 
+- (void)setSshTunnel:(BOOL)enable
+{
+    if (!enable) {
+        [_sshHost release];
+        [_sshUser release];
+
+        _sshHost = nil;
+        _sshUser = nil;
+        _sshPort = 0;
+    } else if (_sshHost == nil) {
+        _sshHost = [_host retain];
+    }
+}
+
 - (void)profileListUpdate:(NSNotification *)notification
 {
 	ProfileDataManager* profileManager = [ProfileDataManager sharedInstance];

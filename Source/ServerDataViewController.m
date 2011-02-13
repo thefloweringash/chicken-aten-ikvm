@@ -181,11 +181,19 @@
 		[fullscreen setIntValue:[mServer fullscreen]];
 		[viewOnly setIntValue:[mServer viewOnly]];
 		[self setProfilePopupToProfile: [mServer profile]];
+        if ([mServer sshHost] == nil) {
+            [useSshTunnel setIntValue:NO];
+            [sshHost setStringValue:@""];
+        } else {
+            [useSshTunnel setIntValue:YES];
+            [sshHost setStringValue:[mServer sshString]];
+        }
 		
 		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
 		[display     setEditable:[mServer doYouSupport:EDIT_PORT]];
 		[password    setEnabled: [mServer doYouSupport:EDIT_PASSWORD]];
 		[rememberPwd setEnabled: [mServer respondsToSelector:@selector(setRememberPassword:)]];
+        [sshHost     setEnabled: [mServer sshHost] != nil];
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];
 
         [viewOnly setEnabled: YES];
@@ -200,6 +208,8 @@
 		[shared setEnabled: NO];
 		[profilePopup setEnabled: NO];
 		[connectBtn setEnabled: NO];
+        [useSshTunnel setEnabled: NO];
+        [sshHost setEnabled: NO];
 
 		[hostName setStringValue:@""];
 		[password setStringValue:@""];
@@ -208,6 +218,8 @@
 		[shared setIntValue:0];
 		[fullscreen setIntValue:0];
 		[viewOnly setIntValue:0];
+        [useSshTunnel setIntValue:0];
+        [sshHost setStringValue:@""];
 		[self setProfilePopupToProfile: nil];
 
         [displayDescription setStringValue:@""];
@@ -374,6 +386,18 @@
 	{
 		[mServer setViewOnly:![mServer viewOnly]];
 	}
+}
+
+- (IBAction)useSshTunnelChanged:(id)sender
+{
+    [mServer setSshTunnel:[sender state]];
+    [sshHost setEnabled:[sender state]];
+    [sshHost setStringValue:[sender state] ? [mServer sshString] : @""];
+}
+
+- (IBAction)sshHostChanged:(id)sender
+{
+    [mServer setSshString:[sender stringValue]];
 }
 
 - (IBAction)addServerChanged:(id)sender

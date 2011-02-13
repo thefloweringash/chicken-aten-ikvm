@@ -236,7 +236,6 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 	
 	defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setObject: [self propertyList] forKey: @"KeyEquivalentScenarios"];
-	[defaults synchronize];
 }
 
 
@@ -246,10 +245,7 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 	
 	defaults = [NSUserDefaults standardUserDefaults];
 	[defaults removeObjectForKey: @"KeyEquivalentScenarios"];
-	[defaults synchronize];
-	[mScenarioDict release];
-	mScenarioDict = nil;
-	[self loadScenarios];
+	[self loadScenariosFromDefaults];
 }
 
 

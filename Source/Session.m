@@ -111,6 +111,29 @@
     return [server_ viewOnly];
 }
 
+/* Begin a reconnection attempt to the server. */
+- (void)beginReconnect
+{
+    if (sshTunnel) {
+        /* Reuse the same SSH tunnel if we have one. */
+        _reconnectWaiter = [[SshWaiter alloc] initWithServer:server_
+                                                    delegate:self
+                                                      window:window
+                                                   sshTunnel:sshTunnel];
+    } else {
+        _reconnectWaiter = [[ConnectionWaiter waiterForServer:server_
+                                                      profile:[server_ profile]
+                                                     delegate:self
+                                                       window:window] retain];
+    }
+    NSString *templ = NSLocalizedString(@"NoReconnection", nil);
+    NSString *err = [NSString stringWithFormat:templ, host];
+    [_reconnectWaiter setErrorStr:err];
+    _reconnectSheetTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
+            target:self selector:@selector(createReconnectSheet:)
+            userInfo:nil repeats:NO] retain];
+}
+
 - (void)connectionTerminatedSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	/* One might reasonably argue that this should be handled by the connection manager. */
@@ -118,23 +141,7 @@
 		case NSAlertDefaultReturn:
 			break;
 		case NSAlertAlternateReturn:
-            if (sshTunnel) {
-                _reconnectWaiter = [[SshWaiter alloc] initWithServer:server_
-                                                            delegate:self
-                                                              window:window
-                                                           sshTunnel:sshTunnel];
-            } else {
-                _reconnectWaiter = [[ConnectionWaiter waiterForServer:server_
-                                                    profile:[server_ profile]
-                                                   delegate:self
-                                                     window:window] retain];
-            }
-            NSString *templ = NSLocalizedString(@"NoReconnection", nil);
-            NSString *err = [NSString stringWithFormat:templ, host];
-            [_reconnectWaiter setErrorStr:err];
-            _reconnectSheetTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
-                    target:self selector:@selector(createReconnectSheet:)
-                    userInfo:nil repeats:NO] retain];
+            [self beginReconnect];
             return;
 		default:
 			NSLog(@"Unknown alert returnvalue: %d", returnCode);
@@ -173,8 +180,7 @@
                     && -[_connectionStartDate timeIntervalSinceNow] > timeout) {
                 NSLog(@"Automatically reconnecting to server.  The connection was closed because: \"%@\".", aReason);
 				// begin reconnect
-                [self connectionTerminatedSheetDidEnd:nil returnCode:0
-                    contextInfo:NULL];
+                [self beginReconnect];
 			}
 			else {
 				// Ask what to do
@@ -224,8 +230,7 @@
     }
 
     [_reconnectReason setStringValue:@""];
-    [self connectionTerminatedSheetDidEnd:nil returnCode:NSAlertAlternateReturn
-                              contextInfo:NULL];
+    [self beginReconnect];
     [NSApp endSheet:passwordSheet];
 }
 
@@ -250,8 +255,7 @@
 
     [self connectionProblem];
     [_reconnectReason setStringValue:@""];
-    [self connectionTerminatedSheetDidEnd:nil returnCode:NSAlertAlternateReturn
-                              contextInfo:NULL];
+    [self beginReconnect];
 }
 
 - (void)setSize:(NSSize)aSize

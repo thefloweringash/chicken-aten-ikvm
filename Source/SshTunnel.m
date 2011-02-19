@@ -88,8 +88,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
         if ([sshHost isEqualToString:sshHost])
             tunnelledHost = @"localhost";
-        tunnel = [NSString stringWithFormat:@"%d/%@/%d", localPort, sshHost,
-                                                [aServer port]];
+        tunnel = [NSString stringWithFormat:@"%d/%@/%d", localPort,
+                                                tunneledHost, [aServer port]];
 
         args = [[NSMutableArray alloc] init];
         [args addObject:@"-L"];

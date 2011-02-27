@@ -46,6 +46,7 @@
     [challengeReader release];
     [authResultReader release];
     [serverInitReader release];
+    [vncAuthChallenge release];
     [super dealloc];
 }
 
@@ -168,11 +169,29 @@
 {
     unsigned char bytes[CHALLENGESIZE];
 
+    if ([connection password] == nil) {
+        [connection promptForPassword];
+        [vncAuthChallenge autorelease];
+        /* Note that theChallenge uses strictly temporary memory, so we can't
+         * just retain, we have to copy. */
+        vncAuthChallenge = [[NSData dataWithData:theChallenge] retain];
+        return;
+    }
+
     [theChallenge getBytes:bytes length:CHALLENGESIZE];
     vncEncryptBytes(bytes, (char*)[[connection password] UTF8String]);
     [connection writeBytes:bytes length:CHALLENGESIZE];
     [connection setReader:authResultReader];
     triedPassword = YES;
+}
+
+- (void)gotPassword
+{
+    if (vncAuthChallenge) {
+        [self challenge:vncAuthChallenge];
+        [vncAuthChallenge release];
+        vncAuthChallenge = nil;
+    }
 }
 
 - (void)setAuthResult:(NSNumber*)theResult

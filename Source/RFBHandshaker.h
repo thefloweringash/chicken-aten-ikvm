@@ -32,11 +32,14 @@
     id	authResultReader;
     id	serverInitReader;
     BOOL    triedPassword;
+    NSData  *vncAuthChallenge;
 }
 
 - (id)initWithConnection: (RFBConnection *)aConnection;
 
 - (void)handshake;
 - (void)setServerInit: (ServerInitMessage *)serverMsg;
+
+- (void)gotPassword;
 
 @end

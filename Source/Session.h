@@ -91,6 +91,7 @@
 - (void)paste:(id)sender;
 - (void)terminateConnection:(NSString*)aReason;
 - (void)authenticationFailed:(NSString *)aReason;
+- (void)promptForPassword;
 - (IBAction)reconnectWithNewPassword:(id)sender;
 - (IBAction)dontReconnect:(id)sender;
 - (IBAction)forceReconnect:(id)sender;

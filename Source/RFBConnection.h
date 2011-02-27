@@ -104,6 +104,7 @@
 - (void)setCursor: (NSCursor *)aCursor;
 - (void)terminateConnection:(NSString*)aReason;
 - (void)authenticationFailed:(NSString *)aReason;
+- (void)promptForPassword;
 - (void)sizeDisplay:(NSSize)aSize withPixelFormat:(rfbPixelFormat*)pixf;
 - (void)setDisplayName:(NSString*)aName;
 

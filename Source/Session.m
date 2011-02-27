@@ -206,6 +206,11 @@
 
     [self connectionProblem];
     [authMessage setStringValue: aReason];
+    [self promptForPassword];
+}
+
+- (void)promptForPassword
+{
     if ([server_ respondsToSelector:@selector(setRememberPassword:)])
         [rememberNewPassword setState: [server_ rememberPassword]];
     else
@@ -230,7 +235,10 @@
     }
 
     [_reconnectReason setStringValue:@""];
-    [self beginReconnect];
+    if (connection)
+        [connection setPassword:password];
+    else
+        [self beginReconnect];
     [NSApp endSheet:passwordSheet];
 }
 
@@ -238,6 +246,7 @@
 - (IBAction)dontReconnect:(id)sender
 {
     [NSApp endSheet:passwordSheet];
+    [self connectionProblem];
     [self endSession];
 }
 

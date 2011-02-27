@@ -170,6 +170,8 @@
 {
     [password release];
     password = [aPassword retain];
+    
+    [handshaker gotPassword];
 }
 
 - (void)setSshTunnel:(SshTunnel *)tunnel
@@ -243,6 +245,11 @@
 - (void)authenticationFailed:(NSString *)reason
 {
     [session authenticationFailed:reason];
+}
+
+- (void)promptForPassword
+{
+    [session promptForPassword];
 }
 
 /* Creates a framebuffer and sets up rfbView for a given display size */

@@ -85,3 +85,7 @@
 "little-endian" = "little-endian";
 "yes" = "oui";
 "no" = "non";
+
+// SSH
+"FirstTimeHeader" = "First time connecting";
+"FirstTimeMessage" = "The authenticity of the server could not be established.  Are you sure you want to continue connectiong?";

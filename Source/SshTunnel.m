@@ -27,7 +27,7 @@
 #import <unistd.h>
 
 #define SSH_STATE_OPENING 0
-#define SSH_STATE_PASSWORD_PROMPT 1
+#define SSH_STATE_PROMPT 1
 #define SSH_STATE_PASSWORD_ENTERED 2
 #define SSH_STATE_OPEN 3
 #define SSH_STATE_CLOSING 4
@@ -46,7 +46,9 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh;
 
 - (void)getPassword;
-- (void)writePassword:(NSString *)password;
+- (void)writeToHelper:(NSString *)str;
+
+- (void)firstTimeConnecting;
 
 @end
 
@@ -227,8 +229,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)cleanupFifos
 {
     if (fifo) {
-        if (state == SSH_STATE_PASSWORD_PROMPT)
-            [self writePassword:@""];
+        if (state == SSH_STATE_PROMPT)
+            [self writeToHelper:@""];
         if (unlink([fifo fileSystemRepresentation]) != 0)
             NSLog(@"Error unlinking %@: %d", fifo, errno);
         [fifo release];
@@ -272,14 +274,26 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         } else
             NSLog(@"Unknown message from ssh stdout: %@", str);
     } else if (fh == [sshErr fileHandleForReading]) {
-        // data from ssh's standard error
-        if ([str hasPrefix:@"Chicken ssh-helper: "]) {
+        // data from ssh's standard error: messages sent via our helper. These
+        // require a response.
+        if ([str hasPrefix:@"Chicken ssh-helper: Password:"]) {
             if (state != SSH_STATE_CLOSING) {
-                state = SSH_STATE_PASSWORD_PROMPT;
+                state = SSH_STATE_PROMPT;
                 [self getPassword];
             }
+        } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
+
+            if (state == SSH_STATE_CLOSING)
+                [self writeToHelper:@"no"];
+            else {
+                state = SSH_STATE_PROMPT;
+                [self firstTimeConnecting];
+            }
+        // messages sent by ssh itself.
         } else if ([str isEqualToString:@"Password:"]) {
-            state = SSH_STATE_PASSWORD_PROMPT;
+            // this probably won't ever happen
+            NSLog(@"Password prompt: how did this happen?");
+            state = SSH_STATE_PROMPT;
             [self getPassword];
         } else if ([str hasPrefix:@"Identity added:"]) {
             NSLog(@"Added identity");
@@ -289,9 +303,11 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
             NSLog(@"permission denied");
             [delegate sshFailed];
             [self close];
-        } else if ([str hasPrefix:@"channel "]) {
+        } else if ([str hasPrefix:@"channel "])
             NSLog(@"probably open failure: %@", str);
-        } else if ([str length] > 0)
+        else if ([str hasPrefix:@"Warning: Permanently added"])
+            NSLog(@"Added key to known hosts");
+        else if ([str length] > 0)
             NSLog(@"Unknown message from ssh error: %@", str);
     } else
         NSLog(@"Read notification from unknown object");
@@ -326,18 +342,43 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)authPasswordEntered:(NSString *)password
 {
-    [self writePassword:password];
+    [self writeToHelper:password];
 
     state = SSH_STATE_PASSWORD_ENTERED;
 }
 
-- (void)writePassword:(NSString *)password
+- (void)writeToHelper:(NSString *)str
 {
     NSFileHandle    *fh = [NSFileHandle fileHandleForWritingAtPath:fifo];
 
-    [fh writeData: [password dataUsingEncoding:NSUTF8StringEncoding]];
+    [fh writeData: [str dataUsingEncoding:NSUTF8StringEncoding]];
     [fh writeData: [NSData dataWithBytes: "\n" length:1]];
     [fh closeFile];
+}
+
+- (void)firstTimeConnecting
+{
+    /* This is ssh's first time connecting to this server. We want to verify
+     * that the user wants to add the unauthenticated server key to the hosts
+     * file. */
+
+    NSWindow    *wind = [delegate windowForSshAuth];
+    NSAlert     *alert = [[NSAlert alloc] init];
+
+    [alert setMessageText:NSLocalizedString(@"FirstTimeHeader", nil)];
+    [alert setInformativeText:NSLocalizedString(@"FirstTimeMessage", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Connect", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    [alert beginSheetModalForWindow:wind modalDelegate:self
+                     didEndSelector:@selector(firstTime:returnCode:contextInfo:)
+                        contextInfo:NULL];
+}
+
+- (void)firstTime:(NSAlert *)sheet returnCode:(int)retCode
+      contextInfo:(void *)info
+{
+    NSString    *resp = retCode == NSAlertFirstButtonReturn ? @"yes" : @"no";
+    [self writeToHelper:resp];
 }
 
 @end

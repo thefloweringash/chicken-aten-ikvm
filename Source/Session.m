@@ -255,6 +255,12 @@
 
     [self connectionProblem];
     [_reconnectReason setStringValue:@""];
+
+    // Force ourselves to use a new SSH tunnel
+    [sshTunnel close];
+    [sshTunnel release];
+    sshTunnel = nil;
+
     [self beginReconnect];
 }
 

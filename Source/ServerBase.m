@@ -83,7 +83,7 @@
 
 - (NSString*)password
 {
-    return _password ? _password : @"";
+    return _password;
 }
 
 - (BOOL)rememberPassword

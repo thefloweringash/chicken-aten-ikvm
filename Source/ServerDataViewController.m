@@ -175,7 +175,7 @@
             /* It's important to do password before rememberPwd so that
              * the latter will reflect a failure to retrieve the
              * passsword from the key chain. */
-		[password setStringValue:[mServer password]];
+        [password setStringValue:[mServer password] ? [mServer password] : @""];
         [rememberPwd setIntValue:[mServer rememberPassword]];
         [shared setIntValue:[mServer shared]];
 		[fullscreen setIntValue:[mServer fullscreen]];
@@ -339,7 +339,16 @@
 	{
 		if( nil != mServer && [mServer doYouSupport:EDIT_PASSWORD] )
 		{
-			[mServer setPassword:[sender stringValue]];
+            NSString    *str = [sender stringValue];
+
+            if ([str length] > 0 || [rememberPwd state])
+                [mServer setPassword:str];
+            else {
+                /* Treat blank, non-saved password as no password: this means
+                 * that we'll prompt for a password if one is required, rather
+                 * than trying the empty string and presumably failing. */
+                [mServer setPassword:nil];
+            }
 		}
 	}
 }

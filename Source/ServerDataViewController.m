@@ -193,6 +193,7 @@
 		[display     setEditable:[mServer doYouSupport:EDIT_PORT]];
 		[password    setEnabled: [mServer doYouSupport:EDIT_PASSWORD]];
 		[rememberPwd setEnabled: [mServer respondsToSelector:@selector(setRememberPassword:)]];
+        [useSshTunnel setEnabled: YES];
         [sshHost     setEnabled: [mServer sshHost] != nil];
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];
 
@@ -529,6 +530,8 @@
     [fullscreen setEnabled: NO];
     [shared setEnabled: NO];
     [viewOnly setEnabled: NO];
+    [useSshTunnel setEnabled: NO];
+    [sshHost setEnabled: NO];
     [superController setControlsEnabled: NO];
 }
 

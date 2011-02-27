@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Build number */
-#define BUILD "20110207"
+#define BUILD "20110227"
 
 /* Support arithmetic encoding */
 /* #undef C_ARITH_CODING_SUPPORTED */
@@ -83,13 +83,13 @@
 #define PACKAGE_NAME "libjpeg-turbo"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libjpeg-turbo 1.0.90"
+#define PACKAGE_STRING "libjpeg-turbo 1.1.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libjpeg-turbo"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.0.90"
+#define PACKAGE_VERSION "1.1.0"
 
 /* Define if shift is unsigned */
 /* #undef RIGHT_SHIFT_IS_UNSIGNED */
@@ -98,7 +98,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "1.0.90"
+#define VERSION "1.1.0"
 
 /* Use accelerated SIMD routines. */
 #define WITH_SIMD 1

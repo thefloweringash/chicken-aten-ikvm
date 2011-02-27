@@ -36,17 +36,16 @@
 @implementation ConnectionWaiter
 
 + (ConnectionWaiter *)waiterForServer:(id<IServerData>)aServer
-                              profile:(Profile*)aProfile
                              delegate:(id<ConnectionWaiterDelegate>)aDelegate
                                window:(NSWindow *)aWind
 {
     Class class = [aServer sshHost] ? [SshWaiter class] : [ConnectionWaiter class];
 
-    return [[[class alloc] initWithServer:aServer profile:aProfile
+    return [[[class alloc] initWithServer:aServer
                                  delegate:aDelegate window:aWind] autorelease];
 }
 
-- (id)initWithServer:(id<IServerData>)aServer profile:(Profile*)aProfile
+- (id)initWithServer:(id<IServerData>)aServer
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWindow
 {
     if (self = [super init]) {
@@ -55,7 +54,6 @@
         if (host == nil)
             host = [DEFAULT_HOST retain];
         port = [server port];
-        profile = [aProfile retain];
         lock = [[NSLock alloc] init];
         currentSock = -1;
         window = [aWindow retain];
@@ -72,7 +70,6 @@
 {
     [server release];
     [host release];
-    [profile release];
     [lock release];
     [window release];
     [errorStr release];
@@ -217,7 +214,7 @@
         fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
                                            closeOnDealloc: YES];
         theConnection = [[RFBConnection alloc] initWithFileHandle:fh
-                server:server profile:profile];
+                server:server profile:[server profile]];
         [delegate connectionSucceeded: theConnection];
         [fh release];
         [theConnection release];

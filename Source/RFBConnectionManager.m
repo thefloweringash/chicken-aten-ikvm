@@ -138,8 +138,6 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	
 	ServerStandAlone* cmdlineServer = [[[ServerStandAlone alloc] init] autorelease];
     id<IServerData> savedServ = nil;
-	Profile* profile = nil;
-	ProfileManager *profileManager = [ProfileManager sharedManager];
     BOOL listen = NO;
 	
 	// Check our arguments.  Args start at 0, which is the application name
@@ -182,6 +180,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 		}
 		else if ([arg hasPrefix:@"--Profile"])
 		{
+            ProfileManager *profileManager = [ProfileManager sharedManager];
 			if (i + 1 >= argCount) [self cmdlineUsage];
 			NSString *profileName = [args objectAtIndex:++i];
 			if ( ! [profileManager profileWithNameExists: profileName] )
@@ -189,7 +188,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 				NSLog(@"Cannot find a profile with the given name: \"%@\".", profileName);
 				exit(1);
 			}
-			profile = [profileManager profileNamed: profileName];
+			Profile *profile = [profileManager profileNamed: profileName];
+            if (profile)
+                [cmdlineServer setProfile:profile];
 		}
         else if ([arg isEqualToString:@"--Shared"])
             [cmdlineServer setShared:YES];
@@ -215,8 +216,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
         if (listen) {
             ListenerController *l = [ListenerController sharedController];
             [l showWindow:nil];
-            if (profile)
-                [l changeProfileTo:profile];
+            [l changeProfileTo:[cmdlineServer profile]];
             if ([cmdlineServer fullscreen])
                 [l setDisplaysFullscreen:YES];
             [l actionPressed:nil];
@@ -224,12 +224,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
             // :TORESOLVE: currently no way to cancel without killing program
             id<IServerData> server = savedServ ? savedServ : cmdlineServer;
 
-            if ( nil == profile )
-                profile = [profileManager defaultProfile];	
-        
             /* This will leak memory, but it's at most one instance per run, so
              * it's not a practical problem. */
-            [[ConnectionWaiter waiterForServer:server profile:profile
+            [[ConnectionWaiter waiterForServer:server
                                      delegate:self window:nil] retain];
         }
         return YES;

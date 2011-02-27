@@ -465,8 +465,8 @@
     // Asynchronously creates a connection to the server
     window = superController ? [superController window] : [self window];
     connectionWaiter = [[ConnectionWaiter waiterForServer:server
-                            profile:[mServer profile] delegate:self
-                             window:window] retain];
+                                                 delegate:self
+                                                   window:window] retain];
     [[ServerDataManager sharedInstance] save]; // just in case we crash
     if (connectionWaiter == nil)
         [self connectionFailed];

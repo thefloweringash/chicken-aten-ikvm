@@ -66,10 +66,9 @@
 };
 
 + (ConnectionWaiter *)waiterForServer:(id<IServerData>)aServer
-                              profile:(Profile*)aProfile
                              delegate:(id<ConnectionWaiterDelegate>)aDelegate
                                window:(NSWindow *)aWind;
-- (id)initWithServer:(id<IServerData>)aServer profile:(Profile*)aProfile
+- (id)initWithServer:(id<IServerData>)aServer
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWind;
 - (void)dealloc;
 

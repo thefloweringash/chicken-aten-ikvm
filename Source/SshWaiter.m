@@ -27,12 +27,11 @@
 
 @implementation SshWaiter
 
-- (id)initWithServer:(id<IServerData>)aServer profile:(Profile*)aProfile
+- (id)initWithServer:(id<IServerData>)aServer
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWind
 {
     if (self = [super init]) {
         server = [aServer retain];
-        profile = [aProfile retain];
         delegate = aDelegate;
         window = [aWind retain];
 
@@ -49,7 +48,6 @@
 {
     if (self = [super init]) {
         server = [aServer retain];
-        profile = [[server profile] retain];
         delegate = aDelegate;
         window = [aWind retain];
         tunnel = [aTunnel retain];
@@ -105,7 +103,7 @@
     fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
                                        closeOnDealloc: YES];
     conn = [[RFBConnection alloc] initWithFileHandle:fh server:server
-                                             profile:profile];
+                                             profile:[server profile]];
     [conn setSshTunnel:tunnel];
     [delegate connectionSucceeded:conn];
 

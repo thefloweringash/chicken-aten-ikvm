@@ -122,7 +122,6 @@
                                                    sshTunnel:sshTunnel];
     } else {
         _reconnectWaiter = [[ConnectionWaiter waiterForServer:server_
-                                                      profile:[server_ profile]
                                                      delegate:self
                                                        window:window] retain];
     }

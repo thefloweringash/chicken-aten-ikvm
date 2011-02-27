@@ -61,12 +61,12 @@
 	[standardUserDefaults registerDefaults: dict];
 }
 
-- (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server profile:(Profile*)p
+- (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server
 {
     if (self = [super init]) {
         ByteBlockReader *versionReader;
 
-        _profile = [p retain];
+        _profile = [[server profile] retain];
 
         currentReader = nil;
 

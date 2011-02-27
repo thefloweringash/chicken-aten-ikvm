@@ -70,7 +70,7 @@
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
 - (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file 
-    server:(id<IServerData>) server profile:(Profile *) someProfile;
+    server:(id<IServerData>) server;
 - (void)successfulConnection: (RFBConnection *)theConnection
                     toServer:(id<IServerData>)server;
 

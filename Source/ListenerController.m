@@ -282,9 +282,8 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     RFBConnectionManager* cm = [RFBConnectionManager sharedManager];
     server = [[ServerFromConnection alloc] initFromConnection:incomingConnection];
     [server setFullscreen: [NSApp isActive] && [fullscreen state]];
-    [cm createConnectionWithFileHandle:incomingConnection 
-        server:server
-        profile:listeningProfile];
+    [server setProfile:listeningProfile];
+    [cm createConnectionWithFileHandle:incomingConnection server:server];
     [server release];
 }
 

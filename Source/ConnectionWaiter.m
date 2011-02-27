@@ -214,7 +214,7 @@
         fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
                                            closeOnDealloc: YES];
         theConnection = [[RFBConnection alloc] initWithFileHandle:fh
-                server:server profile:[server profile]];
+                server:server];
         [delegate connectionSucceeded: theConnection];
         [fh release];
         [theConnection release];

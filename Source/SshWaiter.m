@@ -102,8 +102,7 @@
 
     fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
                                        closeOnDealloc: YES];
-    conn = [[RFBConnection alloc] initWithFileHandle:fh server:server
-                                             profile:[server profile]];
+    conn = [[RFBConnection alloc] initWithFileHandle:fh server:server];
     [conn setSshTunnel:tunnel];
     [delegate connectionSucceeded:conn];
 

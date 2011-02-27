@@ -433,12 +433,12 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 }
 
 /* Creates a connection from an already connected file handle */
-- (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file server:(id<IServerData>) server profile:(Profile *) someProfile
+- (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file server:(id<IServerData>) server
 {
 	/* change */
     RFBConnection* theConnection;
 
-    theConnection = [[RFBConnection alloc] initWithFileHandle:file server:server profile:someProfile];
+    theConnection = [[RFBConnection alloc] initWithFileHandle:file server:server];
     if(theConnection) {
         [self successfulConnection:theConnection toServer:nil];
         [theConnection release];

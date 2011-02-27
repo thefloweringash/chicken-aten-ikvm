@@ -86,7 +86,7 @@
     int             lastBufferedIsMouseMovement;
 }
 
-- (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server profile:(Profile*)p;
+- (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server;
 
 - (void)dealloc;
 

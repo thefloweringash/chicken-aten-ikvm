@@ -673,6 +673,33 @@
     return YES;
 }
 
+- (void)sendPasteboardToServer:(NSPasteboard *)pb
+{
+    NSString    *str = [pb stringForType:NSStringPboardType];
+    const char  *cStr = [str cStringUsingEncoding:NSISOLatin1StringEncoding];
+
+    NSLog(@"Sending %@", str);
+    if (cStr == NULL) {
+        NSLog(@"String not encodable in Latin-1");
+        return;
+    }
+
+    unsigned int            len = strlen(cStr);
+    unsigned int            msgSz = sizeof(rfbClientCutTextMsg) + len;
+    rfbClientCutTextMsg     *msg = malloc(msgSz);
+
+    if (msg == NULL) {
+        NSLog(@"Not enough memory to store pasteboard contents");
+        return;
+    }
+
+    msg->type = rfbClientCutText;
+    msg->length = htonl(len);
+    memcpy((char *)(msg + 1), cStr, len);
+    [self writeBytes:(unsigned char *)msg length:msgSz];
+    free(msg);
+}
+
 - (EventFilter *)eventFilter
 {  return _eventFilter;  }
 

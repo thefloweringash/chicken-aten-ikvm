@@ -89,6 +89,7 @@
 - (void)resize:(NSSize)size;
 
 - (void)paste:(id)sender;
+- (IBAction)sendPasteboardToServer:(id)sender;
 - (void)terminateConnection:(NSString*)aReason;
 - (void)authenticationFailed:(NSString *)aReason;
 - (void)promptForPassword;

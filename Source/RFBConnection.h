@@ -100,6 +100,7 @@
 - (void)setReader:(ByteReader*)aReader;
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb;
+- (void)sendPasteboardToServer:(NSPasteboard *)pb;
 - (void)setServerVersion:(NSData*)aVersion;
 - (void)setCursor: (NSCursor *)aCursor;
 - (void)terminateConnection:(NSString*)aReason;

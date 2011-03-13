@@ -480,6 +480,11 @@
     [connection pasteFromPasteboard:[NSPasteboard generalPasteboard]];
 }
 
+- (void)sendPasteboardToServer:(id)sender
+{
+    [connection sendPasteboardToServer:[NSPasteboard generalPasteboard]];
+}
+
 /* --------------------------------------------------------------------------------- */
 - (void)openNewTitlePanel:(id)sender
 {

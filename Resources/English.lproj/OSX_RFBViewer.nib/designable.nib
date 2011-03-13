@@ -12,6 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="1307"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -485,6 +486,14 @@
 									<string key="NSTitle">Paste</string>
 									<string key="NSKeyEquiv">v</string>
 									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="529750286"/>
+									<reference key="NSMixedImage" ref="368837609"/>
+								</object>
+								<object class="NSMenuItem" id="302104228">
+									<reference key="NSMenu" ref="208347917"/>
+									<string key="NSTitle">Paste to Remote Clipboard</string>
+									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="529750286"/>
 									<reference key="NSMixedImage" ref="368837609"/>
@@ -1229,6 +1238,14 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 					</object>
 					<int key="connectionID">1512</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sendPasteboardToServer:</string>
+						<reference key="source" ref="518874856"/>
+						<reference key="destination" ref="302104228"/>
+					</object>
+					<int key="connectionID">1514</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1536,6 +1553,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 							<reference ref="21217042"/>
 							<reference ref="309990674"/>
 							<reference ref="471785486"/>
+							<reference ref="302104228"/>
 						</object>
 						<reference key="parent" ref="1066758316"/>
 					</object>
@@ -1871,6 +1889,11 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 						<reference key="object" ref="968292629"/>
 						<reference key="parent" ref="1056163985"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1513</int>
+						<reference key="object" ref="302104228"/>
+						<reference key="parent" ref="208347917"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1986,6 +2009,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 					<string>1506.ImportedFromIB2</string>
 					<string>1509.IBPluginDependency</string>
 					<string>1511.IBPluginDependency</string>
+					<string>1513.IBPluginDependency</string>
 					<string>165.IBPluginDependency</string>
 					<string>165.ImportedFromIB2</string>
 					<string>225.IBPluginDependency</string>
@@ -2081,7 +2105,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{513, 701}, {151, 183}}</string>
+					<string>{{513, 681}, {270, 203}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2164,6 +2188,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2252,7 +2277,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1512</int>
+			<int key="maxID">1514</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2859,11 +2884,13 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 							<string>reconnectCancelled:</string>
 							<string>reconnectWithNewPassword:</string>
 							<string>requestFrameBufferUpdate:</string>
+							<string>sendPasteboardToServer:</string>
 							<string>setNewTitle:</string>
 							<string>toggleFullscreenMode:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2894,6 +2921,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 							<string>reconnectCancelled:</string>
 							<string>reconnectWithNewPassword:</string>
 							<string>requestFrameBufferUpdate:</string>
+							<string>sendPasteboardToServer:</string>
 							<string>setNewTitle:</string>
 							<string>toggleFullscreenMode:</string>
 						</object>
@@ -2941,6 +2969,10 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0Lw</string>
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">requestFrameBufferUpdate:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">sendPasteboardToServer:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

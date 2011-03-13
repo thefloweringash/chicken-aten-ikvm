@@ -153,7 +153,6 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         return;
 
     [[sshIn fileHandleForWriting] closeFile];
-    [self cleanupFifos];
     state = SSH_STATE_CLOSING;
 
     [self retain]; // we want to wait for ssh to terminate cleanly even if
@@ -164,8 +163,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)applicationTerminating:(NSNotification *)notif
 {
     // make sure that the FIFOs and the ssh instance get cleaned up
-    [self cleanupFifos];
     [task terminate];
+    [self cleanupFifos];
 }
 
 - (in_port_t)localPort
@@ -316,6 +315,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)sshTerminated:(NSNotification *)notif
 {
     portUsed[localPort - TUNNEL_PORT_START] = NO;
+    [self cleanupFifos];
 
     if (state != SSH_STATE_OPEN)
         [delegate sshFailed];

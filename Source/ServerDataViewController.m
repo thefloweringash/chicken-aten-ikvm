@@ -283,23 +283,42 @@
 	return mServer;
 }
 
+/* Updates the display description after the user has changed the current port.
+ */
+- (void)descriptionFromPort
+{
+    int         port = [mServer port];
+    NSString    *str;
+    
+    if (port >= PORT_BASE && port < PORT_BASE + DISPLAY_MAX) {
+        NSString    *fmt = NSLocalizedString(@"PortIsDisplay", nil);
+
+        str = [NSString stringWithFormat:fmt, port, port - PORT_BASE];
+    } else {
+        NSString    *fmt = NSLocalizedString(@"PortNum", nil);
+
+        str = [NSString stringWithFormat:fmt, port];
+    }
+    [displayDescription setStringValue:str];
+}
+
+/* Use the current value of the display box to set the server port, and update
+ * the description string. */
 - (void)takePortFromDisplay
 {
     int         val = [display intValue];
-    NSString    *str;
 
-    if (val > DISPLAY_MAX) {
-        NSString    *fmt = NSLocalizedString(@"PortNum", nil);
-
-        str = [NSString stringWithFormat:fmt, val];
+    if (val >= DISPLAY_MAX) {
         [mServer setPort:val];
+        [self descriptionFromPort];
     } else {
         NSString    *fmt = NSLocalizedString(@"DisplayIsPort", nil);
+        NSString    *str;
 
         str = [NSString stringWithFormat:fmt, val, val + PORT_BASE];
         [mServer setDisplay:val];
+        [displayDescription setStringValue:str];
     }
-    [displayDescription setStringValue:str];
 }
 
 - (void)controlTextDidChange:(NSNotification *)aNotification
@@ -321,13 +340,9 @@
 			BOOL portSpec = [mServer setHostAndPort:[sender stringValue]];
 
             [display setEnabled:!portSpec];
-            if (portSpec) {
-                NSString    *fmt = NSLocalizedString(@"PortNum", nil);
-                NSString    *str;
-
-                str = [NSString stringWithFormat:fmt, [mServer port]];
-                [displayDescription setStringValue:str];
-            } else
+            if (portSpec)
+                [self descriptionFromPort];
+            else
                 [self takePortFromDisplay];
 
             if (setSsh) {

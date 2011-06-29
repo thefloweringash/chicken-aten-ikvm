@@ -352,10 +352,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
                     && ![modified isEqualToString: unmodified]) {
         /* Some non-US keyboards require holding option or control in order to
          * type basic ASCII characters. Since these characters can be so
-         * crucial, we the modified key if it's in the ASCII range.
+         * crucial, we send the modified key if it's in the ASCII range.
          *
-         * Note that the command key tends to block the effect of the shift key
-         * on [theEvent characters], so this heuristic can't be applied with the
+         * The command key tends to block the effect of the shift key on
+         * [theEvent characters], so this heuristic can't be applied with the
          * command key is down. */
         characters = modified;
 

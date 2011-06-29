@@ -17,7 +17,7 @@
  */
 
 #import <AppKit/AppKit.h>
-#import <ServerDataViewController.h>
+#import "ServerDataViewController.h"
 #import "ConnectionWaiter.h"
 
 @class Profile, ProfileManager;

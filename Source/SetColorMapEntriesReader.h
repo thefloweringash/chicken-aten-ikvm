@@ -19,7 +19,7 @@
  */
 
 #import <AppKit/AppKit.h>
-#import <rfbproto.h>
+#import "rfbproto.h"
 
 @class RFBProtocol;
 @class RFBConnection;

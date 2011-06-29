@@ -19,7 +19,7 @@
  */
 
 #import <AppKit/AppKit.h>
-#import <rfbproto.h>
+#import "rfbproto.h"
 
 /* A ByteReader is something which can receive data from the RFB connection. As
  * data comes in, it will be passed the readBytes:length: message. When it has

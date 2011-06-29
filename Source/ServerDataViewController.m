@@ -336,7 +336,7 @@
 	{
 		if( nil != mServer && [mServer doYouSupport:EDIT_ADDRESS] )
 		{
-            BOOL setSsh = [[sshHost stringValue] isEqualToString:[mServer host]];
+            BOOL setSsh = [[mServer sshString] isEqualToString:[mServer host]];
 			BOOL portSpec = [mServer setHostAndPort:[sender stringValue]];
 
             [display setEnabled:!portSpec];

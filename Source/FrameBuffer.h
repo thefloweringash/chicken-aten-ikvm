@@ -20,7 +20,7 @@
 #define __FRAMEBUFFER_H_INCLUDED__
 
 #import <AppKit/AppKit.h>
-#import <rfbproto.h>
+#import "rfbproto.h"
 
 #define SCRATCHPAD_SIZE			(384*384)
 

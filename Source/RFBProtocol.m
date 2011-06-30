@@ -74,21 +74,18 @@
 
 /* Sends the list of supported encodings to the server. Note that it only
  * buffers the message, without actually writing it. It is assumed that a
- * subsequent message will be written without buffering. */
-- (void)changeEncodingsTo:(CARD32*)newEncodings length:(CARD16)l
+ * subsequent message will be written without buffering.
+ *
+ * The array enc should be an array of network-order encoding values of length
+ * l. */
+- (void)changeEncodingsTo:(CARD32*)enc length:(CARD16)l
 {
-    int i;
     rfbSetEncodingsMsg msg;
-    CARD32	*enc = (CARD32 *)malloc(l * sizeof(CARD32));
 
     msg.type = rfbSetEncodings;
     msg.nEncodings = htons(l);
     [connection writeBufferedBytes:(unsigned char*)&msg length:sizeof(msg)];
-    for(i=0; i<l; i++) {
-        enc[i] = htonl(newEncodings[i]);
-    }
     [connection writeBufferedBytes:(unsigned char*)enc length:l*sizeof(CARD32)];
-    free(enc);
 }
 
 - (void)setEncodings
@@ -98,7 +95,7 @@
     CARD32	*enc = (CARD32 *)malloc(l * sizeof(CARD32));
 
     for(i=0; i<l; i++) {
-        enc[i] = [profile encodingAtIndex:i];
+        enc[i] = htonl([profile encodingAtIndex:i]);
     }
     [self changeEncodingsTo:enc length:l];
     free(enc);

@@ -88,7 +88,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
             return nil;
         }
 
-        if ([sshHost isEqualToString:sshHost])
+        if ([sshHost isEqualToString:[aServer host]])
             tunnelledHost = @"localhost";
         tunnel = [NSString stringWithFormat:@"%d/%@/%d", localPort,
                                                 tunnelledHost, [aServer port]];

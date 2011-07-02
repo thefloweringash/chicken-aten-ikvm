@@ -382,6 +382,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 {
     NSString    *resp = retCode == NSAlertFirstButtonReturn ? @"yes" : @"no";
     [self writeToHelper:resp];
+    state = SSH_STATE_OPENING;
 }
 
 @end

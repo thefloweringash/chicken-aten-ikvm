@@ -19,14 +19,13 @@
 
 #import <AppKit/AppKit.h>
 #import <netinet/in.h>
-#import "AuthPrompt.h"
 
 @class SshWaiter;
 @protocol IServerData;
 
 /* This class manages an ssh connection establishing a tunnel to the remote
  * host. */
-@interface SshTunnel : NSObject <AuthPromptDelegate> {
+@interface SshTunnel : NSObject {
     NSTask  *task;
     NSPipe  *sshIn;
     NSPipe  *sshOut;
@@ -47,5 +46,7 @@
 - (void)close;
 
 - (in_port_t)localPort;
+
+- (void)usePassword:(NSString *)pass;
 
 @end

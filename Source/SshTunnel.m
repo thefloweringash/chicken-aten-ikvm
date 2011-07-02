@@ -45,7 +45,6 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh;
 - (void)sshFailed:(NSString *)err;
 
-- (void)getPassword;
 - (void)writeToHelper:(NSString *)str;
 
 - (void)firstTimeConnecting;
@@ -281,7 +280,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         if ([str hasPrefix:@"Chicken ssh-helper: Password:"]) {
             if (state != SSH_STATE_CLOSING) {
                 state = SSH_STATE_PROMPT;
-                [self getPassword];
+                [delegate getPassword];
             }
         } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
 
@@ -344,21 +343,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [self release];
 }
 
-- (void)getPassword
-{
-    AuthPrompt  *auth = [[AuthPrompt alloc] initWithDelegate:self];
-    NSWindow    *wind = [delegate windowForSshAuth];
-
-    [auth runSheetOnWindow:wind]; 
-}
-
-- (void)authCancelled
-{
-    [delegate sshFailed];
-    [self close];
-}
-
-- (void)authPasswordEntered:(NSString *)password
+- (void)usePassword:(NSString*)password
 {
     [self writeToHelper:password];
 

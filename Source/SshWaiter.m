@@ -64,6 +64,7 @@
 
     [tunnel close];
     [tunnel release];
+    [auth release];
 
     [super dealloc];
 }
@@ -79,6 +80,15 @@
     if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
         [delegate connectionPrepareForSheet];
     return window;
+}
+
+- (void)getPassword
+{
+    auth = [[AuthPrompt alloc] initWithDelegate:self];
+
+    if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
+        [delegate connectionPrepareForSheet];
+    [auth runSheetOnWindow:window]; 
 }
 
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort
@@ -124,6 +134,21 @@
     NSString    *header = [NSString stringWithFormat:fmt, [server sshHost]];
 
     [self error:header message:err];
+}
+
+- (void)authCancelled
+{
+    [auth release];
+    auth = nil;
+    [delegate connectionFailed];
+    [tunnel close];
+}
+
+- (void)authPasswordEntered:(NSString *)password
+{
+    [auth release];
+    auth = nil;
+    [tunnel usePassword:password];
 }
 
 @end

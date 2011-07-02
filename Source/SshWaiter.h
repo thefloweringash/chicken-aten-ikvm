@@ -19,6 +19,7 @@
 
 #import <AppKit/AppKit.h>
 #import "ConnectionWaiter.h"
+#import "AuthPrompt.h"
 
 @protocol IServerData;
 
@@ -28,9 +29,10 @@
 
 /* This class waits for ssh to connect to a remote host and for a connection to
  * be made through the remote tunnel. */
-@interface SshWaiter : ConnectionWaiter
+@interface SshWaiter : ConnectionWaiter <AuthPromptDelegate>
 {
     SshTunnel       *tunnel;
+    AuthPrompt      *auth;
 }
 
 - (id)initWithServer:(id<IServerData>)aServer
@@ -44,8 +46,13 @@
 
 // messages from SshTunnel
 - (NSWindow *)windowForSshAuth;
+- (void)getPassword;
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort;
 - (void)sshFailed;
 - (void)sshFailedWithError:(NSString *)err;
+
+// implementation of AuthPromptDelegate
+- (void)authCancelled;
+- (void)authPasswordEntered:(NSString *)password;
 
 @end

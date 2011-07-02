@@ -28,9 +28,8 @@
 
 #define SSH_STATE_OPENING 0
 #define SSH_STATE_PROMPT 1
-#define SSH_STATE_PASSWORD_ENTERED 2
-#define SSH_STATE_OPEN 3
-#define SSH_STATE_CLOSING 4
+#define SSH_STATE_OPEN 2
+#define SSH_STATE_CLOSING 3
 
 #define TUNNEL_PORT_START 5910
 #define TUNNEL_PORT_END 5950
@@ -44,6 +43,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)cleanupFifos;
 
 - (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh;
+- (void)sshFailed:(NSString *)err;
 
 - (void)getPassword;
 - (void)writeToHelper:(NSString *)str;
@@ -65,6 +65,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         NSMutableDictionary     *env;
 
         delegate = aDelegate;
+        server = [aServer retain];
 
         task = [[NSTask alloc] init];
         sshIn = [[NSPipe alloc] init];
@@ -112,6 +113,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         [notifs addObserver:self selector:@selector(sshTerminated:)
                 name:NSTaskDidTerminateNotification object:task];
         [task launch];
+        [self retain];
 
         [notifs addObserver:self selector:@selector(readFromSsh:)
                        name:NSFileHandleReadCompletionNotification
@@ -137,6 +139,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [self cleanupFifos];
+    [server release];
     [task release];
     [[sshOut fileHandleForWriting] closeFile];
     [[sshErr fileHandleForWriting] closeFile];
@@ -149,14 +152,10 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)close
 {
-    if (state == SSH_STATE_CLOSING)
-        return;
+    if (state != SSH_STATE_CLOSING)
+        [[sshIn fileHandleForWriting] closeFile];
 
-    [[sshIn fileHandleForWriting] closeFile];
     state = SSH_STATE_CLOSING;
-
-    [self retain]; // we want to wait for ssh to terminate cleanly even if
-                   // no one else cares.
     delegate = nil;
 }
 
@@ -273,6 +272,9 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         } else
             NSLog(@"Unknown message from ssh stdout: %@", str);
     } else if (fh == [sshErr fileHandleForReading]) {
+        if (state == SSH_STATE_CLOSING)
+            return;
+
         // data from ssh's standard error: messages sent via our helper. These
         // require a response.
         if ([str hasPrefix:@"Chicken ssh-helper: Password:"]) {
@@ -288,28 +290,45 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
                 state = SSH_STATE_PROMPT;
                 [self firstTimeConnecting];
             }
+
         // messages sent by ssh itself.
-        } else if ([str isEqualToString:@"Password:"]) {
-            // this probably won't ever happen
-            NSLog(@"Password prompt: how did this happen?");
-            state = SSH_STATE_PROMPT;
-            [self getPassword];
+        } else if ([str hasPrefix:@"ssh: Could not resolve hostname"]) {
+            NSString *fmt = NSLocalizedString(@"NoNamedServer", nil);
+            NSString *str = [NSString stringWithFormat:fmt, [server sshHost]];
+            [self sshFailed:str];
+        } else if ([str hasPrefix:@"ssh: connect to host"]) {
+            if ([str hasSuffix:@"Connection refused\r"]) {
+                [self sshFailed:NSLocalizedString(@"ConnectRefused", nil)];
+            } else if ([str hasSuffix:@"Operation timed out\r"]) {
+                [self sshFailed:NSLocalizedString(@"ConnectTimedOut", nil)];
+            } else {
+                NSLog(@"from std err: %@", str);
+                [self sshFailed:@"OtherSshConnectionError"];
+            }
+        } else if ([str hasPrefix:@"@@@@@@@@"]) {
+            [self sshFailed:@"SshKeyMismatch"];
         } else if ([str hasPrefix:@"Identity added:"]) {
             NSLog(@"Added identity");
-        } else if ([str hasPrefix:@"cat: "]) {
-            NSLog(@"Error with cat: %@", str);
-        } else if ([str hasPrefix:@"Permission denied"]) {
-            NSLog(@"permission denied");
-            [delegate sshFailed];
-            [self close];
         } else if ([str hasPrefix:@"channel "])
             NSLog(@"probably open failure: %@", str);
         else if ([str hasPrefix:@"Warning: Permanently added"])
             NSLog(@"Added key to known hosts");
-        else if ([str length] > 0)
+
+        // messages sent by shell, cat, etc.
+        else if ([str hasPrefix:@"cat: "]) {
+           [self sshFailed:@"CatError"];
+        } else if ([str hasPrefix:@"Permission denied"]) {
+           [self sshFailed:@"SshPermissionError"];
+        } else if ([str length] > 0)
             NSLog(@"Unknown message from ssh error: %@", str);
     } else
         NSLog(@"Read notification from unknown object");
+}
+
+- (void)sshFailed:(NSString *)err
+{
+    state = SSH_STATE_CLOSING;
+    [delegate connectionFailed:err];
 }
 
 - (void)sshTerminated:(NSNotification *)notif
@@ -317,13 +336,11 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     portUsed[localPort - TUNNEL_PORT_START] = NO;
     [self cleanupFifos];
 
-    if (state != SSH_STATE_OPEN)
+    if (state != SSH_STATE_CLOSING) {
+        state = SSH_STATE_CLOSING;
         [delegate sshFailed];
-    else if (state == SSH_STATE_CLOSING) {
-        [[sshOut fileHandleForReading] closeFile];
-        [[sshErr fileHandleForReading] closeFile];
-        [self release]; // balances the retain in the close method
     }
+    [self release];
 }
 
 - (void)getPassword
@@ -344,7 +361,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 {
     [self writeToHelper:password];
 
-    state = SSH_STATE_PASSWORD_ENTERED;
+    state = SSH_STATE_OPENING;
 }
 
 - (void)writeToHelper:(NSString *)str

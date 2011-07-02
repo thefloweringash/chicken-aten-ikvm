@@ -37,6 +37,8 @@
     SshWaiter   *delegate; // only used while in the process of connecting
     in_port_t   localPort;
     int         state;
+    
+    id<IServerData> server;
 }
 
 - (id)initWithServer:(id<IServerData>)aServer delegate:(SshWaiter *)aDelegate;

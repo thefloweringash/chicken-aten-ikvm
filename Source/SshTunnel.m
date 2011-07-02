@@ -96,6 +96,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         args = [[NSMutableArray alloc] init];
         [args addObject:@"-L"];
         [args addObject:tunnel];
+        [args addObject:@"-x"]; // make sure that ssh doesn't forward our dummy
+                                // display
         [args addObject:sshHost];
         [args addObject:@"echo;cat"];
         [task setArguments:args];

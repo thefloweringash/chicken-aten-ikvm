@@ -33,6 +33,12 @@
 "ConnectRefused" = "The server refused the connection";
 "ConnectTimedOut" = "The connection attempt timed out";
 
+// SSH-related errors
+"SshOtherError" = "Problem connecting with ssh";
+"SshKeyMismatch" = "Remote SSH identification has changed. Someone maybe trying to eavesdrop on the conversation";
+"SshCatError" = "Error with cat";
+"SshPermissionError" = "Permission error with ssh script";
+
 /* Connection Terminated */
 "ConnectionTerminated" = "Connexion interrompue";
 "Reconnect" = "Reconnecter";

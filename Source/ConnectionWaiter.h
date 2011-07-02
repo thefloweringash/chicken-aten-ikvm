@@ -37,6 +37,7 @@
 
 @optional
 - (void)connectionPrepareForSheet;
+- (void)connectionSheetOver;
 
 @end
 

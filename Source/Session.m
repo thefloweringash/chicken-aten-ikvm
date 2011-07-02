@@ -39,6 +39,12 @@
 @end
 #endif
 
+@interface Session(Private)
+
+- (void)startTimerForReconnectSheet;
+
+@end
+
 @implementation Session
 
 - (id)initWithConnection:(RFBConnection *)aConnection
@@ -128,6 +134,10 @@
     NSString *templ = NSLocalizedString(@"NoReconnection", nil);
     NSString *err = [NSString stringWithFormat:templ, host];
     [_reconnectWaiter setErrorStr:err];
+}
+
+- (void)startTimerForReconnectSheet
+{
     _reconnectSheetTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
             target:self selector:@selector(createReconnectSheet:)
             userInfo:nil repeats:NO] retain];
@@ -915,6 +925,14 @@
 - (void)connectionPrepareForSheet
 {
     [NSApp endSheet:_reconnectPanel];
+    [_reconnectSheetTimer invalidate];
+    [_reconnectSheetTimer release];
+    _reconnectSheetTimer = nil;
+}
+
+- (void)connectionSheetOver
+{
+    [self startTimerForReconnectSheet];
 }
 
 /* Reconnect attempt has failed */

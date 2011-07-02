@@ -149,6 +149,8 @@
     [auth release];
     auth = nil;
     [tunnel usePassword:password];
+    if ([delegate respondsToSelector:@selector(connectionSheetOver)])
+        [delegate connectionSheetOver];
 }
 
 @end

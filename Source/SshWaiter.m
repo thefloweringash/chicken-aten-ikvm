@@ -75,11 +75,30 @@
     [tunnel close];
 }
 
-- (NSWindow *)windowForSshAuth
+- (void)firstTimeConnecting
 {
+    /* This is ssh's first time connecting to this server. We want to verify
+     * that the user wants to add the unauthenticated server key to the hosts
+     * file. */
+
+    NSAlert     *alert = [[NSAlert alloc] init];
+
     if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
         [delegate connectionPrepareForSheet];
-    return window;
+
+    [alert setMessageText:NSLocalizedString(@"FirstTimeHeader", nil)];
+    [alert setInformativeText:NSLocalizedString(@"FirstTimeMessage", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Connect", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    [alert beginSheetModalForWindow:window modalDelegate:self
+                     didEndSelector:@selector(firstTime:returnCode:contextInfo:)
+                        contextInfo:NULL];
+}
+
+- (void)firstTime:(NSAlert *)sheet returnCode:(int)retCode
+      contextInfo:(void *)info
+{
+    [tunnel acceptKey:retCode == NSAlertFirstButtonReturn];
 }
 
 - (void)getPassword

@@ -47,8 +47,6 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)writeToHelper:(NSString *)str;
 
-- (void)firstTimeConnecting;
-
 @end
 
 @implementation SshTunnel
@@ -288,7 +286,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
                 [self writeToHelper:@"no"];
             else {
                 state = SSH_STATE_PROMPT;
-                [self firstTimeConnecting];
+                [delegate firstTimeConnecting];
             }
 
         // messages sent by ssh itself.
@@ -343,6 +341,13 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [self release];
 }
 
+- (void)acceptKey:(BOOL)accept
+{
+    NSString    *resp = accept ? @"yes" : @"no";
+    [self writeToHelper:resp];
+    state = SSH_STATE_OPENING;
+}
+
 - (void)usePassword:(NSString*)password
 {
     [self writeToHelper:password];
@@ -357,32 +362,6 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [fh writeData: [str dataUsingEncoding:NSUTF8StringEncoding]];
     [fh writeData: [NSData dataWithBytes: "\n" length:1]];
     [fh closeFile];
-}
-
-- (void)firstTimeConnecting
-{
-    /* This is ssh's first time connecting to this server. We want to verify
-     * that the user wants to add the unauthenticated server key to the hosts
-     * file. */
-
-    NSWindow    *wind = [delegate windowForSshAuth];
-    NSAlert     *alert = [[NSAlert alloc] init];
-
-    [alert setMessageText:NSLocalizedString(@"FirstTimeHeader", nil)];
-    [alert setInformativeText:NSLocalizedString(@"FirstTimeMessage", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Connect", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
-    [alert beginSheetModalForWindow:wind modalDelegate:self
-                     didEndSelector:@selector(firstTime:returnCode:contextInfo:)
-                        contextInfo:NULL];
-}
-
-- (void)firstTime:(NSAlert *)sheet returnCode:(int)retCode
-      contextInfo:(void *)info
-{
-    NSString    *resp = retCode == NSAlertFirstButtonReturn ? @"yes" : @"no";
-    [self writeToHelper:resp];
-    state = SSH_STATE_OPENING;
 }
 
 @end

@@ -45,7 +45,7 @@
 - (void)cancel;
 
 // messages from SshTunnel
-- (NSWindow *)windowForSshAuth;
+- (void)firstTimeConnecting;
 - (void)getPassword;
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort;
 - (void)sshFailed;

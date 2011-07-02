@@ -47,6 +47,7 @@
 
 - (in_port_t)localPort;
 
+- (void)acceptKey:(BOOL)accept;
 - (void)usePassword:(NSString *)pass;
 
 @end

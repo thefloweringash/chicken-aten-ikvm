@@ -2,16 +2,16 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10J567</string>
-		<string key="IBDocument.InterfaceBuilderVersion">823</string>
-		<string key="IBDocument.AppKitVersion">1038.35</string>
-		<string key="IBDocument.HIToolboxVersion">462.00</string>
+		<string key="IBDocument.SystemVersion">10K540</string>
+		<string key="IBDocument.InterfaceBuilderVersion">851</string>
+		<string key="IBDocument.AppKitVersion">1038.36</string>
+		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">823</string>
+			<string key="NS.object.0">851</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="5"/>
+			<integer value="23"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -534,7 +534,7 @@
 										</object>
 										<object class="NSButton" id="635478681">
 											<reference key="NSNextResponder" ref="27065155"/>
-											<int key="NSvFlags">268</int>
+											<int key="NSvFlags">265</int>
 											<string key="NSFrame">{{84, 82}, {125, 18}}</string>
 											<reference key="NSSuperview" ref="27065155"/>
 											<bool key="NSEnabled">YES</bool>
@@ -556,7 +556,7 @@
 										</object>
 										<object class="NSTextField" id="409945545">
 											<reference key="NSNextResponder" ref="27065155"/>
-											<int key="NSvFlags">268</int>
+											<int key="NSvFlags">265</int>
 											<string key="NSFrame">{{106, 54}, {211, 22}}</string>
 											<reference key="NSSuperview" ref="27065155"/>
 											<bool key="NSEnabled">YES</bool>
@@ -573,7 +573,7 @@
 										</object>
 										<object class="NSTextField" id="815214723">
 											<reference key="NSNextResponder" ref="27065155"/>
-											<int key="NSvFlags">268</int>
+											<int key="NSvFlags">265</int>
 											<string key="NSFrame">{{37, 56}, {64, 17}}</string>
 											<reference key="NSSuperview" ref="27065155"/>
 											<bool key="NSEnabled">YES</bool>

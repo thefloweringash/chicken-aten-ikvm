@@ -99,6 +99,8 @@
       contextInfo:(void *)info
 {
     [tunnel acceptKey:retCode == NSAlertFirstButtonReturn];
+    if ([delegate respondsToSelector:@selector(connectionSheetOver)])
+        [delegate connectionSheetOver];
 }
 
 - (void)getPassword

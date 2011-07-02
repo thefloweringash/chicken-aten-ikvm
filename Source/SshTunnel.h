@@ -38,7 +38,7 @@
     in_port_t   localPort;
     int         state;
     
-    id<IServerData> server;
+    NSString    *sshHost;
 }
 
 - (id)initWithServer:(id<IServerData>)aServer delegate:(SshWaiter *)aDelegate;

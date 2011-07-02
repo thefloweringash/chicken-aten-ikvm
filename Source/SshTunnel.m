@@ -59,13 +59,12 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     if (self = [super init]) {
         NSMutableArray  *args;
         NSString        *tunnel;
-        NSString        *sshHost = [aServer sshHost];
         NSString        *tunnelledHost = [aServer host];
         NSNotificationCenter    *notifs = [NSNotificationCenter defaultCenter];
         NSMutableDictionary     *env;
 
         delegate = aDelegate;
-        server = [aServer retain];
+        sshHost = [[aServer sshHost] retain];
 
         task = [[NSTask alloc] init];
         sshIn = [[NSPipe alloc] init];
@@ -139,7 +138,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [self cleanupFifos];
-    [server release];
+    [sshHost release];
     [task release];
     [[sshOut fileHandleForWriting] closeFile];
     [[sshErr fileHandleForWriting] closeFile];
@@ -294,7 +293,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         // messages sent by ssh itself.
         } else if ([str hasPrefix:@"ssh: Could not resolve hostname"]) {
             NSString *fmt = NSLocalizedString(@"NoNamedServer", nil);
-            NSString *str = [NSString stringWithFormat:fmt, [server sshHost]];
+            NSString *str = [NSString stringWithFormat:fmt, sshHost];
             [self sshFailed:str];
         } else if ([str hasPrefix:@"ssh: connect to host"]) {
             if ([str hasSuffix:@"Connection refused\r"]) {

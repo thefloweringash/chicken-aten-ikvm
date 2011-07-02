@@ -123,7 +123,7 @@
     NSString    *fmt = NSLocalizedString(@"SshError", nil);
     NSString    *header = [NSString stringWithFormat:fmt, [server sshHost]];
 
-    [self error:header message:NSLocalizedString(err, nil)];
+    [self error:header message:err];
 }
 
 @end

@@ -301,8 +301,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
             } else if ([str hasSuffix:@"Operation timed out\r"]) {
                 [self sshFailed:NSLocalizedString(@"ConnectTimedOut", nil)];
             } else {
-                NSLog(@"from std err: %@", str);
-                [self sshFailed:@"OtherSshConnectionError"];
+                [self sshFailed:[[str componentsSeparatedByString:@": "]
+                                    lastObject]];
             }
         } else if ([str hasPrefix:@"@@@@@@@@"]) {
             [self sshFailed:@"SshKeyMismatch"];

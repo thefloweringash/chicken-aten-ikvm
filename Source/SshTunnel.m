@@ -328,7 +328,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)sshFailed:(NSString *)err
 {
     state = SSH_STATE_CLOSING;
-    [delegate connectionFailed:err];
+    [delegate sshFailedWithError:err];
 }
 
 - (void)sshTerminated:(NSNotification *)notif

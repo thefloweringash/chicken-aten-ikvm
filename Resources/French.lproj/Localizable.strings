@@ -38,6 +38,7 @@
 "SshKeyMismatch" = "Remote SSH identification has changed. Someone maybe trying to eavesdrop on the conversation";
 "SshCatError" = "Error with cat";
 "SshPermissionError" = "Permission error with ssh script";
+"SshQuit" = "The ssh program quit unexpectedly";
 
 /* Connection Terminated */
 "ConnectionTerminated" = "Connexion interrompue";

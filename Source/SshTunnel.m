@@ -255,6 +255,13 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
     data = [[notif userInfo] objectForKey:NSFileHandleNotificationDataItem];
     if ([data length] == 0) {
+        /* end of stream */
+        if ([notif object] == [sshErr fileHandleForReading] &&
+                state != SSH_STATE_CLOSING) {
+            /* Program quit without giving us an error message that we
+             * recognized. */
+            [self sshFailed:NSLocalizedString(@"SshQuit, nil")];
+        }
         return;
     }
 
@@ -337,10 +344,9 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     portUsed[localPort - TUNNEL_PORT_START] = NO;
     [self cleanupFifos];
 
-    if (state != SSH_STATE_CLOSING) {
-        state = SSH_STATE_CLOSING;
-        [delegate sshFailed];
-    }
+    /* The termination notification can come before the end of the error stream,
+     * so we clean up here, but we wait to see if we get an explanation on
+     * sshErr before we tell the delegate that we've failed. */
     [self release];
 }
 

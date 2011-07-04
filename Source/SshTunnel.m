@@ -26,10 +26,12 @@
 #import <sys/types.h>
 #import <unistd.h>
 
-#define SSH_STATE_OPENING 0
-#define SSH_STATE_PROMPT 1
-#define SSH_STATE_OPEN 2
-#define SSH_STATE_CLOSING 3
+#define SSH_STATE_OPENING 0 /* ssh process has been started */
+#define SSH_STATE_PROMPT 1  /* ssh process is waiting for us to provide some
+                               kind of response. */
+#define SSH_STATE_OPEN 2    /* ssh tunnel established */
+#define SSH_STATE_CLOSING 3 /* ssh in proces of shutting down, either due to
+                               errror, or because we requested it. */
 
 #define TUNNEL_PORT_START 5910
 #define TUNNEL_PORT_END 5950
@@ -150,8 +152,15 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)close
 {
-    if (state != SSH_STATE_CLOSING)
-        [[sshIn fileHandleForWriting] closeFile];
+    switch (state) {
+        case SSH_STATE_OPENING:
+        case SSH_STATE_PROMPT:
+            [task terminate];
+            // fall through
+        case SSH_STATE_OPEN:
+            /* Shut down the connection gently by closing the channel */
+            [[sshIn fileHandleForWriting] closeFile];
+    }
 
     state = SSH_STATE_CLOSING;
     delegate = nil;
@@ -241,6 +250,9 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     NSEnumerator    *en;
     NSString        *line;
 
+    if (state == SSH_STATE_CLOSING)
+        return;
+
     data = [[notif userInfo] objectForKey:NSFileHandleNotificationDataItem];
     if ([data length] == 0) {
         return;
@@ -270,24 +282,15 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         } else
             NSLog(@"Unknown message from ssh stdout: %@", str);
     } else if (fh == [sshErr fileHandleForReading]) {
-        if (state == SSH_STATE_CLOSING)
-            return;
-
         // data from ssh's standard error: messages sent via our helper. These
         // require a response.
         if ([str hasPrefix:@"Chicken ssh-helper: Password:"]) {
-            if (state != SSH_STATE_CLOSING) {
-                state = SSH_STATE_PROMPT;
-                [delegate getPassword];
-            }
+            state = SSH_STATE_PROMPT;
+            [delegate getPassword];
         } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
 
-            if (state == SSH_STATE_CLOSING)
-                [self writeToHelper:@"no"];
-            else {
-                state = SSH_STATE_PROMPT;
-                [delegate firstTimeConnecting];
-            }
+            state = SSH_STATE_PROMPT;
+            [delegate firstTimeConnecting];
 
         // messages sent by ssh itself.
         } else if ([str hasPrefix:@"ssh: Could not resolve hostname"]) {
@@ -345,23 +348,24 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 {
     NSString    *resp = accept ? @"yes" : @"no";
     [self writeToHelper:resp];
-    state = SSH_STATE_OPENING;
 }
 
 - (void)usePassword:(NSString*)password
 {
     [self writeToHelper:password];
-
-    state = SSH_STATE_OPENING;
 }
 
 - (void)writeToHelper:(NSString *)str
 {
     NSFileHandle    *fh = [NSFileHandle fileHandleForWritingAtPath:fifo];
 
+    if (state != SSH_STATE_PROMPT)
+        return;
+
     [fh writeData: [str dataUsingEncoding:NSUTF8StringEncoding]];
     [fh writeData: [NSData dataWithBytes: "\n" length:1]];
     [fh closeFile];
+    state = SSH_STATE_OPENING;
 }
 
 @end

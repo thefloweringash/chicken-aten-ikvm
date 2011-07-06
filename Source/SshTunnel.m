@@ -323,7 +323,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
             NSLog(@"Added key to known hosts");
 
         // messages sent by shell, cat, etc.
-        else if ([str hasPrefix:@"cat: "]) {
+        else if ([str hasPrefix:@"/bin/cat: "]) {
            [self sshFailed:NSLocalizedString(@"CatError", nil)];
         } else if ([str hasPrefix:@"Permission denied"]) {
            [self sshFailed:NSLocalizedString(@"SshPermissionError", nil)];

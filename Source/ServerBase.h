@@ -37,7 +37,7 @@
     Profile   *_profile;
 
     NSString  *_sshHost;
-    int       _sshPort; // 0 means use default port
+    in_port_t _sshPort; // 0 means use default port
     NSString  *_sshUser;
 }
 
@@ -62,7 +62,7 @@
 - (bool)addToServerListOnConnect;
 
 - (NSString *)sshHost;
-- (int)sshPort;
+- (in_port_t)sshPort;
 - (NSString *)sshUser;
 - (NSString *)sshString;
 

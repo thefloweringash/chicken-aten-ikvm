@@ -121,7 +121,7 @@
     return _sshHost;
 }
 
-- (int)sshPort
+- (in_port_t)sshPort
 {
     return _sshPort;
 }

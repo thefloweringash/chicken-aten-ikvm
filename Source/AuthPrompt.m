@@ -38,6 +38,11 @@
     [self retain];
 }
 
+- (void)stopSheet
+{
+    [NSApp endSheet:panel];
+}
+
 - (IBAction)enterPassword:(id)sender
 {
     [delegate authPasswordEntered:[passwordField stringValue]];

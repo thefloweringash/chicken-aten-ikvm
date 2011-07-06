@@ -35,6 +35,7 @@
 - (id)initWithDelegate:(id<AuthPromptDelegate>)aDelegate;
 
 - (void)runSheetOnWindow:(NSWindow *)window;
+- (void)stopSheet;
 
 - (IBAction)enterPassword:(id)sender;
 - (IBAction)cancel:(id)sender;

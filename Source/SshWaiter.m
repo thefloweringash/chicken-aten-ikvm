@@ -154,6 +154,11 @@
     NSString    *fmt = NSLocalizedString(@"SshError", nil);
     NSString    *header = [NSString stringWithFormat:fmt, [server sshHost]];
 
+    if (auth) {
+        [auth stopSheet];
+        [auth release];
+        auth = nil;
+    }
     [self error:header message:err];
 }
 

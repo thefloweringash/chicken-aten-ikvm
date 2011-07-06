@@ -51,8 +51,8 @@
 
 - (IBAction)cancel:(id)sender
 {
-    [delegate authCancelled];
     [NSApp endSheet:panel];
+    [delegate authCancelled];
 }
 
 - (IBAction)passwordEnteredFor:(NSWindow *)wind returnCode:(int)retCode

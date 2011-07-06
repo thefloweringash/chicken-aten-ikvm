@@ -260,7 +260,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
                 state != SSH_STATE_CLOSING) {
             /* Program quit without giving us an error message that we
              * recognized. */
-            [self sshFailed:NSLocalizedString(@"SshQuit, nil")];
+            [self sshFailed:NSLocalizedString(@"SshQuit", nil)];
         }
         return;
     }

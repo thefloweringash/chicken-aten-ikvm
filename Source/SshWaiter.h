@@ -48,7 +48,6 @@
 - (void)firstTimeConnecting;
 - (void)getPassword;
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort;
-- (void)sshFailed;
 - (void)sshFailedWithError:(NSString *)err;
 
 // implementation of AuthPromptDelegate

@@ -144,11 +144,6 @@
     currentSock = -1;
 }
 
-- (void)sshFailed
-{
-    [delegate connectionFailed];
-}
-
 - (void)sshFailedWithError:(NSString *)err
 {
     NSString    *fmt = NSLocalizedString(@"SshError", nil);

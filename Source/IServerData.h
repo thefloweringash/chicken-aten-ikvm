@@ -50,6 +50,8 @@ typedef enum
 - (Profile *)profile;
 - (bool)addToServerListOnConnect;
 - (NSString *)sshHost;
+- (in_port_t)sshPort;
+- (NSString *)sshUser;
 
 - (void)setHost: (NSString*)host;
 - (BOOL)setHostAndPort: (NSString*)host;

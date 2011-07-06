@@ -59,6 +59,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         NSMutableArray  *args;
         NSString        *tunnel;
         NSString        *tunnelledHost = [aServer host];
+        in_port_t       sshPort = [aServer sshPort];
+        NSString        *sshUser = [aServer sshUser];
         NSNotificationCenter    *notifs = [NSNotificationCenter defaultCenter];
         NSMutableDictionary     *env;
 
@@ -95,6 +97,14 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         args = [[NSMutableArray alloc] init];
         [args addObject:@"-L"];
         [args addObject:tunnel];
+        if (sshPort) {
+            [args addObject:@"-p"];
+            [args addObject:[NSString stringWithFormat:@"%d", sshPort]];
+        }
+        if (sshUser) {
+            [args addObject:@"-l"];
+            [args addObject:sshUser];
+        }
         [args addObject:@"-x"]; // make sure that ssh doesn't forward our dummy
                                 // display
         [args addObject:sshHost];

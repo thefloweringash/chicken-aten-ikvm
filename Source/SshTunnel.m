@@ -302,12 +302,16 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         // data from ssh's standard error: messages sent via our helper. These
         // require a response.
         if ([str hasPrefix:@"Chicken ssh-helper: Password:"]) {
-            state = SSH_STATE_PROMPT;
-            [delegate getPassword];
+            if (state == SSH_STATE_OPENING) {
+                state = SSH_STATE_PROMPT;
+                [delegate getPassword];
+            }
         } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
 
-            state = SSH_STATE_PROMPT;
-            [delegate firstTimeConnecting];
+            if (state == SSH_STATE_OPENING) {
+                state = SSH_STATE_PROMPT;
+                [delegate firstTimeConnecting];
+            }
 
         // messages sent by ssh itself.
         } else if ([str hasPrefix:@"ssh: Could not resolve hostname"]) {

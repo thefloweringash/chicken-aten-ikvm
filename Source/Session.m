@@ -957,6 +957,8 @@
     [connection setRfbView:rfbView];
     [connection setPassword:password];
     [connection installMouseMovedTrackingRect];
+    if (sshTunnel == nil)
+        sshTunnel = [[connection sshTunnel] retain];
 
     [_connectionStartDate release];
     _connectionStartDate = [[NSDate alloc] init];

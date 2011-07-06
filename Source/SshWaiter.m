@@ -166,8 +166,8 @@
 {
     [auth release];
     auth = nil;
-    [delegate connectionFailed];
     [tunnel close];
+    [delegate connectionFailed];
 }
 
 - (void)authPasswordEntered:(NSString *)password

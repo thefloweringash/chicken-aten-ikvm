@@ -244,8 +244,6 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)cleanupFifos
 {
     if (fifo) {
-        if (state == SSH_STATE_PROMPT)
-            [self writeToHelper:@""];
         if (unlink([fifo fileSystemRepresentation]) != 0)
             NSLog(@"Error unlinking %@: %d", fifo, errno);
         [fifo release];
@@ -377,14 +375,32 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)writeToHelper:(NSString *)str
 {
-    NSFileHandle    *fh = [NSFileHandle fileHandleForWritingAtPath:fifo];
+    int     fd;
 
     if (state != SSH_STATE_PROMPT)
         return;
 
-    [fh writeData: [str dataUsingEncoding:NSUTF8StringEncoding]];
-    [fh writeData: [NSData dataWithBytes: "\n" length:1]];
-    [fh closeFile];
+    /* Even though we believe that our helper is waiting for input, something
+     * may have happened, so we open non-blocking. This also precludes Cocoa
+     * wrappers. */
+    fd = open([fifo fileSystemRepresentation], O_WRONLY | O_NONBLOCK);
+    if (fd == -1) {
+        NSLog(@"Couldn't open FIFO to ssh helper: %s", strerror(errno));
+        errno = 0;
+    } else {
+        const char  *cStr = [str UTF8String];
+        int         len = strlen(cStr);
+        char        *buf = malloc(len + 1);
+
+        memcpy(buf, cStr, len);
+        buf[len] = '\n';
+        if (write(fd, buf, len + 1) <= 0) {
+            NSLog(@"Couldn't write to ssh helper: %s", strerror(errno));
+            errno = 0;
+        }
+        free(buf);
+        close(fd);
+    }
     state = SSH_STATE_OPENING;
 }
 

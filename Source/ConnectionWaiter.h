@@ -78,6 +78,7 @@
 - (void)cancel;
 
 - (void)connect: (id)unused;
+- (void)waitForDataOn:(int)sock;
 - (void)finishConnection;
 - (void)connectionFailed: (NSString *)cause;
 - (void)serverClosed;

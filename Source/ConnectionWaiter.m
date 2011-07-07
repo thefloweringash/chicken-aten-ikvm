@@ -148,26 +148,8 @@
         [lock unlock];
 
         if (connect(sock, res->ai_addr, res->ai_addrlen) == 0) {
-            /* Socket connected successfully: Now wait for data from server. For
-             * example, if we're tunnelling over SSH, SSH will accept the
-             * connection right away, but we want to wait for the handshake from
-             * the VNC server, before we represent to the user that a connection
-             * has been made. */
-            struct pollfd   pfd;
-
             freeaddrinfo(res0);
-
-            pfd.fd = sock;
-            pfd.events = POLLERR | POLLHUP | POLLIN;
-            poll(&pfd, 1, -1);
-            if (pfd.revents & (POLLERR | POLLHUP)) {
-                [self performSelectorOnMainThread:@selector(serverClosed)
-                           withObject:nil waitUntilDone:NO];
-                return;
-            }
-
-            [self performSelectorOnMainThread:@selector(finishConnection)
-                                   withObject:nil waitUntilDone:NO];
+            [self waitForDataOn:sock];
             return; 
         } else {
             [lock lock];
@@ -202,6 +184,28 @@
     [self performSelectorOnMainThread: @selector(connectionFailed:)
                            withObject: errMsg waitUntilDone: NO];
     [pool release];
+}
+
+- (void)waitForDataOn:(int)sock
+{
+    /* At this point, the socket has been connected successfully. Now we wait
+     * for data from server. For example, if we're tunnelling over SSH, SSH will
+     * accept the connection right away, but we want to wait for the handshake
+     * from the VNC server, before we represent to the user that a connection
+     * has been made. */
+    struct pollfd   pfd;
+
+    pfd.fd = sock;
+    pfd.events = POLLERR | POLLHUP | POLLIN;
+    poll(&pfd, 1, -1);
+    if (pfd.revents & (POLLERR | POLLHUP)) {
+        [self performSelectorOnMainThread:@selector(serverClosed)
+                   withObject:nil waitUntilDone:NO];
+        return;
+    }
+
+    [self performSelectorOnMainThread:@selector(finishConnection)
+                           withObject:nil waitUntilDone:NO];
 }
 
 - (void)finishConnection

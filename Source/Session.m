@@ -176,10 +176,28 @@
 /* Some kind of connection failure. Decide whether to try to reconnect. */
 - (void)terminateConnection:(NSString*)aReason
 {
-    if(connection) {		
-        [self connectionProblem];
-		[self endFullscreenScrolling];
+    if (!connection)
+        return;
 
+    [self connectionProblem];
+    [self endFullscreenScrolling];
+
+    if ([passwordSheet isVisible]) {
+        /* User is in middle of entering password. */
+        if ([server_ doYouSupport:CONNECT]) {
+            NSLog(@"Will reconnect to server when password entered. Reason for disconnect was: %@", aReason);
+            return;
+        } else {
+            /* Server doesn't support reconnect, so we have to interrupt the
+             * password sheet to show an error*/
+            [NSApp endSheet:passwordSheet];
+
+            NSBeginAlertSheet(NSLocalizedString(@"ConnectionTerminated", nil),
+                    NSLocalizedString(@"Okay", nil), nil, nil, window, self,
+                    @selector(connectionTerminatedSheetDidEnd:returnCode:contextInfo:),
+                    nil, nil, aReason);
+        }
+    } else {
         if(aReason) {
             NSTimeInterval timeout = [[PrefController sharedController] intervalBeforeReconnect];
             BOOL supportReconnect = [server_ doYouSupport:CONNECT];

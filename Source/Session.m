@@ -300,6 +300,15 @@
     [self beginReconnect];
 }
 
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)item
+{
+    if ([item action] == @selector(forceReconnect:))
+        // we only enable Force Reconnect menu item if server supports it
+        return [server_ doYouSupport:CONNECT];
+    else
+        return [self respondsToSelector:[item action]];
+}
+
 - (void)setSize:(NSSize)aSize
 {
     _maxSize = aSize;

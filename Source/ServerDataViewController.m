@@ -457,6 +457,11 @@
     NSWindow *window;
     ServerBase  *server;
 
+    window = superController ? [superController window] : [self window];
+
+    // needed so that any changes being made now are reflected in server
+    [window makeFirstResponder:nil];
+
     saveCheckboxWasVisible = !removedSaveCheckbox;
     [self setSaveCheckboxIsVisible: NO];
 	[connectIndicator startAnimation:self];
@@ -478,7 +483,6 @@
         server = mServer;
 	
     // Asynchronously creates a connection to the server
-    window = superController ? [superController window] : [self window];
     connectionWaiter = [[ConnectionWaiter waiterForServer:server
                                                  delegate:self
                                                    window:window] retain];

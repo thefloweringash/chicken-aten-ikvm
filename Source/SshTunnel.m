@@ -327,7 +327,11 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
             }
         } else if ([str hasPrefix:@"@@@@@@@@"]) {
             [self sshFailed:NSLocalizedString(@"SshKeyMismatch", nil)];
-        } else if ([str hasPrefix:@"Identity added:"]) {
+        } else if ([str hasPrefix:@"Permission denied"])
+            [self sshFailed:NSLocalizedString(@"SshPermissionDenied", nil)];
+        else if ([str hasPrefix:@"Connection closed by "])
+            [self sshFailed:NSLocalizedString(@"SshConnectionClosed", nil)];
+        else if ([str hasPrefix:@"Identity added:"]) {
             NSLog(@"Added identity");
         } else if ([str hasPrefix:@"channel "])
             NSLog(@"probably open failure: %@", str);
@@ -337,8 +341,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         // messages sent by shell, cat, etc.
         else if ([str hasPrefix:@"/bin/cat: "]) {
            [self sshFailed:NSLocalizedString(@"CatError", nil)];
-        } else if ([str hasPrefix:@"Permission denied"]) {
-           [self sshFailed:NSLocalizedString(@"SshPermissionError", nil)];
+        } else if ([str hasPrefix:@"ssh_askpass: exec("]) {
+           [self sshFailed:NSLocalizedString(@"SshScriptError", nil)];
         } else if ([str length] > 0)
             NSLog(@"Unknown message from ssh error: %@", str);
     } else

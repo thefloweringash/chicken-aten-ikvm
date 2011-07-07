@@ -37,8 +37,10 @@
 "SshError" = "Could not establish an SSH connection to server %@";
 "SshKeyMismatch" = "Remote SSH identification has changed. Someone maybe trying to eavesdrop on the conversation";
 "SshCatError" = "Error with cat";
-"SshPermissionError" = "Permission error with ssh script";
+"SshScriptError" = "Permission error with ssh script";
 "SshQuit" = "The ssh program quit unexpectedly";
+"SshPermissionDenied" = "Permission denied by SSH server";
+"SshConnectionClosed" = "The SSH server closed the connection";
 
 // Connection Terminated
 "ConnectionTerminated" = "Connection Terminated";

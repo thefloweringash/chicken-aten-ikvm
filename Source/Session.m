@@ -528,7 +528,7 @@
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
-    // terminateConnection closes the window, so we have to null it out here
+    // dealloc closes the window, so we have to null it out here
     // The window will autorelease itself when closed.  If we allow terminateConnection
     // to close it again, it will get double-autoreleased.  Bummer.
     window = NULL;

@@ -25,6 +25,13 @@
 #import <sys/socket.h>
 #import <unistd.h>
 
+@interface SshWaiter(Private)
+
+- (void)waitForData;
+- (void)tunnelledConnFailed: (NSString *)err;
+
+@end
+
 @implementation SshWaiter
 
 - (id)initWithServer:(id<IServerData>)aServer
@@ -114,13 +121,39 @@
 
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort
 {
-    host = @"localhost";
-    port = aPort;
-    lock = [[NSLock alloc] init];
-    currentSock = -1;
+    struct sockaddr_in  addr;
 
-    [NSThread detachNewThreadSelector: @selector(connect:) toTarget: self
-                           withObject: nil];
+    if ((currentSock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        NSString *fmt = NSLocalizedString(@"TunnelSocketErr", nil);
+        [self tunnelledConnFailed:[NSString stringWithFormat:fmt,strerror(errno)]];
+        errno = 0;
+        return;
+    }
+
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    addr.sin_port = htons(aPort);
+    if (connect(currentSock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+        NSString *fmt = NSLocalizedString(@"TunnelConnectErr", nil);
+        [self tunnelledConnFailed:[NSString stringWithFormat:fmt, strerror(errno)]];
+        errno = 0;
+        return;
+    }
+
+    [NSThread detachNewThreadSelector:@selector(waitForData)
+                             toTarget:self
+                           withObject:nil];
+}
+
+- (void)tunnelledConnFailed: (NSString *)err
+{
+    [self error:NSLocalizedString(@"TunnelErr", nil) message:err];
+}
+
+- (void)waitForData
+{
+    [self waitForDataOn:currentSock];
 }
 
 - (void)finishConnection
@@ -142,6 +175,11 @@
     tunnel = nil;
     [conn release];
     currentSock = -1;
+}
+
+- (void)serverClosed
+{
+    [self tunnelledConnFailed:NSLocalizedString(@"ServerClosed", nil)];
 }
 
 - (void)sshFailedWithError:(NSString *)err

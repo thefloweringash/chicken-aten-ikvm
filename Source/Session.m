@@ -134,6 +134,7 @@
     NSString *templ = NSLocalizedString(@"NoReconnection", nil);
     NSString *err = [NSString stringWithFormat:templ, host];
     [_reconnectWaiter setErrorStr:err];
+    [self startTimerForReconnectSheet];
 }
 
 - (void)startTimerForReconnectSheet

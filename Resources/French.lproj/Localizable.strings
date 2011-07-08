@@ -42,6 +42,11 @@
 "SshPermissionDenied" = "Permission denied by SSH server";
 "SshConnectionClosed" = "La serveur SSH a fermé la connexion";
 
+// errors with SSH tunnel after having established SSH connection
+"TunnelErr" = "Could not connect to server through SSH tunnel";
+"TunnelSocketErr" = "Error with socket(): %s";
+"TunnelConnectErr" = "Error with connect(): %s";
+
 /* Connection Terminated */
 "ConnectionTerminated" = "Connexion interrompue";
 "Reconnect" = "Reconnecter";

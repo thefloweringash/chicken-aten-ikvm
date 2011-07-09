@@ -226,10 +226,7 @@
 													<reference key="NSSupport" ref="412275590"/>
 													<reference key="NSControlView" ref="309587208"/>
 													<bool key="NSDrawsBackground">YES</bool>
-													<object class="NSColor" key="NSBackgroundColor">
-														<int key="NSColorSpace">1</int>
-														<bytes key="NSRGB">MC4zMzM0NjA0ODUzIDEgMC4wOTU3MjY0MTU5NCAwAA</bytes>
-													</object>
+													<reference key="NSBackgroundColor" ref="795280858"/>
 													<reference key="NSTextColor" ref="369907917"/>
 												</object>
 											</object>

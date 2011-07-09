@@ -103,3 +103,7 @@
 // SSH
 "FirstTimeHeader" = "First time connecting";
 "FirstTimeMessage" = "The authenticity of the server could not be established.  Are you sure you want to continue connectiong?";
+
+"PasteConversionHeader" = "Clipboard incompatible with Latin-1";
+"PasteConversionBody" = "The VNC protocol only supports sending clipbord text in the Latin-1 encoding. Do you want to send anyways, possibly losing characters?";
+"PasteAnyways" = "Paste Anyways";

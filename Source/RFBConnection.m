@@ -51,6 +51,12 @@
 #define BUFFER_SIZE 2048
 #define READ_BUF_SIZE (1024*1024)
 
+@interface RFBConnection (Private)
+
+- (void)sendStringToServersClipboard:(const char *)cStr length:(unsigned)len;
+
+@end
+
 @implementation RFBConnection
 
 // jason added for Jaguar check
@@ -678,13 +684,20 @@
     NSString    *str = [pb stringForType:NSStringPboardType];
     const char  *cStr = [str cStringUsingEncoding:NSISOLatin1StringEncoding];
 
-    NSLog(@"Sending %@", str);
     if (cStr == NULL) {
-        NSLog(@"String not encodable in Latin-1");
-        return;
-    }
+        NSBeginAlertSheet(NSLocalizedString(@"PasteConversionHeader", nil), 
+                          NSLocalizedString(@"PasteAnyways", nil),
+                          NSLocalizedString(@"Cancel", nil), nil,
+                          [rfbView window], self,
+                          @selector(pasteConfirmation:returnCode:contextInfo:),
+                          nil, [str retain],
+                          NSLocalizedString(@"PasteConversionBody", nil));
+    } else
+        [self sendStringToServersClipboard:cStr length:strlen(cStr)];
+}
 
-    unsigned int            len = strlen(cStr);
+- (void)sendStringToServersClipboard:(const char *)cStr length:(unsigned)len
+{
     unsigned int            msgSz = sizeof(rfbClientCutTextMsg) + len;
     rfbClientCutTextMsg     *msg = malloc(msgSz);
 
@@ -698,6 +711,17 @@
     memcpy((char *)(msg + 1), cStr, len);
     [self writeBytes:(unsigned char *)msg length:msgSz];
     free(msg);
+}
+
+- (void)pasteConfirmation:(NSWindow *)sheet returnCode:(int)code
+              contextInfo:(NSString *)str
+{
+    if (code == NSAlertDefaultReturn) {
+        NSData  *data = [str dataUsingEncoding:NSISOLatin1StringEncoding
+                          allowLossyConversion:YES];
+        [self sendStringToServersClipboard:[data bytes] length:[data length]];
+    }
+    [str release];
 }
 
 - (EventFilter *)eventFilter

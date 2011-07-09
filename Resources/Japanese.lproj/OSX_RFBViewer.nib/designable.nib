@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10J567</string>
-		<string key="IBDocument.InterfaceBuilderVersion">823</string>
-		<string key="IBDocument.AppKitVersion">1038.35</string>
-		<string key="IBDocument.HIToolboxVersion">462.00</string>
+		<string key="IBDocument.SystemVersion">10K540</string>
+		<string key="IBDocument.InterfaceBuilderVersion">851</string>
+		<string key="IBDocument.AppKitVersion">1038.36</string>
+		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">823</string>
+			<string key="NS.object.0">851</string>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -481,6 +481,14 @@
 									<string key="NSTitle">ペースト</string>
 									<string key="NSKeyEquiv">v</string>
 									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="487498644"/>
+									<reference key="NSMixedImage" ref="249173457"/>
+								</object>
+								<object class="NSMenuItem" id="425599949">
+									<reference key="NSMenu" ref="779229721"/>
+									<string key="NSTitle">Paste to Remote Clipboard</string>
+									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="487498644"/>
 									<reference key="NSMixedImage" ref="249173457"/>
@@ -1234,6 +1242,14 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 					</object>
 					<int key="connectionID">1499</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sendPasteboardToServer:</string>
+						<reference key="source" ref="26840678"/>
+						<reference key="destination" ref="425599949"/>
+					</object>
+					<int key="connectionID">1501</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1541,6 +1557,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 							<reference ref="519955334"/>
 							<reference ref="62599797"/>
 							<reference ref="1026163336"/>
+							<reference ref="425599949"/>
 						</object>
 						<reference key="parent" ref="92250957"/>
 					</object>
@@ -1882,6 +1899,11 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 						<reference key="object" ref="900833788"/>
 						<reference key="parent" ref="374687083"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1500</int>
+						<reference key="object" ref="425599949"/>
+						<reference key="parent" ref="779229721"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1911,6 +1933,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 					<string>1305.ImportedFromIB2</string>
 					<string>1306.IBPluginDependency</string>
 					<string>1306.ImportedFromIB2</string>
+					<string>1307.IBEditorWindowLastContentRect</string>
 					<string>1307.IBPluginDependency</string>
 					<string>1307.ImportedFromIB2</string>
 					<string>1308.IBPluginDependency</string>
@@ -1996,6 +2019,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 					<string>1494.ImportedFromIB2</string>
 					<string>1496.IBPluginDependency</string>
 					<string>1498.IBPluginDependency</string>
+					<string>1500.IBPluginDependency</string>
 					<string>165.IBPluginDependency</string>
 					<string>165.ImportedFromIB2</string>
 					<string>225.IBPluginDependency</string>
@@ -2089,6 +2113,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>{{463, 497}, {270, 203}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2172,6 +2197,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2259,7 +2285,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1499</int>
+			<int key="maxID">1501</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2866,11 +2892,13 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 							<string>reconnectCancelled:</string>
 							<string>reconnectWithNewPassword:</string>
 							<string>requestFrameBufferUpdate:</string>
+							<string>sendPasteboardToServer:</string>
 							<string>setNewTitle:</string>
 							<string>toggleFullscreenMode:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2901,6 +2929,7 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 							<string>reconnectCancelled:</string>
 							<string>reconnectWithNewPassword:</string>
 							<string>requestFrameBufferUpdate:</string>
+							<string>sendPasteboardToServer:</string>
 							<string>setNewTitle:</string>
 							<string>toggleFullscreenMode:</string>
 						</object>
@@ -2948,6 +2977,10 @@ dCBhdmFpbGFibGUgYXQgaHR0cDovL2NoaWNrZW4uc291cmNlZm9yZ2UubmV0A</string>
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">requestFrameBufferUpdate:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">sendPasteboardToServer:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

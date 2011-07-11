@@ -370,6 +370,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 {
     NSString    *resp = accept ? @"yes" : @"no";
     [self writeToHelper:resp];
+    if (!accept)
+        state = SSH_STATE_CLOSING;
 }
 
 - (void)usePassword:(NSString*)password

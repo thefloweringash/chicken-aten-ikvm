@@ -105,9 +105,12 @@
 - (void)firstTime:(NSAlert *)sheet returnCode:(int)retCode
       contextInfo:(void *)info
 {
-    [tunnel acceptKey:retCode == NSAlertFirstButtonReturn];
+    BOOL    accept = retCode == NSAlertFirstButtonReturn;
+    [tunnel acceptKey:accept];
     if ([delegate respondsToSelector:@selector(connectionSheetOver)])
         [delegate connectionSheetOver];
+    if (!accept)
+        [delegate connectionFailed];
 }
 
 - (void)getPassword

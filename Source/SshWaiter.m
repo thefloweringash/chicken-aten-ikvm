@@ -41,6 +41,7 @@
         server = [aServer retain];
         delegate = aDelegate;
         window = [aWind retain];
+        currentSock = -1;
 
         tunnel = [[SshTunnel alloc] initWithServer:server delegate:self];
     }

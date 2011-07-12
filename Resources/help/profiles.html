@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="style_sheet.css" type="text/css" />
+	<title>Chicken: Connection profiles</title>
+</head>
+<body>
+<div id="PageContainer">
+<div id="header">
+	<h1>Connection profiles</h1>
+	<h2><img src="icon.jpg" width="128" height="128" alt="Chicken Icon" /></h2>
+</div>
+<div class="section">
+	<h1>Using Connection Profiles</h1>
+	
+	<p>You can use profiles to store settings for an individual VNC server or for a class of servers.  For example, you might want to use full-color display for a server that is on your local area network, but drop down to 8-bit display for a remote machine.</p>
+
+	<p>You can also use profiles to specify your default encoding.  VNC operates by transferring an image of the screen from the server to the client.  This obviously requires lots of bandwidth.  The better the encoding that you use to transfer this information, the less "lag" you'll experience while using the Chicken.  Unfortunately, encodings that require less bandwidth also require more CPU utilization on both the server and client computers, so you may need to experiment to find the encoding that's right for your situation.</p>
+
+	<p class="noMargin">The different encodings are (in rough order of efficiency)<br/>
+	<ul id="encodingList">
+		<li>ZRLE</li>
+		<li>Tight</li>
+		<li>Zlib</li>
+		<li>ZlibHex</li>
+		<li>Hextile</li>
+		<li>CoRRE</li>
+		<li>RRE</li>
+		<li>Raw</li>
+	</ul></p>
+	
+	<div class="ss"><img src="profiles-encodings.jpg" width="627" height="417" alt="Profile Dialog" /></div>
+
+	<ul class="explanation">
+		<li><span class="item">Profiles:</span>  A list of profiles that are available to use for your connections.  Add a new profile by typing its name below the list and pressing <strong>New</strong>.  Remove a profile other than the default one by selecting it and pressing the <strong>Delete</strong> button.  The information in the remainder of the window belongs to the selected profile.</li>
+
+		<li><span class="item">Encodings:</span>  The encoding to use for the connection.  Encodings are described above.  You can <strong>drag encodings</strong> to change your preferred encoding - the top one is tried first, and subsequent ones are tried until one is found that is supported by your server.  To disable an encoding, uncheck it.  <strong>CopyRect Encoding</strong> is an optimization that's useful in some situations.  If you're connecting to a very old server, you may wish to turn it off, but we haven't run across any situations where it isn't supported.</li>
+	</ul>
+
+	<div class="ss"><a name="emulation"><img src="profiles-emulation.jpg" width="624" height="428" alt="Profile Dialog" /></a></div>
+
+    <ul class="explanation">
+    <li><span class="item">Emulation:</span> If you are one of those cursed with a single button mouse, you have many mouse button emulation options.</li>
+	
+    <p>You can emulate a button click by holding down a modifier key while clicking your single button mouse using the <strong>Modifier Click</strong> emulation option.  For example, you can use this to imitate the familiar control-click paradigm used on your Macintosh.</p>
+	
+	<p>The <strong>Multi-Tap</strong> option lets you emulate a button click by tapping a particular modifier key quickly.  For example, you can right-click at the current mouse position by tapping the Command key twice quickly.</p>
+	
+	<p>The <strong>Tap and Click</strong> option lets you emulate a button click by tapping a modifier key a single time and then clicking the mouse.  This is the behavior that was in previous versions of Chicken of the VNC, so you may already be accustomed to it.  Once you've tapped the modifier key, the mouse cursor will change to indicate that a mouse click will be emulated.  You can cancel emulation by waiting for it to <strong>timeout</strong>, or by pressing the Escape key on your keyboard.</p>
+	
+	<p>If you don't wish to use mouse button emulation, you can set the <strong>No Emulation</strong> option.</p>
+
+    <p>If you are lucky enough to have a two or three button mouse, you don't need to worry about emulation as Chicken supports up to three mouse buttons, as well as scroll-wheels on compatible servers.</p></li>
+    </ul>
+
+	<div class="ss"><img src="profiles-modifiers.jpg" width="635" height="431" alt="Profile Dialog" /></div>
+
+	<ul class="explanation">
+		<li><span class="item">Modifiers:</span>  You can use this section to map the modifier keys on your Macintosh keyboard to keys commonly used on other operating systems.  This allows you to use the Alt key on a Windows server or the Meta key on a Unix server, for example. If you set the Option key to "none (local keymap)", then Option won't be sent to the server, but can be used to enter special characters using normal Mac keyboard combinations, such as Option-A for &aring; on a US keyboard.</li>
+	</ul>
+
+	<div class="ss"><img src="profiles-color.jpg" width="631" height="423" alt="Profile Dialog" /></div>
+
+	<ul class="explanation">
+		<li><span class="item">Color:</span>  You can use this section to select the color resolution you wish to use with your remote servers.  Since VNC is a bandwidth-intensive protocol, you may obtain better responsiveness by reducing your color resolution.  <strong>Let Server Decide</strong> uses the native color resolution of the server.</li>
+
+        <p>The <strong>Tint remote display</strong> setting will cause the
+        remote displays to be tinted a given color. Tinting creates a visual
+        distinction between the remote and local windows.</p>
+	</ul>
+</div>
+</div></body></html>

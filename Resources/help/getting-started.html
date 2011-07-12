@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="style_sheet.css" type="text/css" />
+	<title>Getting started with Chicken</title>
+</head>
+<body>
+<div id="PageContainer">
+<div id="header">
+	<h1>Getting started with Chicken</h1>
+	<h2><img src="icon.jpg" width="128" height="128" alt="Chicken Icon" /></h2>
+</div>
+<div class="section">
+	<h1>Using Chicken</h1>
+
+	<p>Use it just like any other VNC client - enter the address of a working VNC server (you can use <em>host:port</em> notation if you wish), the display number and your password and rock'n'roll...</p>
+
+	<div class="ss"><img src="connect.jpg" width="611" height="362" alt="Connection Dialog" /></div>
+	
+	<ul class="explanation">
+		<li><span class="item">Servers:</span>  You can store commonly used servers in this section.  Use the + and - buttons to add and remove servers.</li>
+
+		<li><span class="item">Host:</span>  The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You may optionally specify a port number here by appending it with a colon (like myserver.com:5900).  </li>
+
+		<li><span class="item">Display or port:</span> The display number for
+        the connection. Numbers larger than 50 will be treated as a port instead of a display. Thus, 0 has the same effect as 5900.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on either your computer or on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
+
+		<li><span class="item">Password:</span>  The password needed to connect to the server running at the specified host and display.  If Remember Password was checked, this will be fetched from your Mac OS X Keychain after you've entered it initially.</li>
+
+		<li><span class="item">Remember Password:</span>  If checked, the password will be stored in your Mac OS X Keychain and remembered for later use.</li>
+
+		<li><span class="item">Profile:</span>  The connection profile to use when connecting to this server.  See the section below for more info about connection profiles.</li>
+	
+		<li><span class="item">View Only:</span>  If selected, your connection will not be interactive.  You will be able to view the server's screen, but mouse movements, key presses and the like will not be transmitted.</li>
+
+		<li><span class="item">Allow Other Clients To Connect:</span>  If selected, multiple clients can connect to the same server simultaneously.  Otherwise, only one client can be connected to a given server at at time.</li>
+
+		<li><span class="item">Fullscreen Display:</span>  If selected, the connection will initially be opened using your entire screen, rather than in a window.</li>
+	</ul>
+
+	<p>You can also check <a href="http://www.realvnc.com/">RealVNC's web page</a> for additional information on connection and configuring a VNC client.</p>
+</div>
+
+<div class="section">
+    <h1>A Note About Security</h1>
+    <p>VNC is not a secure protocol. Unless otherwise encrypted, your keypresses
+    and screenshots can be captured by anyone on the same network as you.  If
+    you are using VNC over the Internet or other public network, you should
+    tunnel it through an encrypted connection. The easiest way to do this is
+    with <strong>SSH</strong>. Before using Chicken, open
+    <strong>Terminal</strong> and type:
+    <p style="margin-left:2em"><code>
+        ssh -L 5900:localhost:5900 -l <i>username</i> <i>hostname</i>
+    </code></p>
+    <p>where <code><i>hostname</i></code> and <code><i>username</i></code> are
+    the name of the server and your account on that server respectively. If the
+    VNC server is on port other than 5900 (i.e. display 0), replace 5900 with
+    the port. After hitting return, you will be prompted for a password. Once
+    SSH has connected, start the connection as usual in Chicken, except use
+    "localhost" as the host. When you're done, type <code>exit</code> in the
+    Terminal window to close the SSH connection.</p>
+
+    <p>If you have problems making the SSH connection, make sure that SSH is
+    enabled on the remote computer. If the remote computer is a Mac, this can be
+    done by going to Sharing in System Preferences and checking the box next to
+    Remote Login. If you have established the SSH connection, but Chicken won't
+    connect, make sure that the port number of the remote server is the same as
+    the numbers in the <code>ssh</code> command. Remember that the port number
+    is always 5900 plus the display number.</p>
+</div>
+</body></html>

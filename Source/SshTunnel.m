@@ -124,7 +124,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         [notifs addObserver:self selector:@selector(sshTerminated:)
                 name:NSTaskDidTerminateNotification object:task];
         [task launch];
-        [self retain];
+        [self retain]; // this retain lasts as long as ssh is running
 
         [notifs addObserver:self selector:@selector(readFromSsh:)
                        name:NSFileHandleReadCompletionNotification
@@ -285,6 +285,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [[notif object] readInBackgroundAndNotify];
 }
 
+/* Process one line of output from ssh */
 - (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh
 {
     if (fh == [sshOut fileHandleForReading]) {
@@ -404,6 +405,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [self writeToHelper:password];
 }
 
+/* Write a messsage to our helper script. This is how we feed replies to ssh's
+ * interactive questions. */
 - (void)writeToHelper:(NSString *)str
 {
     int     fd;

@@ -115,6 +115,7 @@
         [delegate connectionFailed];
 }
 
+/* Message from ssh requesting a password. */
 - (void)getPassword
 {
     auth = [[AuthPrompt alloc] initWithDelegate:self];
@@ -124,6 +125,8 @@
     [auth runSheetOnWindow:window]; 
 }
 
+/* The ssh program has connected to the remote server. Now we connect to the VNC
+ * server via the tunneled port. */
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort
 {
     struct sockaddr_in  addr;
@@ -161,6 +164,8 @@
     [self waitForDataOn:currentSock];
 }
 
+/* The connection's been established and we have data waiting for us. Here, we
+ * set up RFBConnection and related objects. This runs in the main thread. */
 - (void)finishConnection
 {
     NSFileHandle    *fh;
@@ -182,6 +187,7 @@
     currentSock = -1;
 }
 
+/* The server closed the connection while we were waiting for the first data. */
 - (void)serverClosed
 {
     [self tunnelledConnFailed:NSLocalizedString(@"ServerClosed", nil)];

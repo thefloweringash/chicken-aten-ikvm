@@ -690,7 +690,8 @@
                           NSLocalizedString(@"Cancel", nil), nil,
                           [rfbView window], self,
                           @selector(pasteConfirmation:returnCode:contextInfo:),
-                          nil, [str retain],
+                          nil, [str retain], /* This retain is balanced by the
+                                              * release in pasteConfirmation: */
                           NSLocalizedString(@"PasteConversionBody", nil));
     } else
         [self sendStringToServersClipboard:cStr length:strlen(cStr)];
@@ -721,7 +722,7 @@
                           allowLossyConversion:YES];
         [self sendStringToServersClipboard:[data bytes] length:[data length]];
     }
-    [str release];
+    [str release]; // balances retain in sendPasteboardToServer:
 }
 
 - (EventFilter *)eventFilter

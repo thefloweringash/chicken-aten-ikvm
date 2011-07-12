@@ -152,7 +152,7 @@
             fmt = colon.location == NSNotFound ? @"%@:%d" : @"[%@]:%d";
             hostAndPort = [NSString stringWithFormat:fmt, host, port];
             [hostName setStringValue:hostAndPort];
-            [display setStringValue:@""];
+            [display setStringValue:@" "];
             [display setEnabled:NO];
             str = [NSString stringWithFormat:NSLocalizedString(@"PortNum", nil),
                     port];
@@ -168,7 +168,7 @@
                 str = [NSString stringWithFormat:NSLocalizedString(@"PortNum", nil),
                         port];
             }
-            [display setEnabled: YES];
+            [display setEnabled:[mServer doYouSupport:EDIT_PORT]];
         }
         [displayDescription setStringValue:str];
 
@@ -190,7 +190,6 @@
         }
 		
 		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
-		[display     setEditable:[mServer doYouSupport:EDIT_PORT]];
 		[password    setEnabled: [mServer doYouSupport:EDIT_PASSWORD]];
 		[rememberPwd setEnabled: [mServer respondsToSelector:@selector(setRememberPassword:)]];
         [useSshTunnel setEnabled: YES];
@@ -339,11 +338,15 @@
             BOOL setSsh = [[mServer sshString] isEqualToString:[mServer host]];
 			BOOL portSpec = [mServer setHostAndPort:[sender stringValue]];
 
-            [display setEnabled:!portSpec];
-            if (portSpec)
+            if (portSpec) {
                 [self descriptionFromPort];
-            else
+                [display setStringValue:@" "];
+            } else {
+                if (![display isEnabled])
+                    [display setStringValue:@"0"];
                 [self takePortFromDisplay];
+            }
+            [display setEnabled:!portSpec];
 
             if (setSsh) {
                 [mServer setSshHost:[mServer host]];

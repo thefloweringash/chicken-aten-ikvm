@@ -83,19 +83,20 @@
     [tunnel close];
 }
 
-- (void)firstTimeConnecting
+- (void)firstTimeConnecting:(NSString *)fingerprint
 {
     /* This is ssh's first time connecting to this server. We want to verify
      * that the user wants to add the unauthenticated server key to the hosts
      * file. */
 
     NSAlert     *alert = [[NSAlert alloc] init];
+    NSString    *msg = NSLocalizedString(@"FirstTimeMessage", nil);
 
     if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
         [delegate connectionPrepareForSheet];
 
     [alert setMessageText:NSLocalizedString(@"FirstTimeHeader", nil)];
-    [alert setInformativeText:NSLocalizedString(@"FirstTimeMessage", nil)];
+    [alert setInformativeText:[NSString stringWithFormat:msg, fingerprint]];
     [alert addButtonWithTitle:NSLocalizedString(@"Connect", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
     [alert beginSheetModalForWindow:window modalDelegate:self

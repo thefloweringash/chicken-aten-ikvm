@@ -45,6 +45,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)cleanupFifos;
 
 - (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh;
+- (void)firstTimeConnecting:(NSString *)str;
 - (void)sshFailed:(NSString *)err;
 
 - (void)writeToHelper:(NSString *)str;
@@ -305,10 +306,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
                 [delegate getPassword];
             }
         } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
-
             if (state == SSH_STATE_OPENING) {
-                state = SSH_STATE_PROMPT;
-                [delegate firstTimeConnecting];
+                [self firstTimeConnecting:str];
             }
 
         // messages sent by ssh itself.
@@ -347,6 +346,32 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
             NSLog(@"Unknown message from ssh error: %@", str);
     } else
         NSLog(@"Read notification from unknown object");
+}
+
+/* This is our first time connecting and the ssh program has given us a prompt
+ * about accepting the host key. We extract the fingerprint and pass this along
+ * to the delegate. */
+- (void)firstTimeConnecting:(NSString *)str
+{
+    NSRange     intro = [str rangeOfString:@" key fingerprint is "];
+    NSString    *fingerprint = @"<unknown>";
+
+    if (intro.location != NSNotFound) {
+        NSRange     after, end, sub;
+
+        after.location = intro.location + intro.length;
+        after.length = [str length] - after.location;
+        end = [str rangeOfString:@". " options:0 range:after];
+
+        if (end.location != NSNotFound) {
+            sub.location = after.location;
+            sub.length = end.location - sub.location;
+            fingerprint = [str substringWithRange:sub];
+        }
+    }
+
+    state = SSH_STATE_PROMPT;
+    [delegate firstTimeConnecting:fingerprint];
 }
 
 - (void)sshFailed:(NSString *)err

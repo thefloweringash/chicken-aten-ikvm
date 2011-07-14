@@ -15,7 +15,8 @@
 <div class="section">
 	<h1>Full Screen Display</h1>
 	
-	<p>The Chicken can be toggled in and out of full screen display by pressing the keyboard combination command-option-control-`.  The 'command' key is also known as the 'Apple' key.  The back-quote (`) is the character immediately to the left of the number '1' on American keyboards.</p>
+	<p>The Chicken can be toggled in and out of full screen display by pressing
+    the keyboard combination, which in the English language version, is command-option-control-`.  The 'command' key is also known as the 'Apple' key.  The back-quote (`) is the character immediately to the left of the number '1' on American keyboards.</p>
 
 	<p>If this key combination interferes with your work, or is not convenient on international keyboards, it can be changed in the <strong>Keyboard tab of the Preferences</strong>.</p>
 
@@ -23,9 +24,26 @@
 </div>
 
 <div class="section">
+<h1>Copy and Paste</h1>
+
+<p>VNC supports copying and pasting text to and from the clipboard of the remote
+server.  Whenever you copy text on the remote server (and the server supports
+it), Chicken will place the text in your local clipboard. To transfer text to
+the server, you have two options. If you choose <strong>Paste</strong> from the
+<strong>Edit</strong>menu, Chicken will simulate keystrokes typing the text from
+the clipboard. The <strong>Paste to Remote Clipboard</strong> will send the text
+to the server's clipboard.</p>
+
+<p>Note that, due to inherent limitations with VNC, copying from and pasting to
+the server's clipboard only works for text compatible with the Latin-1 encoding,
+which includes most Western European languages. Also, as always, Chicken is
+dependent on what operations are supported by the server.</p>
+</div>
+
+<div class="section">
 	<h1>More About Connections</h1>
 	
-	<p>The Chicken supports server autodiscovery using Bonjour (formerly known as Rendezvous).  To enable it, select the <strong>Use Bonjour</strong> item in Chicken's application menu.  Servers that advertise themselves using Bonjour will automatically show up in your bookmarks window!</p>
+	<p>Chicken supports server autodiscovery using Bonjour.  To enable it, select the <strong>Use Bonjour</strong> item in Chicken's application menu.  Servers that advertise themselves using Bonjour will automatically show up in your bookmarks window!</p>
 	
 	<p>If you wish to connect to a server without using bookmarks, just choose <strong>New Connection</strong> from the <strong>File</strong> menu.  Of course, if you decide that you want to bookmark the server, you can always check the "Save Server" button before you connect.</p>
 	

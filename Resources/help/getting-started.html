@@ -35,9 +35,19 @@
 	
 		<li><span class="item">View Only:</span>  If selected, your connection will not be interactive.  You will be able to view the server's screen, but mouse movements, key presses and the like will not be transmitted.</li>
 
-		<li><span class="item">Allow Other Clients To Connect:</span>  If selected, multiple clients can connect to the same server simultaneously.  Otherwise, only one client can be connected to a given server at at time.</li>
+		<li><span class="item">Allow other clients to connect:</span>  If selected, multiple clients can connect to the same server simultaneously.  Otherwise, only one client can be connected to a given server at at time.</li>
 
 		<li><span class="item">Fullscreen Display:</span>  If selected, the connection will initially be opened using your entire screen, rather than in a window.</li>
+
+<a link="ssh"><li><span class="item">Tunnel over SSH:</span> If selected,
+Chicken first connects to the server using the SSH protocol and then establishes
+the VNC connection through an encrypted SSH tunnel. This is a beta feature and
+may not work in all circumstances.</li>
+
+<li><span class="item">SSH host:</span> The name of the SSH server to connect
+to, which need not be the same as the VNC server. You can specify a username
+other than your own by prepending "username@" and a non-standard port by
+appending ":portnumber".</li>
 	</ul>
 
 	<p>You can also check <a href="http://www.realvnc.com/">RealVNC's web page</a> for additional information on connection and configuring a VNC client.</p>
@@ -49,25 +59,13 @@
     and screenshots can be captured by anyone on the same network as you.  If
     you are using VNC over the Internet or other public network, you should
     tunnel it through an encrypted connection. The easiest way to do this is
-    with <strong>SSH</strong>. Before using Chicken, open
-    <strong>Terminal</strong> and type:
-    <p style="margin-left:2em"><code>
-        ssh -L 5900:localhost:5900 -l <i>username</i> <i>hostname</i>
-    </code></p>
-    <p>where <code><i>hostname</i></code> and <code><i>username</i></code> are
-    the name of the server and your account on that server respectively. If the
-    VNC server is on port other than 5900 (i.e. display 0), replace 5900 with
-    the port. After hitting return, you will be prompted for a password. Once
-    SSH has connected, start the connection as usual in Chicken, except use
-    "localhost" as the host. When you're done, type <code>exit</code> in the
-    Terminal window to close the SSH connection.</p>
+    with <strong>SSH</strong>, which you can do within Chicken by checking the
+    <strong>Tunnel over SSH</strong> checkbox, as described
+    <a href="#ssh">above</a>.</p>
 
-    <p>If you have problems making the SSH connection, make sure that SSH is
-    enabled on the remote computer. If the remote computer is a Mac, this can be
-    done by going to Sharing in System Preferences and checking the box next to
-    Remote Login. If you have established the SSH connection, but Chicken won't
-    connect, make sure that the port number of the remote server is the same as
-    the numbers in the <code>ssh</code> command. Remember that the port number
-    is always 5900 plus the display number.</p>
+    <p>In order for this to work, the remote computer needs to be running an SSH
+    server. If the remote computer is a Mac, this can be enabled by going to
+    Sharing in System Preferences and checking the box next to Remote Login.
+    </p>
 </div>
 </body></html>

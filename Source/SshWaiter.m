@@ -156,7 +156,9 @@
 
 - (void)tunnelledConnFailed: (NSString *)err
 {
-    [self error:NSLocalizedString(@"TunnelErr", nil) message:err];
+    NSString *fmt = NSLocalizedString(@"NoConnection", nil);
+    [self error:[NSString stringWithFormat:fmt, [server host], [server port]]
+        message:err];
 }
 
 - (void)waitForData

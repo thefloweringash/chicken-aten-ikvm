@@ -43,7 +43,6 @@
 "SshConnectionClosed" = "The SSH server closed the connection";
 
 // errors with SSH tunnel after having establishe SSH connection
-"TunnelErr" = "Could not connect to server through SSH tunnel";
 "TunnelSocketErr" = "Error with socket(): %s";
 "TunnelConnectErr" = "Error with connect(): %s";
 

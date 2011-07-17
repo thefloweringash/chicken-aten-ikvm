@@ -33,6 +33,29 @@
 #define SSH_STATE_CLOSING 3 /* ssh in proces of shutting down, either due to
                                errror, or because we requested it. */
 
+/* SshTunnel operates on a state machine as follows. The state transitions can
+   by messages to SshTunnel, by the ssh program or both. In the latter case,
+   these trigger callbacks to the delegate as shown below.
+
+              [SshTunnel acceptKey:]
+              [SshTunnel usePassword:]
+       +-------------------<----------------------+
+       V                                          |
+   OPENING -----------------------------------> PROMPT
+      |      [delegate firstTimeConnectiong:]
+      |      [delegate getPassword]
+      |
+      | [delegate tunnelEstablishedAtPort:]
+      V
+     OPEN
+      |
+      | [SshTunnel close]
+      V
+   CLOSING <---------------------------OPENING or PROMPT
+               [SshTunnel close]
+               [delegate sshFailedWithError:]
+ */
+
 #define TUNNEL_PORT_START 5910
 #define TUNNEL_PORT_END 5950
 

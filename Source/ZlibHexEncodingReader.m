@@ -96,9 +96,9 @@
 		bpp = [frameBuffer bytesPerPixel];
 		if(subEncodingMask & rfbHextileBackgroundSpecified) {
 			[frameBuffer fillColor:&background fromPixel:ptr];
-			[frameBuffer fillRect:currentTile withFbColor:&background];
 			ptr += bpp;
 		}
+        [frameBuffer fillRect:currentTile withFbColor:&background];
 		if(subEncodingMask & rfbHextileForegroundSpecified) {
 			subEncodingMask &= ~(rfbHextileSubrectsColoured);
 			[frameBuffer fillColor:&foreground fromPixel:ptr];

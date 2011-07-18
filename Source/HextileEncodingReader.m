@@ -56,8 +56,7 @@
 }
 
 /* Advances the data to the next tile. After reading the current tile, this
- * updates the currentTile variable and fills the rectangle with the default
- * background color, which is to reuse the previous background color. */
+ * updates the currentTile variable. */
 - (void)nextTile
 {
     currentTile.origin.x += TILE_SIZE;
@@ -77,7 +76,6 @@
     if(NSMaxY(currentTile) > NSMaxY(frame)) {
         currentTile.size.height -= NSMaxY(currentTile) - NSMaxY(frame);
     }
-    [frameBuffer fillRect:currentTile withFbColor:&background];
     [connection setReader:subEncodingReader];
 }
 
@@ -95,6 +93,11 @@
 
         if (subEncodingMask & rfbHextileBackgroundSpecified)
             headerSz += [frameBuffer bytesPerPixel];
+        else {
+            // use default background color: same as previous tile
+            [frameBuffer fillRect:currentTile withFbColor:&background];
+        }
+
         if (subEncodingMask & rfbHextileForegroundSpecified) {
             headerSz += [frameBuffer bytesPerPixel];
             subEncodingMask &= ~rfbHextileSubrectsColoured;

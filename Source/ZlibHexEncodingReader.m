@@ -21,7 +21,7 @@
 	
 		zLengthReader = [[CARD16Reader alloc] initTarget:self action:@selector(setZLength:)];
         rawStream = [[ZlibStreamReader alloc] initTarget:self
-                                                  action:@selector(setRawTile:)
+                                                  action:@selector(setZlibRawTile:)
                                               connection:connection];
 		inflateResult = inflateInit(&encodedStream);
 		if(inflateResult != Z_OK) {

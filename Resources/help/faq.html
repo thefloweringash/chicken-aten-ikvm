@@ -14,21 +14,66 @@
 </div>
 
 <div class="section">
-	<h1>I Get Strange Characters When I Type</h1>
+<h1>What's the difference between Chicken and Chicken of the VNC?</h1>
+<p>Chicken is an improved version of Chicken of the VNC. Chicken of the VNC has
+essentially been abandoned by its developers. Chicken is an independent project,
+which builds on CotVNC to add new features and bug fixes, while remaining
+streamlined and easy to use.</p>
+</div>
+
+<div class="section">
+<h1>Can I use my saved servers and passwords from Chicken of the VNC in
+Chicken?</h1>
+
+<p>If you've previously used Chicken of the VNC, any preferences or saved
+servers will be imported by Chicken the first time it is run. However, saved
+passwords are not copied.</p>
+
+<p>If you wish to transfer your saved passwords, you can do
+this manually. First open <strong>Keychain Access</strong> in the Utilities
+folder. For each keychain item called <strong>cotvnc</strong>, double click and
+change the <strong>Name</strong> and <strong>Where</strong> fields to
+<strong>Chicken</strong>, and click <strong>Save Changes</strong>.
+Similarly, change <strong>cotvnc-zeroconf</strong> to
+<strong>Chicken-zeroconf</strong></p>
+</div>
+
+<div class="section">
+<h1>Screen Sharing is enabled, so why does Chicken say I can't connect?</h1>
+<p>In the Screen Sharing settings on the remote computer, you need to check the
+box which says <strong>VNC viewers may control screen</strong>.</p>
+
+<p>Apple's Screen Sharing is based on VNC, but it is not completely compatible.
+One difference is that Screen Sharing, by default, requires both a username and
+password to log in, where as standard VNC only requires a password. Chicken only
+supports the standard VNC log in, which is why you need to tell Screen Sharing
+to enable VNC authentication.</p>
+</div>
+
+<div class="section">
+<h1>I Get Strange Characters When I Type</h1>
 	
-    <p>Chicken tries hard to work with different keyboard layouts. However, not
-    all servers will know how to handle all characters which might be on your
-    keyboard, especially if the remote computer has a different keyboard layout
-    than your current computer.</p>
-    
-    <p>Note that, by default, Chicken will treat the Option key as Meta or
-    Option on the remote computer. If you instead want to use the option key
-    to enter special characters by OS X shortcuts, go to the
-    <strong>Modifiers</strong> tab in <strong>Connection Profiles</strong> and
-    change the setting for the option key to <strong>none (local
-    keymap)</strong>. If you still have problems with the keyboard, file a bug
-    report on the <a href="http://sourceforge.net/projects/chicken/">SourceForge
-    page</a></p> </div>
+<p>Chicken tries hard to work with different keyboard layouts. However, not
+all servers will know how to handle all characters which might be on your
+keyboard. There are a couple of things to try for better keyboard
+compatibility.</p>
+
+<p>First, VNC will work best if the server and client are both configured to use
+the same keyboard layout. Second, if you're connecting to a virtual machine, it
+generally works better to run a VNC server within the virtualized OS, rather
+than using a VNC server built into the virtualization software. VNC is designed
+to work at the OS level rather than the level of emulated hardware.</p>
+
+<p>Third, you can change the way that Chicken interprets the Option key.  By
+default, Chicken will treat the Option key as Meta or Option on the remote
+computer. If you instead want to use the option key to enter special characters
+by OS X shortcuts, go to the <strong>Modifiers</strong> tab in
+<strong>Connection Profiles</strong> and change the setting for the option key
+to <strong>none (local keymap)</strong>.</p>
+
+<p>If you still have problems with the keyboard, file a bug report on the
+<a href="http://sourceforge.net/projects/chicken/">SourceForge page</a>.</p>
+</div>
 
 <div class="section">
     <h1>Why Can't I Control Click?</h1>
@@ -36,7 +81,7 @@
     <p>By default, Chicken interprets control-clicks as right clicks. If you
     need to send a control-click, you can change the emulation for right mouse
     button to something other than control-click, as described
-    <a href="#emulation">below</a>.</p>
+    <a href="profiles.html#emulation">here</a>.</p>
 </div>
 
 <div class="section">
@@ -54,4 +99,69 @@
 	
 	<p>The <strong>Connection</strong> menu's <strong>Special Keys</strong> submenu has several other commonly used keystrokes that are not found on Macintosh keyboards.</p>
 </div>
+
+<div class="section">
+<h1>What's the difference between the display number and the port number?</h1>
+<p>The port is just the display number plus 5900.
+If you enter a number less than 50, Chicken assumes it's a display number and
+adds 5900 to get the port. If you enter a number greater than or equal than 50,
+then Chicken assumes it's a port and uses that.</p>
+</div>
+
+<div class="section">
+<h1>Okay, so how do I connect on a port less than 50?</h1>
+
+<p>Enter <em>host</em>:<em>port</em> in the host name instead of just
+<em>host</em>.</p>
+</div>
+
+<div class="section">
+<h1>How can I import my server list from somewhere else?</h1>
+
+<p>Importing servers is not directly supported. However, as of Chicken 2.2b1,
+the server list is stored in a standard property list format which you can edit
+if you're comfortable with the command line and XML.</p>
+
+<p> First, make a backup copy of Chicken's preference file
+<strong>~/Library/Preferences/net.sourceforge.chicken.plist</strong>.
+Then run <strong>plutil -convert xml1
+~/Library/Preferences/net.sourceforge.chicken.plist</strong>. The file is now is
+now an XML representation of all of Chicken's preferences, including the
+servers, which are stored under the <strong>SavedServers2</strong> key. By
+looking at examples, it should be clear in what format to add new servers to the
+list. When you're done editing, type run <strong>plutil -convert binary1
+~/Library/Preferences/net.sourceforge.chicken.plist</strong> to convert back to
+binary format.</p>
+</div>
+
+<div class="section"><h1>What is the coolest feature of Chicken?</h1>
+
+<p>Chicken can tint the remote display for visual distinguishability. When the
+remote server is running a different OS, it is easy to distinguish local windows
+from remote windows because they look different. However, when the remote OS is
+also a Mac, then there is no immediate visual clue as to whether a window is
+remote or local. In the <strong>Colors</strong> tab of the <strong>Connection
+Profiles</strong>, you can choose to tint the remote display to provide such
+this visual hint.</p>
+</div>
+
+<div class="section"><h1>How can I help?</h1>
+<p>The source code is available
+<a href="https://sourceforge.net/scm/?type=svn&group_id=364722">on
+SourceForge</a>. Patches for bug fixes or feature additions can be submitted
+through the SourceForge tracker.</p>
+
+<p>What Chicken really needs is more complete translations. If you speak French,
+Italian, or Japanese, you'll notice that Chicken speaks a mixture of your
+language and English. These translations were inherited from CotVNC, but newer
+features are only in English. If you want to help translate, you can start by
+adding missing translations to the
+<a href="../French.lproj/Localizable.strings">French</a>,
+<a href="../Italian.lproj/Localizable.strings">Italian</a>, or
+<a href="../Japanese.lproj/Localizable.strings">Japanese</a> string lists or by
+adding starting with the
+<a href="../English.lproj/Localizable.strings">English-language</a> strings to
+provide a translation to a whole new language.</p>
+</div>
+
 </div></body></html>

@@ -40,26 +40,14 @@
 	[super dealloc];
 }
 
-- (void)checkSubEncoding
+- (void)setSubEncoding:(NSNumber *)aNumber
 {
-    if(subEncodingMask & rfbHextileRaw) {
-        int s = [frameBuffer bytesPerPixel] * currentTile.size.width * currentTile.size.height;
-        subEncodingMask = 0;
-        [rawReader setBufferSize:s];
-        [connection setReader:rawReader];
-	} else if(subEncodingMask & (rfbHextileZlibRaw | rfbHextileZlibHex)) {
-		[connection setReader:zLengthReader];
-    } else if(subEncodingMask & rfbHextileBackgroundSpecified) {
-        subEncodingMask &= ~rfbHextileBackgroundSpecified;
-        [connection setReader:backGroundReader];
-    } else if(subEncodingMask & rfbHextileForegroundSpecified) {
-        subEncodingMask &= ~(rfbHextileForegroundSpecified | rfbHextileSubrectsColoured);
-        [connection setReader:foreGroundReader];
-    } else if(subEncodingMask & rfbHextileAnySubrects) {
-        [connection setReader:numOfSubRectReader];
-    } else {
-        [self nextTile];
-    }
+    subEncodingMask = [aNumber unsignedCharValue];
+
+    if (subEncodingMask & (rfbHextileZlibRaw | rfbHextileZlibHex))
+        [connection setReader:zLengthReader];
+    else
+        [super setSubEncoding:aNumber];
 }
 
 - (void)inflateError

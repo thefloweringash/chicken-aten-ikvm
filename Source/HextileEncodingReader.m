@@ -30,10 +30,8 @@
     if (self = [super initWithUpdater: aUpdater connection: aConnection]) {
 		subEncodingReader = [[CARD8Reader alloc] initTarget:self action:@selector(setSubEncoding:)];
 		rawReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawRawTile:)];
-		backGroundReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setBackground:)];
-		foreGroundReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setForeground:)];
+        tileHeaderReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setTileHeader:)];
 		subColorRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawSubColorRects:)];
-		numOfSubRectReader = [[CARD8Reader alloc] initTarget:self action:@selector(setSubrects:)];
 		subRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawSubRects:)];
 	}
 	return self;
@@ -42,20 +40,11 @@
 - (void)dealloc
 {
     [rawReader release];
-    [backGroundReader release];
-    [foreGroundReader release];
+    [tileHeaderReader release];
     [subColorRectReader release];
-    [numOfSubRectReader release];
     [subRectReader release];
     [subEncodingReader release];
     [super dealloc];
-}
-
-- (void)setFrameBuffer:(id)aBuffer
-{
-    [super setFrameBuffer:aBuffer];
-    [backGroundReader setBufferSize:[aBuffer bytesPerPixel]];
-    [foreGroundReader setBufferSize:[aBuffer bytesPerPixel]];
 }
 
 - (void)readEncoding
@@ -92,33 +81,32 @@
     [connection setReader:subEncodingReader];
 }
 
-/* Sets the reader to the appropriate header byte, based on subEncodingMask */
-- (void)checkSubEncoding
+- (void)setSubEncoding:(NSNumber*)aNumber
 {
-    if(subEncodingMask & rfbHextileRaw) {
+    subEncodingMask = [aNumber unsignedCharValue];
+
+    if (subEncodingMask & rfbHextileRaw) {
         int s = [frameBuffer bytesPerPixel] * currentTile.size.width * currentTile.size.height;
         subEncodingMask = 0;
         [rawReader setBufferSize:s];
         [connection setReader:rawReader];
-    } else if(subEncodingMask & rfbHextileBackgroundSpecified) {
-        subEncodingMask &= ~rfbHextileBackgroundSpecified;
-        [connection setReader:backGroundReader];
-    } else if(subEncodingMask & rfbHextileForegroundSpecified) {
-        subEncodingMask &= ~(rfbHextileForegroundSpecified | rfbHextileSubrectsColoured);
-        [connection setReader:foreGroundReader];
-    } else if(subEncodingMask & rfbHextileAnySubrects) {
-        [connection setReader:numOfSubRectReader];
     } else {
-        [self nextTile];
-    }
-}
+        unsigned    headerSz = 0;
 
-- (void)setSubEncoding:(NSNumber*)aNumber
-{
-    if((subEncodingMask = [aNumber unsignedCharValue]) == 0) {
-        [self nextTile];
-    } else {
-        [self checkSubEncoding];
+        if (subEncodingMask & rfbHextileBackgroundSpecified)
+            headerSz += [frameBuffer bytesPerPixel];
+        if (subEncodingMask & rfbHextileForegroundSpecified) {
+            headerSz += [frameBuffer bytesPerPixel];
+            subEncodingMask &= ~rfbHextileSubrectsColoured;
+        }
+        if (subEncodingMask & rfbHextileAnySubrects)
+            headerSz += 1;
+
+        if(headerSz > 0) {
+            [tileHeaderReader setBufferSize:headerSz];
+            [connection setReader:tileHeaderReader];
+        } else
+            [self nextTile];
     }
 }
 
@@ -128,29 +116,34 @@
     [self nextTile];
 }
 
-- (void)setBackground:(NSData*)data
+- (void)setTileHeader:(NSData *)data
 {
-    [frameBuffer fillColor:&background fromPixel:(unsigned char*)[data bytes]];
-    [frameBuffer fillRect:currentTile withFbColor:&background];
-    [self checkSubEncoding];
-}
+    const unsigned char *bytes = [data bytes];
 
-- (void)setForeground:(NSData*)data
-{
-    [frameBuffer fillColor:&foreground fromPixel:(unsigned char*)[data bytes]];
-    [self checkSubEncoding];
-}
-
-- (void)setSubrects:(NSNumber*)aNumber
-{
-    numOfSubRects = [aNumber unsignedCharValue];
-    if(subEncodingMask & rfbHextileSubrectsColoured) {
-        [subColorRectReader setBufferSize:([frameBuffer bytesPerPixel] + 2) * numOfSubRects];
-        [connection setReader:subColorRectReader];
-    } else {
-        [subRectReader setBufferSize:numOfSubRects * 2];
-        [connection setReader:subRectReader];
+    if (subEncodingMask & rfbHextileBackgroundSpecified) {
+        [frameBuffer fillColor:&background fromPixel:bytes];
+        [frameBuffer fillRect:currentTile withFbColor:&background];
+        bytes += [frameBuffer bytesPerPixel];
     }
+    
+    if (subEncodingMask & rfbHextileForegroundSpecified) {
+        [frameBuffer fillColor:&foreground fromPixel:bytes];
+        bytes += [frameBuffer bytesPerPixel];
+    }
+
+    if (subEncodingMask & rfbHextileAnySubrects) {
+        numOfSubRects = *bytes;
+
+        if(subEncodingMask & rfbHextileSubrectsColoured) {
+            unsigned sz = ([frameBuffer bytesPerPixel] + 2) * numOfSubRects;
+            [subColorRectReader setBufferSize:sz];
+            [connection setReader:subColorRectReader];
+        } else {
+            [subRectReader setBufferSize:numOfSubRects * 2];
+            [connection setReader:subRectReader];
+        }
+    } else
+        [self nextTile];
 }
 
 - (void)drawSubColorRects:(NSData*)data

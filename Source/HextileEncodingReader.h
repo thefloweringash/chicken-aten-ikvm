@@ -23,13 +23,13 @@
 
 #define TILE_SIZE	16
 
+@class ByteBlockReader;
+
 @interface HextileEncodingReader : EncodingReader
 {
     id			subEncodingReader;
     id			rawReader;
-    id			backGroundReader;
-    id			foreGroundReader;
-    id			numOfSubRectReader;
+    ByteBlockReader *tileHeaderReader;
     id			subColorRectReader;
     id			subRectReader;
     FrameBufferColor	background;
@@ -40,6 +40,7 @@
 }
 
 - (void)nextTile;
+- (void)setSubEncoding:(NSNumber *)aNumber;
 - (void)drawSubColorRects:(NSData*)data;
 - (void)drawSubRects:(NSData*)data;
 - (void)drawRawTile:(NSData*)data;

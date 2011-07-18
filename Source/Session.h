@@ -54,6 +54,7 @@
 
     IBOutlet NSPanel *passwordSheet;
     IBOutlet NSTextField *passwordField;
+    IBOutlet NSTextField *authHeader;
     IBOutlet NSTextField *authMessage;
     IBOutlet NSButton *rememberNewPassword;
 

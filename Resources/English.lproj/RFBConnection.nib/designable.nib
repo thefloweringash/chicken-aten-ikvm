@@ -10,9 +10,7 @@
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">851</string>
 		</object>
-		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="88"/>
-		</array>
+		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 		</array>
@@ -387,6 +385,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 91}, {156, 17}}</string>
 							<reference key="NSSuperview" ref="759432549"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="736712432">
 								<int key="NSCellFlags">68288064</int>
@@ -403,6 +402,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{291, 16}, {105, 32}}</string>
 							<reference key="NSSuperview" ref="759432549"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="587707808">
 								<int key="NSCellFlags">67239424</int>
@@ -423,6 +423,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{195, 16}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="759432549"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="680934780">
 								<int key="NSCellFlags">67239424</int>
@@ -443,6 +444,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{185, 86}, {205, 22}}</string>
 							<reference key="NSSuperview" ref="759432549"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSecureTextFieldCell" key="NSCell" id="871780468">
 								<int key="NSCellFlags">343014976</int>
@@ -463,6 +465,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{19, 126}, {318, 22}}</string>
 							<reference key="NSSuperview" ref="759432549"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="444806326">
 								<int key="NSCellFlags">-2079195584</int>
@@ -486,6 +489,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 156}, {376, 17}}</string>
 							<reference key="NSSuperview" ref="759432549"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="85807823">
 								<int key="NSCellFlags">68288064</int>
@@ -790,6 +794,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{183, 62}, {153, 18}}</string>
 							<reference key="NSSuperview" ref="759432549"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="746493959">
 								<int key="NSCellFlags">67239424</int>
@@ -815,6 +820,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 					</array>
 					<string key="NSFrameSize">{410, 193}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -829,7 +835,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="158543921">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSButton" id="637147310">
@@ -837,7 +843,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{288, 12}, {105, 32}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="932273967">
 								<int key="NSCellFlags">67239424</int>
@@ -858,7 +863,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{100, 82}, {238, 17}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="70973106">
 								<int key="NSCellFlags">68288064</int>
@@ -1160,7 +1164,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<object class="NSPSMatrix" key="NSDrawMatrix"/>
 							<string key="NSFrame">{{371, 83}, {16, 16}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<int key="NSpiFlags">20746</int>
 							<double key="NSMaxValue">100</double>
 						</object>
@@ -1169,7 +1172,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{100, 57}, {290, 17}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="572435265">
 								<int key="NSCellFlags">68288064</int>
@@ -1194,7 +1196,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							</set>
 							<string key="NSFrame">{{20, 35}, {64, 64}}</string>
 							<reference key="NSSuperview" ref="158543921"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSImageCell" key="NSCell" id="541248210">
 								<int key="NSCellFlags">67239424</int>
@@ -1213,8 +1214,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						</object>
 					</array>
 					<string key="NSFrameSize">{407, 119}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -1405,6 +1404,14 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						<reference key="destination" ref="882652889"/>
 					</object>
 					<int key="connectionID">147</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">authHeader</string>
+						<reference key="source" ref="501034350"/>
+						<reference key="destination" ref="1060207431"/>
+					</object>
+					<int key="connectionID">150</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1922,7 +1929,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">149</int>
+			<int key="maxID">150</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2052,6 +2059,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						<string key="_reconnectIndicator">NSProgressIndicator</string>
 						<string key="_reconnectPanel">NSPanel</string>
 						<string key="_reconnectReason">NSTextField</string>
+						<string key="authHeader">NSTextField</string>
 						<string key="authMessage">NSTextField</string>
 						<string key="infoField">id</string>
 						<string key="newTitleField">id</string>
@@ -2077,6 +2085,10 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="_reconnectReason">
 							<string key="name">_reconnectReason</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="authHeader">
+							<string key="name">authHeader</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="authMessage">

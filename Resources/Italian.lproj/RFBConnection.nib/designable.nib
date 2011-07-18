@@ -12,8 +12,8 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="111"/>
 			<integer value="7"/>
-			<integer value="110"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -846,7 +846,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="338513237">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -855,7 +855,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{288, 12}, {105, 32}}</string>
 							<reference key="NSSuperview" ref="338513237"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="273934040">
 								<int key="NSCellFlags">67239424</int>
@@ -876,7 +875,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{99, 82}, {238, 17}}</string>
 							<reference key="NSSuperview" ref="338513237"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="761181179">
 								<int key="NSCellFlags">68288064</int>
@@ -1179,7 +1177,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<object class="NSPSMatrix" key="NSDrawMatrix"/>
 							<string key="NSFrame">{{371, 83}, {16, 16}}</string>
 							<reference key="NSSuperview" ref="338513237"/>
-							<reference key="NSWindow"/>
 							<int key="NSpiFlags">20746</int>
 							<double key="NSMaxValue">100</double>
 						</object>
@@ -1188,7 +1185,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{99, 57}, {291, 17}}</string>
 							<reference key="NSSuperview" ref="338513237"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="530025441">
 								<int key="NSCellFlags">68288064</int>
@@ -1217,7 +1213,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							</object>
 							<string key="NSFrame">{{20, 35}, {64, 64}}</string>
 							<reference key="NSSuperview" ref="338513237"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSImageCell" key="NSCell" id="55491803">
 								<int key="NSCellFlags">130560</int>
@@ -1235,8 +1230,6 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						</object>
 					</object>
 					<string key="NSFrameSize">{407, 119}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -1428,6 +1421,14 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 						<reference key="destination" ref="149009572"/>
 					</object>
 					<int key="connectionID">144</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">authHeader</string>
+						<reference key="source" ref="552548069"/>
+						<reference key="destination" ref="508301363"/>
+					</object>
+					<int key="connectionID">147</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2098,7 +2099,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">146</int>
+			<int key="maxID">147</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2397,6 +2398,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>_reconnectIndicator</string>
 							<string>_reconnectPanel</string>
 							<string>_reconnectReason</string>
+							<string>authHeader</string>
 							<string>authMessage</string>
 							<string>infoField</string>
 							<string>newTitleField</string>
@@ -2415,6 +2417,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSProgressIndicator</string>
 							<string>NSPanel</string>
+							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>id</string>
@@ -2438,6 +2441,7 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							<string>_reconnectIndicator</string>
 							<string>_reconnectPanel</string>
 							<string>_reconnectReason</string>
+							<string>authHeader</string>
 							<string>authMessage</string>
 							<string>infoField</string>
 							<string>newTitleField</string>
@@ -2464,6 +2468,10 @@ MApSZWN0YW5nbGVzOiA4OQ</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">_reconnectReason</string>
+								<string key="candidateClassName">NSTextField</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">authHeader</string>
 								<string key="candidateClassName">NSTextField</string>
 							</object>
 							<object class="IBToOneOutletInfo">

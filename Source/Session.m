@@ -43,6 +43,8 @@
 
 - (void)startTimerForReconnectSheet;
 
+- (void)displayPasswordSheet;
+
 @end
 
 @implementation Session
@@ -233,11 +235,24 @@
         [self terminateConnection:NSLocalizedString(@"AuthenticationFailed", nil)];
 
     [self connectionProblem];
+    [authHeader setStringValue:NSLocalizedString(@"AuthenticationFailed", nil)];
     [authMessage setStringValue: aReason];
-    [self promptForPassword];
+    [[passwordSheet defaultButtonCell] setTitle:NSLocalizedString(@"Reconnect",
+            nil)];
+    [self displayPasswordSheet];
 }
 
 - (void)promptForPassword
+{
+    [authHeader setStringValue:NSLocalizedString(@"AuthenticationRequired",
+            nil)];
+    [authMessage setStringValue:@""];
+    [[passwordSheet defaultButtonCell] setTitle:NSLocalizedString(@"Connect",
+            nil)];
+    [self displayPasswordSheet];
+}
+
+- (void)displayPasswordSheet
 {
     if ([server_ respondsToSelector:@selector(setRememberPassword:)])
         [rememberNewPassword setState: [server_ rememberPassword]];

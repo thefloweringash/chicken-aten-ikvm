@@ -503,7 +503,7 @@
 - (void)connectionSucceeded: (RFBConnection *)theConnection
 {
     if (![mServer rememberPassword])
-        [mServer setPassword: @""];
+        [mServer setPassword: nil];
     [[RFBConnectionManager sharedManager] successfulConnection:theConnection
                                                       toServer:mServer];
 

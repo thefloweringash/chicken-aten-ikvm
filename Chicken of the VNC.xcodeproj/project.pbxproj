@@ -288,7 +288,6 @@
 		E291FB24088168E20061216E /* QueuedEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E291FB22088168E20061216E /* QueuedEvent.m */; };
 		E2929DD507675DE800190669 /* MyApp.h in Headers */ = {isa = PBXBuildFile; fileRef = E2929DD307675DE800190669 /* MyApp.h */; };
 		E2929DD607675DE800190669 /* MyApp.m in Sources */ = {isa = PBXBuildFile; fileRef = E2929DD407675DE800190669 /* MyApp.m */; };
-		E2B0839D0763A51700CE24C1 /* KeyEquivalentScenarios.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2B0839B0763A51700CE24C1 /* KeyEquivalentScenarios.plist */; };
 		E2B083E20763AA7D00CE24C1 /* ServerFromConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B083E00763AA7D00CE24C1 /* ServerFromConnection.m */; };
 		E2B083E30763AA7D00CE24C1 /* ServerFromConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = E2B083E10763AA7D00CE24C1 /* ServerFromConnection.h */; };
 		E2B083EF0763AA9A00CE24C1 /* ListenerController.h in Headers */ = {isa = PBXBuildFile; fileRef = E2B083ED0763AA9A00CE24C1 /* ListenerController.h */; };
@@ -363,7 +362,6 @@
 		DA5B897011E193DC004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/RFBConnection.nib; sourceTree = "<group>"; };
 		DA5B897111E193E4004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ServerDisplay.nib; sourceTree = "<group>"; };
 		DA5B897211E193EF004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Resources/Japanese.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		DA5B897311E193FA004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Japanese; path = Resources/Japanese.lproj/KeyEquivalentScenarios.plist; sourceTree = "<group>"; };
 		DA5B897411E1940A004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Resources/Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA602FFD11E03B5400271F8F /* bmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bmp.c; path = "libjpeg-turbo/bmp.c"; sourceTree = "<group>"; };
 		DA602FFE11E03B5400271F8F /* bmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bmp.h; path = "libjpeg-turbo/bmp.h"; sourceTree = "<group>"; };
@@ -552,11 +550,9 @@
 		E291FB22088168E20061216E /* QueuedEvent.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QueuedEvent.m; sourceTree = "<group>"; };
 		E2929DD307675DE800190669 /* MyApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyApp.h; sourceTree = "<group>"; };
 		E2929DD407675DE800190669 /* MyApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyApp.m; sourceTree = "<group>"; };
-		E2B0839C0763A51700CE24C1 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = English; path = Resources/English.lproj/KeyEquivalentScenarios.plist; sourceTree = "<group>"; };
 		E2B083A30763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ServerDisplay.nib; sourceTree = "<group>"; };
 		E2B083A40763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
 		E2B083A50763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/RFBConnection.nib; sourceTree = "<group>"; };
-		E2B083A60763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = French; path = Resources/French.lproj/KeyEquivalentScenarios.plist; sourceTree = "<group>"; };
 		E2B083A70763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = Resources/French.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E2B083A80763A79F00CE24C1 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/Preferences.nib; sourceTree = "<group>"; };
 		E2B083A90763A79F00CE24C1 /* French */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = French; path = Resources/French.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -586,7 +582,6 @@
 		E2F48D78040EDD5100BD55BA /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		E2F5464B0768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E2F5464C0768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/RFBConnection.nib; sourceTree = "<group>"; };
-		E2F5464D0768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Italian; path = Resources/Italian.lproj/KeyEquivalentScenarios.plist; sourceTree = "<group>"; };
 		E2F5464E0768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
 		E2F5464F0768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/Preferences.nib; sourceTree = "<group>"; };
 		E2F546500768C79D00AB2600 /* Italian */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Italian; path = Resources/Italian.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -747,7 +742,6 @@
 				F5DC7177033DB40D01A8010C /* icon.icns */,
 				E21FE256062B6C8D0059585C /* Info.plist */,
 				F5DC7172033DB3DC01A8010C /* InfoPlist.strings */,
-				E2B0839B0763A51700CE24C1 /* KeyEquivalentScenarios.plist */,
 				E21FE261062B6D310059585C /* Localizable.strings */,
 				F5DC717C033DB40D01A8010C /* rfbCursor.tiff */,
 				F5DC717B033DB40D01A8010C /* rfbCursor2.tiff */,
@@ -1346,7 +1340,6 @@
 				E2F3A7E806D4A687005EB917 /* ConnectionDialog.nib in Resources */,
 				E2F3A99E06D4BFD8005EB917 /* ProfileManager.nib in Resources */,
 				E2CA651806DA451600B70BDF /* help in Resources */,
-				E2B0839D0763A51700CE24C1 /* KeyEquivalentScenarios.plist in Resources */,
 				E2B083F90763AAC200CE24C1 /* ListenDialog.nib in Resources */,
 				7FB3EA8D0804ECDB003757C9 /* CotVNC.scriptTerminology in Resources */,
 				7FB3EA8E0804ECE0003757C9 /* CotVNC.scriptSuite in Resources */,
@@ -1572,17 +1565,6 @@
 				DA5B897411E1940A004F9B7B /* Japanese */,
 			);
 			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		E2B0839B0763A51700CE24C1 /* KeyEquivalentScenarios.plist */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E2B0839C0763A51700CE24C1 /* English */,
-				E2B083A60763A79F00CE24C1 /* French */,
-				E2F5464D0768C79D00AB2600 /* Italian */,
-				DA5B897311E193FA004F9B7B /* Japanese */,
-			);
-			name = KeyEquivalentScenarios.plist;
 			sourceTree = "<group>";
 		};
 		E2B083F70763AAC200CE24C1 /* ListenDialog.nib */ = {

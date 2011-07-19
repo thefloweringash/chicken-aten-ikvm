@@ -66,7 +66,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 
 - (void)combineRGB:(int*)rgb pixels:(unsigned)length into:(unsigned char*)v
 {
-    int pix, bpp = [self tightBytesPerPixel];
+    int pix, bpp = tightBytesPerPixel;
 
 	switch(bpp) {
 		case 1:
@@ -140,7 +140,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 	unsigned char c;
     int pix;
     
-    switch([self tightBytesPerPixel]) {
+    switch(tightBytesPerPixel) {
         case 1:
             while(length--) {
 				c = *v++;

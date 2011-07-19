@@ -88,11 +88,9 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
 {	
     [self stopListener];
     [self savePrefs];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
 	[super dealloc];
-		
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:ProfileListChangeMsg
-												  object:(id)[ProfileDataManager sharedInstance]];
 }
 
 - (void)windowDidLoad

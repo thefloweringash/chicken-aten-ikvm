@@ -94,7 +94,7 @@ static inline unsigned int cvt_pixel(const unsigned char* v, FrameBuffer *this)
 - (void)fillColor:(FrameBufferColor*)fbc
    fromTightPixel:(const unsigned char*)pixValue
 {
-	if([self tightBytesPerPixel] == 3) {
+	if(tightBytesPerPixel == 3) {
 		*((FBColor*)fbc) = cvt_pixel24(pixValue, self);
 	} else {
 		*((FBColor*)fbc) = cvt_pixel(pixValue, self);
@@ -210,7 +210,7 @@ printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect
 /* --------------------------------------------------------------------------------- */
 - (void)fillRect:(NSRect)aRect tightPixel:(const unsigned char*)pixValue
 {
-    if([self tightBytesPerPixel] == 3) {
+    if(tightBytesPerPixel == 3) {
         [self fillRect:aRect withColor:[self colorFromPixel24:pixValue]];
     } else {
         [self fillRect:aRect withPixel:pixValue];
@@ -275,7 +275,7 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
 /* --------------------------------------------------------------------------------- */
 - (void)putRect:(NSRect)aRect fromTightData:(const unsigned char*)data
 {
-    if([self tightBytesPerPixel] == 3) {
+    if(tightBytesPerPixel == 3) {
         FBColor* start;
         unsigned int stride, i, lines;
 

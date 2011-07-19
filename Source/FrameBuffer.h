@@ -40,6 +40,7 @@ typedef unsigned char	FrameBufferPaletteIndex;
     BOOL		isBig;
     NSSize		size;
     int			bytesPerPixel;
+    unsigned    tightBytesPerPixel;
     
 @public
     unsigned int	redClut[256];
@@ -66,7 +67,6 @@ typedef unsigned char	FrameBufferPaletteIndex;
 
     BOOL			forceServerBigEndian;
     BOOL            serverIsBigEndian;
-	unsigned int	*tightBytesPerPixelOverride;
 }
 
 + (BOOL)bigEndian;

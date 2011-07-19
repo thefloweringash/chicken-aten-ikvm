@@ -235,6 +235,16 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
     memcpy(&pixelFormat, theFormat, sizeof(pixelFormat));
     bytesPerPixel = pixelFormat.bitsPerPixel / 8;
 
+    if ((pixelFormat.bitsPerPixel == 32) &&
+		    (pixelFormat.depth == 24) &&
+            (pixelFormat.redMax == 0xff) &&
+            (pixelFormat.greenMax == 0xff) &&
+            (pixelFormat.blueMax == 0xff)) {
+        tightBytesPerPixel = 3;
+    } else {
+        tightBytesPerPixel = bytesPerPixel;
+    }
+
     redShiftFromFull = [self shiftForColorMax: theFormat->redMax];
     greenShiftFromFull = [self shiftForColorMax: theFormat->greenMax];
     blueShiftFromFull = [self shiftForColorMax: theFormat->blueMax];
@@ -345,14 +355,6 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
     return self;
 }
 
-/* --------------------------------------------------------------------------------- */
-- (void)dealloc
-{
-	if ( tightBytesPerPixelOverride )
-		free( tightBytesPerPixelOverride );
-	[super dealloc];
-}
-
 #if 0
 /* --------------------------------------------------------------------------------- */
 - (void)monitor:(id)sender
@@ -403,25 +405,13 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 
 - (unsigned int)tightBytesPerPixel
 {
-	if ( tightBytesPerPixelOverride )
-		return *tightBytesPerPixelOverride;
-    if((pixelFormat.bitsPerPixel == 32) &&
-		(pixelFormat.depth == 24) &&
-        (pixelFormat.redMax == 0xff) &&
-        (pixelFormat.greenMax == 0xff) &&
-        (pixelFormat.blueMax == 0xff)) {
-        return 3;
-    } else {
-        return bytesPerPixel;
-    }
+    return tightBytesPerPixel;
 }
 
 /* --------------------------------------------------------------------------------- */
 - (void)setTightBytesPerPixelOverride: (unsigned int)count
 {
-	if ( ! tightBytesPerPixelOverride )
-		tightBytesPerPixelOverride = (unsigned int *)malloc(sizeof(unsigned int));
-	*tightBytesPerPixelOverride = count;
+    tightBytesPerPixel = count;
 }
 
 /* --------------------------------------------------------------------------------- */

@@ -490,6 +490,7 @@
                                                  delegate:self
                                                    window:window] retain];
     [[ServerDataManager sharedInstance] save]; // just in case we crash
+    [[NSUserDefaults standardUserDefaults] synchronize];
     if (connectionWaiter == nil)
         [self connectionFailed];
 }

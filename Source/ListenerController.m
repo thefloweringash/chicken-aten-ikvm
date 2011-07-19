@@ -275,7 +275,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     NSFileHandle * incomingConnection = [[aNotification userInfo] objectForKey:NSFileHandleNotificationFileHandleItem];
     ServerFromConnection    *server;
 
-    [[aNotification object] acceptConnectionInBackgroundAndNotify];
+    [self stopListener];
     
     RFBConnectionManager* cm = [RFBConnectionManager sharedManager];
     server = [[ServerFromConnection alloc] initFromConnection:incomingConnection];

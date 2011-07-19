@@ -24,6 +24,31 @@ based on the Chicken of the VNC code, with several improvements.</p>
 <div class="section">
 	<div id="versionHistory">
 	<dl>
+        <dt>Version 2.2b1 (???)</dt>
+        <dd><ul>
+            <li>- Added ability to have Chicken set up SSH tunnels.</li>
+            <li>- Reconnections no longer open a new window.</li>
+            <li>- Minor speed improvments in Hextile and ZlibHex encodings.</li>
+            <li>- Fixed bug with refresh getting stuck while using the ZlibHex
+            encoding.</li>
+            <li>- If no password has been set, prompts for one rather than
+            trying a blank password.</li>
+            <li>- Fixed behavior of display box when disabled.</li>
+            <li>- Improved formatting of text in performance preferences
+            tab.</li>
+            <li>- Reconnecting panel now has an icon.</li>
+            <li>- Tweaked layout of modifier tab in profiles.</li>
+            <li>- Force reconnect is now disabled on reverse connections.</li>
+            <li>- Upgraded libjpeg-turbo to version 1.1.0.</li>
+            <li>- Take default keyboard preferences from NIB instead of
+            KeyEquivalentScenarios.plist.</li>
+            <li>- Fixed handling of URLs with unspecified port.</li>
+            <li>- More efficient at handling lots of data coming in small
+            pieces.</li>
+            <li>- Servers now saved in property list format.</li>
+            <li>- Replaced funcitons for manipulating KeyChain with
+            non-deprecated ones.</li>
+        </dd>
         <dt>Version 2.1.1 (February 12, 2011)</dt>
         <dd><ul>
             <li>- Fixed bug with changes to the update speed not taking effect

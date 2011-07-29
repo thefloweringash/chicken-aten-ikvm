@@ -133,28 +133,6 @@
 		DA335CD012DA4A6C00C70987 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = DA335CCE12DA4A6C00C70987 /* Session.m */; };
 		DA3648F51293A26800FB8272 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3648F41293A26800FB8272 /* Sparkle.framework */; };
 		DA36490C1293A2AE00FB8272 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DA3648F41293A26800FB8272 /* Sparkle.framework */; };
-		DA60301611E03B5400271F8F /* bmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DA602FFD11E03B5400271F8F /* bmp.c */; };
-		DA60301711E03B5400271F8F /* bmp.h in Headers */ = {isa = PBXBuildFile; fileRef = DA602FFE11E03B5400271F8F /* bmp.h */; };
-		DA60301811E03B5400271F8F /* cderror.h in Headers */ = {isa = PBXBuildFile; fileRef = DA602FFF11E03B5400271F8F /* cderror.h */; };
-		DA60301911E03B5400271F8F /* cdjpeg.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300011E03B5400271F8F /* cdjpeg.c */; };
-		DA60301C11E03B5400271F8F /* jcapimin.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300311E03B5400271F8F /* jcapimin.c */; };
-		DA60301D11E03B5400271F8F /* jcapistd.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300411E03B5400271F8F /* jcapistd.c */; };
-		DA60301E11E03B5400271F8F /* jccoefct.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300511E03B5400271F8F /* jccoefct.c */; };
-		DA60301F11E03B5400271F8F /* jccolor.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300611E03B5400271F8F /* jccolor.c */; };
-		DA60302011E03B5400271F8F /* jcdctmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300711E03B5400271F8F /* jcdctmgr.c */; };
-		DA60302211E03B5400271F8F /* jchuff.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60300911E03B5400271F8F /* jchuff.h */; };
-		DA60302311E03B5400271F8F /* jcinit.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300A11E03B5400271F8F /* jcinit.c */; };
-		DA60302411E03B5400271F8F /* jcmainct.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300B11E03B5400271F8F /* jcmainct.c */; };
-		DA60302511E03B5400271F8F /* jcmarker.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300C11E03B5400271F8F /* jcmarker.c */; };
-		DA60302611E03B5400271F8F /* jcmaster.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300D11E03B5400271F8F /* jcmaster.c */; };
-		DA60302711E03B5400271F8F /* jcomapi.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300E11E03B5400271F8F /* jcomapi.c */; };
-		DA60302811E03B5400271F8F /* jconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60300F11E03B5400271F8F /* jconfig.h */; };
-		DA60302911E03B5400271F8F /* jcparam.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60301011E03B5400271F8F /* jcparam.c */; };
-		DA60302A11E03B5400271F8F /* jcphuff.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60301111E03B5400271F8F /* jcphuff.c */; };
-		DA60302B11E03B5400271F8F /* jcprepct.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60301211E03B5400271F8F /* jcprepct.c */; };
-		DA60302C11E03B5400271F8F /* jcsample.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60301311E03B5400271F8F /* jcsample.c */; };
-		DA60302D11E03B5400271F8F /* jctrans.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60301411E03B5400271F8F /* jctrans.c */; };
-		DA60302E11E03B5400271F8F /* jdapimin.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60301511E03B5400271F8F /* jdapimin.c */; };
 		DA60307011E03BA600271F8F /* jdapistd.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303111E03BA600271F8F /* jdapistd.c */; };
 		DA60307111E03BA600271F8F /* jdatadst.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303211E03BA600271F8F /* jdatadst.c */; };
 		DA60307211E03BA600271F8F /* jdatasrc.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303311E03BA600271F8F /* jdatasrc.c */; };
@@ -171,13 +149,7 @@
 		DA60307D11E03BA600271F8F /* jdmerge.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303E11E03BA600271F8F /* jdmerge.c */; };
 		DA60307E11E03BA600271F8F /* jdphuff.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303F11E03BA600271F8F /* jdphuff.c */; };
 		DA60307F11E03BA600271F8F /* jdpostct.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304011E03BA600271F8F /* jdpostct.c */; };
-		DA60308011E03BA600271F8F /* jdsample.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304111E03BA600271F8F /* jdsample.c */; };
-		DA60308111E03BA600271F8F /* jdtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304211E03BA600271F8F /* jdtrans.c */; };
-		DA60308211E03BA600271F8F /* jerror.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304311E03BA600271F8F /* jerror.c */; };
 		DA60308311E03BA600271F8F /* jerror.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60304411E03BA600271F8F /* jerror.h */; };
-		DA60308411E03BA600271F8F /* jfdctflt.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304511E03BA600271F8F /* jfdctflt.c */; };
-		DA60308511E03BA600271F8F /* jfdctfst.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304611E03BA600271F8F /* jfdctfst.c */; };
-		DA60308611E03BA600271F8F /* jfdctint.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304711E03BA600271F8F /* jfdctint.c */; };
 		DA60308711E03BA600271F8F /* jidctflt.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304811E03BA600271F8F /* jidctflt.c */; };
 		DA60308811E03BA600271F8F /* jidctfst.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304911E03BA600271F8F /* jidctfst.c */; };
 		DA60308911E03BA600271F8F /* jidctint.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304A11E03BA600271F8F /* jidctint.c */; };
@@ -188,30 +160,9 @@
 		DA60308E11E03BA600271F8F /* jmemsys.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60304F11E03BA600271F8F /* jmemsys.h */; };
 		DA60308F11E03BA600271F8F /* jmorecfg.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305011E03BA600271F8F /* jmorecfg.h */; };
 		DA60309011E03BA600271F8F /* jpegint.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305111E03BA600271F8F /* jpegint.h */; };
-		DA60309411E03BA600271F8F /* jquant1.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305511E03BA600271F8F /* jquant1.c */; };
-		DA60309511E03BA600271F8F /* jquant2.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305611E03BA600271F8F /* jquant2.c */; };
 		DA60309711E03BA600271F8F /* jsimd.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305811E03BA600271F8F /* jsimd.h */; };
 		DA60309811E03BA600271F8F /* jsimddct.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305911E03BA600271F8F /* jsimddct.h */; };
-		DA60309911E03BA600271F8F /* jutils.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305A11E03BA600271F8F /* jutils.c */; };
 		DA60309A11E03BA600271F8F /* jversion.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305B11E03BA600271F8F /* jversion.h */; };
-		DA60309B11E03BA600271F8F /* rdbmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305C11E03BA600271F8F /* rdbmp.c */; };
-		DA60309C11E03BA600271F8F /* rdcolmap.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305D11E03BA600271F8F /* rdcolmap.c */; };
-		DA60309D11E03BA600271F8F /* rdgif.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305E11E03BA600271F8F /* rdgif.c */; };
-		DA60309F11E03BA600271F8F /* rdppm.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306011E03BA600271F8F /* rdppm.c */; };
-		DA6030A011E03BA600271F8F /* rdrle.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306111E03BA600271F8F /* rdrle.c */; };
-		DA6030A111E03BA600271F8F /* rdswitch.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306211E03BA600271F8F /* rdswitch.c */; };
-		DA6030A211E03BA600271F8F /* rdtarga.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306311E03BA600271F8F /* rdtarga.c */; };
-		DA6030A311E03BA600271F8F /* rrtimer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60306411E03BA600271F8F /* rrtimer.h */; };
-		DA6030A411E03BA600271F8F /* rrutil.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60306511E03BA600271F8F /* rrutil.h */; };
-		DA6030A511E03BA600271F8F /* transupp.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306611E03BA600271F8F /* transupp.c */; };
-		DA6030A611E03BA600271F8F /* transupp.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60306711E03BA600271F8F /* transupp.h */; };
-		DA6030A711E03BA600271F8F /* turbojpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60306811E03BA600271F8F /* turbojpeg.h */; };
-		DA6030A811E03BA600271F8F /* turbojpegl.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306911E03BA600271F8F /* turbojpegl.c */; };
-		DA6030A911E03BA600271F8F /* wrbmp.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306A11E03BA600271F8F /* wrbmp.c */; };
-		DA6030AA11E03BA600271F8F /* wrgif.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306B11E03BA600271F8F /* wrgif.c */; };
-		DA6030AC11E03BA600271F8F /* wrppm.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306D11E03BA600271F8F /* wrppm.c */; };
-		DA6030AD11E03BA600271F8F /* wrrle.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306E11E03BA600271F8F /* wrrle.c */; };
-		DA6030AE11E03BA600271F8F /* wrtarga.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60306F11E03BA600271F8F /* wrtarga.c */; };
 		DA6030B511E03BE600271F8F /* jpeglib.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305211E03BA600271F8F /* jpeglib.h */; };
 		DA60312111E0401E00271F8F /* jccolmmx.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030E411E0401E00271F8F /* jccolmmx.asm */; };
 		DA60312311E0401E00271F8F /* jccolss2.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030E611E0401E00271F8F /* jccolss2.asm */; };
@@ -219,16 +170,13 @@
 		DA60312611E0401E00271F8F /* jcqntmmx.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030E911E0401E00271F8F /* jcqntmmx.asm */; };
 		DA60312811E0401E00271F8F /* jcqnts2f.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030EB11E0401E00271F8F /* jcqnts2f.asm */; };
 		DA60312A11E0401E00271F8F /* jcqnts2i.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030ED11E0401E00271F8F /* jcqnts2i.asm */; };
-		DA60312B11E0401E00271F8F /* jcqntsse.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030EE11E0401E00271F8F /* jcqntsse.asm */; };
 		DA60312C11E0401E00271F8F /* jcsammmx.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030EF11E0401E00271F8F /* jcsammmx.asm */; };
-		DA60312E11E0401E00271F8F /* jcsamss2.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030F111E0401E00271F8F /* jcsamss2.asm */; };
 		DA60313211E0401E00271F8F /* jdcolmmx.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030F511E0401E00271F8F /* jdcolmmx.asm */; };
 		DA60313411E0401E00271F8F /* jdcolss2.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030F711E0401E00271F8F /* jdcolss2.asm */; };
 		DA60313611E0401E00271F8F /* jdmermmx.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030F911E0401E00271F8F /* jdmermmx.asm */; };
 		DA60313811E0401E00271F8F /* jdmerss2.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030FB11E0401E00271F8F /* jdmerss2.asm */; };
 		DA60313C11E0401E00271F8F /* jdsammmx.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030FF11E0401E00271F8F /* jdsammmx.asm */; };
 		DA60313E11E0401E00271F8F /* jdsamss2.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA60310111E0401E00271F8F /* jdsamss2.asm */; };
-		DA60313F11E0401E00271F8F /* jf3dnflt.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA60310211E0401E00271F8F /* jf3dnflt.asm */; };
 		DA60314011E0401E00271F8F /* jfmmxfst.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA60310311E0401E00271F8F /* jfmmxfst.asm */; };
 		DA60314111E0401E00271F8F /* jfmmxint.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA60310411E0401E00271F8F /* jfmmxint.asm */; };
 		DA60314311E0401E00271F8F /* jfss2fst.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA60310611E0401E00271F8F /* jfss2fst.asm */; };
@@ -254,13 +202,21 @@
 		DA80A6F011E27B430076CB0A /* CursorPseudoEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA80A6EE11E27B430076CB0A /* CursorPseudoEncodingReader.m */; };
 		DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */; };
 		DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */; };
+		DABF105B13E346AC00558AE1 /* jcsamss2.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030F111E0401E00271F8F /* jcsamss2.asm */; };
+		DABF105E13E346B600558AE1 /* jcqntsse.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030EE11E0401E00271F8F /* jcqntsse.asm */; };
+		DABF107313E3470800558AE1 /* jaricom.c in Sources */ = {isa = PBXBuildFile; fileRef = DAD344B71304648200134E29 /* jaricom.c */; };
+		DABF107A13E3472100558AE1 /* jconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60300F11E03B5400271F8F /* jconfig.h */; };
+		DABF108A13E3473F00558AE1 /* jdapimin.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60301511E03B5400271F8F /* jdapimin.c */; };
+		DABF109113E3475B00558AE1 /* jutils.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305A11E03BA600271F8F /* jutils.c */; };
+		DABF109613E3476600558AE1 /* jquant2.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305611E03BA600271F8F /* jquant2.c */; };
+		DABF109713E3476700558AE1 /* jquant1.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305511E03BA600271F8F /* jquant1.c */; };
+		DABF10A013E3477900558AE1 /* jf3dnflt.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA60310211E0401E00271F8F /* jf3dnflt.asm */; };
+		DABF10A913E3479000558AE1 /* jerror.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304311E03BA600271F8F /* jerror.c */; };
+		DABF111913E34A7600558AE1 /* jdsample.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304111E03BA600271F8F /* jdsample.c */; };
+		DABF111E13E34A9000558AE1 /* jcomapi.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300E11E03B5400271F8F /* jcomapi.c */; };
 		DAC8077E12FEC38400C4ADB6 /* ssh-helper.sh in Resources */ = {isa = PBXBuildFile; fileRef = DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */; };
-		DAD344BD1304648200134E29 /* jcarith.c in Sources */ = {isa = PBXBuildFile; fileRef = DAD344B81304648200134E29 /* jcarith.c */; };
 		DAD344BE1304648200134E29 /* jdarith.c in Sources */ = {isa = PBXBuildFile; fileRef = DAD344B91304648200134E29 /* jdarith.c */; };
 		DAD344BF1304648200134E29 /* jpegcomp.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD344BA1304648200134E29 /* jpegcomp.h */; };
-		DAD344CE1304656F00134E29 /* cdjpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60300111E03B5400271F8F /* cdjpeg.h */; };
-		DAD344D31304657500134E29 /* jaricom.c in Sources */ = {isa = PBXBuildFile; fileRef = DAD344B71304648200134E29 /* jaricom.c */; };
-		DAD344D61304658700134E29 /* jchuff.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300811E03B5400271F8F /* jchuff.c */; };
 		DAD6DEE112DCF37A001FD9D6 /* AuthPrompt.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */; };
 		DAD6DEE212DCF37A001FD9D6 /* AuthPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */; };
 		DAD6DEEA12DCF4A3001FD9D6 /* AuthPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = DAD6DEE812DCF4A3001FD9D6 /* AuthPrompt.nib */; };
@@ -363,29 +319,8 @@
 		DA5B897111E193E4004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ServerDisplay.nib; sourceTree = "<group>"; };
 		DA5B897211E193EF004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Resources/Japanese.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DA5B897411E1940A004F9B7B /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Resources/Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DA602FFD11E03B5400271F8F /* bmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bmp.c; path = "libjpeg-turbo/bmp.c"; sourceTree = "<group>"; };
-		DA602FFE11E03B5400271F8F /* bmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bmp.h; path = "libjpeg-turbo/bmp.h"; sourceTree = "<group>"; };
-		DA602FFF11E03B5400271F8F /* cderror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cderror.h; path = "libjpeg-turbo/cderror.h"; sourceTree = "<group>"; };
-		DA60300011E03B5400271F8F /* cdjpeg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cdjpeg.c; path = "libjpeg-turbo/cdjpeg.c"; sourceTree = "<group>"; };
-		DA60300111E03B5400271F8F /* cdjpeg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cdjpeg.h; path = "libjpeg-turbo/cdjpeg.h"; sourceTree = "<group>"; };
-		DA60300311E03B5400271F8F /* jcapimin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcapimin.c; path = "libjpeg-turbo/jcapimin.c"; sourceTree = "<group>"; };
-		DA60300411E03B5400271F8F /* jcapistd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcapistd.c; path = "libjpeg-turbo/jcapistd.c"; sourceTree = "<group>"; };
-		DA60300511E03B5400271F8F /* jccoefct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jccoefct.c; path = "libjpeg-turbo/jccoefct.c"; sourceTree = "<group>"; };
-		DA60300611E03B5400271F8F /* jccolor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jccolor.c; path = "libjpeg-turbo/jccolor.c"; sourceTree = "<group>"; };
-		DA60300711E03B5400271F8F /* jcdctmgr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcdctmgr.c; path = "libjpeg-turbo/jcdctmgr.c"; sourceTree = "<group>"; };
-		DA60300811E03B5400271F8F /* jchuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jchuff.c; path = "libjpeg-turbo/jchuff.c"; sourceTree = "<group>"; };
-		DA60300911E03B5400271F8F /* jchuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jchuff.h; path = "libjpeg-turbo/jchuff.h"; sourceTree = "<group>"; };
-		DA60300A11E03B5400271F8F /* jcinit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcinit.c; path = "libjpeg-turbo/jcinit.c"; sourceTree = "<group>"; };
-		DA60300B11E03B5400271F8F /* jcmainct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcmainct.c; path = "libjpeg-turbo/jcmainct.c"; sourceTree = "<group>"; };
-		DA60300C11E03B5400271F8F /* jcmarker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcmarker.c; path = "libjpeg-turbo/jcmarker.c"; sourceTree = "<group>"; };
-		DA60300D11E03B5400271F8F /* jcmaster.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcmaster.c; path = "libjpeg-turbo/jcmaster.c"; sourceTree = "<group>"; };
 		DA60300E11E03B5400271F8F /* jcomapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcomapi.c; path = "libjpeg-turbo/jcomapi.c"; sourceTree = "<group>"; };
 		DA60300F11E03B5400271F8F /* jconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jconfig.h; path = "libjpeg-turbo/jconfig.h"; sourceTree = "<group>"; };
-		DA60301011E03B5400271F8F /* jcparam.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcparam.c; path = "libjpeg-turbo/jcparam.c"; sourceTree = "<group>"; };
-		DA60301111E03B5400271F8F /* jcphuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcphuff.c; path = "libjpeg-turbo/jcphuff.c"; sourceTree = "<group>"; };
-		DA60301211E03B5400271F8F /* jcprepct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcprepct.c; path = "libjpeg-turbo/jcprepct.c"; sourceTree = "<group>"; };
-		DA60301311E03B5400271F8F /* jcsample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcsample.c; path = "libjpeg-turbo/jcsample.c"; sourceTree = "<group>"; };
-		DA60301411E03B5400271F8F /* jctrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jctrans.c; path = "libjpeg-turbo/jctrans.c"; sourceTree = "<group>"; };
 		DA60301511E03B5400271F8F /* jdapimin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdapimin.c; path = "libjpeg-turbo/jdapimin.c"; sourceTree = "<group>"; };
 		DA60303111E03BA600271F8F /* jdapistd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdapistd.c; path = "libjpeg-turbo/jdapistd.c"; sourceTree = "<group>"; };
 		DA60303211E03BA600271F8F /* jdatadst.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdatadst.c; path = "libjpeg-turbo/jdatadst.c"; sourceTree = "<group>"; };
@@ -404,12 +339,8 @@
 		DA60303F11E03BA600271F8F /* jdphuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdphuff.c; path = "libjpeg-turbo/jdphuff.c"; sourceTree = "<group>"; };
 		DA60304011E03BA600271F8F /* jdpostct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdpostct.c; path = "libjpeg-turbo/jdpostct.c"; sourceTree = "<group>"; };
 		DA60304111E03BA600271F8F /* jdsample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdsample.c; path = "libjpeg-turbo/jdsample.c"; sourceTree = "<group>"; };
-		DA60304211E03BA600271F8F /* jdtrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdtrans.c; path = "libjpeg-turbo/jdtrans.c"; sourceTree = "<group>"; };
 		DA60304311E03BA600271F8F /* jerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jerror.c; path = "libjpeg-turbo/jerror.c"; sourceTree = "<group>"; };
 		DA60304411E03BA600271F8F /* jerror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jerror.h; path = "libjpeg-turbo/jerror.h"; sourceTree = "<group>"; };
-		DA60304511E03BA600271F8F /* jfdctflt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jfdctflt.c; path = "libjpeg-turbo/jfdctflt.c"; sourceTree = "<group>"; };
-		DA60304611E03BA600271F8F /* jfdctfst.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jfdctfst.c; path = "libjpeg-turbo/jfdctfst.c"; sourceTree = "<group>"; };
-		DA60304711E03BA600271F8F /* jfdctint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jfdctint.c; path = "libjpeg-turbo/jfdctint.c"; sourceTree = "<group>"; };
 		DA60304811E03BA600271F8F /* jidctflt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jidctflt.c; path = "libjpeg-turbo/jidctflt.c"; sourceTree = "<group>"; };
 		DA60304911E03BA600271F8F /* jidctfst.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jidctfst.c; path = "libjpeg-turbo/jidctfst.c"; sourceTree = "<group>"; };
 		DA60304A11E03BA600271F8F /* jidctint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jidctint.c; path = "libjpeg-turbo/jidctint.c"; sourceTree = "<group>"; };
@@ -428,24 +359,6 @@
 		DA60305911E03BA600271F8F /* jsimddct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsimddct.h; path = "libjpeg-turbo/jsimddct.h"; sourceTree = "<group>"; };
 		DA60305A11E03BA600271F8F /* jutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jutils.c; path = "libjpeg-turbo/jutils.c"; sourceTree = "<group>"; };
 		DA60305B11E03BA600271F8F /* jversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jversion.h; path = "libjpeg-turbo/jversion.h"; sourceTree = "<group>"; };
-		DA60305C11E03BA600271F8F /* rdbmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rdbmp.c; path = "libjpeg-turbo/rdbmp.c"; sourceTree = "<group>"; };
-		DA60305D11E03BA600271F8F /* rdcolmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rdcolmap.c; path = "libjpeg-turbo/rdcolmap.c"; sourceTree = "<group>"; };
-		DA60305E11E03BA600271F8F /* rdgif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rdgif.c; path = "libjpeg-turbo/rdgif.c"; sourceTree = "<group>"; };
-		DA60306011E03BA600271F8F /* rdppm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rdppm.c; path = "libjpeg-turbo/rdppm.c"; sourceTree = "<group>"; };
-		DA60306111E03BA600271F8F /* rdrle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rdrle.c; path = "libjpeg-turbo/rdrle.c"; sourceTree = "<group>"; };
-		DA60306211E03BA600271F8F /* rdswitch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rdswitch.c; path = "libjpeg-turbo/rdswitch.c"; sourceTree = "<group>"; };
-		DA60306311E03BA600271F8F /* rdtarga.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rdtarga.c; path = "libjpeg-turbo/rdtarga.c"; sourceTree = "<group>"; };
-		DA60306411E03BA600271F8F /* rrtimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rrtimer.h; path = "libjpeg-turbo/rrtimer.h"; sourceTree = "<group>"; };
-		DA60306511E03BA600271F8F /* rrutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rrutil.h; path = "libjpeg-turbo/rrutil.h"; sourceTree = "<group>"; };
-		DA60306611E03BA600271F8F /* transupp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = transupp.c; path = "libjpeg-turbo/transupp.c"; sourceTree = "<group>"; };
-		DA60306711E03BA600271F8F /* transupp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = transupp.h; path = "libjpeg-turbo/transupp.h"; sourceTree = "<group>"; };
-		DA60306811E03BA600271F8F /* turbojpeg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = turbojpeg.h; path = "libjpeg-turbo/turbojpeg.h"; sourceTree = "<group>"; };
-		DA60306911E03BA600271F8F /* turbojpegl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = turbojpegl.c; path = "libjpeg-turbo/turbojpegl.c"; sourceTree = "<group>"; };
-		DA60306A11E03BA600271F8F /* wrbmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wrbmp.c; path = "libjpeg-turbo/wrbmp.c"; sourceTree = "<group>"; };
-		DA60306B11E03BA600271F8F /* wrgif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wrgif.c; path = "libjpeg-turbo/wrgif.c"; sourceTree = "<group>"; };
-		DA60306D11E03BA600271F8F /* wrppm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wrppm.c; path = "libjpeg-turbo/wrppm.c"; sourceTree = "<group>"; };
-		DA60306E11E03BA600271F8F /* wrrle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wrrle.c; path = "libjpeg-turbo/wrrle.c"; sourceTree = "<group>"; };
-		DA60306F11E03BA600271F8F /* wrtarga.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wrtarga.c; path = "libjpeg-turbo/wrtarga.c"; sourceTree = "<group>"; };
 		DA6030E211E0401E00271F8F /* jcclrss2-64.asm */ = {isa = PBXFileReference; explicitFileType = sourcecode.nasm; fileEncoding = 4; name = "jcclrss2-64.asm"; path = "libjpeg-turbo/simd/jcclrss2-64.asm"; sourceTree = "<group>"; };
 		DA6030E411E0401E00271F8F /* jccolmmx.asm */ = {isa = PBXFileReference; explicitFileType = sourcecode.nasm; fileEncoding = 4; name = jccolmmx.asm; path = "libjpeg-turbo/simd/jccolmmx.asm"; sourceTree = "<group>"; };
 		DA6030E511E0401E00271F8F /* jccolss2-64.asm */ = {isa = PBXFileReference; explicitFileType = sourcecode.nasm; fileEncoding = 4; name = "jccolss2-64.asm"; path = "libjpeg-turbo/simd/jccolss2-64.asm"; sourceTree = "<group>"; };
@@ -518,7 +431,6 @@
 		DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "ssh-helper.sh"; path = "Resources/ssh-helper.sh"; sourceTree = "<group>"; };
 		DACD08DF1274C284001F6B72 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
 		DAD344B71304648200134E29 /* jaricom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jaricom.c; path = "libjpeg-turbo/jaricom.c"; sourceTree = "<group>"; };
-		DAD344B81304648200134E29 /* jcarith.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcarith.c; path = "libjpeg-turbo/jcarith.c"; sourceTree = "<group>"; };
 		DAD344B91304648200134E29 /* jdarith.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdarith.c; path = "libjpeg-turbo/jdarith.c"; sourceTree = "<group>"; };
 		DAD344BA1304648200134E29 /* jpegcomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpegcomp.h; path = "libjpeg-turbo/jpegcomp.h"; sourceTree = "<group>"; };
 		DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthPrompt.h; sourceTree = "<group>"; };
@@ -857,7 +769,6 @@
 			isa = PBXGroup;
 			children = (
 				DAD344B71304648200134E29 /* jaricom.c */,
-				DAD344B81304648200134E29 /* jcarith.c */,
 				DAD344B91304648200134E29 /* jdarith.c */,
 				DAD344BA1304648200134E29 /* jpegcomp.h */,
 				DA6030DD11E03FE100271F8F /* simd */,
@@ -878,12 +789,8 @@
 				DA60303F11E03BA600271F8F /* jdphuff.c */,
 				DA60304011E03BA600271F8F /* jdpostct.c */,
 				DA60304111E03BA600271F8F /* jdsample.c */,
-				DA60304211E03BA600271F8F /* jdtrans.c */,
 				DA60304311E03BA600271F8F /* jerror.c */,
 				DA60304411E03BA600271F8F /* jerror.h */,
-				DA60304511E03BA600271F8F /* jfdctflt.c */,
-				DA60304611E03BA600271F8F /* jfdctfst.c */,
-				DA60304711E03BA600271F8F /* jfdctint.c */,
 				DA60304811E03BA600271F8F /* jidctflt.c */,
 				DA60304911E03BA600271F8F /* jidctfst.c */,
 				DA60304A11E03BA600271F8F /* jidctint.c */,
@@ -902,47 +809,8 @@
 				DA60305911E03BA600271F8F /* jsimddct.h */,
 				DA60305A11E03BA600271F8F /* jutils.c */,
 				DA60305B11E03BA600271F8F /* jversion.h */,
-				DA60305C11E03BA600271F8F /* rdbmp.c */,
-				DA60305D11E03BA600271F8F /* rdcolmap.c */,
-				DA60305E11E03BA600271F8F /* rdgif.c */,
-				DA60306011E03BA600271F8F /* rdppm.c */,
-				DA60306111E03BA600271F8F /* rdrle.c */,
-				DA60306211E03BA600271F8F /* rdswitch.c */,
-				DA60306311E03BA600271F8F /* rdtarga.c */,
-				DA60306411E03BA600271F8F /* rrtimer.h */,
-				DA60306511E03BA600271F8F /* rrutil.h */,
-				DA60306611E03BA600271F8F /* transupp.c */,
-				DA60306711E03BA600271F8F /* transupp.h */,
-				DA60306811E03BA600271F8F /* turbojpeg.h */,
-				DA60306911E03BA600271F8F /* turbojpegl.c */,
-				DA60306A11E03BA600271F8F /* wrbmp.c */,
-				DA60306B11E03BA600271F8F /* wrgif.c */,
-				DA60306D11E03BA600271F8F /* wrppm.c */,
-				DA60306E11E03BA600271F8F /* wrrle.c */,
-				DA60306F11E03BA600271F8F /* wrtarga.c */,
-				DA602FFD11E03B5400271F8F /* bmp.c */,
-				DA602FFE11E03B5400271F8F /* bmp.h */,
-				DA602FFF11E03B5400271F8F /* cderror.h */,
-				DA60300011E03B5400271F8F /* cdjpeg.c */,
-				DA60300111E03B5400271F8F /* cdjpeg.h */,
-				DA60300311E03B5400271F8F /* jcapimin.c */,
-				DA60300411E03B5400271F8F /* jcapistd.c */,
-				DA60300511E03B5400271F8F /* jccoefct.c */,
-				DA60300611E03B5400271F8F /* jccolor.c */,
-				DA60300711E03B5400271F8F /* jcdctmgr.c */,
-				DA60300811E03B5400271F8F /* jchuff.c */,
-				DA60300911E03B5400271F8F /* jchuff.h */,
-				DA60300A11E03B5400271F8F /* jcinit.c */,
-				DA60300B11E03B5400271F8F /* jcmainct.c */,
-				DA60300C11E03B5400271F8F /* jcmarker.c */,
-				DA60300D11E03B5400271F8F /* jcmaster.c */,
 				DA60300E11E03B5400271F8F /* jcomapi.c */,
 				DA60300F11E03B5400271F8F /* jconfig.h */,
-				DA60301011E03B5400271F8F /* jcparam.c */,
-				DA60301111E03B5400271F8F /* jcphuff.c */,
-				DA60301211E03B5400271F8F /* jcprepct.c */,
-				DA60301311E03B5400271F8F /* jcsample.c */,
-				DA60301411E03B5400271F8F /* jctrans.c */,
 				DA60301511E03B5400271F8F /* jdapimin.c */,
 			);
 			name = "libjpeg-turbo";
@@ -1238,10 +1106,6 @@
 				7F7DE7D6080F39DF006BF1DF /* ServerStandAlone.h in Headers */,
 				E291FA1508815A950061216E /* EventFilter.h in Headers */,
 				E291FB23088168E20061216E /* QueuedEvent.h in Headers */,
-				DA60301711E03B5400271F8F /* bmp.h in Headers */,
-				DA60301811E03B5400271F8F /* cderror.h in Headers */,
-				DA60302211E03B5400271F8F /* jchuff.h in Headers */,
-				DA60302811E03B5400271F8F /* jconfig.h in Headers */,
 				DA60307511E03BA600271F8F /* jdct.h in Headers */,
 				DA60307811E03BA600271F8F /* jdhuff.h in Headers */,
 				DA60308311E03BA600271F8F /* jerror.h in Headers */,
@@ -1252,10 +1116,6 @@
 				DA60309711E03BA600271F8F /* jsimd.h in Headers */,
 				DA60309811E03BA600271F8F /* jsimddct.h in Headers */,
 				DA60309A11E03BA600271F8F /* jversion.h in Headers */,
-				DA6030A311E03BA600271F8F /* rrtimer.h in Headers */,
-				DA6030A411E03BA600271F8F /* rrutil.h in Headers */,
-				DA6030A611E03BA600271F8F /* transupp.h in Headers */,
-				DA6030A711E03BA600271F8F /* turbojpeg.h in Headers */,
 				DA6030B511E03BE600271F8F /* jpeglib.h in Headers */,
 				DA60315711E0401E00271F8F /* jsimd.h in Headers */,
 				DA80A6EF11E27B430076CB0A /* CursorPseudoEncodingReader.h in Headers */,
@@ -1269,7 +1129,7 @@
 				DAD6DEFE12DCF583001FD9D6 /* SshTunnel.h in Headers */,
 				DA78379912DE159800F1893E /* SshWaiter.h in Headers */,
 				DAD344BF1304648200134E29 /* jpegcomp.h in Headers */,
-				DAD344CE1304656F00134E29 /* cdjpeg.h in Headers */,
+				DABF107A13E3472100558AE1 /* jconfig.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1421,24 +1281,6 @@
 				7F7DE7D7080F39DF006BF1DF /* ServerStandAlone.m in Sources */,
 				E291FB1B088168BB0061216E /* EventFilter.m in Sources */,
 				E291FB24088168E20061216E /* QueuedEvent.m in Sources */,
-				DA60301611E03B5400271F8F /* bmp.c in Sources */,
-				DA60301911E03B5400271F8F /* cdjpeg.c in Sources */,
-				DA60301C11E03B5400271F8F /* jcapimin.c in Sources */,
-				DA60301D11E03B5400271F8F /* jcapistd.c in Sources */,
-				DA60301E11E03B5400271F8F /* jccoefct.c in Sources */,
-				DA60301F11E03B5400271F8F /* jccolor.c in Sources */,
-				DA60302011E03B5400271F8F /* jcdctmgr.c in Sources */,
-				DA60302311E03B5400271F8F /* jcinit.c in Sources */,
-				DA60302411E03B5400271F8F /* jcmainct.c in Sources */,
-				DA60302511E03B5400271F8F /* jcmarker.c in Sources */,
-				DA60302611E03B5400271F8F /* jcmaster.c in Sources */,
-				DA60302711E03B5400271F8F /* jcomapi.c in Sources */,
-				DA60302911E03B5400271F8F /* jcparam.c in Sources */,
-				DA60302A11E03B5400271F8F /* jcphuff.c in Sources */,
-				DA60302B11E03B5400271F8F /* jcprepct.c in Sources */,
-				DA60302C11E03B5400271F8F /* jcsample.c in Sources */,
-				DA60302D11E03B5400271F8F /* jctrans.c in Sources */,
-				DA60302E11E03B5400271F8F /* jdapimin.c in Sources */,
 				DA60307011E03BA600271F8F /* jdapistd.c in Sources */,
 				DA60307111E03BA600271F8F /* jdatadst.c in Sources */,
 				DA60307211E03BA600271F8F /* jdatasrc.c in Sources */,
@@ -1453,51 +1295,25 @@
 				DA60307D11E03BA600271F8F /* jdmerge.c in Sources */,
 				DA60307E11E03BA600271F8F /* jdphuff.c in Sources */,
 				DA60307F11E03BA600271F8F /* jdpostct.c in Sources */,
-				DA60308011E03BA600271F8F /* jdsample.c in Sources */,
-				DA60308111E03BA600271F8F /* jdtrans.c in Sources */,
-				DA60308211E03BA600271F8F /* jerror.c in Sources */,
-				DA60308411E03BA600271F8F /* jfdctflt.c in Sources */,
-				DA60308511E03BA600271F8F /* jfdctfst.c in Sources */,
-				DA60308611E03BA600271F8F /* jfdctint.c in Sources */,
 				DA60308711E03BA600271F8F /* jidctflt.c in Sources */,
 				DA60308811E03BA600271F8F /* jidctfst.c in Sources */,
 				DA60308911E03BA600271F8F /* jidctint.c in Sources */,
 				DA60308A11E03BA600271F8F /* jidctred.c in Sources */,
 				DA60308C11E03BA600271F8F /* jmemmgr.c in Sources */,
 				DA60308D11E03BA600271F8F /* jmemnobs.c in Sources */,
-				DA60309411E03BA600271F8F /* jquant1.c in Sources */,
-				DA60309511E03BA600271F8F /* jquant2.c in Sources */,
-				DA60309911E03BA600271F8F /* jutils.c in Sources */,
-				DA60309B11E03BA600271F8F /* rdbmp.c in Sources */,
-				DA60309C11E03BA600271F8F /* rdcolmap.c in Sources */,
-				DA60309D11E03BA600271F8F /* rdgif.c in Sources */,
-				DA60309F11E03BA600271F8F /* rdppm.c in Sources */,
-				DA6030A011E03BA600271F8F /* rdrle.c in Sources */,
-				DA6030A111E03BA600271F8F /* rdswitch.c in Sources */,
-				DA6030A211E03BA600271F8F /* rdtarga.c in Sources */,
-				DA6030A511E03BA600271F8F /* transupp.c in Sources */,
-				DA6030A811E03BA600271F8F /* turbojpegl.c in Sources */,
-				DA6030A911E03BA600271F8F /* wrbmp.c in Sources */,
-				DA6030AA11E03BA600271F8F /* wrgif.c in Sources */,
-				DA6030AC11E03BA600271F8F /* wrppm.c in Sources */,
-				DA6030AD11E03BA600271F8F /* wrrle.c in Sources */,
-				DA6030AE11E03BA600271F8F /* wrtarga.c in Sources */,
 				DA60312111E0401E00271F8F /* jccolmmx.asm in Sources */,
 				DA60312311E0401E00271F8F /* jccolss2.asm in Sources */,
 				DA60312511E0401E00271F8F /* jcqnt3dn.asm in Sources */,
 				DA60312611E0401E00271F8F /* jcqntmmx.asm in Sources */,
 				DA60312811E0401E00271F8F /* jcqnts2f.asm in Sources */,
 				DA60312A11E0401E00271F8F /* jcqnts2i.asm in Sources */,
-				DA60312B11E0401E00271F8F /* jcqntsse.asm in Sources */,
 				DA60312C11E0401E00271F8F /* jcsammmx.asm in Sources */,
-				DA60312E11E0401E00271F8F /* jcsamss2.asm in Sources */,
 				DA60313211E0401E00271F8F /* jdcolmmx.asm in Sources */,
 				DA60313411E0401E00271F8F /* jdcolss2.asm in Sources */,
 				DA60313611E0401E00271F8F /* jdmermmx.asm in Sources */,
 				DA60313811E0401E00271F8F /* jdmerss2.asm in Sources */,
 				DA60313C11E0401E00271F8F /* jdsammmx.asm in Sources */,
 				DA60313E11E0401E00271F8F /* jdsamss2.asm in Sources */,
-				DA60313F11E0401E00271F8F /* jf3dnflt.asm in Sources */,
 				DA60314011E0401E00271F8F /* jfmmxfst.asm in Sources */,
 				DA60314111E0401E00271F8F /* jfmmxint.asm in Sources */,
 				DA60314311E0401E00271F8F /* jfss2fst.asm in Sources */,
@@ -1525,10 +1341,18 @@
 				DAD6DEE212DCF37A001FD9D6 /* AuthPrompt.m in Sources */,
 				DAD6DEFF12DCF583001FD9D6 /* SshTunnel.m in Sources */,
 				DA78379A12DE159800F1893E /* SshWaiter.m in Sources */,
-				DAD344BD1304648200134E29 /* jcarith.c in Sources */,
 				DAD344BE1304648200134E29 /* jdarith.c in Sources */,
-				DAD344D31304657500134E29 /* jaricom.c in Sources */,
-				DAD344D61304658700134E29 /* jchuff.c in Sources */,
+				DABF105B13E346AC00558AE1 /* jcsamss2.asm in Sources */,
+				DABF105E13E346B600558AE1 /* jcqntsse.asm in Sources */,
+				DABF107313E3470800558AE1 /* jaricom.c in Sources */,
+				DABF108A13E3473F00558AE1 /* jdapimin.c in Sources */,
+				DABF109113E3475B00558AE1 /* jutils.c in Sources */,
+				DABF109613E3476600558AE1 /* jquant2.c in Sources */,
+				DABF109713E3476700558AE1 /* jquant1.c in Sources */,
+				DABF10A013E3477900558AE1 /* jf3dnflt.asm in Sources */,
+				DABF10A913E3479000558AE1 /* jerror.c in Sources */,
+				DABF111913E34A7600558AE1 /* jdsample.c in Sources */,
+				DABF111E13E34A9000558AE1 /* jcomapi.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

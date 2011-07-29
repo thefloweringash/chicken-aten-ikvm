@@ -11,6 +11,8 @@
  * This file contains stubs for when there is no SIMD support available.
  */
 
+#ifndef __i386__
+
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
@@ -298,3 +300,4 @@ jsimd_idct_float (j_decompress_ptr cinfo, jpeg_component_info * compptr,
 {
 }
 
+#endif

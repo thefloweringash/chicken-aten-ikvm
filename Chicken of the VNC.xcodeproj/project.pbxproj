@@ -521,7 +521,6 @@
 		DAD344B81304648200134E29 /* jcarith.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcarith.c; path = "libjpeg-turbo/jcarith.c"; sourceTree = "<group>"; };
 		DAD344B91304648200134E29 /* jdarith.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdarith.c; path = "libjpeg-turbo/jdarith.c"; sourceTree = "<group>"; };
 		DAD344BA1304648200134E29 /* jpegcomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpegcomp.h; path = "libjpeg-turbo/jpegcomp.h"; sourceTree = "<group>"; };
-		DAD344BB1304648200134E29 /* jpgtest.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jpgtest.cxx; path = "libjpeg-turbo/jpgtest.cxx"; sourceTree = "<group>"; };
 		DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthPrompt.h; sourceTree = "<group>"; };
 		DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthPrompt.m; sourceTree = "<group>"; };
 		DAD6DEE912DCF4A3001FD9D6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/AuthPrompt.nib; sourceTree = "<group>"; };
@@ -861,7 +860,6 @@
 				DAD344B81304648200134E29 /* jcarith.c */,
 				DAD344B91304648200134E29 /* jdarith.c */,
 				DAD344BA1304648200134E29 /* jpegcomp.h */,
-				DAD344BB1304648200134E29 /* jpgtest.cxx */,
 				DA6030DD11E03FE100271F8F /* simd */,
 				DA60303111E03BA600271F8F /* jdapistd.c */,
 				DA60303211E03BA600271F8F /* jdatadst.c */,

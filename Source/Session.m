@@ -39,6 +39,26 @@
 @end
 #endif
 
+/* Ah, the joy of supporting 4 different releases of the OS */
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1050
+#if __LP64__
+typedef long NSInteger;
+#else
+typedef int NSInteger;
+#endif
+#endif
+
+@interface NSScrollView(AvailableInLion)
+    - (void)setScrollerStyle:(NSInteger)newScrollerStyle;
+@end
+
+enum {
+    NSScrollerStyleLegacy = 0,
+    NSScrollerStyleOverlay = 1
+};
+#endif
+
 @interface Session(Private)
 
 - (void)startTimerForReconnectSheet;
@@ -68,6 +88,11 @@
 
     _horizScrollFactor = 0;
     _vertScrollFactor = 0;
+
+    /* On 10.7 Lion, the overlay scrollbars don't reappear properly on hover.
+     * So, for now, we're going to force legacy scrollbars. */
+    if ([scrollView respondsToSelector:@selector(setScrollerStyle:)])
+        [scrollView setScrollerStyle:NSScrollerStyleLegacy];
 
     _connectionStartDate = [[NSDate alloc] init];
 

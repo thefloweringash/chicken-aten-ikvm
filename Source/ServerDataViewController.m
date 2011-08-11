@@ -505,8 +505,7 @@
 {
     if (![mServer rememberPassword])
         [mServer setPassword: nil];
-    [[RFBConnectionManager sharedManager] successfulConnection:theConnection
-                                                      toServer:mServer];
+    [[RFBConnectionManager sharedManager] successfulConnection:theConnection];
 
     [superController connectionDone];
     [self connectionAttemptEnded];

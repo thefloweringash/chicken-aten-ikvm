@@ -71,8 +71,7 @@
 
 - (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file 
     server:(id<IServerData>) server;
-- (void)successfulConnection: (RFBConnection *)theConnection
-                    toServer:(id<IServerData>)server;
+- (void)successfulConnection: (RFBConnection *)theConnection;
 
 - (IBAction)addServer:(id)sender;
 - (IBAction)deleteSelectedServer:(id)sender;

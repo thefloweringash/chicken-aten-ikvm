@@ -282,7 +282,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 /* Connection initiated from the command-line succeeded */
 - (void)connectionSucceeded:(RFBConnection *)conn
 {
-    [self successfulConnection:conn toServer: nil];
+    [self successfulConnection:conn];
 }
 
 /* Connection initiated from command-line failed */
@@ -440,7 +440,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
     theConnection = [[RFBConnection alloc] initWithFileHandle:file server:server];
     if(theConnection) {
-        [self successfulConnection:theConnection toServer:nil];
+        [self successfulConnection:theConnection];
         [theConnection release];
         return YES;
     }
@@ -452,7 +452,6 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 /* Registers a successful connection using an already-created RFBConnection
  * object. */
 - (void)successfulConnection: (RFBConnection *)theConnection
-        toServer: (id<IServerData>)server
 {
     Session *sess = [[Session alloc] initWithConnection:theConnection];
     [connections addObject:sess];

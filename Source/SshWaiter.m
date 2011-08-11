@@ -189,10 +189,25 @@
     currentSock = -1;
 }
 
-/* The server closed the connection while we were waiting for the first data. */
 - (void)serverClosed
 {
+    /* The server closed the connection without sending any data. Usually, this
+     * means that the ssh server couldn't connect to the VNC port. If so, we
+     * want to wait for ssh's error message, which will give details, before
+     * giving a generic answer. On the other hand, ssh's error may have
+     * arrived first, then delegate will be nil and we don't need to do
+     * anything. */
+    if (delegate) {
+        tunnelClosedTimer = [NSTimer scheduledTimerWithInterval:0.5 target:self
+                                     selector:@selector(serverClosedNoReason:)
+                                     userInfo:NULL repeats:NO];
+    }
+}
+
+- (void)serverClosedNoReason:(void *)unused
+{
     [self tunnelledConnFailed:NSLocalizedString(@"ServerClosed", nil)];
+    [tunnel close];
 }
 
 - (void)sshFailedWithError:(NSString *)err
@@ -206,6 +221,19 @@
         auth = nil;
     }
     [self error:header message:err];
+}
+
+- (void)tunnelFailed:(NSString *)err
+{
+    [tunnelClosedTimer invalidate];
+    [tunnelClosedTimer release];
+    tunnelClosedTimer = nil;
+
+    [self sshFailedWithError:err];
+
+    /* We may not have received the serverClosed message yet, in which case we
+     * don't want to trigger another error when that message arrives. */
+    delegate = nil;
 }
 
 - (void)authCancelled

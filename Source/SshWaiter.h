@@ -33,6 +33,7 @@
 {
     SshTunnel       *tunnel;
     AuthPrompt      *auth;
+    NSTimer         *tunnelClosedTimer;
 }
 
 - (id)initWithServer:(id<IServerData>)aServer
@@ -49,6 +50,7 @@
 - (void)getPassword;
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort;
 - (void)sshFailedWithError:(NSString *)err;
+- (void)tunnelFailed:(NSString *)err;
 
 // implementation of AuthPromptDelegate
 - (void)authCancelled;

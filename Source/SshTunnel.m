@@ -29,8 +29,10 @@
 #define SSH_STATE_OPENING 0 /* ssh process has been started */
 #define SSH_STATE_PROMPT 1  /* ssh process is waiting for us to provide some
                                kind of response. */
-#define SSH_STATE_OPEN 2    /* ssh tunnel established */
-#define SSH_STATE_CLOSING 3 /* ssh in proces of shutting down, either due to
+#define SSH_STATE_TUNNELING 2 /* ssh connection established: at this point we
+                                 still have a delegate to send errors to */
+#define SSH_STATE_OPEN 3    /* ssh tunnel established: no more delegate */
+#define SSH_STATE_CLOSING 4 /* ssh in proces of shutting down, either due to
                                errror, or because we requested it. */
 
 /* SshTunnel operates on a state machine as follows. The state transitions can
@@ -47,10 +49,16 @@
       |
       | [delegate tunnelEstablishedAtPort:]
       V
-     OPEN
-      |
-      | [SshTunnel close]
-      V
+  TUNNELING------------------------------+
+      |                                  |
+      | [SshTunnel tunnelConnected]      |
+      V                                  | [SshTunnel close]
+     OPEN                                | [delegate tunnelFailed:]
+      |                                  |
+      | [SshTunnel close]                |
+      |                                  |
+      |  +-------------------------------+
+      V  V
    CLOSING <---------------------------OPENING or PROMPT
                [SshTunnel close]
                [delegate sshFailedWithError:]
@@ -69,6 +77,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh;
 - (void)firstTimeConnecting:(NSString *)str;
+- (void)tunnelError:(NSStrign *)str;
 - (void)sshFailed:(NSString *)err;
 
 - (void)writeToHelper:(NSString *)str;
@@ -315,10 +324,9 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         // data from ssh's standard out
         if ([str isEqualToString:@""]) {
             // blank lines means that we've connected
-            state = SSH_STATE_OPEN;
+            state = SSH_STATE_TUNNELING;
             [self cleanupFifos];
             [delegate tunnelEstablishedAtPort:localPort];
-            delegate = nil;
         } else
             NSLog(@"Unknown message from ssh stdout: %@", str);
     } else if (fh == [sshErr fileHandleForReading]) {
@@ -357,7 +365,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         else if ([str hasPrefix:@"Identity added:"]) {
             NSLog(@"Added identity");
         } else if ([str hasPrefix:@"channel "])
-            NSLog(@"probably open failure: %@", str);
+            [self tunnelError:str];
         else if ([str hasPrefix:@"Warning: Permanently added"])
             NSLog(@"Added key to known hosts");
 
@@ -398,6 +406,25 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [delegate firstTimeConnecting:fingerprint];
 }
 
+- (void)tunnelError:(NSString *)err
+{
+    int         i;
+    NSString    dict[2][] = {
+        {@"connect failed: Connection refused", @"ConnectRefused"},
+        {@"administratively prohibited", @"SshTunnelAdminProhibited"}};
+
+    state = SSH_STATE_CLOSING;
+
+    for (i = 0; i < sizeof(dict) / sizeof(*dict); i++) {
+        if ([str containsSubstring:dict[i][0]]) {
+            [delegate tunnelFailed:NSLocalizedString(dict[i][1], nil)];
+            return;
+        }
+    }
+
+    [delegate tunnelFailed:NSLocalizedString(@"SshTunnelOther", nil)];
+}
+
 - (void)sshFailed:(NSString *)err
 {
     state = SSH_STATE_CLOSING;
@@ -426,6 +453,12 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)usePassword:(NSString*)password
 {
     [self writeToHelper:password];
+}
+
+- (void)sshTunnelConnected
+{
+    state = SSH_STATE_OPEN;
+    delegate = nil;
 }
 
 /* Write a messsage to our helper script. This is how we feed replies to ssh's

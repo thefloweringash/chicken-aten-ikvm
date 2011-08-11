@@ -42,6 +42,8 @@
 "SshQuit" = "The ssh program quit unexpectedly";
 "SshPermissionDenied" = "Permission denied by SSH server";
 "SshConnectionClosed" = "The SSH server closed the connection";
+"SshTunnelAdminProhibited" = "The SSH server has prohibited this type of tunnel";
+"SshTunnelOther" = "The SSH server could not connect to the VNC server";
 
 // errors with SSH tunnel after having establishe SSH connection
 "TunnelSocketErr" = "Error with socket(): %s";

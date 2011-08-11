@@ -79,9 +79,6 @@
 
 - (void)makeAllConnectionsWindowed;
 
-- (BOOL)haveMultipleConnections; // True if there is more than one connection open.
-- (BOOL)haveAnyConnections;      // True if there are any connections open.
-
 - (void)serverListDidChange:(NSNotification*)notification;
 
 - (id<IServerData>)selectedServer;

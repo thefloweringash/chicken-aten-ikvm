@@ -509,14 +509,6 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	}
 }
 
-- (BOOL)haveMultipleConnections {
-    return [connections count] > 1;
-}
-
-- (BOOL)haveAnyConnections {
-    return [connections count] > 0;
-}
-
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
 	if( serverList == aTableView )

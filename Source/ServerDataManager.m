@@ -189,7 +189,7 @@ static ServerDataManager* gInstance = nil;
 	return gInstance;
 }
 
-/* This is called when loading servers saved by version 2.1 and earlier. */
+/* This is called when loading servers saved by version 2.1.x and earlier. */
 - (id)initWithCoder:(NSCoder *)coder
 {
 	[self autorelease];

@@ -39,10 +39,11 @@
                              delegate:(id<ConnectionWaiterDelegate>)aDelegate
                                window:(NSWindow *)aWind
 {
-    Class class = [aServer sshHost] ? [SshWaiter class] : [ConnectionWaiter class];
+    ConnectionWaiter    *cw;
 
-    return [[[class alloc] initWithServer:aServer
-                                 delegate:aDelegate window:aWind] autorelease];
+    cw = [aServer sshHost] ? [SshWaiter alloc] : [ConnectionWaiter alloc];
+    cw = [cw initWithServer:aServer delegate:aDelegate window:aWind];
+    return [cw autorelease];
 }
 
 - (id)initWithServer:(id<IServerData>)aServer

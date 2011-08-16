@@ -356,26 +356,29 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
                 [self sshFailed:[[str componentsSeparatedByString:@": "]
                                     lastObject]];
             }
-        } else if ([str hasPrefix:@"@@@@@@@@"]) {
-            [self sshFailed:NSLocalizedString(@"SshKeyMismatch", nil)];
-        } else if ([str hasPrefix:@"Permission denied"])
-            [self sshFailed:NSLocalizedString(@"SshPermissionDenied", nil)];
-        else if ([str hasPrefix:@"Connection closed by "])
-            [self sshFailed:NSLocalizedString(@"SshConnectionClosed", nil)];
-        else if ([str hasPrefix:@"Identity added:"]) {
-            NSLog(@"Added identity");
         } else if ([str hasPrefix:@"channel "])
             [self tunnelError:str];
-        else if ([str hasPrefix:@"Warning: Permanently added"])
-            NSLog(@"Added key to known hosts");
+        else if ([str length] > 0) {
+            int         i;
+            NSString    *dict[][2] = {
+                {@"@@@@@@@@", @"SshKeyMismatch"},
+                {@"Permission denied", @"SshPermissionDenied"},
+                {@"Connection closed by ", @"SshConnectionClosed"},
+                {@"Identity added:", nil},
+                {@"Warning: Permanently added", nil},
+                {@"/bin/cat: ", @"CatError"},
+                {@"ssh_askpass: exec(", @"SshScriptError"}};
+            
+            for (i = 0; i < sizeof(dict) / sizeof(*dict); i++) {
+                if ([str hasPrefix:dict[i][0]]) {
+                    if (dict[i][1])
+                        [self sshFailed:NSLocalizedString(dict[i][1], nil)];
+                    return;
+                }
+            }
 
-        // messages sent by shell, cat, etc.
-        else if ([str hasPrefix:@"/bin/cat: "]) {
-           [self sshFailed:NSLocalizedString(@"CatError", nil)];
-        } else if ([str hasPrefix:@"ssh_askpass: exec("]) {
-           [self sshFailed:NSLocalizedString(@"SshScriptError", nil)];
-        } else if ([str length] > 0)
             NSLog(@"Unknown message from ssh error: %@", str);
+        }
     } else
         NSLog(@"Read notification from unknown object");
 }

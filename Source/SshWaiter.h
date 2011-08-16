@@ -34,6 +34,7 @@
     SshTunnel       *tunnel;
     AuthPrompt      *auth;
     NSTimer         *tunnelClosedTimer;
+    BOOL            tunnelHasFailed;
 }
 
 - (id)initWithServer:(id<IServerData>)aServer

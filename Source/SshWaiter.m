@@ -195,10 +195,10 @@
      * means that the ssh server couldn't connect to the VNC port. If so, we
      * want to wait for ssh's error message, which will give details, before
      * giving a generic answer. On the other hand, ssh's error may have
-     * arrived first, then delegate will be nil and we don't need to do
-     * anything. */
-    if (delegate) {
-        tunnelClosedTimer = [NSTimer scheduledTimerWithInterval:0.5 target:self
+     * arrived first, then we don't need to do anything. */
+    if (!tunnelHasFailed) {
+        tunnelClosedTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                     target:self
                                      selector:@selector(serverClosedNoReason:)
                                      userInfo:NULL repeats:NO];
     }
@@ -229,11 +229,11 @@
     [tunnelClosedTimer release];
     tunnelClosedTimer = nil;
 
-    [self sshFailedWithError:err];
+    [self tunnelledConnFailed:err];
 
     /* We may not have received the serverClosed message yet, in which case we
      * don't want to trigger another error when that message arrives. */
-    delegate = nil;
+    tunnelHasFailed = YES;
 }
 
 - (void)authCancelled

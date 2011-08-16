@@ -77,7 +77,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh;
 - (void)firstTimeConnecting:(NSString *)str;
-- (void)tunnelError:(NSStrign *)str;
+- (void)tunnelError:(NSString *)str;
 - (void)sshFailed:(NSString *)err;
 
 - (void)writeToHelper:(NSString *)str;
@@ -409,14 +409,15 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (void)tunnelError:(NSString *)err
 {
     int         i;
-    NSString    dict[2][] = {
+    NSString    *dict[][2] = {
         {@"connect failed: Connection refused", @"ConnectRefused"},
         {@"administratively prohibited", @"SshTunnelAdminProhibited"}};
 
     state = SSH_STATE_CLOSING;
 
     for (i = 0; i < sizeof(dict) / sizeof(*dict); i++) {
-        if ([str containsSubstring:dict[i][0]]) {
+        NSRange range = [err rangeOfString:dict[i][0]];
+        if (range.location != NSNotFound) {
             [delegate tunnelFailed:NSLocalizedString(dict[i][1], nil)];
             return;
         }

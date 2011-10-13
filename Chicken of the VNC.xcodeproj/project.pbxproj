@@ -441,7 +441,7 @@
 		DAEB76F11232AE3400002E6A /* Keymap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Keymap.m; sourceTree = "<group>"; };
 		DAFB492112944331008C6FC4 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
 		E21FE256062B6C8D0059585C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
-		E21FE262062B6D310059585C /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E21FE262062B6D310059585C /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E21FE43D062B79AB0059585C /* KeyEquivalentScenario.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KeyEquivalentScenario.m; sourceTree = "<group>"; };
 		E21FE43E062B79AB0059585C /* KeyEquivalentEntry.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = KeyEquivalentEntry.h; sourceTree = "<group>"; };
 		E21FE43F062B79AB0059585C /* KeyEquivalent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyEquivalent.m; sourceTree = "<group>"; };

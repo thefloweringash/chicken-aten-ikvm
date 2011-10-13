@@ -130,7 +130,8 @@
 				else
 					errorStr = [errorStr stringByAppendingFormat:@",%@", [NSNumber numberWithChar:availableAuthType]];
 				if (availableAuthType == 30)
-					errorStr = [NSLocalizedString( @"ARDAuthWarning", nil ) stringByAppendingFormat:errorStr];
+					errorStr = [NSLocalizedString( @"ARDAuthWarning", nil )
+					                stringByAppendingString:errorStr];
 			}
 		}
 	}

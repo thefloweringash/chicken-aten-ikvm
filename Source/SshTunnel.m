@@ -332,15 +332,19 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     } else if (fh == [sshErr fileHandleForReading]) {
         // data from ssh's standard error: messages sent via our helper. These
         // require a response.
-        if ([str hasPrefix:@"Chicken ssh-helper: Password:"]) {
-            if (state == SSH_STATE_OPENING) {
-                state = SSH_STATE_PROMPT;
-                [delegate getPassword];
-            }
-        } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
-            if (state == SSH_STATE_OPENING) {
-                [self firstTimeConnecting:str];
-            }
+        if ([str hasPrefix:@"Chicken ssh-helper: "]) {
+            if ([str hasPrefix:@"Chicken ssh-helper: Password:"]
+                    || [str hasSuffix:@"'s password:"]) {
+                if (state == SSH_STATE_OPENING) {
+                    state = SSH_STATE_PROMPT;
+                    [delegate getPassword];
+                }
+            } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
+                if (state == SSH_STATE_OPENING) {
+                    [self firstTimeConnecting:str];
+                }
+            } else
+                NSLog(@"Unknown message from helper: %@", str);
 
         // messages sent by ssh itself.
         } else if ([str hasPrefix:@"ssh: Could not resolve hostname"]) {

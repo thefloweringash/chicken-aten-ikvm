@@ -483,7 +483,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         errno = 0;
     } else {
         const char  *cStr = [str UTF8String];
-        int         len = strlen(cStr);
+        size_t      len = strlen(cStr);
         char        *buf = malloc(len + 1);
 
         memcpy(buf, cStr, len);

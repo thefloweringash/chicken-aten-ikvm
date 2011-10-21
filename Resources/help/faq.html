@@ -51,6 +51,23 @@ to enable VNC authentication.</p>
 </div>
 
 <div class="section">
+<h1>What do the errors "Unknown rectangle encoding," "Unknown message type,"
+"Protocol error," etc. mean?</h1>
+
+<p>These indicate that Chicken got confused by the data that the server was
+sending to it. This could be caused by a bug in the VNC server software.
+However, just between you and me, it's more likely that there's a bug in
+Chicken. You can try to avoid this bug by going to <strong>Conection
+Profiles</strong> and the <strong>Encodings</strong> tab and disabling encodings
+until you can connect without problems. Be sure to re-enable encodings which
+don't cause problems as these may give you a better connection. Also, please
+<a href="http://sourceforge.net/tracker/?group_id=364722&atid=1521165">report a bug</a>,
+which should include the encoding that seems to be responsible, the VNC server
+software, when the error occurs (immediately after connecting, only after moving
+the mouse, etc.), and anything else about how the error occurs.</p>
+</div>
+
+<div class="section">
 <h1>I Get Strange Characters When I Type</h1>
 	
 <p>Chicken tries hard to work with different keyboard layouts. However, not
@@ -71,9 +88,20 @@ by OS X shortcuts, go to the <strong>Modifiers</strong> tab in
 <strong>Connection Profiles</strong> and change the setting for the option key
 to <strong>none (local keymap)</strong>.</p>
 
-<p>If you still have problems with the keyboard, file a bug report on the
-<a href="http://sourceforge.net/projects/chicken/">SourceForge page</a>.</p>
+<p>If you still have problems with the keyboard, <a
+href="http://sourceforge.net/tracker/?group_id=364722&atid=1521165">file a bug report</a>.</p>
 </div>
+
+<div class="section">
+<h1>What about dead keys?</h1>
+
+<p>Chicken does not support dead keys. If you type a dead key, it just won't
+send anything to the server. Sometimes, you can get around this by typing the
+key combinations which trigger the dead key on the remote server. For example,
+if the remote server is a Mac with a US keyboard layout, typing Option-e will
+add an acute accent to the next letter (assuming that the option key is set to
+<strong>Meta (Option)</strong> in <strong>Connection Profiles</strong>).
+</p></div>
 
 <div class="section">
     <h1>Why Can't I Control Click?</h1>

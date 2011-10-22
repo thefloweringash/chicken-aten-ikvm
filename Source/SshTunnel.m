@@ -418,6 +418,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     int         i;
     NSString    *dict[][2] = {
         {@"connect failed: Connection refused", @"ConnectRefused"},
+        {@"connect failed: Operation timed out", @"ConnectTimedOut"},
         {@"administratively prohibited", @"SshTunnelAdminProhibited"}};
 
     state = SSH_STATE_CLOSING;

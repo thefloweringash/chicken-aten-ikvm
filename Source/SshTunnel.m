@@ -453,7 +453,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)acceptKey:(BOOL)accept
 {
-    NSString    *resp = accept ? @"yes" : @"no";
+    NSString    *resp = accept ? @"yes\n" : @"no\n";
     [self writeToHelper:resp];
     if (!accept)
         state = SSH_STATE_CLOSING;
@@ -461,7 +461,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)usePassword:(NSString*)password
 {
-    [self writeToHelper:password];
+    [self writeToHelper:[password stringByAppendingString:@"\n"]];
 }
 
 - (void)sshTunnelConnected
@@ -471,7 +471,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 }
 
 /* Write a messsage to our helper script. This is how we feed replies to ssh's
- * interactive questions. */
+ * interactive questions. The string str should end with a newline, or it won't
+ * be recognized as a full response by ssh. */
 - (void)writeToHelper:(NSString *)str
 {
     int     fd;
@@ -489,15 +490,11 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     } else {
         const char  *cStr = [str UTF8String];
         size_t      len = strlen(cStr);
-        char        *buf = malloc(len + 1);
 
-        memcpy(buf, cStr, len);
-        buf[len] = '\n';
-        if (write(fd, buf, len + 1) <= 0) {
+        if (write(fd, cStr, len) <= 0) {
             NSLog(@"Couldn't write to ssh helper: %s", strerror(errno));
             errno = 0;
         }
-        free(buf);
         close(fd);
     }
     state = SSH_STATE_OPENING;

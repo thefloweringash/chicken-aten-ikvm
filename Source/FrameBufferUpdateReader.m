@@ -126,9 +126,13 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
 
     memcpy(&msg.pad, [header bytes], sizeof(msg) - 1);
     numberOfRects = ntohs(msg.nRects);
-    if (numberOfRects > 0)
+    if (numberOfRects > 0) {
+            /* We set encoding to a dummy value, because if we've read the
+             * message header correctly, there's no point in reporting an
+             * encoding from a precevious message. */
+        encoding = rfbEncodingLastRect;
         [connection setReader:rectHeaderReader];
-    else
+    } else
         /* OSXvnc/Vine Server version 3.11 will sometimes send FramebufferUpdate
          * messages with no rectangles. */
         [self updateComplete];
@@ -139,21 +143,22 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
 - (void)setRect:(NSData*)rectInfo
 {
     EncodingReader  *theReader = nil;
-    CARD32          e;
     rfbFramebufferUpdateRectHeader* msg = (rfbFramebufferUpdateRectHeader*)[rectInfo bytes];
+    CARD32          lastEncoding = encoding;
 
     currentRect.origin.x = ntohs(msg->r.x);
     currentRect.origin.y = ntohs(msg->r.y);
     currentRect.size.width = ntohs(msg->r.w);
     currentRect.size.height = ntohs(msg->r.h);
-    e = ntohl(msg->encoding);
+    encoding = ntohl(msg->encoding);
     if (currentRect.size.width == 0 && currentRect.size.height == 0
-            && e != rfbEncodingPointerPos && e != rfbEncodingDesktopName) {
+            && encoding != rfbEncodingPointerPos
+            && encoding != rfbEncodingDesktopName) {
 		// this is a hack for compatibility with OSXvnc 1.0
 		[self updateComplete];
 		return;
     }
-    switch(e) {
+    switch(encoding) {
         case rfbEncodingRaw:
             theReader = rawEncodingReader;
             break;
@@ -203,17 +208,26 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
             return;
     }
     if(theReader == nil) {
-        NSString    *fmt = NSLocalizedString(@"UnknownRectangle", nil);
-        [connection terminateConnection:[NSString stringWithFormat:fmt, e]];
+        NSString    *err;
+        if (lastEncoding >= sizeof(encodingNames) / sizeof(*encodingNames)) {
+            NSString   *fmt = NSLocalizedString(@"UnknownRectangle", nil);
+            err = [NSString stringWithFormat:fmt, encoding];
+        } else {
+            NSString   *fmt = NSLocalizedString(@"UnknownRectangleLastEncoding",
+                                                nil);
+            err = [NSString stringWithFormat:fmt, encoding,
+                                             encodingNames[lastEncoding]];
+        }
+        [connection terminateConnection:err];
     } else {
         [theReader setRectangle:currentRect];
         [theReader readEncoding];
-        if (e <= rfbEncodingMax) { // not a pseudo-encoding
+        if (encoding <= rfbEncodingMax) { // not a pseudo-encoding
             [invalidRects addObject: [NSValue valueWithRect:currentRect]];
             bytesRepresented += currentRect.size.width * currentRect.size.height
                                     * bytesPerPixel;
             rectsTransferred++;
-            rectsByType[e]++;
+            rectsByType[encoding]++;
         }
     }
 }

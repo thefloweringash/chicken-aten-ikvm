@@ -64,6 +64,7 @@ extern NSString *encodingNames[];
     RFBProtocol     *protocol;
     unsigned        bytesPerPixel;  // bytes per pixel in framebuffer
 
+    CARD32 encoding;
     NSRect currentRect;
     CARD16 numberOfRects;
     NSMutableArray  *invalidRects;

@@ -145,6 +145,7 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     EncodingReader  *theReader = nil;
     rfbFramebufferUpdateRectHeader* msg = (rfbFramebufferUpdateRectHeader*)[rectInfo bytes];
     CARD32          lastEncoding = encoding;
+    NSRect          currentRect;
 
     currentRect.origin.x = ntohs(msg->r.x);
     currentRect.origin.y = ntohs(msg->r.y);

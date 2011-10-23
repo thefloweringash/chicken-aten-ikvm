@@ -65,7 +65,6 @@ extern NSString *encodingNames[];
     unsigned        bytesPerPixel;  // bytes per pixel in framebuffer
 
     CARD32 encoding;
-    NSRect currentRect;
     CARD16 numberOfRects;
     NSMutableArray  *invalidRects;
     NSSize resize;

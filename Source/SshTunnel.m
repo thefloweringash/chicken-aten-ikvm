@@ -419,7 +419,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     NSString    *dict[][2] = {
         {@"connect failed: Connection refused", @"ConnectRefused"},
         {@"connect failed: Operation timed out", @"ConnectTimedOut"},
-        {@"administratively prohibited", @"SshTunnelAdminProhibited"}};
+        {@"administratively prohibited", @"TunnelAdminProhibited"}};
 
     state = SSH_STATE_CLOSING;
 
@@ -431,7 +431,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         }
     }
 
-    [delegate tunnelFailed:NSLocalizedString(@"SshTunnelOther", nil)];
+    [delegate tunnelFailed:NSLocalizedString(@"TunnelOther", nil)];
 }
 
 - (void)sshFailed:(NSString *)err

@@ -74,31 +74,23 @@
 
 /* Sends the list of supported encodings to the server. Note that it only
  * buffers the message, without actually writing it. It is assumed that a
- * subsequent message will be written without buffering.
- *
- * The array enc should be an array of network-order encoding values of length
- * l. */
-- (void)changeEncodingsTo:(CARD32*)enc length:(CARD16)l
+ * subsequent message will be written without buffering. */
+- (void)setEncodings
 {
+    Profile* profile = [connection profile];
+    CARD16 i;
+    CARD16 l = [profile numEnabledEncodingsIfViewOnly:[connection viewOnly]];
     rfbSetEncodingsMsg msg;
 
     msg.type = rfbSetEncodings;
     msg.nEncodings = htons(l);
     [connection writeBufferedBytes:(unsigned char*)&msg length:sizeof(msg)];
-    [connection writeBufferedBytes:(unsigned char*)enc length:l*sizeof(CARD32)];
-}
-
-- (void)setEncodings
-{
-    Profile* profile = [connection profile];
-    CARD16 i, l = [profile numEnabledEncodingsIfViewOnly:[connection viewOnly]];
-    CARD32	*enc = (CARD32 *)malloc(l * sizeof(CARD32));
 
     for(i=0; i<l; i++) {
-        enc[i] = htonl([profile encodingAtIndex:i]);
+        CARD32  enc = htonl([profile encodingAtIndex:i]);
+        [connection writeBufferedBytes:(unsigned char*)&enc
+                                length:sizeof(CARD32)];
     }
-    [self changeEncodingsTo:enc length:l];
-    free(enc);
 }
 
 - (void)encodingsChanged:(NSNotification *)notif

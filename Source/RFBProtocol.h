@@ -45,7 +45,6 @@
 
 - (void)setPixelFormat:(rfbPixelFormat*)aFormat;
 
-- (void)changeEncodingsTo:(CARD32*)newEncodings length:(CARD16)l;
 - (void)setEncodings;
 
 - (FrameBufferUpdateReader*)frameBufferUpdateReader;

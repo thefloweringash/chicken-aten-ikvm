@@ -245,6 +245,14 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     }
 }
 
+- (NSString *)lastEncodingName
+{
+    if (encoding < sizeof(encodingNames) / sizeof(*encodingNames))
+        return encodingNames[encoding];
+    else
+        return nil;
+}
+
 - (double)rectanglesTransferred
 {
     return rectsTransferred;

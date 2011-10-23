@@ -84,6 +84,8 @@ extern NSString *encodingNames[];
 - (void)updateComplete;
 - (void)didRect:(EncodingReader*)aReader;
 
+- (NSString *)lastEncodingName; // encoding of last rectangle read
+
 - (double)rectanglesTransferred;
 - (double)bytesRepresented;
 - (NSString *)rectsByTypeString;

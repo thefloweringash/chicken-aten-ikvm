@@ -158,8 +158,21 @@
     unsigned t = [type unsignedIntValue];
 
     if(t > MAX_MSGTYPE) {
-		NSString *errorStr = NSLocalizedString( @"UnknownMessageType", nil );
-		errorStr = [NSString stringWithFormat:errorStr, type];
+        NSString    *lastEnc = nil;
+        NSString    *errorStr;
+
+        if (lastMessage == rfbFramebufferUpdate)
+            lastEnc = [msgTypeReader[rfbFramebufferUpdate] lastEncodingName];
+
+        if (lastEnc) {
+            NSString    *fmt;
+            
+            fmt = NSLocalizedString(@"UnknownMessageTypeLastEncoding", nil);
+            errorStr = [NSString stringWithFormat:fmt, type, lastEnc];
+        } else {
+            NSString    *fmt = NSLocalizedString(@"UnknownMessageType", nil);
+            errorStr = [NSString stringWithFormat:fmt, type];
+        }
         [connection terminateConnection:errorStr];
     } else if(t == rfbBell) {
         NSBeep();
@@ -167,6 +180,8 @@
     } else {
         [msgTypeReader[t] readMessage];
     }
+
+    lastMessage = t;
 }
 
 @end

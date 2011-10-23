@@ -36,7 +36,8 @@
     RFBConnection   *connection;
 
     CARD8Reader     *typeReader;
-    id			msgTypeReader[MAX_MSGTYPE + 1];
+    id              msgTypeReader[MAX_MSGTYPE + 1];
+    unsigned        lastMessage;
 }
 
 - (id)initWithConnection:(RFBConnection *)aTarget serverInfo:(id)info;

@@ -45,10 +45,6 @@ static ServerDataManager* gInstance = nil;
 {
 	if( self = [super init] )
 	{
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(applicationWillTerminate:)
-													 name:NSApplicationWillTerminateNotification object:NSApp];
-		
 		mServers                 = [[NSMutableDictionary alloc] init];
 		mGroups                  = [[NSMutableDictionary alloc] init];
 		mRendezvousNameToServer  = [[NSMutableDictionary alloc] init];
@@ -121,8 +117,6 @@ static ServerDataManager* gInstance = nil;
 {
 	NSParameterAssert( gInstance == self );
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
 	[self save];
 		
     [mServers release];
@@ -248,13 +242,6 @@ static ServerDataManager* gInstance = nil;
 	}
 	
     return self;
-}
-
-
-- (void)applicationWillTerminate:(NSNotification *)notification
-{
-	[self save];
-    [self release];
 }
 
 - (void)putServers:(NSArray *)servers inDictionary:(NSMutableDictionary *)dict

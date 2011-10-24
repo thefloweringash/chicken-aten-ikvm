@@ -57,6 +57,10 @@
 												 selector:@selector(updateProfileView:)
 													 name:ProfileListChangeMsg
 												   object:(id)[ProfileDataManager sharedInstance]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(applicationWillTerminate:)
+                                                     name:NSApplicationWillTerminateNotification
+                                                   object:NSApp];
 	}
 	
 	return self;
@@ -99,9 +103,22 @@
     [connectionWaiter release];
 	[super dealloc];
 		
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:ProfileListChangeMsg
-												  object:(id)[ProfileDataManager sharedInstance]];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notif
+{
+    NSWindow    *wind;
+
+    /* We need to make sure than any changes to text fields get reflected in our
+     * preferences before we quit. */
+    wind = superController ? [superController window] : [self window];
+    [wind makeFirstResponder:nil];
+
+    /* Also, during termination, ServerDataManager needs to save, but it needs
+     * to hapeen after we make our changes. Thus, it is triggered here instead
+     * of ServerDataManager having its own notification. */
+    [[ServerDataManager sharedInstance] save];
 }
 
 - (void)setServer:(id<IServerData>)server

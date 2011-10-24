@@ -102,6 +102,7 @@
 	int index=0;
 	const char *bytes=[authTypeArray bytes];
 	unsigned char availableAuthType=0;
+    BOOL ardAuth = NO;
 	NSString *errorStr = nil;
 	
 	while (index < [authTypeArray length]) {
@@ -123,24 +124,26 @@
 				[connection setReader:challengeReader];
 				return;
 			}
+            case 30:
+                ardAuth = YES;
+                break;
 			default: {
 				if (!errorStr)
 					errorStr = [NSString stringWithFormat:NSLocalizedString( @"UnknownAuthType", nil ),
 						[NSNumber numberWithChar:availableAuthType]]; 
 				else
-					errorStr = [errorStr stringByAppendingFormat:@",%@", [NSNumber numberWithChar:availableAuthType]];
-				if (availableAuthType == 30)
-					errorStr = [NSLocalizedString( @"ARDAuthWarning", nil )
-					                stringByAppendingString:errorStr];
+					errorStr = [errorStr stringByAppendingFormat:@", %@", [NSNumber numberWithChar:availableAuthType]];
+
 			}
 		}
 	}
 
-
 	// No valid auth type found
-	NSLog(@"%@", errorStr);
 	availableAuthType= 0;
 	[connection writeBytes:&availableAuthType length:1];
+
+    if (ardAuth)
+        errorStr = NSLocalizedString(@"ARDAuthWarning", nil);
 	[connection terminateConnection:errorStr];
 }
 

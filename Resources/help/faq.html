@@ -57,10 +57,13 @@ to enable VNC authentication.</p>
 <p>These indicate that Chicken got confused by the data that the server was
 sending to it. This could be caused by a bug in the VNC server software.
 However, just between you and me, it's more likely that there's a bug in
-Chicken. You can try to avoid this bug by going to <strong>Conection
-Profiles</strong> and the <strong>Encodings</strong> tab and disabling encodings
-until you can connect without problems. Be sure to re-enable encodings which
-don't cause problems as these may give you a better connection. Also, please
+Chicken. Many times this error message also tells you what the previous encoding
+is, and that encoding may be the root cause. You can a disable a given encoding
+in <strong>Conection Profiles</strong> and the <strong>Encodings</strong> tab.
+Be sure to re-enable encodings which
+don't cause problems as these may give you a better connection.</p>
+
+<p>Also, please
 <a href="http://sourceforge.net/tracker/?group_id=364722&atid=1521165">report a bug</a>,
 which should include the encoding that seems to be responsible, the VNC server
 software, when the error occurs (immediately after connecting, only after moving

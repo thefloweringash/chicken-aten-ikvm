@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10K540</string>
+		<string key="IBDocument.SystemVersion">10K549</string>
 		<string key="IBDocument.InterfaceBuilderVersion">851</string>
 		<string key="IBDocument.AppKitVersion">1038.36</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
@@ -40,7 +40,7 @@
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
 				</object>
-				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
+				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<string key="NSWindowContentMinSize">{213, 107}</string>
 				<object class="NSView" key="NSWindowView" id="432757062">
 					<reference key="NSNextResponder"/>
@@ -76,12 +76,12 @@
 													<string key="NSColorName">controlColor</string>
 													<object class="NSColor" key="NSColor">
 														<int key="NSColorSpace">3</int>
-														<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
+														<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
 													</object>
 												</object>
 												<object class="NSColor" key="NSTextColor">
 													<int key="NSColorSpace">1</int>
-													<bytes key="NSRGB">MC40MjkzNDc4MSAwLjQyOTM0NzgxIDAuNDI5MzQ3ODEAA</bytes>
+													<bytes key="NSRGB">MC40MjkzNDc4MTMxIDAuNDI5MzQ3ODEzMSAwLjQyOTM0NzgxMzEAA</bytes>
 												</object>
 											</object>
 										</object>
@@ -388,7 +388,7 @@
 												<reference key="NSBackgroundColor" ref="248821091"/>
 												<object class="NSColor" key="NSTextColor">
 													<int key="NSColorSpace">3</int>
-													<bytes key="NSWhite">MCAwLjgwMDAwMDAxAA</bytes>
+													<bytes key="NSWhite">MCAwLjgwMDAwMDAxMTkAA</bytes>
 												</object>
 											</object>
 											<int key="NSBorderType">3</int>
@@ -503,7 +503,7 @@
 												<reference key="NSBackgroundColor" ref="804458197"/>
 												<object class="NSColor" key="NSTextColor">
 													<int key="NSColorSpace">1</int>
-													<bytes key="NSRGB">MC4zMjA2NTIxNzM5IDAuMzIwNjUyMTczOSAwLjMyMDY1MjE3MzkAA</bytes>
+													<bytes key="NSRGB">MC4zMjA2NTIxODY5IDAuMzIwNjUyMTg2OSAwLjMyMDY1MjE4NjkAA</bytes>
 												</object>
 											</object>
 										</object>
@@ -603,7 +603,7 @@
 								<reference key="NSBackgroundColor" ref="248821091"/>
 								<object class="NSColor" key="NSTextColor">
 									<int key="NSColorSpace">3</int>
-									<bytes key="NSWhite">MCAwLjgwMDAwMDAxAA</bytes>
+									<bytes key="NSWhite">MCAwLjgwMDAwMDAxMTkAA</bytes>
 								</object>
 							</object>
 							<reference key="NSContentView" ref="785985985"/>
@@ -618,7 +618,7 @@
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 832}}</string>
 				<string key="NSMinSize">{213, 129}</string>
-				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
+				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
 			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
@@ -817,14 +817,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="375321898"/>
-						<reference key="destination" ref="794448044"/>
-					</object>
-					<int key="connectionID">91</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">fullscreen</string>
 						<reference key="source" ref="794448044"/>
 						<reference key="destination" ref="519453394"/>
@@ -910,6 +902,14 @@
 						<reference key="destination" ref="349998768"/>
 					</object>
 					<int key="connectionID">142</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">passwordChanged:</string>
+						<reference key="source" ref="794448044"/>
+						<reference key="destination" ref="375321898"/>
+					</object>
+					<int key="connectionID">143</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1445,7 +1445,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">142</int>
+			<int key="maxID">143</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1483,6 +1483,7 @@
 						<string key="cancelConnect:">id</string>
 						<string key="connectToServer:">id</string>
 						<string key="fullscreenChanged:">id</string>
+						<string key="passwordChanged:">id</string>
 						<string key="profileSelectionChanged:">id</string>
 						<string key="rememberPwdChanged:">id</string>
 						<string key="sharedChanged:">id</string>
@@ -1506,6 +1507,10 @@
 						</object>
 						<object class="IBActionInfo" key="fullscreenChanged:">
 							<string key="name">fullscreenChanged:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="passwordChanged:">
+							<string key="name">passwordChanged:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="profileSelectionChanged:">

@@ -354,23 +354,24 @@
             }
 		}
 	}
-	else if( password == sender )
-	{
-		if( nil != mServer && [mServer doYouSupport:EDIT_PASSWORD] )
-		{
-            NSString    *str = [sender stringValue];
-
-            if ([str length] > 0 || [rememberPwd state])
-                [mServer setPassword:str];
-            else {
-                /* Treat blank, non-saved password as no password: this means
-                 * that we'll prompt for a password if one is required, rather
-                 * than trying the empty string and presumably failing. */
-                [mServer setPassword:nil];
-            }
-		}
-	}
 }
+
+- (IBAction)passwordChanged:(id)sender
+{
+    if ([mServer doYouSupport:EDIT_PASSWORD]) {
+        NSString    *str = [sender stringValue];
+
+        if ([str length] > 0 || [rememberPwd state])
+            [mServer setPassword:str];
+        else {
+            /* Treat blank, non-saved password as no password: this means
+             * that we'll prompt for a password if one is required, rather
+             * than trying the empty string and presumably failing. */
+            [mServer setPassword:nil];
+        }
+    }
+}
+
 
 - (IBAction)rememberPwdChanged:(id)sender
 {

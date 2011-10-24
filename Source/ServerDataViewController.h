@@ -66,6 +66,7 @@
 - (void)setServer:(id<IServerData>)server;
 - (id<IServerData>)server;
 
+- (IBAction)passwordChanged:(id)sender;
 - (IBAction)rememberPwdChanged:(id)sender;
 - (IBAction)profileSelectionChanged:(id)sender;
 - (IBAction)fullscreenChanged:(id)sender;

@@ -56,6 +56,15 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+    /* We need to make sure than any changes to text fields get reflected in our
+     * preferences before we quit. */
+    [[self window] makeFirstResponder:nil];
+
+    /* Also, during termination, ServerDataManager needs to save, but it needs
+     * to hapeen after we make our changes. Thus, it is triggered here instead
+     * of ServerDataManager having its own notification. */
+    [[ServerDataManager sharedInstance] save];
+
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 

@@ -1160,7 +1160,7 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken of the VNC" */;
+			buildConfigurationList = E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -1673,7 +1673,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken of the VNC" */ = {
+		E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E20426EB087531990026AA26 /* Development */,

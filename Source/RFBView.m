@@ -59,14 +59,6 @@
 	return [sMapping objectForKey: name];
 }
 
-- (void)tintChanged:(NSNotification *)notif
-{
-    if (useTint) {
-        drawTint = [[_profile tint] alphaComponent] != 0.0;
-        [self setNeedsDisplay:YES];
-    }
-}
-
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
     return NO;
@@ -114,23 +106,20 @@
         [[self window] invalidateCursorRectsForView: self];
 }
 
-- (void)setUseTint: (BOOL)aUseTint
+- (void)setTint: (NSColor *)aTint
 {
-    useTint = aUseTint;
-    drawTint = useTint && [[_profile tint] alphaComponent] != 0.0;
+    if (![tint isEqual:aTint]) {
+        [tint release];
+        tint = [aTint retain];
+        drawTint = [tint alphaComponent] != 0.0;
+        [self setNeedsDisplay:YES];
+    }
 }
 
 - (void)setDelegate:(RFBConnection *)delegate
 {
     _delegate = delegate;
 	_eventFilter = [_delegate eventFilter];
-    if (_delegate)
-        _profile = [_delegate profile];
-    [self setUseTint:YES];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(tintChanged:)
-                                                 name:ProfileTintChangedMsg
-                                               object:_profile];
 	[self setCursorTo: nil];
 	[self setPostsFrameChangedNotifications: YES];
 	[[NSNotificationCenter defaultCenter] addObserver: _delegate selector: @selector(viewFrameDidChange:) name: NSViewFrameDidChangeNotification object: self];
@@ -149,7 +138,7 @@
     int             i;
 
     if (drawTint)
-        [[_profile tint] setFill];
+        [tint setFill];
 
     [self getRectsBeingDrawn:&rects count:&numRects];
     for (i = 0; i < numRects; i++) {

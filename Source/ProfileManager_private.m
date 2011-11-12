@@ -130,7 +130,7 @@
     [mAltKey selectItemAtIndex:[profile altKeyPreference]];
     [mShiftKey selectItemAtIndex:[profile shiftKeyPreference]];
 
-    [mTintColorWell setColor:[profile tint]];
+    [mTintColorWell setColor:[profile tintWhenFront:NO]];
 	
     [mEncodingTableView reloadData];
 }

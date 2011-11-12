@@ -59,7 +59,8 @@ NSString *kProfile_TapAndClickButtonSpeedForButton3_Key = @"TapAndClickButtonSpe
 NSString *kProfile_TapAndClickTimeoutForButton2_Key = @"TapAndClickTimeoutForButton2";
 NSString *kProfile_TapAndClickTimeoutForButton3_Key = @"TapAndClickTimeoutForButton3";
 NSString *kProfile_IsDefault_Key = @"IsDefault";
-NSString *kProfile_Tint_Key = @"Tint";
+NSString *kProfile_TintBack_Key = @"Tint";
+NSString *kProfile_TintFront_Key = @"TintFront";
 
 const unsigned int gEncodingValues[NUMENCODINGS] = {
 	rfbEncodingZRLE,
@@ -226,11 +227,18 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
         pixelFormatIndex = [[info objectForKey: kProfile_PixelFormat_Key]
                                 intValue];
 
-        obj = [info objectForKey: kProfile_Tint_Key];
+        obj = [info objectForKey: kProfile_TintBack_Key];
         if (obj)
-            tint = [[NSKeyedUnarchiver unarchiveObjectWithData:obj] retain];
-        if (tint == nil)
-            tint = [[NSColor clearColor] retain];
+            tintBack = [[NSKeyedUnarchiver unarchiveObjectWithData:obj]
+                                retain];
+        if (tintBack == nil)
+            tintBack = [[NSColor clearColor] retain];
+
+        if ((obj = [info objectForKey:kProfile_TintFront_Key]) != nil)
+            tintFront = [[NSKeyedUnarchiver unarchiveObjectWithData:obj]
+                                retain];
+        if (tintFront == nil)
+            tintFront = [tintBack retain];
 	}
     return self;
 }
@@ -268,7 +276,8 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
             _tapAndClickTimeout[i] = profile->_tapAndClickTimeout[i];
         }
 
-        tint = [profile->tint retain];
+        tintFront = [profile->tintFront retain];
+        tintBack = [profile->tintBack retain];
     }
     return self;
 }
@@ -279,7 +288,8 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     free(encodings);
     if (enabledEncodings)
         free(enabledEncodings);
-    [tint release];
+    [tintFront release];
+    [tintBack release];
     [super dealloc];
 }
 
@@ -398,8 +408,10 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 
     [dict setObject:[NSNumber numberWithInt:pixelFormatIndex]
              forKey:kProfile_PixelFormat_Key];
-    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tint]
-             forKey:kProfile_Tint_Key];
+    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tintFront]
+             forKey:kProfile_TintFront_Key];
+    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tintBack]
+             forKey:kProfile_TintBack_Key];
 
     return [dict autorelease];
 }
@@ -631,9 +643,9 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     return encodings[index].enabled;
 }
 
-- (NSColor *)tint
+- (NSColor *)tintWhenFront:(BOOL)front
 {
-    return tint;
+    return front ? tintFront : tintBack;
 }
 
 - (void)setCommandKeyPreference:(int)pref
@@ -755,10 +767,15 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     [self makeEnabledEncodings];
 }
 
-- (void)setTint:(NSColor *)aTint
+- (void)setTint:(NSColor *)aTint whenFront:(BOOL)front
 {
-    [tint autorelease];
-    tint = [aTint retain];
+    if (front) {
+        [tintFront autorelease];
+        tintFront = [aTint retain];
+    } else {
+        [tintBack autorelease];
+        tintBack = [aTint retain];
+    }
     [[NSNotificationCenter defaultCenter]
         postNotificationName:ProfileTintChangedMsg object:self];
 }

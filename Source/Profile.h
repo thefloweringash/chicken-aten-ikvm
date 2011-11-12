@@ -52,7 +52,6 @@ extern NSString *kProfile_TapAndClickButtonSpeedForButton3_Key;
 extern NSString *kProfile_TapAndClickTimeoutForButton2_Key;
 extern NSString *kProfile_TapAndClickTimeoutForButton3_Key;
 extern NSString *kProfile_IsDefault_Key;
-extern NSString *kProfile_Tint_Key;
 
 #define ProfileTintChangedMsg @"ProfileTintChangedMsg"
 #define ProfileEncodingsChangedMsg @"ProfileEncodingsChangedMsg"
@@ -95,7 +94,8 @@ struct encoding {
 	NSTimeInterval _tapAndClickButtonSpeed[2]; // 0 means double click interval
 	NSTimeInterval _tapAndClickTimeout[2];
 
-    NSColor *tint;
+    NSColor *tintFront;
+    NSColor *tintBack;
 }
 
 - (id)init;
@@ -135,7 +135,7 @@ struct encoding {
 - (int)numEncodings;
 - (NSString *)encodingNameAtIndex: (int)index;
 - (BOOL)encodingEnabledAtIndex: (int)index;
-- (NSColor *)tint;
+- (NSColor *)tintWhenFront:(BOOL)front;
 
 - (void)setCommandKeyPreference:(int)pref;
 - (void)setAltKeyPreference:(int)pref;
@@ -159,6 +159,6 @@ struct encoding {
 - (void)setCopyRectEnabled:(BOOL)enabled;
 - (void)setJpegEncodingEnabled:(BOOL)enabled;
 - (void)setJpegLevel:(int)level;
-- (void)setTint:(NSColor *)aTint;
+- (void)setTint:(NSColor *)aTint whenFront:(BOOL)front;
 
 @end

@@ -99,6 +99,11 @@ enum {
     [connection setSession:self];
     [connection setRfbView:rfbView];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(tintChanged:)
+                                                 name:ProfileTintChangedMsg
+                                               object:[connection profile]];
+
     return self;
 }
 
@@ -639,15 +644,22 @@ enum {
     }
 	[connection installMouseMovedTrackingRect];
 	[connection setFrameBufferUpdateSeconds: [[PrefController sharedController] frontFrameBufferUpdateSeconds]];
+    [rfbView setTint:[[connection profile] tintWhenFront:YES]];
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification
 {
 	[connection removeMouseMovedTrackingRect];
 	[connection setFrameBufferUpdateSeconds: [[PrefController sharedController] otherFrameBufferUpdateSeconds]];
+    [rfbView setTint:[[connection profile] tintWhenFront:NO]];
 	
 	//Reset keyboard state on remote end
 	[[connection eventFilter] clearAllEmulationStates];
+}
+
+- (void)tintChanged:(NSNotification *)notif
+{
+    [rfbView setTint:[[connection profile] tintWhenFront:[window isKeyWindow]]];
 }
 
 - (void)openOptions:(id)sender
@@ -689,7 +701,7 @@ enum {
 	[self windowDidResize: nil];
 	[window makeKeyAndOrderFront:nil];
 	[connection viewFrameDidChange: nil];
-    [rfbView setUseTint:YES];
+    [rfbView setTint:[[connection profile] tintWhenFront:YES]];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                 name:NSApplicationWillHideNotification object:nil];
@@ -747,7 +759,7 @@ enum {
             [scrollView reflectScrolledClipView:contentView];
         }
 
-        [rfbView setUseTint:NO];
+        [rfbView setTint:[NSColor clearColor]];
 
 		[self installFullscreenTrackingRects];
 		[self windowDidResize: nil];

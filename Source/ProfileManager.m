@@ -207,11 +207,10 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 - (IBAction)tintDidChange:(id)sender
 {
     Profile     *profile = [self _currentProfile];
+    NSColor     *color = [mTintColorWell color];
 
-    /* This causes a redraw of any currently open connections. We only want to
-     * do that when the color has really changed, which is why the tint triggers
-     * its own selector and is not clumped into formDidChange: */
-    [profile setTint: [mTintColorWell color]];
+    [profile setTint: color whenFront:YES];
+    [profile setTint: color whenFront:NO];
     
     [[ProfileDataManager sharedInstance] saveProfile:profile];
 }

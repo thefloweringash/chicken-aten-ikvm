@@ -24,11 +24,10 @@
 {
     RFBConnection   *_delegate;
     EventFilter     *_eventFilter;
-    Profile         *_profile;
     NSCursor        *_modifierCursor;
     NSCursor        *_serverCursor; // cursor sent by server, if any
     FrameBuffer     *fbuf;
-    BOOL            useTint;
+    NSColor         *tint;
     BOOL            drawTint;
 }
 
@@ -39,7 +38,7 @@
 
 - (void)setCursorTo: (NSString *)name;
 - (void)setServerCursorTo: (NSCursor *)aCursor;
-- (void)setUseTint: (BOOL)aUseTint;
+- (void)setTint: (NSColor *)aTint;
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender;
 - (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender;

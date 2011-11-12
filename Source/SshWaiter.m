@@ -181,6 +181,7 @@
     conn = [[RFBConnection alloc] initWithFileHandle:fh server:server];
     [conn setSshTunnel:tunnel];
     [delegate connectionSucceeded:conn];
+    [tunnel sshTunnelConnected];
 
     [fh release];
     [tunnel release];

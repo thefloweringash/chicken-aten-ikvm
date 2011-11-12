@@ -51,7 +51,7 @@
       V
   TUNNELING------------------------------+
       |                                  |
-      | [SshTunnel tunnelConnected]      |
+      | [SshTunnel sshTunnelConnected]   |
       V                                  | [SshTunnel close]
      OPEN                                | [delegate tunnelFailed:]
       |                                  |

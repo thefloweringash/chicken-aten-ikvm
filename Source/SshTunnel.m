@@ -75,7 +75,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 - (BOOL)setupFifos;
 - (void)cleanupFifos;
 
-- (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh;
+- (void)processStringFromStdout:(NSString *)str;
+- (void)processStringFromStderr:(NSString *)str;
 - (void)firstTimeConnecting:(NSString *)str;
 - (void)tunnelError:(NSString *)str;
 - (void)sshFailed:(NSString *)err;
@@ -307,84 +308,90 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     }
 
     str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    en = [[str componentsSeparatedByString:@"\n"] objectEnumerator];
 
-    while (line = [en nextObject]) {
-        [self processString:line fromFileHandle:[notif object]];
-    }
+    if ([notif object] == [sshOut fileHandleForReading]) {
+        [self processStringFromStdout: str];
+    } else if ([notif object] == [sshErr fileHandleForReading]) {
+        en = [[str componentsSeparatedByString:@"\n"] objectEnumerator];
+
+        while (line = [en nextObject])
+            [self processStringFromStderr: line];
+    } else
+        NSLog(@"Read notification from unknown object");
 
     [str release];
     [[notif object] readInBackgroundAndNotify];
 }
 
 /* Process one line of output from ssh */
-- (void)processString:(NSString *)str fromFileHandle:(NSFileHandle *)fh
+- (void)processStringFromStdout:(NSString *)str
 {
-    if (fh == [sshOut fileHandleForReading]) {
-        // data from ssh's standard out
-        if ([str isEqualToString:@""]) {
-            // blank lines means that we've connected
+    // data from ssh's standard out
+    if ([str isEqualToString:@"\n"]) {
+        // blank lines means that we've connected
+        if (state == SSH_STATE_OPENING) {
             state = SSH_STATE_TUNNELING;
             [self cleanupFifos];
             [delegate tunnelEstablishedAtPort:localPort];
-        } else
-            NSLog(@"Unknown message from ssh stdout: %@", str);
-    } else if (fh == [sshErr fileHandleForReading]) {
-        // data from ssh's standard error: messages sent via our helper. These
-        // require a response.
-        if ([str hasPrefix:@"Chicken ssh-helper: "]) {
-            if ([str hasPrefix:@"Chicken ssh-helper: Password:"]
-                    || [str hasSuffix:@"'s password:"]) {
-                if (state == SSH_STATE_OPENING) {
-                    state = SSH_STATE_PROMPT;
-                    [delegate getPassword];
-                }
-            } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
-                if (state == SSH_STATE_OPENING) {
-                    [self firstTimeConnecting:str];
-                }
-            } else
-                NSLog(@"Unknown message from helper: %@", str);
-
-        // messages sent by ssh itself.
-        } else if ([str hasPrefix:@"ssh: Could not resolve hostname"]) {
-            NSString *fmt = NSLocalizedString(@"NoNamedServer", nil);
-            NSString *str = [NSString stringWithFormat:fmt, sshHost];
-            [self sshFailed:str];
-        } else if ([str hasPrefix:@"ssh: connect to host"]) {
-            if ([str hasSuffix:@"Connection refused\r"]) {
-                [self sshFailed:NSLocalizedString(@"ConnectRefused", nil)];
-            } else if ([str hasSuffix:@"Operation timed out\r"]) {
-                [self sshFailed:NSLocalizedString(@"ConnectTimedOut", nil)];
-            } else {
-                [self sshFailed:[[str componentsSeparatedByString:@": "]
-                                    lastObject]];
-            }
-        } else if ([str hasPrefix:@"channel "])
-            [self tunnelError:str];
-        else if ([str length] > 0) {
-            int         i;
-            NSString    *dict[][2] = {
-                {@"@@@@@@@@", @"SshKeyMismatch"},
-                {@"Permission denied", @"SshPermissionDenied"},
-                {@"Connection closed by ", @"SshConnectionClosed"},
-                {@"Identity added:", nil},
-                {@"Warning: Permanently added", nil},
-                {@"/bin/cat: ", @"CatError"},
-                {@"ssh_askpass: exec(", @"SshScriptError"}};
-            
-            for (i = 0; i < sizeof(dict) / sizeof(*dict); i++) {
-                if ([str hasPrefix:dict[i][0]]) {
-                    if (dict[i][1])
-                        [self sshFailed:NSLocalizedString(dict[i][1], nil)];
-                    return;
-                }
-            }
-
-            NSLog(@"Unknown message from ssh error: %@", str);
         }
     } else
-        NSLog(@"Read notification from unknown object");
+        NSLog(@"Unknown message from ssh stdout: %@", str);
+}
+
+- (void)processStringFromStderr:(NSString *)str
+{
+    // messages sent via our helper. These require a response.
+    if ([str hasPrefix:@"Chicken ssh-helper: "]) {
+        if ([str hasPrefix:@"Chicken ssh-helper: Password:"]
+                || [str hasSuffix:@"'s password:"]) {
+            if (state == SSH_STATE_OPENING) {
+                state = SSH_STATE_PROMPT;
+                [delegate getPassword];
+            }
+        } else if ([str hasPrefix:@"Chicken ssh-helper: The authenticity of host "]) {
+            if (state == SSH_STATE_OPENING) {
+                [self firstTimeConnecting:str];
+            }
+        } else
+            NSLog(@"Unknown message from helper: %@", str);
+
+    // messages sent by ssh itself.
+    } else if ([str hasPrefix:@"ssh: Could not resolve hostname"]) {
+        NSString *fmt = NSLocalizedString(@"NoNamedServer", nil);
+        NSString *str = [NSString stringWithFormat:fmt, sshHost];
+        [self sshFailed:str];
+    } else if ([str hasPrefix:@"ssh: connect to host"]) {
+        if ([str hasSuffix:@"Connection refused\r"]) {
+            [self sshFailed:NSLocalizedString(@"ConnectRefused", nil)];
+        } else if ([str hasSuffix:@"Operation timed out\r"]) {
+            [self sshFailed:NSLocalizedString(@"ConnectTimedOut", nil)];
+        } else {
+            [self sshFailed:[[str componentsSeparatedByString:@": "]
+                                lastObject]];
+        }
+    } else if ([str hasPrefix:@"channel "])
+        [self tunnelError:str];
+    else if ([str length] > 0) {
+        int         i;
+        NSString    *dict[][2] = {
+            {@"@@@@@@@@", @"SshKeyMismatch"},
+            {@"Permission denied", @"SshPermissionDenied"},
+            {@"Connection closed by ", @"SshConnectionClosed"},
+            {@"Identity added:", nil},
+            {@"Warning: Permanently added", nil},
+            {@"/bin/cat: ", @"CatError"},
+            {@"ssh_askpass: exec(", @"SshScriptError"}};
+        
+        for (i = 0; i < sizeof(dict) / sizeof(*dict); i++) {
+            if ([str hasPrefix:dict[i][0]]) {
+                if (dict[i][1])
+                    [self sshFailed:NSLocalizedString(dict[i][1], nil)];
+                return;
+            }
+        }
+
+        NSLog(@"Unknown message from ssh error: %@", str);
+    }
 }
 
 /* This is our first time connecting and the ssh program has given us a prompt

@@ -43,6 +43,7 @@
 - (id)initWithServer:(id<IServerData>)aServer delegate:(SshWaiter *)aDelegate;
 - (void)dealloc;
 
+- (void)sshTunnelConnected;
 - (void)close;
 
 - (in_port_t)localPort;

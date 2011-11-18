@@ -36,7 +36,7 @@
 	IBOutlet NSSplitView *splitView;
     IBOutlet NSButton *serverDeleteBtn;
     IBOutlet NSButton *serverAddBtn;
-    NSMutableArray*	connections;
+    NSMutableArray*	sessions;
 	ServerDataViewController* mServerCtrler;
 	BOOL mDisplayGroups;
 	BOOL mRunningFromCommandLine;

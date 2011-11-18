@@ -90,7 +90,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	mServerCtrler = [[ServerDataViewController alloc] init];
 
     signal(SIGPIPE, SIG_IGN);
-    connections = [[NSMutableArray alloc] init];
+    sessions = [[NSMutableArray alloc] init];
     [[ProfileManager sharedManager] wakeup];
     
 	NSBox *serverCtrlerBox = [mServerCtrler box];
@@ -431,9 +431,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 - (void)removeConnection:(id)aConnection
 {
     [aConnection retain];
-    [connections removeObject:aConnection];
+    [sessions removeObject:aConnection];
     [aConnection autorelease];
-	if ( 0 == [connections count] ) {
+	if ( 0 == [sessions count] ) {
         if ( mRunningFromCommandLine ) 
             [NSApp terminate:self];
         else
@@ -463,7 +463,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 - (void)successfulConnection: (RFBConnection *)theConnection
 {
     Session *sess = [[Session alloc] initWithConnection:theConnection];
-    [connections addObject:sess];
+    [sessions addObject:sess];
     [sess release];
 }
 
@@ -508,7 +508,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 // Jason added the following for full-screen windows
 - (void)makeAllConnectionsWindowed {
-	NSEnumerator *enumerator = [connections objectEnumerator];
+	NSEnumerator *enumerator = [sessions objectEnumerator];
     Session      *session;
 
 	while (session = [enumerator nextObject]) {
@@ -654,7 +654,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)setFrontWindowUpdateInterval: (NSTimeInterval)interval
 {
-	NSEnumerator *enumerator = [connections objectEnumerator];
+	NSEnumerator *enumerator = [sessions objectEnumerator];
     Session      *session;
 	
 	while (session = [enumerator nextObject]) {
@@ -667,7 +667,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)setOtherWindowUpdateInterval: (NSTimeInterval)interval
 {
-	NSEnumerator *enumerator = [connections objectEnumerator];
+	NSEnumerator *enumerator = [sessions objectEnumerator];
     Session      *session;
 	
 	while (session = [enumerator nextObject]) {

@@ -71,6 +71,9 @@ enum {
 
 - (id)initWithConnection:(RFBConnection *)aConnection
 {
+    if ((self = [super init]) == nil)
+        return nil;
+
     connection = [aConnection retain];
     server_ = [[connection server] retain];
     host = [[server_ host] retain];

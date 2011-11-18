@@ -24,6 +24,18 @@ based on the Chicken of the VNC code, with several improvements.</p>
 <div class="section">
 	<div id="versionHistory">
 	<dl>
+        <dt>Version 2.2b2 (???)</dt>
+        <dd><ul>
+            <li>- Fixed bug with changes to ssh host not being saved in some
+            circumstances.</li>
+            <li>- Reduce accesses to KeyChain while typing passowrd.</li>
+            <li>- Some error message include the encoding which was likely
+            responsible.</li>
+            <li>- Correctly detect password prompt from ssh in more cases
+            (thanks to Darren Oster for helping track this down).</li>
+            <li>- Report error messages with establishing tunneled
+            connection.</li>
+        </ul></dd>
         <dt>Version 2.2b1 (August 5, 2011)</dt>
         <dd><ul>
             <li>- Added ability to have Chicken set up SSH tunnels.</li>
@@ -50,9 +62,9 @@ based on the Chicken of the VNC code, with several improvements.</p>
             <li>- More efficient at handling lots of data coming in small
             pieces.</li>
             <li>- Servers now saved in property list format.</li>
-            <li>- Replaced funcitons for manipulating KeyChain with
+            <li>- Replaced functions for manipulating KeyChain with
             non-deprecated ones.</li>
-        </dd>
+        </ul></dd>
         <dt>Version 2.1.1 (February 12, 2011)</dt>
         <dd><ul>
             <li>- Fixed bug with changes to the update speed not taking effect

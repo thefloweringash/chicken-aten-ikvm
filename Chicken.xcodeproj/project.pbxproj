@@ -1581,7 +1581,7 @@
 				GCC_VERSION = 4.0;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.2b1;
+				_CHICKEN_VERSION_ = 2.2b2;
 			};
 			name = Development;
 		};
@@ -1594,7 +1594,7 @@
 				);
 				GCC_VERSION = 4.0;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				_CHICKEN_VERSION_ = 2.2b1;
+				_CHICKEN_VERSION_ = 2.2b2;
 			};
 			name = Deployment;
 		};
@@ -1604,7 +1604,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = 4.0;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				_CHICKEN_VERSION_ = 2.2b1;
+				_CHICKEN_VERSION_ = 2.2b2;
 			};
 			name = Default;
 		};
@@ -1655,7 +1655,7 @@
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.2b1;
+				_CHICKEN_VERSION_ = 2.2b2;
 			};
 			name = "Universal Fast Development";
 		};

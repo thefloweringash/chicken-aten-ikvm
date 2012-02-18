@@ -152,13 +152,7 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     currentRect.size.width = ntohs(msg->r.w);
     currentRect.size.height = ntohs(msg->r.h);
     encoding = ntohl(msg->encoding);
-    if (currentRect.size.width == 0 && currentRect.size.height == 0
-            && encoding != rfbEncodingPointerPos
-            && encoding != rfbEncodingDesktopName) {
-		// this is a hack for compatibility with OSXvnc 1.0
-		[self updateComplete];
-		return;
-    }
+
     switch(encoding) {
         case rfbEncodingRaw:
             theReader = rawEncodingReader;

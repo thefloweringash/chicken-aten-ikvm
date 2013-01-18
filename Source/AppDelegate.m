@@ -12,6 +12,7 @@
 #import "ProfileManager.h"
 #import "RFBConnectionManager.h"
 #import "ListenerController.h"
+#import "ServerDataManager.h"
 
 
 @implementation AppDelegate
@@ -118,6 +119,54 @@
 - (NSMenuItem *)getFullScreenMenuItem
 {
     return fullScreenMenuItem;
+}
+
+- (NSMenu *)applicationDockMenu:(NSApplication *)sender
+{
+	NSMenu          *dockMenu = [[[NSMenu alloc] init] autorelease];
+	NSEnumerator    *enumerator;
+	NSString        *s;
+
+	[dockMenu addItemWithTitle:NSLocalizedString(@"Connect to...", nil)
+			  action:nil
+			  keyEquivalent:@""];
+
+	enumerator = [[[ServerDataManager sharedInstance] sortedServerNames]
+						objectEnumerator];
+	while (s = [enumerator nextObject]) {
+		NSString	*title = [@"   " stringByAppendingString: s];
+		NSMenuItem	*item =  [dockMenu addItemWithTitle:title
+										action:@selector(connectClicked:)
+										keyEquivalent:@""];
+		[item setTarget:self];
+	}
+
+    return dockMenu;
+}	
+
+- (void)connectClicked: (id)sender
+{
+	ServerDataManager *serverManager = [ServerDataManager sharedInstance];
+	NSString	*servName = [[sender title] stringByTrimmingCharactersInSet:
+									[NSCharacterSet whitespaceCharacterSet]];
+	id<IServerData> server = [serverManager getServerWithName:servName];
+
+	// :TOFIX: the following will leak memory if the users makes two selections
+	// in rapid succession, because there is only one dockConnection variable.
+	dockConnection = [[ConnectionWaiter waiterForServer:server delegate:self window:nil] retain];
+}
+
+- (void)connectionSucceeded: (RFBConnection *)theConnection
+{
+	[[RFBConnectionManager sharedManager] successfulConnection:theConnection];
+	[dockConnection release];
+	dockConnection = nil;
+}
+
+- (void)connectionFailed
+{
+	[dockConnection release];
+	dockConnection = nil;
 }
 
 @end

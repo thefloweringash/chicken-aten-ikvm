@@ -7,12 +7,14 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "ConnectionWaiter.h"
 
-
-@interface AppDelegate : NSObject {
+@interface AppDelegate : NSObject<ConnectionWaiterDelegate> {
 	IBOutlet NSMenuItem *mRendezvousMenuItem;
 	IBOutlet NSTextField *mInfoVersionNumber;
     IBOutlet NSMenuItem *fullScreenMenuItem;
+	
+	ConnectionWaiter    *dockConnection;
 }
 
 - (IBAction)showPreferences: (id)sender;
@@ -24,5 +26,9 @@
 - (IBAction)showHelp: (id)sender;
 
 - (NSMenuItem *)getFullScreenMenuItem;
+
+- (NSMenu *)applicationDockMenu:(NSApplication *)sender;
+- (void)connectionSucceeded: (RFBConnection *)theConnection;
+- (void)connectionFailed;
 
 @end

@@ -30,6 +30,7 @@
 // imports required for socket initialization
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <poll.h>
 #include <unistd.h>
 
 // --- Preference Keys --- //
@@ -78,6 +79,8 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
         
         listeningSockets[0] = nil;
         listeningSockets[1] = nil;
+
+        fileHandles = [[NSMutableArray alloc] init];
     }
 	
 	return self;
@@ -86,9 +89,16 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
 
 - (void)dealloc
 {	
+    [self closeLingering:nil];
     [self stopListener];
     [self savePrefs];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    [fileHandles release];
+    [closeTimer invalidate];
+    [closeTimer release];
+    [resetErrorTimer invalidate];
+    [resetErrorTimer release];
 	
 	[super dealloc];
 }
@@ -104,6 +114,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
                                                object:(id)[ProfileDataManager sharedInstance]];
     
     [self updateUI];
+    [self setStatus:NSLocalizedString(@"listenStopped", nil)];
 }
 
 
@@ -112,6 +123,8 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
 
 - (void)actionPressed:(id)sender
 {
+    [self closeLingering:nil];
+
     if (!listeningSockets[0]) {
         // listen
         ProfileManager* pm = [ProfileManager sharedManager];
@@ -148,8 +161,6 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     
     [actionBtn setTitle: NSLocalizedString(
         !active ? @"listenStart" : @"listenStop", nil)];
-    [statusText setStringValue: NSLocalizedString(
-        !active ? @"listenStopped" : @"listenRunning", nil)];
         
     [portText     setEnabled: !active];
     [localOnlyBtn setEnabled: !active];
@@ -185,7 +196,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
         int e = errno;
         if ([self isWindowLoaded]) {
             NSError* errObj = [NSError errorWithDomain:NSPOSIXErrorDomain code:e userInfo:nil];
-            [statusText setStringValue: [errObj localizedDescription]];
+            [self setStatus: [errObj localizedDescription]];
         }
         
         close(fdForListening);
@@ -252,6 +263,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     listeningProfile = [profile retain];
 
     [self updateUI];
+    [self setStatus: NSLocalizedString(@"listenRunning", nil)];
     
     return YES;
 }
@@ -268,21 +280,107 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     [listeningProfile release]; listeningProfile = nil;
     
     [self updateUI];
+    [self setStatus: NSLocalizedString(@"listenStopped", nil)];
 }
 
+- (void)setStatus:(NSString *)str;
+{
+    [statusText setStringValue:str];
+
+    [resetErrorTimer invalidate];
+    [resetErrorTimer release];
+    resetErrorTimer = nil;
+}
+
+- (void)clearError:(NSTimer *)timer
+{
+    NSString    *status;
+
+    if ([fileHandles count] > 0)
+        status = NSLocalizedString(@"listenConnected", nil);
+    else
+        status = NSLocalizedString(@"listenRunning", nil);
+
+    [self setStatus:status];
+}
+
+// Connection management
 
 - (void)connectionReceived:(NSNotification *)aNotification {
     NSFileHandle * incomingConnection = [[aNotification userInfo] objectForKey:NSFileHandleNotificationFileHandleItem];
-    ServerFromConnection    *server;
 
-    [self stopListener];
-    
-    RFBConnectionManager* cm = [RFBConnectionManager sharedManager];
-    server = [[ServerFromConnection alloc] initFromConnection:incomingConnection];
+    /* We've received a connection. However, we want to wait to see if it sends
+     * any data before we start a connection and stop listening. */
+    [fileHandles addObject:incomingConnection];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+            selector:@selector(dataReceived:)
+            name:NSFileHandleDataAvailableNotification
+            object:incomingConnection];
+    [incomingConnection waitForDataInBackgroundAndNotify];
+
+    [self setStatus:NSLocalizedString(@"listenConnected", nil)];
+    [listeningSockets[0] acceptConnectionInBackgroundAndNotify];
+    [listeningSockets[1] acceptConnectionInBackgroundAndNotify];
+}
+
+- (void)dataReceived:(NSNotification *)notif
+{
+    NSFileHandle            *fh = [notif object];
+    ServerFromConnection    *server;
+    RFBConnectionManager    *cm = [RFBConnectionManager sharedManager];
+    struct pollfd           pfd;
+    int                     numev;
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:nil
+            object:fh];
+    [fileHandles removeObject:fh];
+
+    /* We've received a notification that either the socket has received data or
+     * it's been closed. We use a non-blocking call to poll to distinguish these
+     * two cases. */
+    pfd.fd = [fh fileDescriptor];
+    pfd.events = POLLERR | POLLHUP | POLLIN;
+    numev = poll(&pfd, 1, 0);
+    if (numev < 1 || pfd.revents & (POLLERR | POLLHUP)) {
+        // Display an error message, but clear we'll clear it a little later
+        [self setStatus:NSLocalizedString(@"listenClosed", nil)];
+        resetErrorTimer = [NSTimer scheduledTimerWithTimeInterval:3*60
+                                target:self selector:@selector(clearError:)
+                                userInfo:nil repeats:NO];
+        [resetErrorTimer retain];
+        return;
+    }
+
+    server = [[ServerFromConnection alloc] initFromConnection:fh];
     [server setFullscreen: [NSApp isActive] && [fullscreen state]];
     [server setProfile:listeningProfile];
-    [cm createConnectionWithFileHandle:incomingConnection server:server];
+    [cm createConnectionWithFileHandle:fh server:server];
     [server release];
+
+    [self stopListener];
+    if (closeTimer == nil && [fileHandles count] > 0) {
+        /* We may have received multiple connections during the time we were
+         * waiting for data. We close any extra connections which aren't sending
+         * data. */
+        closeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self
+                                selector:@selector(closeLingering:)
+                                userInfo:nil repeats:NO];
+        [closeTimer retain];
+    }
+}
+
+- (void)closeLingering:(NSTimer *)timer
+{
+    int     i;
+
+    for (i = 0; i < [fileHandles count]; i++) {
+        [[fileHandles objectAtIndex: i] closeFile];
+    }
+    [fileHandles removeAllObjects];
+
+    [closeTimer invalidate];
+    [closeTimer release];
+    closeTimer = nil;
 }
 
 #pragma mark -

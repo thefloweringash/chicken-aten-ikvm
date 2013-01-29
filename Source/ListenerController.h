@@ -35,6 +35,10 @@
 
     NSFileHandle* listeningSockets[2]; // listening socket: IPv4 and IPv6
     Profile* listeningProfile;
+
+    NSMutableArray  *fileHandles;
+    NSTimer         *closeTimer;
+    NSTimer         *resetErrorTimer;
 }
 
 + (ListenerController*)sharedController;
@@ -45,6 +49,8 @@
 
 - (BOOL)startListenerOnPort:(int)port withProfile:(Profile*)profile localOnly:(BOOL)local;
 - (void)stopListener;
+- (void)setStatus: (NSString *)str;
+- (void)closeLingering: (NSTimer *)timer;
 
 - (void)setProfilePopupToProfile: (NSString *)profileName;
 - (void)changeProfileTo:(Profile *)profile;

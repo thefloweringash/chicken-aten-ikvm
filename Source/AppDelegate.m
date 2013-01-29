@@ -13,9 +13,17 @@
 #import "RFBConnectionManager.h"
 #import "ListenerController.h"
 #import "ServerDataManager.h"
-
+#import "DockConnection.h"
 
 @implementation AppDelegate
+
+- (id) init
+{
+    if (self = [super init])
+        dockConnections = [[NSMutableArray alloc] init];
+
+    return self;
+}
 
 /* This will copy the Chicken of the VNC preferences file to a Chicken file, if
  * the former exists and the latter doesn't. This allows us to inherit Chicken
@@ -121,6 +129,8 @@
     return fullScreenMenuItem;
 }
 
+/* Dock menu-related selectors */
+
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender
 {
 	NSMenu              *dockMenu = [[[NSMenu alloc] init] autorelease];
@@ -143,29 +153,32 @@
         [item setRepresentedObject:[serverManager getServerWithName:s]];
 	}
 
+    if ([dockConnections count] > 0) {
+        // Menu items for current dock-initiated connection attempts.
+        [dockMenu addItem:[NSMenuItem separatorItem]];
+        [dockConnections makeObjectsPerformSelector:@selector(addMenuItems:)
+                withObject:dockMenu];
+    }
+
     return dockMenu;
 }	
 
 - (void)connectClicked: (id)sender
 {
-	id<IServerData> server = [sender representedObject];
+    DockConnection      *conn;
 
-	// :TOFIX: the following will leak memory if the users makes two selections
-	// in rapid succession, because there is only one dockConnection variable.
-	dockConnection = [[ConnectionWaiter waiterForServer:server delegate:self window:nil] retain];
+    conn = [[DockConnection alloc] initWithServer:[sender representedObject]];
+    [dockConnections addObject:conn];
+    [conn release];
 }
 
-- (void)connectionSucceeded: (RFBConnection *)theConnection
+- (void)removeDockConnection: (DockConnection *)conn
 {
-	[[RFBConnectionManager sharedManager] successfulConnection:theConnection];
-	[dockConnection release];
-	dockConnection = nil;
-}
-
-- (void)connectionFailed
-{
-	[dockConnection release];
-	dockConnection = nil;
+    /* This selector is called by the object conn itself. We want to make sure
+     * that the object continues to exist, even though we're about to remove it
+     * from our array. */
+    [[conn retain] autorelease];
+    [dockConnections removeObject:conn];
 }
 
 @end

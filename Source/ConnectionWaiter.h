@@ -29,6 +29,7 @@
 @protocol IServerData;
 @class Profile;
 @class RFBConnection;
+@class ConnectionWaiter;
 
 @protocol ConnectionWaiterDelegate <NSObject>
 
@@ -73,6 +74,7 @@
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWind;
 - (void)dealloc;
 
+- (id<IServerData>)server;
 - (void)setErrorStr:(NSString *)str;
 
 - (void)cancel;

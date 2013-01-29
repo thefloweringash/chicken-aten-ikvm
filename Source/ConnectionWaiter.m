@@ -77,6 +77,11 @@
     [super dealloc];
 }
 
+- (id<IServerData>)server
+{
+    return server;
+}
+
 - (void)setErrorStr:(NSString *)str
 {
     [errorStr autorelease];

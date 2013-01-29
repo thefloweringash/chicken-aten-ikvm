@@ -200,6 +200,8 @@
 		DA78379A12DE159800F1893E /* SshWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = DA78379812DE159800F1893E /* SshWaiter.m */; };
 		DA80A6EF11E27B430076CB0A /* CursorPseudoEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DA80A6ED11E27B430076CB0A /* CursorPseudoEncodingReader.h */; };
 		DA80A6F011E27B430076CB0A /* CursorPseudoEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA80A6EE11E27B430076CB0A /* CursorPseudoEncodingReader.m */; };
+		DAA856D116B8717100A40AB5 /* DockConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = DAA856CF16B8717100A40AB5 /* DockConnection.h */; };
+		DAA856D216B8717100A40AB5 /* DockConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA856D016B8717100A40AB5 /* DockConnection.m */; };
 		DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */; };
 		DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */; };
 		DABF105B13E346AC00558AE1 /* jcsamss2.asm in Sources */ = {isa = PBXBuildFile; fileRef = DA6030F111E0401E00271F8F /* jcsamss2.asm */; };
@@ -426,6 +428,8 @@
 		DA80B68A11E1041400C536FF /* jdmrgss2.asm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm.asm; name = jdmrgss2.asm; path = "libjpeg-turbo/simd/jdmrgss2.asm"; sourceTree = "<group>"; };
 		DA80B68B11E1041400C536FF /* jsimdcfg.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = jsimdcfg.inc; path = "libjpeg-turbo/simd/jsimdcfg.inc"; sourceTree = "<group>"; };
 		DA80B68C11E1041400C536FF /* jsimdext.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = jsimdext.inc; path = "libjpeg-turbo/simd/jsimdext.inc"; sourceTree = "<group>"; };
+		DAA856CF16B8717100A40AB5 /* DockConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DockConnection.h; sourceTree = "<group>"; };
+		DAA856D016B8717100A40AB5 /* DockConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DockConnection.m; sourceTree = "<group>"; };
 		DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesktopNameEncodingReader.h; sourceTree = "<group>"; };
 		DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesktopNameEncodingReader.m; sourceTree = "<group>"; };
 		DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "ssh-helper.sh"; path = "Resources/ssh-helper.sh"; sourceTree = "<group>"; };
@@ -1027,6 +1031,8 @@
 				F536C26703937E5301178D82 /* ZlibHexEncodingReader.m */,
 				F536C26803937E5301178D82 /* ZRLEEncodingReader.h */,
 				F536C26903937E5301178D82 /* ZRLEEncodingReader.m */,
+				DAA856CF16B8717100A40AB5 /* DockConnection.h */,
+				DAA856D016B8717100A40AB5 /* DockConnection.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -1130,6 +1136,7 @@
 				DA78379912DE159800F1893E /* SshWaiter.h in Headers */,
 				DAD344BF1304648200134E29 /* jpegcomp.h in Headers */,
 				DABF107A13E3472100558AE1 /* jconfig.h in Headers */,
+				DAA856D116B8717100A40AB5 /* DockConnection.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1353,6 +1360,7 @@
 				DABF10A913E3479000558AE1 /* jerror.c in Sources */,
 				DABF111913E34A7600558AE1 /* jdsample.c in Sources */,
 				DABF111E13E34A9000558AE1 /* jcomapi.c in Sources */,
+				DAA856D216B8717100A40AB5 /* DockConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

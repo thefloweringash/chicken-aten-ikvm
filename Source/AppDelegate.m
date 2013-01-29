@@ -123,22 +123,24 @@
 
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender
 {
-	NSMenu          *dockMenu = [[[NSMenu alloc] init] autorelease];
-	NSEnumerator    *enumerator;
-	NSString        *s;
+	NSMenu              *dockMenu = [[[NSMenu alloc] init] autorelease];
+    ServerDataManager   *serverManager = [ServerDataManager sharedInstance];
+	NSEnumerator        *enumerator;
+	NSString            *s;
 
 	[dockMenu addItemWithTitle:NSLocalizedString(@"Connect to...", nil)
 			  action:nil
 			  keyEquivalent:@""];
 
-	enumerator = [[[ServerDataManager sharedInstance] sortedServerNames]
-						objectEnumerator];
+	enumerator = [[serverManager sortedServerNames] objectEnumerator];
 	while (s = [enumerator nextObject]) {
 		NSString	*title = [@"   " stringByAppendingString: s];
 		NSMenuItem	*item =  [dockMenu addItemWithTitle:title
 										action:@selector(connectClicked:)
 										keyEquivalent:@""];
+
 		[item setTarget:self];
+        [item setRepresentedObject:[serverManager getServerWithName:s]];
 	}
 
     return dockMenu;
@@ -146,10 +148,7 @@
 
 - (void)connectClicked: (id)sender
 {
-	ServerDataManager *serverManager = [ServerDataManager sharedInstance];
-	NSString	*servName = [[sender title] stringByTrimmingCharactersInSet:
-									[NSCharacterSet whitespaceCharacterSet]];
-	id<IServerData> server = [serverManager getServerWithName:servName];
+	id<IServerData> server = [sender representedObject];
 
 	// :TOFIX: the following will leak memory if the users makes two selections
 	// in rapid succession, because there is only one dockConnection variable.

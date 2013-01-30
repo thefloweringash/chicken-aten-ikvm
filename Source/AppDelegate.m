@@ -144,13 +144,13 @@
 
 	enumerator = [[serverManager sortedServerNames] objectEnumerator];
 	while (s = [enumerator nextObject]) {
-		NSString	*title = [@"   " stringByAppendingString: s];
-		NSMenuItem	*item =  [dockMenu addItemWithTitle:title
+		NSMenuItem	*item =  [dockMenu addItemWithTitle:s
 										action:@selector(connectClicked:)
 										keyEquivalent:@""];
 
 		[item setTarget:self];
         [item setRepresentedObject:[serverManager getServerWithName:s]];
+        [item setIndentationLevel:1];
 	}
 
     if ([dockConnections count] > 0) {

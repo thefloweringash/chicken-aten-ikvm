@@ -138,7 +138,7 @@
 	NSEnumerator        *enumerator;
 	NSString            *s;
 
-	[dockMenu addItemWithTitle:NSLocalizedString(@"Connect to...", nil)
+	[dockMenu addItemWithTitle:NSLocalizedString(@"ConnectTo", nil)
 			  action:nil
 			  keyEquivalent:@""];
 

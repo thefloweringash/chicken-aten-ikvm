@@ -36,13 +36,13 @@
                                errror, or because we requested it. */
 
 /* SshTunnel operates on a state machine as follows. The state transitions can
-   by messages to SshTunnel, by the ssh program or both. In the latter case,
-   these trigger callbacks to the delegate as shown below.
+   be triggered by messages to SshTunnel, by the ssh program or both. In the
+   latter case, these trigger callbacks to the delegate as shown below.
 
-              [SshTunnel acceptKey:]
-              [SshTunnel usePassword:]
-       +-------------------<----------------------+
-       V                                          |
+    |         [SshTunnel acceptKey:]
+    |         [SshTunnel usePassword:]
+    |  +-------------------<----------------------+
+    V  V                                          |
    OPENING -----------------------------------> PROMPT
       |      [delegate firstTimeConnectiong:]
       |      [delegate getPassword]

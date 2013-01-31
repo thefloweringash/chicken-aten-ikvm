@@ -244,12 +244,31 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     return [self nameForEncoding:encoding];
 }
 
+/* Returns the name associated to the given encoding number. Note that this is
+ * used for debugging purposes when we encounter an error, so it returns nil for
+ * the LastRect pseudo-encoding, because that is just a flag that there has been
+ * non-rectangle data since the last rectangle, so the last encoding is not the
+ * cause of the error. */
 - (NSString *)nameForEncoding:(CARD32)enc
 {
     if (enc < sizeof(encodingNames) / sizeof(*encodingNames))
         return encodingNames[enc];
-    else
-        return nil;
+    else {
+        switch(enc) {
+            case rfbEncodingDesktopName:
+                return @"DesktopName";
+            case rfbEncodingRichCursor:
+                return @"RichCursor";
+            case rfbEncodingPointerPos:
+                return @"PointerPos";
+            case rfbEncodingLastRect:
+                return nil; // there's been non-rectangle data since last rect
+            case rfbEncodingDesktopSize:
+                return @"DesktopSize";
+            default:
+                return nil;
+        }
+    }
 }
 
 - (double)rectanglesTransferred

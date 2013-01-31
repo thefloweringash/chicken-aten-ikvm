@@ -85,6 +85,7 @@ extern NSString *encodingNames[];
 - (void)didRect:(EncodingReader*)aReader;
 
 - (NSString *)lastEncodingName; // encoding of last rectangle read
+- (NSString *)nameForEncoding:(CARD32)enc;
 
 - (double)rectanglesTransferred;
 - (double)bytesRepresented;

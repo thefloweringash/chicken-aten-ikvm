@@ -204,14 +204,14 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     }
     if(theReader == nil) {
         NSString    *err;
-        if (lastEncoding >= sizeof(encodingNames) / sizeof(*encodingNames)) {
-            NSString   *fmt = NSLocalizedString(@"UnknownRectangle", nil);
-            err = [NSString stringWithFormat:fmt, encoding];
-        } else {
+        NSString    *encName = [self nameForEncoding:lastEncoding];
+        if (encName) {
             NSString   *fmt = NSLocalizedString(@"UnknownRectangleLastEncoding",
                                                 nil);
-            err = [NSString stringWithFormat:fmt, encoding,
-                                             encodingNames[lastEncoding]];
+            err = [NSString stringWithFormat:fmt, encoding, encName];
+        } else {
+            NSString   *fmt = NSLocalizedString(@"UnknownRectangle", nil);
+            err = [NSString stringWithFormat:fmt, encoding];
         }
         [connection terminateConnection:err];
     } else {
@@ -241,8 +241,13 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
 
 - (NSString *)lastEncodingName
 {
-    if (encoding < sizeof(encodingNames) / sizeof(*encodingNames))
-        return encodingNames[encoding];
+    return [self nameForEncoding:encoding];
+}
+
+- (NSString *)nameForEncoding:(CARD32)enc
+{
+    if (enc < sizeof(encodingNames) / sizeof(*encodingNames))
+        return encodingNames[enc];
     else
         return nil;
 }

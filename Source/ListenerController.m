@@ -1,5 +1,5 @@
 //
-//  ListenerController.h
+//  ListenerController.m
 //  Chicken of the VNC
 //
 //  Created by Mark Lentczner on Sat Oct 23 2004.

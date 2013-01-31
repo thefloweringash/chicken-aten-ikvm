@@ -1,5 +1,5 @@
 //
-//  ServerFromPrefs.h
+//  ServerDataViewController.h
 //  Chicken of the VNC
 //
 //  Created by Jared McIntyre on Sun May 1 2004.

@@ -1,5 +1,5 @@
 //
-//  ServerManager.m
+//  ServerDataManager.m
 //  Chicken of the VNC
 //
 //  Created by Jared McIntyre on Sat Jan 24 2004.

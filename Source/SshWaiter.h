@@ -1,4 +1,4 @@
-/* SshWaiter.m
+/* SshWaiter.h
  * Copyright (C) 2011 Dustin Cartwright
  *
  * This program is free software; you can redistribute it and/or modify

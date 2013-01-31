@@ -1,5 +1,5 @@
 //
-//  ConnectionWaiter.m
+//  ConnectionWaiter.h
 //  Chicken of the VNC
 //
 //  Created by Dustin Cartwright on 7/9/2010.

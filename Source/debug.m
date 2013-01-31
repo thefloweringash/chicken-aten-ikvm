@@ -1,5 +1,5 @@
 /*
- *  debug.c
+ *  debug.m
  *  Chicken of the VNC
  *
  *  Created by Kurt Werle on Thu Dec 19 2002.

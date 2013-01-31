@@ -227,7 +227,9 @@ printf("fill x=%f y=%f w=%f h=%f -> %d\n", aRect.origin.x, aRect.origin.y, aRect
         int i;
 
         if (aRect.size.width + aPoint.x > size.width 
-                || aRect.size.height + aPoint.y > size.height) {
+                || aRect.size.height + aPoint.y > size.height
+                || aRect.size.width + aRect.origin.x > size.width
+                || aRect.size.height + aRect.origin.y > size.height) {
             NSLog(@"Ignoring copyRect:to: because out of bounds");
             return;
         }

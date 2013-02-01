@@ -128,7 +128,6 @@
 	[mCommandKey selectItemAtIndex:[profile commandKeyPreference]];
     [mControlKey selectItemAtIndex:[profile controlKeyPreference]];
     [mAltKey selectItemAtIndex:[profile altKeyPreference]];
-    [mShiftKey selectItemAtIndex:[profile shiftKeyPreference]];
 
     [mTintColorWell setColor:[profile tintWhenFront:NO]];
 	

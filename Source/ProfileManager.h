@@ -60,7 +60,6 @@ typedef enum {
     IBOutlet NSPopUpButton *mAltKey;
     IBOutlet NSPopUpButton *mCommandKey;
     IBOutlet NSPopUpButton *mControlKey;
-    IBOutlet NSPopUpButton *mShiftKey;
     IBOutlet NSTableView *mEncodingTableView;
 	IBOutlet NSButton *mEnableCopyRect;
     IBOutlet NSButton *mEnableJpegEncoding;

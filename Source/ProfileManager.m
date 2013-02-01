@@ -184,7 +184,6 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
     [profile setCommandKeyPreference:[mCommandKey indexOfSelectedItem]];
     [profile setControlKeyPreference: [mControlKey indexOfSelectedItem]];
     [profile setAltKeyPreference: [mAltKey indexOfSelectedItem]];
-    [profile setShiftKeyPreference: [mShiftKey indexOfSelectedItem]];
     
     [[ProfileDataManager sharedInstance] saveProfile:profile];
 }

@@ -29,6 +29,7 @@
 - (NSMenuItem *)getFullScreenMenuItem;
 
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender;
+- (void)addDockConnection:(DockConnection *)conn;
 - (void)removeDockConnection:(DockConnection *)conn;
 
 @end

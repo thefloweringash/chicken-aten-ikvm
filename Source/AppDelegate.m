@@ -172,6 +172,11 @@
     [conn release];
 }
 
+- (void)addDockConnection:(DockConnection *)conn
+{
+    [dockConnections addObject:conn];
+}
+
 - (void)removeDockConnection: (DockConnection *)conn
 {
     /* This selector is called by the object conn itself. We want to make sure

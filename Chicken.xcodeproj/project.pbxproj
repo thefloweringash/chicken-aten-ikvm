@@ -128,6 +128,8 @@
 		DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1FD8C412D5100400632D78 /* PersistentServer.m */; };
 		DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1FDD9112D6B1A000632D78 /* Security.framework */; };
 		DA21209212087A370060A5F9 /* jsimd_none.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305711E03BA600271F8F /* jsimd_none.c */; };
+		DA22199916BC615600410C5A /* CommandLineConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = DA22199716BC615600410C5A /* CommandLineConnection.h */; };
+		DA22199A16BC615600410C5A /* CommandLineConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DA22199816BC615600410C5A /* CommandLineConnection.m */; };
 		DA231DF612BD562100D3AD44 /* Keymap.h in Headers */ = {isa = PBXBuildFile; fileRef = DA231DF512BD562100D3AD44 /* Keymap.h */; };
 		DA335CCF12DA4A6C00C70987 /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = DA335CCD12DA4A6C00C70987 /* Session.h */; };
 		DA335CD012DA4A6C00C70987 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = DA335CCE12DA4A6C00C70987 /* Session.m */; };
@@ -308,6 +310,8 @@
 		DA1FD8C312D5100400632D78 /* PersistentServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentServer.h; sourceTree = "<group>"; };
 		DA1FD8C412D5100400632D78 /* PersistentServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentServer.m; sourceTree = "<group>"; };
 		DA1FDD9112D6B1A000632D78 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		DA22199716BC615600410C5A /* CommandLineConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandLineConnection.h; sourceTree = "<group>"; };
+		DA22199816BC615600410C5A /* CommandLineConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandLineConnection.m; sourceTree = "<group>"; };
 		DA231DF512BD562100D3AD44 /* Keymap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keymap.h; sourceTree = "<group>"; };
 		DA335CCD12DA4A6C00C70987 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
 		DA335CCE12DA4A6C00C70987 /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
@@ -918,6 +922,8 @@
 		F5DC7198033DB4A801A8010C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				DA22199716BC615600410C5A /* CommandLineConnection.h */,
+				DA22199816BC615600410C5A /* CommandLineConnection.m */,
 				DA78379712DE159800F1893E /* SshWaiter.h */,
 				DA78379812DE159800F1893E /* SshWaiter.m */,
 				DAD6DEFC12DCF583001FD9D6 /* SshTunnel.h */,
@@ -1137,6 +1143,7 @@
 				DAD344BF1304648200134E29 /* jpegcomp.h in Headers */,
 				DABF107A13E3472100558AE1 /* jconfig.h in Headers */,
 				DAA856D116B8717100A40AB5 /* DockConnection.h in Headers */,
+				DA22199916BC615600410C5A /* CommandLineConnection.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1361,6 +1368,7 @@
 				DABF111913E34A7600558AE1 /* jdsample.c in Sources */,
 				DABF111E13E34A9000558AE1 /* jcomapi.c in Sources */,
 				DAA856D216B8717100A40AB5 /* DockConnection.m in Sources */,
+				DA22199A16BC615600410C5A /* CommandLineConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

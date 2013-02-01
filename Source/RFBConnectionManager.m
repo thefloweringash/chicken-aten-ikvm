@@ -19,6 +19,8 @@
 #import "KeyChain.h"
 #import "RFBConnectionManager.h"
 #import "RFBConnection.h"
+#import "AppDelegate.h"
+#import "CommandLineConnection.h"
 #import "ConnectionWaiter.h"
 #import "ListenerController.h"
 #import "PersistentServer.h"
@@ -230,13 +232,12 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
                 [l setDisplaysFullscreen:YES];
             [l actionPressed:nil];
         } else {
-            // :TORESOLVE: currently no way to cancel without killing program
             id<IServerData> server = savedServ ? savedServ : cmdlineServer;
+            CommandLineConnection   *conn;
 
-            /* This will leak memory, but it's at most one instance per run, so
-             * it's not a practical problem. */
-            [[ConnectionWaiter waiterForServer:server
-                                     delegate:self window:nil] retain];
+            conn = [[CommandLineConnection alloc] initWithServer:server];
+            [[NSApp delegate] addDockConnection:conn];
+            [conn release];
         }
         return YES;
 	}
@@ -286,18 +287,6 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	fprintf(stderr, "--ViewOnly\n");
     fprintf(stderr, "--Listen\n");
     exit(1);
-}
-
-/* Connection initiated from the command-line succeeded */
-- (void)connectionSucceeded:(RFBConnection *)conn
-{
-    [self successfulConnection:conn];
-}
-
-/* Connection initiated from command-line failed */
-- (void)connectionFailed
-{
-    [NSApp terminate:self];
 }
 
 - (void)showNewConnectionDialog:(id)sender

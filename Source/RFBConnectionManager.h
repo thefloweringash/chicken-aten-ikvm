@@ -18,7 +18,6 @@
 
 #import <AppKit/AppKit.h>
 #import "ServerDataViewController.h"
-#import "ConnectionWaiter.h"
 
 @class Profile, ProfileManager;
 @class RFBConnection;
@@ -26,7 +25,7 @@
 @protocol IServerData;
 
 
-@interface RFBConnectionManager : NSWindowController<ConnectionWaiterDelegate>
+@interface RFBConnectionManager : NSWindowController
 {
 	IBOutlet NSTableView *serverList;
 	IBOutlet NSTableView *groupList;
@@ -52,8 +51,6 @@
 - (void)wakeup;
 - (BOOL)runFromCommandLine;
 - (void)runNormally;
-- (void)connectionSucceeded:(RFBConnection *)conn;
-- (void)connectionFailed;
 
 - (void)showNewConnectionDialog: (id)sender;
 - (void)showConnectionDialog: (id)sender;

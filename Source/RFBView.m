@@ -137,6 +137,12 @@
     int             numRects;
     int             i;
 
+    /* We always draw the framebuffer at scale. However, on a "Retina" display,
+     * there are 4 pixels for each point. By default, the OS will interpolate
+     * for us, but we don't want that. We want to draw "large" pixels. */
+    [[NSGraphicsContext currentContext]
+        setImageInterpolation:NSImageInterpolationNone];
+
     if (drawTint)
         [tint setFill];
 

@@ -348,13 +348,8 @@ c |= blueClut[(p >> pixelFormat.blueShift) & pixelFormat.blueMax]
 
 - (void)putRect:(NSRect)aRect fromData:(const unsigned char*)data
 {
-    FBColor* start;
+    FBColor* start, *end;
     unsigned int stride, i, lines, pix, col;
-
-    if (NSMaxX(aRect) > size.width || NSMaxY(aRect) > size.height) {
-        NSLog(@"Ignoring too large rectangle in putRect:fromData:");
-        return;
-    }
 
 #ifdef DEBUG_DRAW
 printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height);
@@ -366,6 +361,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 #endif
 
     start = pixels + (int)(aRect.origin.y * size.width) + (int)aRect.origin.x;
+    end = pixels + (int)(size.width) * (int)(size.height);
     lines = aRect.size.height;
     stride = size.width - aRect.size.width;
 
@@ -387,7 +383,8 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 						pix = PIX16BIG(data);
                         data += 2;
 						CLUT(col, pix);
-						*start++ = col;
+                        if (start + 1 <= end)
+                            *start++ = col;
 					}
 					start += stride;
 				}
@@ -397,7 +394,8 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
                         pix = PIX16LITTLE(data);
                         data += 2;
 						CLUT(col, pix);
-						*start++ = col;
+                        if (start + 1 <= end)
+                            *start++ = col;
 					}
 					start += stride;
 				}

@@ -400,6 +400,10 @@ typedef struct {
 typedef struct {
     rfbRectangle r;
     CARD32 encoding;	/* one of the encoding types rfbEncoding... */
+    struct {
+        uint32_t unknown;
+        uint32_t dataLength;
+    } atenExt;
 } rfbFramebufferUpdateRectHeader;
 
 #define sz_rfbFramebufferUpdateRectHeader (sz_rfbRectangle + 4)
@@ -731,10 +735,12 @@ typedef struct {
 
 typedef struct {
     CARD8 type;			/* always rfbKeyEvent */
-    CARD8 down;			/* true if down (press), false if up */
+    CARD8 padding1;
+    CARD8 down;			/* true if down (press), false if up, 0x02 for press+release */
     CARD16 pad;
-    CARD32 key;			/* key is specified as an X keysym */
-} rfbKeyEventMsg;
+    CARD32 key;			/* (aten) key is specified as hid code */
+    CARD8 padding2[9];
+} __attribute__((packed)) rfbKeyEventMsg;
 
 #define sz_rfbKeyEventMsg 8
 
@@ -745,10 +751,12 @@ typedef struct {
 
 typedef struct {
     CARD8 type;			/* always rfbPointerEvent */
+    CARD8 padding1;
     CARD8 buttonMask;		/* bits 0-7 are buttons 1-8, 0=up, 1=down */
     CARD16 x;
     CARD16 y;
-} rfbPointerEventMsg;
+    CARD8 padding2[11];
+} __attribute__((packed)) rfbPointerEventMsg;
 
 #define rfbButton1Mask 1
 #define rfbButton2Mask 2

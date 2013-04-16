@@ -47,6 +47,9 @@
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
 
+#import "HIDKeys.h"
+
+
 // size of write buffer
 #define BUFFER_SIZE 2048
 #define READ_BUF_SIZE (1024*1024)
@@ -121,6 +124,8 @@
         writeBuffer = (unsigned char *)malloc(BUFFER_SIZE);
         bufferLen = 0;
         lastBufferedIsMouseMovement = NO;
+
+        HIDKeys_init();
 	}
     return self;
 }
@@ -492,7 +497,7 @@
 
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
-    rfbPointerEventMsg  msg;
+    rfbPointerEventMsg  msg = {0};
 
     msg.type = rfbPointerEvent;
     msg.buttonMask = mask;
@@ -518,7 +523,7 @@
 
 - (void)mouseClickedAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
-    rfbPointerEventMsg msg;
+    rfbPointerEventMsg msg = {0};
 	
     msg.type = rfbPointerEvent;
     msg.buttonMask = mask;
@@ -562,15 +567,32 @@
         msg.key = htonl([_profile altKeyCode]);
 	else if( NSCommandKeyMask == m )
         msg.key = htonl([_profile commandKeyCode]);
-    else if(NSAlphaShiftKeyMask == m)
-        msg.key = htonl(XK_Caps_Lock);
+    else if(NSAlphaShiftKeyMask == m) {
+#if 1
+        // this is what the aten client seems to do
+        NSLog(@"NB: Caps lock does not work");
+        msg.key = htonl(0xff00 | kHIDKeys_Caps);
+        msg.down = 0x2;
+#else
+        // this sometimes works
+        // but is sometimes backwards
+        // and sometimes breaks all mouse + keyboard input
+        if (pressed) {
+            msg.key = htonl(kHIDKeys_Caps);
+        }
+        else {
+            msg.key = htonl(0xff00 | kHIDKeys_Caps);
+        }
+        msg.down = 0x2;
+#endif
+    }
     else if(NSHelpKeyMask == m)		// this is F1
-        msg.key = htonl(XK_F1);
+        msg.key = htonl(kHIDKeys_F1);
 	else if (NSNumericPadKeyMask == m) // don't know how to handle, eat it
 		return;
 	
-    // XK_VoidSymbol is used for unbound modifier keys
-    if (msg.key != htonl(XK_VoidSymbol)) {
+    // 0 is used for unbound modifier keys
+    if (msg.key != htonl(0)) {
         [self writeBufferedBytes:(unsigned char*)&msg length:sizeof(msg)];
     }
 }
@@ -588,60 +610,9 @@
     msg.type = rfbKeyEvent;
     msg.down = pressed;
 
-    if ((c & 0xf800) == 0xd800) { // surrogate code point
-        /* The unichar type is not really a unicode code point, because it is
-         * only 16-bit, so it codes non-BMP characters using surrogate pairs.
-         * Here, we coalesce successive key events for surrogate pairs into a
-         * single key event, using highSurrogate. */
-        if (c & 0x0400) { // low surrogate
-            if (highSurrogate[pressed]) {
-                keysym = 0x01000000 // keysym offset for Unicode
-                            + 0x00010000 // non-Basic Multilingual Plane offset
-                            + ((highSurrogate[pressed] - 0xd800) << 10)
-                            + (c - 0xdc00);
-                highSurrogate[pressed] = 0;
-            } else
-                return;
-        } else { // high surrogate
-            highSurrogate[pressed] = c;
-            return;
-        }
-    } else {
-        highSurrogate[pressed] = 0;
-
-        switch (c & 0xff80) {
-            case 0x0000: // ASCII
-            case 0x0080: // Latin-I supplement
-                keysym = page0[c];
-                if (keysym == 0)
-                    return;
-                break;
-            case 0x0100: keysym = page1[c & 0x7f]; break; // Latin Extended-A
-            case 0x0380: keysym = page3[c & 0x7f]; break; // Greek
-            case 0x0400: keysym = page4[c & 0x7f]; break; // Cyrillic
-            case 0x0580:
-                if (c & 0x040)
-                    keysym = page5[c & 0x3f]; // Hebrew
-                break;
-            case 0x0600: keysym = page6[c & 0x7f]; break; // Arabic
-            case 0x0e00: keysym = pagee[c & 0x7f]; break; // Thai
-            case 0x3080: keysym = page30[c & 0x7f]; break; // Japanese
-            case 0xf600:
-                if (c < 0xf640) {
-                    keysym = pagef6[c & 0x3f]; // key pad
-                    if (keysym == 0)
-                        return;
-                }
-                break;
-            case 0xf700:
-                keysym = pagef7[c & 0x7f]; // Apple's function keys
-                if (keysym == 0) // don't send special-use Unicode characters
-                    return;
-                break;
-        }
-
-        if (keysym == 0)
-            keysym = c + 0x01000000; // default: map character algorithmically
+    keysym = HIDKeys_usageForChar(c);
+    if (!keysym) {
+        NSLog(@"No encoding for '%c' (%.2x)", c, c);
     }
 
     msg.key = htonl(keysym);

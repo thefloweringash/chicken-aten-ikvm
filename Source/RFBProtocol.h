@@ -22,7 +22,7 @@
 #import "ByteReader.h"
 #import "FrameBufferUpdateReader.h"
 
-#define	MAX_MSGTYPE	rfbServerCutText
+#define	MAX_MSGTYPE	0x3c
 
 @class CARD8Reader;
 @class FrameBuffer;

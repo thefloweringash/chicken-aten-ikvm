@@ -24,8 +24,8 @@
 #import "FrameBuffer.h"
 #import "FrameBufferUpdateReader.h"
 #import <Carbon/Carbon.h>
-#define XK_MISCELLANY
-#include <X11/keysymdef.h>
+
+#import "HIDKeys.h"
 
 #define INTERPRET_LOCALLY_PREFERENCE 6
 
@@ -429,14 +429,14 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 
 - (CARD32)modifierCodeForPreference: (int)pref
 {
-    CARD32 modifierKeyCodes[] = {XK_Alt_L, XK_Meta_L, XK_Control_L,
-        XK_Shift_L, XK_Super_L, XK_VoidSymbol, XK_VoidSymbol};
+    CARD32 modifierKeyCodes[] = {kHIDKeys_LeftAlt, kHIDKeys_LeftWin, kHIDKeys_LeftCtrl,
+        kHIDKeys_LeftShift, 0 /* TODO: super? */, 0, 0};
 
     if (pref >= 0 && pref < sizeof(modifierKeyCodes) / sizeof(CARD32))
         return modifierKeyCodes[pref];
     else {
         NSLog(@"Invalid modifier code: %d", pref);
-        return XK_VoidSymbol;
+        return 0;
     }
 }
 

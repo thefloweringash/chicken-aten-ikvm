@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		48C797E5171D0DC40016ED7B /* HIDKeys.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C797E3171D0DC40016ED7B /* HIDKeys.h */; };
+		48C797E6171D0DC40016ED7B /* HIDKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C797E4171D0DC40016ED7B /* HIDKeys.m */; };
+		48C797E9171D542F0016ED7B /* AtenEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 48C797E7171D542D0016ED7B /* AtenEncodingReader.h */; };
+		48C797EA171D542F0016ED7B /* AtenEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C797E8171D542E0016ED7B /* AtenEncodingReader.m */; };
+		48F0C475171C1F9300EE703A /* DiscardMessageReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F0C473171C1F9300EE703A /* DiscardMessageReader.h */; };
+		48F0C476171C1F9300EE703A /* DiscardMessageReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F0C474171C1F9300EE703A /* DiscardMessageReader.m */; };
 		7F7A93E505E71B5C00E20416 /* ByteBlockReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719B033DB4A801A8010C /* ByteBlockReader.h */; };
 		7F7A93E605E71B5C00E20416 /* ByteReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719D033DB4A801A8010C /* ByteReader.h */; };
 		7F7A93E705E71B5C00E20416 /* CARD16Reader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719F033DB4A801A8010C /* CARD16Reader.h */; };
@@ -284,6 +290,12 @@
 
 /* Begin PBXFileReference section */
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		48C797E3171D0DC40016ED7B /* HIDKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HIDKeys.h; sourceTree = "<group>"; };
+		48C797E4171D0DC40016ED7B /* HIDKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HIDKeys.m; sourceTree = "<group>"; };
+		48C797E7171D542D0016ED7B /* AtenEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtenEncodingReader.h; sourceTree = "<group>"; };
+		48C797E8171D542E0016ED7B /* AtenEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtenEncodingReader.m; sourceTree = "<group>"; };
+		48F0C473171C1F9300EE703A /* DiscardMessageReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscardMessageReader.h; sourceTree = "<group>"; };
+		48F0C474171C1F9300EE703A /* DiscardMessageReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscardMessageReader.m; sourceTree = "<group>"; };
 		7F088F2405E1D81100336456 /* ServerDataManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerDataManager.h; sourceTree = "<group>"; };
 		7F088F2505E1D81100336456 /* ServerDataManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerDataManager.m; sourceTree = "<group>"; };
 		7F088F2805E1DA4800336456 /* URLHandlerCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = URLHandlerCommand.h; sourceTree = "<group>"; };
@@ -978,6 +990,10 @@
 				F5DC71B6033DB4A801A8010C /* FrameBufferDrawing.h */,
 				F5DC71B7033DB4A801A8010C /* FrameBufferUpdateReader.h */,
 				F5DC71B8033DB4A801A8010C /* FrameBufferUpdateReader.m */,
+				48F0C473171C1F9300EE703A /* DiscardMessageReader.h */,
+				48F0C474171C1F9300EE703A /* DiscardMessageReader.m */,
+				48C797E7171D542D0016ED7B /* AtenEncodingReader.h */,
+				48C797E8171D542E0016ED7B /* AtenEncodingReader.m */,
 				F5E4C9AA03416C2701A8010C /* FullscreenWindow.h */,
 				F5E4C9AB03416C2701A8010C /* FullscreenWindow.m */,
 				F5DC71B9033DB4A801A8010C /* GradientFilter.h */,
@@ -1005,6 +1021,8 @@
 				F5DC71DA033DB4A801A8010C /* RawEncodingReader.m */,
 				F5DC71DD033DB4A801A8010C /* RFBConnection.h */,
 				F5DC71DE033DB4A801A8010C /* RFBConnection.m */,
+				48C797E3171D0DC40016ED7B /* HIDKeys.h */,
+				48C797E4171D0DC40016ED7B /* HIDKeys.m */,
 				F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */,
 				F5DC71E2033DB4A801A8010C /* RFBHandshaker.m */,
 				F5DC71E3033DB4A801A8010C /* rfbproto.h */,
@@ -1144,6 +1162,9 @@
 				DABF107A13E3472100558AE1 /* jconfig.h in Headers */,
 				DAA856D116B8717100A40AB5 /* DockConnection.h in Headers */,
 				DA22199916BC615600410C5A /* CommandLineConnection.h in Headers */,
+				48F0C475171C1F9300EE703A /* DiscardMessageReader.h in Headers */,
+				48C797E5171D0DC40016ED7B /* HIDKeys.h in Headers */,
+				48C797E9171D542F0016ED7B /* AtenEncodingReader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1369,6 +1390,9 @@
 				DABF111E13E34A9000558AE1 /* jcomapi.c in Sources */,
 				DAA856D216B8717100A40AB5 /* DockConnection.m in Sources */,
 				DA22199A16BC615600410C5A /* CommandLineConnection.m in Sources */,
+				48F0C476171C1F9300EE703A /* DiscardMessageReader.m in Sources */,
+				48C797E6171D0DC40016ED7B /* HIDKeys.m in Sources */,
+				48C797EA171D542F0016ED7B /* AtenEncodingReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

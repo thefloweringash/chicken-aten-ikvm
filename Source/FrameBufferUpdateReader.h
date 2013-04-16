@@ -39,6 +39,8 @@ extern NSString *encodingNames[];
 @class ZlibHexEncodingReader;
 @class ZRLEEncodingReader;
 
+@class AtenEncodingReader;
+
 /* Handles frame buffer update messages from the server, which form the crux of
  * the RFB protocol. This message consists of a list of rectangles, and there is
  * an instance variable for each encoding of a rectangle. */
@@ -56,6 +58,8 @@ extern NSString *encodingNames[];
     ZlibEncodingReader          *zlibEncodingReader;
     ZRLEEncodingReader          *zrleEncodingReader;
     ZlibHexEncodingReader       *zlibHexEncodingReader;
+
+    AtenEncodingReader          *atenEncodingReader;
 
     DesktopNameEncodingReader   *desktopNameReader;
     CursorPseudoEncodingReader  *cursorReader;

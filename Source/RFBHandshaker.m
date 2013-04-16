@@ -35,6 +35,7 @@
         connFailedReader = [[RFBStringReader alloc] initTarget:self action:@selector(connFailed:) connection:connection];
 		challengeReader = [[ByteBlockReader alloc] initTarget:self action:@selector(challenge:) size:CHALLENGESIZE];
 		authResultReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthResult:)];
+        atenDiscardReader = [[ByteBlockReader alloc] initTarget:self action:@selector(atenDiscardDone) size:24];
         serverInitReader = nil;
 	}
     return self;
@@ -124,6 +125,12 @@
 				[connection setReader:challengeReader];
 				return;
 			}
+            case 16: {
+                NSLog(@"aten auth");
+                [connection writeBytes:&availableAuthType length:1]; // accept!
+                [connection setReader: atenDiscardReader];
+                return;
+            }
             case 30:
                 ardAuth = YES;
                 break;
@@ -145,6 +152,14 @@
     if (ardAuth)
         errorStr = NSLocalizedString(@"ARDAuthWarning", nil);
 	[connection terminateConnection:errorStr];
+}
+
+- (void)atenDiscardDone {
+    unsigned char auth[48] = {0}; // *SPIT*
+    strlcpy((char*) &auth[0], "testuser", 24);
+    strlcpy((char*) &auth[24], "testpass", 24);
+    [connection writeBytes:&auth[0] length:sizeof(auth)];
+    [connection setReader:authResultReader];
 }
 
 - (void)setAuthType:(NSNumber*)authType

@@ -36,6 +36,8 @@
 #import "ZlibHexEncodingReader.h"
 #import "ZRLEEncodingReader.h"
 
+#import "AtenEncodingReader.h"
+
 #import "debug.h"
 
 NSString *encodingNames[] = { // names indexed by RFB encoding numbers
@@ -53,8 +55,9 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
         bytesPerPixel = 0;
 
 		headerReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setHeader:) size:3];
-		rectHeaderReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setRect:) size:12];
+		rectHeaderReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setRect:) size:20];
 
+        atenEncodingReader = [[AtenEncodingReader alloc] initWithUpdater:self connection:connection];
         rawEncodingReader = [[RawEncodingReader alloc] initWithUpdater: self connection: connection];
         copyRectangleEncodingReader = [[CopyRectangleEncodingReader alloc] initWithUpdater: self connection: connection];
         rreEncodingReader = [[RREEncodingReader alloc] initWithUpdater: self connection: connection];
@@ -72,6 +75,7 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
 
         invalidRects = [[NSMutableArray alloc] init];
         shouldResize = NO;
+
 	}
     return self;
 }
@@ -112,6 +116,7 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
 	[zlibEncodingReader setFrameBuffer:aBuffer];
 	[zrleEncodingReader setFrameBuffer:aBuffer];
 	[zlibHexEncodingReader setFrameBuffer:aBuffer];
+	[atenEncodingReader setFrameBuffer:aBuffer];
 }
 
 - (void)readMessage
@@ -153,6 +158,27 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     currentRect.size.height = ntohs(msg->r.h);
     encoding = ntohl(msg->encoding);
 
+    // NSLog(@"setRect: %@, encoding=%i", [NSValue valueWithRect:currentRect], encoding);
+
+    // aten always gives full frame dimensions, and always lies about the actual screen size
+    if (!NSEqualSizes(currentRect.size, resize)) {
+        if (currentRect.size.width == 64896 && currentRect.size.height == 65056) {
+            // screen is probably off, no data is coming
+            NSLog(@"Rect non-sensical. Screen is probably off");
+            [self updateComplete];
+            return;
+        }
+        else {
+            NSLog(@"Resizing %@ -> %@",
+                  [NSValue valueWithSize:resize],
+                  [NSValue valueWithSize:currentRect.size]);
+            resize = currentRect.size;
+            shouldResize = YES;
+        }
+    }
+
+    theReader = atenEncodingReader;
+/*
     switch(encoding) {
         case rfbEncodingRaw:
             theReader = rawEncodingReader;
@@ -202,6 +228,7 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
             [self didRect: nil];
             return;
     }
+             */
     if(theReader == nil) {
         NSString    *err;
         NSString    *encName = [self nameForEncoding:lastEncoding];

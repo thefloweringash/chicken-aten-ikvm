@@ -329,55 +329,12 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)queueKeyEventFromEvent: (NSEvent *)theEvent
 {
     NSString *unmodified = [theEvent charactersIgnoringModifiers];
-    NSString *modified = [theEvent characters];
     NSString *characters;
     unsigned int length;
 	unsigned int i;
-    unsigned int oldModifiers = 0;
-    unsigned int modifiers = [theEvent modifierFlags];
 
-    /* If shift is down, the OS does the capitalization on
-     * charactersIgnoringModifiers, but if caps lock is down, it doesn't. */
-    if (modifiers & NSAlphaShiftKeyMask)
-        unmodified = [unmodified uppercaseString];
+    characters = unmodified;
 
-    // figure out the appropriate string to send to the server
-    if ([modified length] > 0 && [modified characterAtIndex:0] < 0x20) {
-        /* The OS translates Ctrl + letter into ASCII control sequences,
-         * which are also used for Tab, Escape, Return, and Enter. So, in
-         * these cases, we use the unmodified characters instead. */
-        characters = unmodified;
-    } else if ([modified length] > 0 && [modified characterAtIndex:0] < 0x80
-                    && !(modifiers & NSCommandKeyMask)
-                    && ![modified isEqualToString: unmodified]) {
-        /* Some non-US keyboards require holding option or control in order to
-         * type basic ASCII characters. Since these characters can be so
-         * crucial, we send the modified key if it's in the ASCII range.
-         *
-         * The command key tends to block the effect of the shift key on
-         * [theEvent characters], so this heuristic can't be applied with the
-         * command key is down. */
-        characters = modified;
-
-        if ([theEvent type] == NSKeyDown) {
-            /* We clear the modifiers for a keydown event so that the server
-             * doesn't try to interpret the modifiers on top of the already
-             * modified character. */
-            oldModifiers = modifiers;
-            [self queueModifiers:modifiers & ~NSControlKeyMask
-                                           & ~NSAlternateKeyMask
-                       timestamp:[theEvent timestamp]];
-        }
-    } else if ([_profile interpretModifiersLocally]) {
-        characters = modified;
-        if ((modifiers & (NSShiftKeyMask | NSAlphaShiftKeyMask))
-                    && (modifiers & NSCommandKeyMask)) {
-            // command tends to block the effect of shift
-            characters = [characters uppercaseString];
-        }
-    } else {
-        characters = unmodified;
-    }
 
     length = [characters length];
 	NSParameterAssert( characters );
@@ -389,9 +346,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
         character = [characters characterAtIndex: i];
 
-        if ((modifiers & NSNumericPadKeyMask) && character < 0x40)
-            character += 0xf600; // encode numpad keys in private use area
-		
         if ([theEvent type] == NSKeyDown) {
             event = [QueuedEvent keyDownEventWithCharacter: character
                                                  timestamp: [theEvent timestamp]];
@@ -402,12 +356,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		[_pendingEvents addObject: event];
 		[self sendAnyValidEventsToServerNow];
 	}
-
-    if (oldModifiers) {
-        /* Note that it would probably be better to wait until after the
-         * matching key up event before restoring the modifiers. */
-        [self queueModifiers:oldModifiers timestamp:[theEvent timestamp]];
-    }
 
     [_connection writeBuffer];
 }

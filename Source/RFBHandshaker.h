@@ -31,6 +31,7 @@
     id	challengeReader;
     id	authResultReader;
     id	serverInitReader;
+    id  atenDiscardReader;
     BOOL    triedPassword;
     NSData  *vncAuthChallenge;
 }

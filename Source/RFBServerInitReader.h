@@ -47,6 +47,7 @@
     RFBHandshaker       *handshaker;
     RFBStringReader     *nameReader;
     ServerInitMessage*  msg;
+    id atenDiscardReader;
 }
 
 - (id)initWithConnection: (RFBConnection *)aConnection

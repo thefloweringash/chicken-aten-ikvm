@@ -29,6 +29,8 @@
 #import "ServerCutTextReader.h"
 #import "SetColorMapEntriesReader.h"
 
+#import "DiscardMessageReader.h"
+
 /* This class essentially handles all messages from the server once the initial
  * handshaking has been completed. It also sends the initial messages with the
  * supported encodings and the pixel format to the server. */
@@ -39,16 +41,25 @@
     if (self = [super init]) {
         connection = aConnection;
        
-        [self setPixelFormat:[info pixelFormatData]];
+        // aten: nope
+        // [self setPixelFormat:[info pixelFormatData]];
 
-        [self setEncodings];
+        // [self setEncodings];
 		typeReader = [[CARD8Reader alloc] initTarget:self action:@selector(receiveType:)];
+        memset(msgTypeReader, 0x00, sizeof(msgTypeReader) / sizeof(*msgTypeReader));
+
         msgTypeReader[rfbFramebufferUpdate] = [[FrameBufferUpdateReader alloc]
                 initWithProtocol:self connection:connection];
         msgTypeReader[rfbSetColourMapEntries] = [[SetColorMapEntriesReader alloc] initWithProtocol:self connection:connection];
         msgTypeReader[rfbBell] = nil;
         msgTypeReader[rfbServerCutText] = [[ServerCutTextReader alloc]
                 initWithProtocol:self connection:connection];
+
+        msgTypeReader[0x4] = [[DiscardMessageReader alloc] initWithProtocol:self connection:connection messageLength:20];
+        msgTypeReader[0x16] = [[DiscardMessageReader alloc] initWithProtocol:self connection:connection messageLength:1];
+        msgTypeReader[0x37] = [[DiscardMessageReader alloc] initWithProtocol:self connection:connection messageLength:2];
+        msgTypeReader[0x39] = [[DiscardMessageReader alloc] initWithProtocol:self connection:connection messageLength:264];
+        msgTypeReader[0x3c] = [[DiscardMessageReader alloc] initWithProtocol:self connection:connection messageLength:8];
 
         [connection setReader: typeReader];
 

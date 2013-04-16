@@ -30,9 +30,17 @@
     memcpy(&fixed, [data bytes], sizeof(fixed));
     fixed.framebufferWidth = ntohs(fixed.framebufferWidth);
     fixed.framebufferHeight = ntohs(fixed.framebufferHeight);
-    fixed.format.redMax = ntohs(fixed.format.redMax);
-    fixed.format.greenMax = ntohs(fixed.format.greenMax);
-    fixed.format.blueMax = ntohs(fixed.format.blueMax);
+
+    // aten lies, we hope we know better
+    fixed.format.redMax = (1 << 5) - 1;
+    fixed.format.greenMax = (1 << 5) - 1;
+    fixed.format.blueMax = (1 << 5) - 1;
+
+    fixed.format.redShift = 10;
+    fixed.format.greenShift = 5;
+    fixed.format.blueShift = 0;
+
+    fixed.format.bitsPerPixel = 16;
 }
 
 - (rfbPixelFormat *)pixelFormatData
@@ -78,6 +86,8 @@
         handshaker = aHandshaker;
         nameReader = [[RFBStringReader alloc] initTarget:self
                 action:@selector(setName:) connection: connection];
+        atenDiscardReader = [[ByteBlockReader alloc] initTarget:self action:@selector(atenDiscardDone) size:12];
+
         msg = [[ServerInitMessage alloc] init];
     }
     return self;
@@ -109,6 +119,10 @@
 - (void)setName:(NSString*)aName
 {
     [msg setName:aName];
+    [connection setReader:atenDiscardReader];
+}
+
+- (void)atenDiscardDone {
     [handshaker setServerInit: msg];
 }
 

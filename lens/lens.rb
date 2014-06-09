@@ -569,10 +569,14 @@ def server_format
               bytes "front-ground-event", 20
             when 0x16
               bytes "keep-alive-event", 1
+            when 0x33
+              bytes "video-get-info", 4
             when 0x37
               bytes "mouse-get-info", 2
             when 0x39
-              bytes "aten-unknown", 264
+              u32 "get-session-msg-1"
+              u32 "get-session-msg-2"
+              bytes "get-session-msg", 0x100
             when 0x3c
               bytes "get-viewer-lang", 8
             else

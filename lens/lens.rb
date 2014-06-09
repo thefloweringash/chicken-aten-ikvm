@@ -565,8 +565,8 @@ def server_format
                   end
                 end
               end
-            when 4
-              bytes "what", 20
+            when 0x04
+              bytes "front-ground-event", 20
             when 0x16
               bytes "keep-alive-event/sync-kb-led", 1
             when 0x37

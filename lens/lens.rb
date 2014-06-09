@@ -520,7 +520,13 @@ def server_format
       bytes "padding", 3
     end
     l_string "server-name", 32
-    bytes "aten-unknown-2", 12
+    bytes "aten-unknown-2", 8
+    collection "server-init" do
+      u8 "IKVMVideoEnable"
+      u8 "IKVMKMEnable"
+      u8 "IKVMKickEnable"
+      u8 "VUSBEnable"
+    end
     until_eof do
       Collection.new "message" do
         u8 "id"
@@ -562,13 +568,13 @@ def server_format
             when 4
               bytes "what", 20
             when 0x16
-              bytes "aten-unknown", 1
+              bytes "keep-alive-event/sync-kb-led", 1
             when 0x37
-              bytes "aten-unknown", 2
+              bytes "mouse-get-info", 2
             when 0x39
               bytes "aten-unknown", 264
             when 0x3c
-              bytes "aten-unknown", 8
+              bytes "get-viewer-lang", 8
             else
               raise "Unknown tag '#{tag}'"
             end

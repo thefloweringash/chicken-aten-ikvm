@@ -433,7 +433,7 @@ def client_format
           tag = ctx.get_relative("id")
           Collection.new do
             case tag
-            when 0
+            when 0x0
               bytes "padding", 3
               collection "client-pixel-format" do
                 u8 "bits-per-pixel"
@@ -448,14 +448,14 @@ def client_format
                 u8 "green-shift"
                 bytes "padding", 3
               end
-            when 2
+            when 0x2
               bytes "padding", 1
               collection "encoding-list" do
                 l_iterate 16 do
                   Word.new "encoding", 32
                 end
               end
-            when 3
+            when 0x3
               collection "frame-update-request" do
                 u8 "incremental"
                 u16 "x-pos"
@@ -463,11 +463,7 @@ def client_format
                 u16 "width"
                 u16 "height"
               end
-            when 7
-              2.times { u8 "0x7-data" }
-            when 0x16
-              u8 "0x16-data"
-            when 4
+            when 0x4
               collection "key-event" do
                 bytes "padding1", 1
                 u8 "down-flag"
@@ -475,7 +471,7 @@ def client_format
                 u32 "key"
                 bytes "padding3", 9
               end
-            when 5
+            when 0x5
               collection "mouse-event" do
                 u8 "padding1"
                 u8 "button"
@@ -483,9 +479,13 @@ def client_format
                 u16 "y"
                 bytes "padding2", 11
               end
-            when 0x19
-            when 0x37
-            when 0x3c
+            when 0x07
+              u16 "resync-mouse-event"
+            when 0x16
+              bytes "keep-alive-event/sync-kb-led", 1
+            when 0x19 # "front-ground-event"
+            when 0x37 # "mouse-get-info"
+            when 0x3c # "get-viewer-lang"
             else
               raise "Unknown tag '#{tag}'"
             end
@@ -568,7 +568,7 @@ def server_format
             when 0x04
               bytes "front-ground-event", 20
             when 0x16
-              bytes "keep-alive-event/sync-kb-led", 1
+              bytes "keep-alive-event", 1
             when 0x37
               bytes "mouse-get-info", 2
             when 0x39

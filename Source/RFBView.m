@@ -134,7 +134,7 @@
 {
     NSRect          b = [self bounds];
     const NSRect    *rects;
-    int             numRects;
+    NSInteger       numRects;
     int             i;
 
     /* We always draw the framebuffer at scale. However, on a "Retina" display,

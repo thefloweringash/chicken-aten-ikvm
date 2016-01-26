@@ -1195,6 +1195,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -1618,9 +1620,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = 4.0;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				ZERO_LINK = NO;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /opt/X11/include;
 				_CHICKEN_VERSION_ = 2.2b2;
 			};
 			name = Development;
@@ -1628,12 +1629,8 @@
 		E20426EC087531990026AA26 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				GCC_VERSION = 4.0;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /opt/X11/include;
 				_CHICKEN_VERSION_ = 2.2b2;
 			};
 			name = Deployment;
@@ -1642,8 +1639,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = 4.0;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /opt/X11/include;
 				_CHICKEN_VERSION_ = 2.2b2;
 			};
 			name = Default;
@@ -1688,13 +1685,8 @@
 		E21DEC9D097EC77E00F015DE /* Universal Fast Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
-				GCC_VERSION = 4.0;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
-				ZERO_LINK = NO;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /opt/X11/include;
 				_CHICKEN_VERSION_ = 2.2b2;
 			};
 			name = "Universal Fast Development";
